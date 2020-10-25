@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
 	//allocating CPU memory for floatgrids
 	size_t size_fgrid_nelems = (mygrid.num_of_atypes+2) * mygrid.size_xyz[0] * mygrid.size_xyz[1] * mygrid.size_xyz[2];
-	vector<float,aligned_allocator<float>> floatgrids(size_fgrid_nelems);
+	std::vector<float> floatgrids(size_fgrid_nelems);
 
 
 	// Filling the atom types filed of myligand according to the grid types
