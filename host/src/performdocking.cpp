@@ -67,74 +67,8 @@ filled with clock() */
 	#ifdef ENABLE_KRNL_INTRAE
 	cl::Kernel kernel_intrae		(program, "Krnl_IntraE");
 	#endif
-	#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
-	cl::Kernel kernel_prng_bt_ushort_float	(program, "Krnl_Prng_BT_ushort_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_GG_UCHAR
-	cl::Kernel kernel_prng_gg_uchar		(program, "Krnl_Prng_GG_uchar");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_GG_FLOAT
-	cl::Kernel kernel_prng_gg_float		(program, "Krnl_Prng_GG_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS123_USHORT
-	cl::Kernel kernel_prng_ls123_ushort	(program, "Krnl_Prng_LS123_ushort");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS_FLOAT
-	cl::Kernel kernel_prng_ls_float		(program, "Krnl_Prng_LS_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS2_FLOAT
-	cl::Kernel kernel_prng_ls2_float	(program, "Krnl_Prng_LS2_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS3_FLOAT
-	cl::Kernel kernel_prng_ls3_float	(program, "Krnl_Prng_LS3_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS4_FLOAT
-	cl::Kernel kernel_prng_ls4_float	(program, "Krnl_Prng_LS4_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS5_FLOAT
-	cl::Kernel kernel_prng_ls5_float	(program, "Krnl_Prng_LS5_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS6_FLOAT
-	cl::Kernel kernel_prng_ls6_float	(program, "Krnl_Prng_LS6_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS7_FLOAT
-	cl::Kernel kernel_prng_ls7_float	(program, "Krnl_Prng_LS7_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS8_FLOAT
-	cl::Kernel kernel_prng_ls8_float	(program, "Krnl_Prng_LS8_float");
-	#endif
-	#ifdef ENABLE_KRNL_PRNG_LS9_FLOAT
-	cl::Kernel kernel_prng_ls9_float	(program, "Krnl_Prng_LS9_float");
-	#endif
 	#ifdef ENABLE_KRNL_LS
 	cl::Kernel kernel_ls			(program, "Krnl_LS");
-	#endif
-	#ifdef ENABLE_KRNL_LS2
-	cl::Kernel kernel_ls2			(program, "Krnl_LS2");
-	#endif
-	#ifdef ENABLE_KRNL_LS3
-	cl::Kernel kernel_ls3			(program, "Krnl_LS3");
-	#endif
-	#ifdef ENABLE_KRNL_LS4
-	cl::Kernel kernel_ls4			(program, "Krnl_LS4");
-	#endif
-	#ifdef ENABLE_KRNL_LS5
-	cl::Kernel kernel_ls5			(program, "Krnl_LS5");
-	#endif
-	#ifdef ENABLE_KRNL_LS6
-	cl::Kernel kernel_ls6			(program, "Krnl_LS6");
-	#endif
-	#ifdef ENABLE_KRNL_LS7
-	cl::Kernel kernel_ls7			(program, "Krnl_LS7");
-	#endif
-	#ifdef ENABLE_KRNL_LS8
-	cl::Kernel kernel_ls8			(program, "Krnl_LS8");
-	#endif
-	#ifdef ENABLE_KRNL_LS9
-	cl::Kernel kernel_ls9			(program, "Krnl_LS9");
-	#endif
-	#ifdef ENABLE_KRNL_IGL_ARBITER
-	cl::Kernel kernel_igl_arbiter		(program, "Krnl_IGL_Arbiter");
 	#endif
 
 	clock_t clock_start_docking;
@@ -446,71 +380,6 @@ filled with clock() */
 	kernel_intrae.setArg(narg++, dockpars.coeff_desolv);
 	#endif
 
-	#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_bt_ushort_float.setArg(2, dockpars.pop_size);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_GG_UCHAR
-	// Other kernel args are configured at every docking run
-	kernel_prng_gg_uchar.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_GG_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_gg_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS123_USHORT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls123_ushort.setArg(9, dockpars.pop_size);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS2_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls2_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS3_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls3_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS4_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls4_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS5_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls5_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS6_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls6_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS7_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls7_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS8_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls8_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
-	#ifdef ENABLE_KRNL_PRNG_LS9_FLOAT
-	// Other kernel args are configured at every docking run
-	kernel_prng_ls9_float.setArg(1, dockpars.num_of_genes);
-	#endif
-
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
 
@@ -522,89 +391,6 @@ filled with clock() */
 	kernel_ls.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS2
-	narg = 0;
-	kernel_ls2.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls2.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls2.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls2.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls2.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls2.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS3
-	narg = 0;
-	kernel_ls3.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls3.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls3.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls3.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls3.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls3.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS4
-	narg = 0;
-	kernel_ls4.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls4.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls4.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls4.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls4.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls4.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS5
-	narg = 0;
-	kernel_ls5.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls5.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls5.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls5.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls5.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls5.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS6
-	narg = 0;
-	kernel_ls6.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls6.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls6.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls6.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls6.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls6.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS7
-	narg = 0;
-	kernel_ls7.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls7.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls7.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls7.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls7.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls7.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS8
-	narg = 0;
-	kernel_ls8.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls8.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls8.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls8.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls8.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls8.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_LS9
-	narg = 0;
-	kernel_ls9.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls9.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls9.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls9.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls9.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls9.setArg(narg++, Host_cons_limit);
-	#endif
-
-	#ifdef ENABLE_KRNL_IGL_ARBITER
 	#endif
 
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
@@ -632,53 +418,6 @@ filled with clock() */
 		kernel_prng_bt_ushort_float.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 1]);
 		#endif
 
-		#ifdef ENABLE_KRNL_PRNG_GG_UCHAR
-		kernel_prng_gg_uchar.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 2]);
-		#endif
-
-		#ifdef ENABLE_KRNL_PRNG_GG_FLOAT
-		kernel_prng_gg_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 3]);
-		#endif
-
-		#ifdef ENABLE_KRNL_PRNG_LS123_USHORT
-		kernel_prng_ls123_ushort.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 4]);
-		kernel_prng_ls123_ushort.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 5]);
-		kernel_prng_ls123_ushort.setArg(2, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 6]);
-		kernel_prng_ls123_ushort.setArg(3, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 7]);
-		kernel_prng_ls123_ushort.setArg(4, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 8]);
-		kernel_prng_ls123_ushort.setArg(5, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 9]);
-		kernel_prng_ls123_ushort.setArg(6, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 10]);
-		kernel_prng_ls123_ushort.setArg(7, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 11]);
-		kernel_prng_ls123_ushort.setArg(8, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 12]);
-		#endif
-
-		#ifdef ENABLE_KRNL_PRNG_LS_FLOAT
-		kernel_prng_ls_float.setArg (0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 13]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS2_FLOAT
-		kernel_prng_ls2_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 14]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS3_FLOAT
-		kernel_prng_ls3_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 15]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS4_FLOAT
-		kernel_prng_ls4_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 16]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS5_FLOAT
-		kernel_prng_ls5_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 17]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS6_FLOAT
-		kernel_prng_ls6_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 18]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS7_FLOAT
-		kernel_prng_ls7_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 19]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS8_FLOAT
-		kernel_prng_ls8_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 20]);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS9_FLOAT
-		kernel_prng_ls9_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 21]);
-		#endif
 
 		#ifdef ENABLE_KRNL_GA
 		command_queue_ga.enqueueTask(kernel_ga);
@@ -695,71 +434,8 @@ filled with clock() */
 		#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
 		command_queue_prng_bt_ushort_float.enqueueTask(kernel_prng_bt_ushort_float);
 		#endif
-		#ifdef ENABLE_KRNL_PRNG_GG_UCHAR
-		command_queue_prng_gg_uchar.enqueueTask(kernel_prng_gg_uchar);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_GG_FLOAT
-		command_queue_prng_gg_float.enqueueTask(kernel_prng_gg_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS123_USHORT
-		command_queue_prng_ls123_ushort.enqueueTask(kernel_prng_ls123_ushort);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS_FLOAT
-		command_queue_prng_ls_float.enqueueTask(kernel_prng_ls_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS2_FLOAT
-		command_queue_prng_ls2_float.enqueueTask(kernel_prng_ls2_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS3_FLOAT
-		command_queue_prng_ls3_float.enqueueTask(kernel_prng_ls3_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS4_FLOAT
-		command_queue_prng_ls4_float.enqueueTask(kernel_prng_ls4_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS5_FLOAT
-		command_queue_prng_ls5_float.enqueueTask(kernel_prng_ls5_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS6_FLOAT
-		command_queue_prng_ls6_float.enqueueTask(kernel_prng_ls6_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS7_FLOAT
-		command_queue_prng_ls7_float.enqueueTask(kernel_prng_ls7_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS8_FLOAT
-		command_queue_prng_ls8_float.enqueueTask(kernel_prng_ls8_float);
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_LS9_FLOAT
-		command_queue_prng_ls9_float.enqueueTask(kernel_prng_ls9_float);
-		#endif
 		#ifdef ENABLE_KRNL_LS
 		command_queue_ls.enqueueTask(kernel_ls);
-		#endif
-		#ifdef ENABLE_KRNL_LS2
-		command_queue_ls2.enqueueTask(kernel_ls2);
-		#endif
-		#ifdef ENABLE_KRNL_LS3
-		command_queue_ls3.enqueueTask(kernel_ls3);
-		#endif
-		#ifdef ENABLE_KRNL_LS4
-		command_queue_ls4.enqueueTask(kernel_ls4);
-		#endif
-		#ifdef ENABLE_KRNL_LS5
-		command_queue_ls5.enqueueTask(kernel_ls5);
-		#endif
-		#ifdef ENABLE_KRNL_LS6
-		command_queue_ls6.enqueueTask(kernel_ls6);
-		#endif
-		#ifdef ENABLE_KRNL_LS7
-		command_queue_ls7.enqueueTask(kernel_ls7);
-		#endif
-		#ifdef ENABLE_KRNL_LS8
-		command_queue_ls8.enqueueTask(kernel_ls8);
-		#endif
-		#ifdef ENABLE_KRNL_LS9
-		command_queue_ls9.enqueueTask(kernel_ls9);
-		#endif
-		#ifdef ENABLE_KRNL_IGL_ARBITER
-		command_queue_igl_arbiter.enqueueTask(kernel_igl_arbiter);
 		#endif
 
 		#ifdef ENABLE_KRNL_GA	
