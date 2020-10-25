@@ -417,16 +417,10 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 		theta = cpu_ref_ori_angles[3*i+1]*DEG_TO_RAD;
 		genrotangle = cpu_ref_ori_angles[3*i+2]*DEG_TO_RAD;
 
-		/*
 		KerConstStatic->ref_orientation_quats_const[4*i]   = cosf(genrotangle/2.0f);				//q
 		KerConstStatic->ref_orientation_quats_const[4*i+1] = sinf(genrotangle/2.0f)*sinf(theta)*cosf(phi);	//x
 		KerConstStatic->ref_orientation_quats_const[4*i+2] = sinf(genrotangle/2.0f)*sinf(theta)*sinf(phi);	//y
 		KerConstStatic->ref_orientation_quats_const[4*i+3] = sinf(genrotangle/2.0f)*cosf(theta);		//z
-		*/
-		KerConstStatic->ref_orientation_quats_const[i].x = cosf(genrotangle/2.0f);				//q
-		KerConstStatic->ref_orientation_quats_const[i].y = sinf(genrotangle/2.0f)*sinf(theta)*cosf(phi);	//x
-		KerConstStatic->ref_orientation_quats_const[i].z = sinf(genrotangle/2.0f)*sinf(theta)*sinf(phi);	//y
-		KerConstStatic->ref_orientation_quats_const[i].w = sinf(genrotangle/2.0f)*cosf(theta);		//z
 	}
 
 	return 0;
