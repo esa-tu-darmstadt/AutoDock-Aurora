@@ -240,7 +240,6 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 	int type_id1, type_id2;
 	float* floatpoi;
 	char* charpoi;
-	cl_char3* charpoi3;
 	//float phi, theta, genrotangle;
 
 	// arrays to store intermmediate data
