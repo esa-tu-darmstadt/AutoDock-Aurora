@@ -369,13 +369,8 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 		KerConstStatic->atom_charges_const[m] = atom_charges[m]; 
 	}
 
-
-
 	for (m=0;m<MAX_NUM_OF_ATOMS;m++)                   { KerConstStatic->atom_types_const[m]   = atom_types[m];   }
-/*
 	for (m=0;m<3*MAX_INTRAE_CONTRIBUTORS;m++)          { KerConstStatic->intraE_contributors_const[m]   = intraE_contributors[m]; }
-*/
-	for (m=0;m<MAX_INTRAE_CONTRIBUTORS;m++)          { KerConstStatic->intraE_contributors_const[m]   = intraE_contributors[m]; }
 
 	// -------------------------------------------
         // Smoothed pairwise potentials
