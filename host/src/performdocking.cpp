@@ -154,19 +154,19 @@ filled with clock() */
 	size_t size_energies_nelems = mypars->num_of_runs * mypars->pop_size;
 
 	//allocating and initializing CPU memory for initial population
-	vector<float,aligned_allocator<float>> cpu_init_populations (size_populations_nelems, 0.0f);
+	std::vector<float,aligned_allocator<float>> cpu_init_populations (size_populations_nelems, 0.0f);
 
 	//allocating CPU memory for final population
-	vector<float,aligned_allocator<float>> cpu_final_populations (size_populations_nelems);
+	std::vector<float,aligned_allocator<float>> cpu_final_populations (size_populations_nelems);
 
 	//allocating CPU memory for results
-	vector<float,aligned_allocator<float>> cpu_energies (size_energies_nelems);
+	std::vector<float,aligned_allocator<float>> cpu_energies (size_energies_nelems);
 
 	//allocating CPU memory for resulting ligands
-	vector<Ligandresult,aligned_allocator<Ligandresult>> cpu_result_ligands (mypars->num_of_runs);
+	std::vector<Ligandresult,aligned_allocator<Ligandresult>> cpu_result_ligands (mypars->num_of_runs);
 
 	//allocating memory in CPU for reference orientation angles
-	vector<float,aligned_allocator<float>> cpu_ref_ori_angles (mypars->num_of_runs*3);
+	std::vector<float,aligned_allocator<float>> cpu_ref_ori_angles (mypars->num_of_runs*3);
 
 	//generating initial populations and random orientation angles of reference ligand
 	//(ligand will be moved to origo and scaled as well)
@@ -176,7 +176,7 @@ filled with clock() */
 	//allocating memory in CPU for pseudorandom number generator seeds
 	const unsigned int num_of_prng_blocks = 25;
 	size_t size_prng_seeds_nelems = num_of_prng_blocks * mypars->num_of_runs;
-	vector<unsigned int,aligned_allocator<unsigned int>> cpu_prng_seeds (size_prng_seeds_nelems);
+	std::vector<unsigned int,aligned_allocator<unsigned int>> cpu_prng_seeds (size_prng_seeds_nelems);
 	
 	//initializing seed generator
 	genseed(time(NULL));	
@@ -190,10 +190,10 @@ filled with clock() */
 	size_t size_evals_of_runs_nelems = mypars->num_of_runs;
 
 	// allocating memory in CPU for evaluation counters
-	vector<int,aligned_allocator<int>> cpu_evals_of_runs (size_evals_of_runs_nelems, 0);
+	std::vector<int,aligned_allocator<int>> cpu_evals_of_runs (size_evals_of_runs_nelems, 0);
 	
 	// allocating memory in CPU for generation counters
-	vector<int,aligned_allocator<int>> cpu_gens_of_runs (size_evals_of_runs_nelems, 0);
+	std::vector<int,aligned_allocator<int>> cpu_gens_of_runs (size_evals_of_runs_nelems, 0);
 
 	//preparing the constant data fields for the FPGA (calcenergy.cpp)
 	// -----------------------------------------------------------------------------------------------------
@@ -519,7 +519,7 @@ filled with clock() */
 							MAX_NUM_OF_ATYPES*sizeof(float),			&memExt_KerConstStatic_dspars_V_const);
 	#if !defined(SW_EMU)
 	//allocating CPU memory for dummy data (one integer)
-	vector<int,aligned_allocator<int>> cpu_dummy (1);	
+	std::vector<int,aligned_allocator<int>> cpu_dummy (1);	
 
 	// IMPORTANT: enable this dummy global argument only for "hw" build.
 	// https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
