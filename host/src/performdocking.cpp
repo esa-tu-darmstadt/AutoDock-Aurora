@@ -50,9 +50,7 @@ parameters argc and argv:
 		contains the state of the clock tick counter at the beginning of the program
 filled with clock() */
 {
-	// The get_xil_devices will return vector of Xilinx Devices 
-	std::vector<cl::Device> devices = xcl::get_xil_devices();
-	cl::Device device = devices[0];
+
 
 	//Creating Context and Command Queue for selected Device 
 	cl::Context context(device);
