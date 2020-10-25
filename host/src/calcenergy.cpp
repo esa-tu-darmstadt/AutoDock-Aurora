@@ -401,13 +401,11 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 
 	//rotatable bond vectors
 	for (i=0; i < myligand_reference->num_of_rotbonds; i++) {
-		KerConstStatic->rotbonds_moving_vectors_const[i].x = myligand_reference->rotbonds_moving_vectors[i][0];
-		KerConstStatic->rotbonds_moving_vectors_const[i].y = myligand_reference->rotbonds_moving_vectors[i][1];
-		KerConstStatic->rotbonds_moving_vectors_const[i].z = myligand_reference->rotbonds_moving_vectors[i][2];
-		KerConstStatic->rotbonds_unit_vectors_const[i].x = myligand_reference->rotbonds_unit_vectors[i][0];
-		KerConstStatic->rotbonds_unit_vectors_const[i].y = myligand_reference->rotbonds_unit_vectors[i][1];
-		KerConstStatic->rotbonds_unit_vectors_const[i].z = myligand_reference->rotbonds_unit_vectors[i][2];
-	}
+		for (j=0; j<3; j++) {
+			KerConstStatic->rotbonds_moving_vectors_const[3*i+j] = myligand_reference->rotbonds_moving_vectors[i][j];
+			KerConstStatic->rotbonds_unit_vectors_const[3*i+j] = myligand_reference->rotbonds_unit_vectors[i][j];
+		}
+	}		
 
 	float phi, theta, genrotangle;
 
