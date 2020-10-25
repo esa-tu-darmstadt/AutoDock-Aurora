@@ -449,105 +449,66 @@ filled with clock() */
 	#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_bt_ushort_float.setArg(2, dockpars.pop_size);
-	#if !defined(SW_EMU)
-	kernel_prng_bt_ushort_float.setArg(3, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_GG_UCHAR
 	// Other kernel args are configured at every docking run
 	kernel_prng_gg_uchar.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_gg_uchar.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_GG_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_gg_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_gg_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS123_USHORT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls123_ushort.setArg(9, dockpars.pop_size);
-	#if !defined(SW_EMU)
-	kernel_prng_ls123_ushort.setArg(10, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS2_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls2_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls2_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS3_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls3_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls3_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS4_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls4_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls4_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS5_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls5_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls5_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS6_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls6_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls6_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS7_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls7_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls7_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS8_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls8_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls8_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_PRNG_LS9_FLOAT
 	// Other kernel args are configured at every docking run
 	kernel_prng_ls9_float.setArg(1, dockpars.num_of_genes);
-	#if !defined(SW_EMU)
-	kernel_prng_ls9_float.setArg(2, mem_dummy);
-	#endif
 	#endif
 
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
@@ -561,9 +522,6 @@ filled with clock() */
 	kernel_ls.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS2
@@ -574,9 +532,6 @@ filled with clock() */
 	kernel_ls2.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls2.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls2.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls2.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS3
@@ -587,9 +542,6 @@ filled with clock() */
 	kernel_ls3.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls3.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls3.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls3.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS4
@@ -600,9 +552,6 @@ filled with clock() */
 	kernel_ls4.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls4.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls4.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls4.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS5
@@ -613,9 +562,6 @@ filled with clock() */
 	kernel_ls5.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls5.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls5.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls5.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS6
@@ -626,9 +572,6 @@ filled with clock() */
 	kernel_ls6.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls6.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls6.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls6.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS7
@@ -639,9 +582,6 @@ filled with clock() */
 	kernel_ls7.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls7.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls7.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls7.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS8
@@ -652,9 +592,6 @@ filled with clock() */
 	kernel_ls8.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls8.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls8.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls8.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_LS9
@@ -665,15 +602,9 @@ filled with clock() */
 	kernel_ls9.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls9.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls9.setArg(narg++, Host_cons_limit);
-	#if !defined(SW_EMU)
-	kernel_ls9.setArg(narg++, mem_dummy);
-	#endif
 	#endif
 
 	#ifdef ENABLE_KRNL_IGL_ARBITER
-	#if !defined(SW_EMU)
-	kernel_igl_arbiter.setArg(0, mem_dummy);
-	#endif
 	#endif
 
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
