@@ -855,12 +855,9 @@ filled with clock() */
    	// application and into cl::Buffer objects. 
 	// The data will be be transferred from system memory 
 	// over PCIe to the FPGA on-board DDR memory.
+/*	
 	command_queue_ga.enqueueMigrateMemObjects(outBufVec,CL_MIGRATE_MEM_OBJECT_HOST);
-
-	// Making sure all data was transferred back to host
-	#ifdef ENABLE_KRNL_GA	
-	command_queue_ga.finish(); 
-	#endif
+*/
 	// -----------------------------------------------------------------------------------------------------
 
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
