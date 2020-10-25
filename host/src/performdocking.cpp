@@ -335,66 +335,8 @@ filled with clock() */
 	// user has to use cl_mem_ext_ptr_t and provide the Banks
 
 	// Declaring two extensions for both buffers
-
-	// Krnl_GA cl_mem extensions
-	cl_mem_ext_ptr_t memExt_dockpars_conformations_current_Initial;
-	cl_mem_ext_ptr_t memExt_dockpars_conformations_current_Final;
-	cl_mem_ext_ptr_t memExt_dockpars_energies_current;
-	cl_mem_ext_ptr_t memExt_evals_performed;
-	cl_mem_ext_ptr_t memExt_gens_performed;
-
-	// Krnl_Conform cl_mem extensions
-	cl_mem_ext_ptr_t memExt_KerConstStatic_rotlist_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_ref_coords_const;	
-	cl_mem_ext_ptr_t memExt_KerConstStatic_rotbonds_moving_vectors_const;			
-	cl_mem_ext_ptr_t memExt_KerConstStatic_rotbonds_unit_vectors_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_ref_orientation_quats_const;
-
-	// Krnl_InterE cl_mem extensions
-	cl_mem_ext_ptr_t memExt_dockpars_fgrids;	
-	cl_mem_ext_ptr_t memExt_KerConstStatic_InterE_atom_charges_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_InterE_atom_types_const;
-
-	// Krnl_IntraE cl_mem extensions
-	cl_mem_ext_ptr_t memExt_KerConstStatic_IntraE_atom_charges_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_IntraE_atom_types_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_intraE_contributors_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_reqm_const;	
-	cl_mem_ext_ptr_t memExt_KerConstStatic_reqm_hbond_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_atom1_types_reqm_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_atom2_types_reqm_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_VWpars_AC_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_VWpars_BD_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_dspars_S_const;
-	cl_mem_ext_ptr_t memExt_KerConstStatic_dspars_V_const;
-
 	// Specify Bank0 Memory for Krnl_GA & Krnl_Conform
-	memExt_dockpars_conformations_current_Initial.flags = XCL_MEM_DDR_BANK0;
-	memExt_dockpars_conformations_current_Final.flags   = XCL_MEM_DDR_BANK0;
-	memExt_dockpars_energies_current.flags              = XCL_MEM_DDR_BANK0;
-	memExt_evals_performed.flags                        = XCL_MEM_DDR_BANK0;
-	memExt_gens_performed.flags                         = XCL_MEM_DDR_BANK0;
-	memExt_KerConstStatic_rotlist_const.flags	          = XCL_MEM_DDR_BANK0;
-	memExt_KerConstStatic_ref_coords_const.flags		  = XCL_MEM_DDR_BANK0;	
-	memExt_KerConstStatic_rotbonds_moving_vectors_const.flags = XCL_MEM_DDR_BANK0;			
-	memExt_KerConstStatic_rotbonds_unit_vectors_const.flags   = XCL_MEM_DDR_BANK0;
-	memExt_KerConstStatic_ref_orientation_quats_const.flags   = XCL_MEM_DDR_BANK0;
-
 	// Specify Bank1 Memory for Krnl_InterE & Krnl_IntraE
-	memExt_dockpars_fgrids.flags				= XCL_MEM_DDR_BANK1;	
-	memExt_KerConstStatic_InterE_atom_charges_const.flags	= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_InterE_atom_types_const.flags	= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_IntraE_atom_charges_const.flags	= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_IntraE_atom_types_const.flags	= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_intraE_contributors_const.flags	= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_reqm_const.flags			= XCL_MEM_DDR_BANK1;	
-	memExt_KerConstStatic_reqm_hbond_const.flags		= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_atom1_types_reqm_const.flags	= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_atom2_types_reqm_const.flags	= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_VWpars_AC_const.flags		= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_VWpars_BD_const.flags		= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_dspars_S_const.flags		= XCL_MEM_DDR_BANK1;
-	memExt_KerConstStatic_dspars_V_const.flags		= XCL_MEM_DDR_BANK1;
 
 	// Specifying the mapping from host arrays to Krnl_GA & Krnl_Conform
 	memExt_dockpars_conformations_current_Initial.obj = cpu_init_populations.data();
@@ -425,30 +367,6 @@ filled with clock() */
 	memExt_KerConstStatic_dspars_V_const.obj                = &KerConstStatic.dspars_V_const[0];
 
 	// Setting param to zero
-	memExt_dockpars_conformations_current_Initial.param = 0;
-	memExt_dockpars_conformations_current_Final.param   = 0;
-	memExt_dockpars_energies_current.param              = 0;
-	memExt_evals_performed.param                        = 0;
-	memExt_gens_performed.param                         = 0;
-	memExt_KerConstStatic_rotlist_const.param                 = 0;
-	memExt_KerConstStatic_ref_coords_const.param              = 0;	
-	memExt_KerConstStatic_rotbonds_moving_vectors_const.param = 0;			
-	memExt_KerConstStatic_rotbonds_unit_vectors_const.param   = 0;
-	memExt_KerConstStatic_ref_orientation_quats_const.param   = 0;
-	memExt_dockpars_fgrids.param                          = 0;	
-	memExt_KerConstStatic_InterE_atom_charges_const.param = 0;
-	memExt_KerConstStatic_InterE_atom_types_const.param   = 0;
-	memExt_KerConstStatic_IntraE_atom_charges_const.param = 0;
-	memExt_KerConstStatic_IntraE_atom_types_const.param   = 0;
-	memExt_KerConstStatic_intraE_contributors_const.param = 0;
-	memExt_KerConstStatic_reqm_const.param                = 0;	
-	memExt_KerConstStatic_reqm_hbond_const.param          = 0;
-	memExt_KerConstStatic_atom1_types_reqm_const.param    = 0;
-	memExt_KerConstStatic_atom2_types_reqm_const.param    = 0; 
-	memExt_KerConstStatic_VWpars_AC_const.param           = 0;
-	memExt_KerConstStatic_VWpars_BD_const.param           = 0;
-	memExt_KerConstStatic_dspars_S_const.param            = 0;
-	memExt_KerConstStatic_dspars_V_const.param            = 0;
 
 	// -----------------------------------------------------------------------------------------------------
 	// Krnl_GA buffers
