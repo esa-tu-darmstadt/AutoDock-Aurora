@@ -47,29 +47,24 @@ typedef struct
 	float  			qasp;
 } Dockparameters;
 
-/*
-// Aligning struc explictly to XILINX_MEMALIGN to avoid additional memcpy() calls
-#define XILINX_MEMALIGN 4096
-*/
-
 typedef struct
 {
-	float			atom_charges_const	    	 [MAX_NUM_OF_ATOMS] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    char  			atom_types_const  	     	 [MAX_NUM_OF_ATOMS] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-	char			intraE_contributors_const    [MAX_INTRAE_CONTRIBUTORS][3] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float 			reqm_const 		     		 [ATYPE_NUM] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float 			reqm_hbond_const 	     	 [ATYPE_NUM] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    unsigned int 	atom1_types_reqm_const 	     [ATYPE_NUM] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    unsigned int	atom2_types_reqm_const 	     [ATYPE_NUM] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float     		VWpars_AC_const              [MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float     		VWpars_BD_const              [MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float     		dspars_S_const               [MAX_NUM_OF_ATYPES] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float     		dspars_V_const               [MAX_NUM_OF_ATYPES] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    int       		rotlist_const                [MAX_NUM_OF_ROTATIONS] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float 			ref_coords_const             [MAX_NUM_OF_ATOMS][3]  /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float			rotbonds_moving_vectors_const[MAX_NUM_OF_ROTBONDS][3] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-    float 			rotbonds_unit_vectors_const  [MAX_NUM_OF_ROTBONDS][3] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
-	float 			ref_orientation_quats_const  [MAX_NUM_OF_RUNS][4] /*__attribute__ ((aligned (XILINX_MEMALIGN)))*/;
+	float			atom_charges_const	    	 [MAX_NUM_OF_ATOMS];
+    char  			atom_types_const  	     	 [MAX_NUM_OF_ATOMS];
+	char			intraE_contributors_const    [MAX_INTRAE_CONTRIBUTORS][3];
+    float 			reqm_const 		     		 [ATYPE_NUM];
+    float 			reqm_hbond_const 	     	 [ATYPE_NUM];
+    unsigned int 	atom1_types_reqm_const 	     [ATYPE_NUM];
+    unsigned int	atom2_types_reqm_const 	     [ATYPE_NUM];
+    float     		VWpars_AC_const              [MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES];
+    float     		VWpars_BD_const              [MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES];
+    float     		dspars_S_const               [MAX_NUM_OF_ATYPES];
+    float     		dspars_V_const               [MAX_NUM_OF_ATYPES];
+    int       		rotlist_const                [MAX_NUM_OF_ROTATIONS];
+    float 			ref_coords_const             [MAX_NUM_OF_ATOMS][3];
+    float			rotbonds_moving_vectors_const[MAX_NUM_OF_ROTBONDS][3];
+    float 			rotbonds_unit_vectors_const  [MAX_NUM_OF_ROTBONDS][3];
+	float 			ref_orientation_quats_const  [MAX_NUM_OF_RUNS][4];
 } kernelconstant_static;
 
 int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
