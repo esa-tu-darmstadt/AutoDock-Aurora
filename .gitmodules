@@ -1,1 +1,4 @@
 
+[submodule "wrapveo"]
+	path = wrapveo
+	url = git@gitlab.com:postdoc_tud/molecular-docking/autodock-aurora/wrapveo.git
