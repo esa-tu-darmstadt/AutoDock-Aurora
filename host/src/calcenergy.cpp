@@ -369,23 +369,28 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 		KerConstStatic->atom_charges_const[m] = atom_charges[m]; 
 	}
 
-	for (m=0;m<MAX_NUM_OF_ATOMS;m++)                   { KerConstStatic->atom_types_const[m]   = atom_types[m];   }
-	for (m=0;m<3*MAX_INTRAE_CONTRIBUTORS;m++)          { KerConstStatic->intraE_contributors_const[m]   = intraE_contributors[m]; }
+	for (m=0;m<MAX_NUM_OF_ATOMS;m++) { 
+		KerConstStatic->atom_types_const[m] = atom_types[m];   
+	}
+
+	for (m=0;m<3*MAX_INTRAE_CONTRIBUTORS;m++) { 
+		KerConstStatic->intraE_contributors_const[m] = intraE_contributors[m];
+	}
 
 	// -------------------------------------------
-        // Smoothed pairwise potentials
-        // -------------------------------------------
-	for (m=0;m<ATYPE_NUM;m++)			   { KerConstStatic->reqm_const[m]             = reqm[m]; }
-	for (m=0;m<ATYPE_NUM;m++)			   { KerConstStatic->reqm_hbond_const[m]       = reqm_hbond[m]; }
-	for (m=0;m<ATYPE_NUM;m++)			   { KerConstStatic->atom1_types_reqm_const[m] = atom1_types_reqm[m]; }
-	for (m=0;m<ATYPE_NUM;m++)                          { KerConstStatic->atom2_types_reqm_const[m] = atom2_types_reqm[m]; }
+	// Smoothed pairwise potentials
+	// -------------------------------------------
+	for (m=0;m<ATYPE_NUM;m++) { KerConstStatic->reqm_const[m]             = reqm[m]; }
+	for (m=0;m<ATYPE_NUM;m++) { KerConstStatic->reqm_hbond_const[m]       = reqm_hbond[m]; }
+	for (m=0;m<ATYPE_NUM;m++) { KerConstStatic->atom1_types_reqm_const[m] = atom1_types_reqm[m]; }
+	for (m=0;m<ATYPE_NUM;m++) { KerConstStatic->atom2_types_reqm_const[m] = atom2_types_reqm[m]; }
 	// -------------------------------------------
 
-	for (m=0;m<MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES;m++){ KerConstStatic->VWpars_AC_const[m]    = VWpars_AC[m];    }
-	for (m=0;m<MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES;m++){ KerConstStatic->VWpars_BD_const[m]    = VWpars_BD[m];    }
-	for (m=0;m<MAX_NUM_OF_ATYPES;m++)		   { KerConstStatic->dspars_S_const[m]     = dspars_S[m];     }
-	for (m=0;m<MAX_NUM_OF_ATYPES;m++)		   { KerConstStatic->dspars_V_const[m]     = dspars_V[m];     }
-	for (m=0;m<MAX_NUM_OF_ROTATIONS;m++)		   { KerConstStatic->rotlist_const[m]      = rotlist[m];      }
+	for (m=0;m<MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES;m++){ KerConstStatic->VWpars_AC_const[m] = VWpars_AC[m]; }
+	for (m=0;m<MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES;m++){ KerConstStatic->VWpars_BD_const[m] = VWpars_BD[m]; }
+	for (m=0;m<MAX_NUM_OF_ATYPES;m++)		{ KerConstStatic->dspars_S_const[m] = dspars_S[m]; }
+	for (m=0;m<MAX_NUM_OF_ATYPES;m++)		{ KerConstStatic->dspars_V_const[m] = dspars_V[m]; }
+	for (m=0;m<MAX_NUM_OF_ROTATIONS;m++)	{ KerConstStatic->rotlist_const[m] = rotlist[m]; }
 
 	//coordinates of reference ligand
 	for (i=0; i < myligand_reference->num_of_atoms; i++) {
@@ -393,7 +398,6 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 		KerConstStatic->ref_coords_const[i].y = myligand_reference->atom_idxyzq[i][2];
 		KerConstStatic->ref_coords_const[i].z = myligand_reference->atom_idxyzq[i][3];
 	}
-
 
 	//rotatable bond vectors
 	for (i=0; i < myligand_reference->num_of_rotbonds; i++) {
