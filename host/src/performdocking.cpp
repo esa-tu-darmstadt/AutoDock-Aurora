@@ -192,7 +192,6 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
     // These commands will allocate memory on the FPGA. 
 
-/*
 	// Krnl_GA buffers
 	cl::Buffer mem_dockpars_conformations_current_Initial
 							(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, 
@@ -259,7 +258,7 @@ filled with clock() */
 							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_S_const[0]);
 	cl::Buffer mem_KerConstStatic_dspars_V_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_V_const[0]);
-*/
+
 	// -----------------------------------------------------------------------------------------------------
 /*
 	//Separate Read/write Buffer vector is needed to migrate data between host/device
