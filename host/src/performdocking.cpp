@@ -246,11 +246,8 @@ filled with clock() */
 	const unsigned int mul_tmp3 = (dockpars.num_of_atypes + 1) * dockpars.g3;
 
 	// -----------------------------------------------------------------------------------------------------
-	// Replaced by cl_mem extensions (custom connections to DDR banks)
-	#if 0
-
-        // These commands will allocate memory on the FPGA. The cl::Buffer objects can
-        // be used to reference the memory locations on the device. The cl::Buffer
+    // These commands will allocate memory on the FPGA. The cl::Buffer objects can
+    // be used to reference the memory locations on the device. The cl::Buffer
 	// object cannot be referenced directly and must be passed to other OpenCL
 	// functions.
 
@@ -329,15 +326,11 @@ filled with clock() */
 	cl::Buffer mem_dummy				(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(int), cpu_dummy.data());
 	#endif
 
-	#endif
 	// -----------------------------------------------------------------------------------------------------
-        // For Allocating Buffer to specific Global Memory Bank, 
+    // For Allocating Buffer to specific Global Memory Bank, 
 	// user has to use cl_mem_ext_ptr_t and provide the Banks
 
-	// Declaring two extensions for both buffers
-	// Specify Bank0 Memory for Krnl_GA & Krnl_Conform
-	// Specify Bank1 Memory for Krnl_InterE & Krnl_IntraE
-
+/*
 	// Specifying the mapping from host arrays to Krnl_GA & Krnl_Conform
 	memExt_dockpars_conformations_current_Initial.obj = cpu_init_populations.data();
 	memExt_dockpars_conformations_current_Final.obj   = cpu_final_populations.data();
@@ -365,11 +358,11 @@ filled with clock() */
 	memExt_KerConstStatic_VWpars_BD_const.obj               = &KerConstStatic.VWpars_BD_const[0];
 	memExt_KerConstStatic_dspars_S_const.obj                = &KerConstStatic.dspars_S_const[0];
 	memExt_KerConstStatic_dspars_V_const.obj                = &KerConstStatic.dspars_V_const[0];
-
-	// Setting param to zero
+*/
 
 	// -----------------------------------------------------------------------------------------------------
 	// Krnl_GA buffers
+/*	
 	cl::Buffer mem_dockpars_conformations_current_Initial
 							(context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR | CL_MEM_EXT_PTR_XILINX, 
 							size_populations_nbytes,	&memExt_dockpars_conformations_current_Initial);
@@ -443,6 +436,7 @@ filled with clock() */
 	// https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
 	cl::Buffer mem_dummy				(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(int), cpu_dummy.data());
 	#endif
+*/	
 	// -----------------------------------------------------------------------------------------------------
 	//Separate Read/write Buffer vector is needed to migrate data between host/device
 	std::vector<cl::Memory> inBufVec, outBufVec;
