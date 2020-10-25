@@ -317,14 +317,6 @@ filled with clock() */
 							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_S_const[0]);
 	cl::Buffer mem_KerConstStatic_dspars_V_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_V_const[0]);
-	#if !defined(SW_EMU)
-	//allocating CPU memory for dummy data (one integer)
-	vector<int,aligned_allocator<int>> cpu_dummy (1);	
-
-	// IMPORTANT: enable this dummy global argument only for "hw" build.
-	// https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-	cl::Buffer mem_dummy				(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, sizeof(int), cpu_dummy.data());
-	#endif
 
 	// -----------------------------------------------------------------------------------------------------
 	//Separate Read/write Buffer vector is needed to migrate data between host/device
