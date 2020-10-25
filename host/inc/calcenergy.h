@@ -61,7 +61,9 @@ typedef struct
     float     		dspars_S_const               [MAX_NUM_OF_ATYPES];
     float     		dspars_V_const               [MAX_NUM_OF_ATYPES];
     int       		rotlist_const                [MAX_NUM_OF_ROTATIONS];
-    float 			ref_coords_const             [MAX_NUM_OF_ATOMS][3];
+    float 			ref_coords_x_const			 [MAX_NUM_OF_ATOMS];
+	float 			ref_coords_y_const			 [MAX_NUM_OF_ATOMS];
+	float 			ref_coords_z_const			 [MAX_NUM_OF_ATOMS];
     float			rotbonds_moving_vectors_const[MAX_NUM_OF_ROTBONDS][3];
     float 			rotbonds_unit_vectors_const  [MAX_NUM_OF_ROTBONDS][3];
 	float 			ref_orientation_quats_const  [MAX_NUM_OF_RUNS][4];

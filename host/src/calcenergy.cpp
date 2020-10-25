@@ -394,9 +394,9 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 
 	//coordinates of reference ligand
 	for (i=0; i < myligand_reference->num_of_atoms; i++) {
-		KerConstStatic->ref_coords_const[i].x = myligand_reference->atom_idxyzq[i][1];
-		KerConstStatic->ref_coords_const[i].y = myligand_reference->atom_idxyzq[i][2];
-		KerConstStatic->ref_coords_const[i].z = myligand_reference->atom_idxyzq[i][3];
+		KerConstStatic->ref_coords_x_const[i] = myligand_reference->atom_idxyzq[i][1];
+		KerConstStatic->ref_coords_y_const[i] = myligand_reference->atom_idxyzq[i][2];
+		KerConstStatic->ref_coords_z_const[i] = myligand_reference->atom_idxyzq[i][3];
 	}
 
 	//rotatable bond vectors
