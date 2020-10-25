@@ -319,6 +319,7 @@ filled with clock() */
 							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_V_const[0]);
 
 	// -----------------------------------------------------------------------------------------------------
+/*
 	//Separate Read/write Buffer vector is needed to migrate data between host/device
 	std::vector<cl::Memory> inBufVec, outBufVec;
 
@@ -352,7 +353,7 @@ filled with clock() */
 	outBufVec.push_back(mem_dockpars_energies_current);
 	outBufVec.push_back(mem_evals_performed);
 	outBufVec.push_back(mem_gens_performed);
-
+*/
 	// -----------------------------------------------------------------------------------------------------
     	// These commands will load CPU-sources vectors from the host
    	// application and into cl::Buffer objects. 
