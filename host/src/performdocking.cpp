@@ -50,26 +50,36 @@ parameters argc and argv:
 		contains the state of the clock tick counter at the beginning of the program
 filled with clock() */
 {
-
-
-    	// This call will extract a kernel out of the program we loaded in the
-    	// previous line. A kernel is an OpenCL function that is executed on the
-    	// FPGA. This function is defined in the device/Krnl_GA.cl file.
+	// This call will extract a kernel out of the program we loaded in the
+	// previous line. A kernel is an OpenCL function that is executed on the
+	// FPGA. This function is defined in the device/Krnl_GA.cl file.
+/*	
 	#ifdef ENABLE_KRNL_GA
+*/	
 	cl::Kernel kernel_ga			(program, "Krnl_GA");
+/*	
 	#endif
 	#ifdef ENABLE_KRNL_CONFORM
+*/	
 	cl::Kernel kernel_conform		(program, "Krnl_Conform");
+/*	
 	#endif
 	#ifdef ENABLE_KRNL_INTERE
+*/	
 	cl::Kernel kernel_intere		(program, "Krnl_InterE");
+/*	
 	#endif
 	#ifdef ENABLE_KRNL_INTRAE
+*/	
 	cl::Kernel kernel_intrae		(program, "Krnl_IntraE");
+/*	
 	#endif
 	#ifdef ENABLE_KRNL_LS
+*/	
 	cl::Kernel kernel_ls			(program, "Krnl_LS");
+/*	
 	#endif
+*/	
 
 	clock_t clock_start_docking;
 	clock_t	clock_stop_docking;
@@ -299,7 +309,9 @@ filled with clock() */
 	clock_start_docking = clock();
 
 	int narg;
+/*	
 	#ifdef ENABLE_KRNL_GA
+*/	
 	narg = 0;
 	kernel_ga.setArg(narg++, mem_dockpars_conformations_current_Initial);
 	kernel_ga.setArg(narg++, mem_dockpars_conformations_current_Final);
@@ -319,9 +331,10 @@ filled with clock() */
 	kernel_ga.setArg(narg++, dockpars.num_of_lsentities);
 	kernel_ga.setArg(narg++, dockpars.num_of_genes);
 	// Other kernel args are configured at every docking run
+/*	
 	#endif
-
 	#ifdef ENABLE_KRNL_CONFORM
+*/	
 	narg = 0;
 	kernel_conform.setArg(narg++, mem_KerConstStatic_rotlist_const);
 	kernel_conform.setArg(narg++, mem_KerConstStatic_ref_coords_const);
@@ -332,16 +345,18 @@ filled with clock() */
 	kernel_conform.setArg(narg++, dockpars.num_of_genes);
 	kernel_conform.setArg(narg++, mem_KerConstStatic_ref_orientation_quats_const);
 	// Other kernel args are configured at every docking run
+/*	
 	#endif
-
+*/
 	unsigned char gridsizex_minus1 = dockpars.gridsize_x - 1;
 	unsigned char gridsizey_minus1 = dockpars.gridsize_y - 1;
 	unsigned char gridsizez_minus1 = dockpars.gridsize_z - 1;
 	float fgridsizex_minus1 = (float) gridsizex_minus1;
 	float fgridsizey_minus1 = (float) gridsizey_minus1;
 	float fgridsizez_minus1 = (float) gridsizez_minus1;
-
+/*
 	#ifdef ENABLE_KRNL_INTERE
+*/	
 	narg = 0;
 	kernel_intere.setArg(narg++, mem_dockpars_fgrids);
 	kernel_intere.setArg(narg++, mem_KerConstStatic_InterE_atom_charges_const);
@@ -355,9 +370,10 @@ filled with clock() */
 	kernel_intere.setArg(narg++, fgridsizez_minus1);
 	kernel_intere.setArg(narg++, mul_tmp2);
 	kernel_intere.setArg(narg++, mul_tmp3);
+/*	
 	#endif
-
 	#ifdef ENABLE_KRNL_INTRAE
+*/	
 	narg = 0;
 	kernel_intrae.setArg(narg++, mem_KerConstStatic_IntraE_atom_charges_const);
 	kernel_intrae.setArg(narg++, mem_KerConstStatic_IntraE_atom_types_const);
@@ -378,12 +394,14 @@ filled with clock() */
 	kernel_intrae.setArg(narg++, dockpars.coeff_elec);
 	kernel_intrae.setArg(narg++, dockpars.qasp);
 	kernel_intrae.setArg(narg++, dockpars.coeff_desolv);
+/*	
 	#endif
-
+*/
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
-
+/*
 	#ifdef ENABLE_KRNL_LS
+*/	
 	narg = 0;
 	kernel_ls.setArg(narg++, Host_max_num_of_iters);
 	kernel_ls.setArg(narg++, dockpars.rho_lower_bound);
@@ -391,53 +409,68 @@ filled with clock() */
 	kernel_ls.setArg(narg++, dockpars.num_of_genes);
 	kernel_ls.setArg(narg++, dockpars.base_dang_mul_sqrt3);
 	kernel_ls.setArg(narg++, Host_cons_limit);
+/*	
 	#endif
-
+*/
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
 	printf("Execution run: ");
 
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
 		printf(" %u", run_cnt+1); 
 		fflush(stdout);
-
+/*
 		#ifdef ENABLE_KRNL_GA
+*/		
 		unsigned short ushort_run_cnt  = (unsigned ushort) run_cnt;
 		unsigned int   Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int   Host_Offset_Ene = run_cnt * dockpars.pop_size;
 		kernel_ga.setArg(17, ushort_run_cnt);
 		kernel_ga.setArg(18, Host_Offset_Pop);
 		kernel_ga.setArg(19, Host_Offset_Ene);
+/*		
 		#endif
-
 		#ifdef ENABLE_KRNL_CONFORM
+*/		
 		kernel_conform.setArg(8, ushort_run_cnt);
+/*		
 		#endif
-
 		#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
+*/		
 		kernel_prng_bt_ushort_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt]);
 		kernel_prng_bt_ushort_float.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 1]);
+/*		
 		#endif
-
-
 		#ifdef ENABLE_KRNL_GA
+*/		
 		command_queue_ga.enqueueTask(kernel_ga);
+/*		
 		#endif
 		#ifdef ENABLE_KRNL_CONFORM
+*/		
 		command_queue_conform.enqueueTask(kernel_conform);
+/*		
 		#endif
 		#ifdef ENABLE_KRNL_INTERE
+*/		
 		command_queue_intere.enqueueTask(kernel_intere);
+/*		
 		#endif
 		#ifdef ENABLE_KRNL_INTRAE
+*/		
 		command_queue_intrae.enqueueTask(kernel_intrae);
+/*		
 		#endif
 		#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
+*/		
 		command_queue_prng_bt_ushort_float.enqueueTask(kernel_prng_bt_ushort_float);
+/*		
 		#endif
 		#ifdef ENABLE_KRNL_LS
+*/		
 		command_queue_ls.enqueueTask(kernel_ls);
+/*		
 		#endif
-
+*/
 		clock_stop_docking = clock();
 	} // End of for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++)
 
