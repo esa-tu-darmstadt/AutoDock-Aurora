@@ -52,18 +52,6 @@ filled with clock() */
 {
 
 
-
-
-
-    	// import_binary() command will find the OpenCL binary file created using the 
-    	// xocc compiler load into OpenCL Binary and return as Binaries
-    	// OpenCL and it can contain many functions which can be executed on the
-   	// device.
-    	std::string binaryFile = xcl::find_binary_file(device_name,"Krnl_GA");
-    	cl::Program::Binaries bins = xcl::import_binary_file(binaryFile);
-    	devices.resize(1);
-    	cl::Program program(context, devices, bins);
-
     	// This call will extract a kernel out of the program we loaded in the
     	// previous line. A kernel is an OpenCL function that is executed on the
     	// FPGA. This function is defined in the device/Krnl_GA.cl file.
