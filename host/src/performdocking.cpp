@@ -52,10 +52,7 @@ filled with clock() */
 {
 
 
-	//Creating Context and Command Queue for selected Device 
-	cl::Context context(device);
-    	std::string device_name = device.getInfo<CL_DEVICE_NAME>(); 
-	std::cout << "Found Device=" << device_name.c_str() << std::endl;
+
 
 
     	// import_binary() command will find the OpenCL binary file created using the 
