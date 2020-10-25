@@ -286,13 +286,12 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 		return 1;
 	}
 
-	charpoi3 = intraE_contributors;
+	charpoi = intraE_contributors;
 	for (i=0; i<myligand_reference->num_of_atoms-1; i++)
 		for (j=i+1; j<myligand_reference->num_of_atoms; j++)
 		{
 			if (myligand_reference->intraE_contributors[i][j] == 1)
 			{
-/*
 				*charpoi = (char) i;
 				charpoi++;
 				*charpoi = (char) j;
@@ -305,19 +304,6 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 				else
 					*charpoi = (char) 0;
 				charpoi++;
-*/
-				(*charpoi3).x = (char) i;
-				//charpoi++;
-				(*charpoi3).y = (char) j;
-				//charpoi++;
-
-				type_id1 = (int) myligand_reference->atom_idxyzq [i][0];
-				type_id2 = (int) myligand_reference->atom_idxyzq [j][0];
-				if (is_H_bond(myligand_reference->atom_types[type_id1], myligand_reference->atom_types[type_id2]) != 0)
-					(*charpoi3).z = (char) 1;
-				else
-					(*charpoi3).z = (char) 0;
-				charpoi3++;
 			}
 		}
 
