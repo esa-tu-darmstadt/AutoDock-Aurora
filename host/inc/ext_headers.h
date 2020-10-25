@@ -5,9 +5,6 @@
 
 #include <math.h>	// calcenergy.h, getparameters.h, miscellaneous.h, processgrid.h, processresult.h
 #include <stdio.h>	// calcenergy.h, getparameters.h, miscellaneous.h, processgrid.h, processresult.h, performdocking.h
-/*
-#include "xcl2.hpp"	// calcenergy.h, performdocking.h
-*/
 #include <string.h>	// getparameters.h, processgrid.h, processresult.h
 #include <time.h>	// miscellaneous.h, performdocking.h, main.cpp
 #include <stdlib.h>	// miscellaneous.h, performdocking.h, processgrid.h
