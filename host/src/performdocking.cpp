@@ -238,6 +238,7 @@ filled with clock() */
 	uint64_t mem_gens_performed;
 
 	// Krnl_Conform buffers
+/*	
 	cl::Buffer mem_KerConstStatic_rotlist_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_ROTATIONS*sizeof(int),	&KerConstStatic.rotlist_const[0]);
 	cl::Buffer mem_KerConstStatic_ref_coords_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
@@ -251,8 +252,15 @@ filled with clock() */
 	cl::Buffer mem_KerConstStatic_ref_orientation_quats_const
 							(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_RUNS*sizeof(cl_float4),   	&KerConstStatic.ref_orientation_quats_const[0]);
-	
+*/
+	uint64_t mem_KerConstStatic_rotlist_const;
+	uint64_t mem_KerConstStatic_ref_coords_const;
+	uint64_t mem_KerConstStatic_rotbonds_moving_vectors_const;
+	uint64_t mem_KerConstStatic_rotbonds_unit_vectors_const;
+	uint64_t mem_KerConstStatic_ref_orientation_quats_const;
+
 	// Krnl_InterE buffers
+/*	
 	cl::Buffer mem_dockpars_fgrids			(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							size_floatgrids_nbytes,		cpu_floatgrids);	
 	cl::Buffer mem_KerConstStatic_InterE_atom_charges_const
@@ -261,8 +269,13 @@ filled with clock() */
 	cl::Buffer mem_KerConstStatic_InterE_atom_types_const
 							(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_ATOMS*sizeof(char),	&KerConstStatic.atom_types_const[0]);
-	
+*/
+	uint64_t mem_dockpars_fgrids;
+	uint64_t mem_KerConstStatic_InterE_atom_charges_const;
+	uint64_t mem_KerConstStatic_InterE_atom_types_const;
+
 	// Krnl_IntraE buffers
+/*	
 	cl::Buffer mem_KerConstStatic_IntraE_atom_charges_const
 							(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_ATOMS*sizeof(float),	&KerConstStatic.atom_charges_const[0]);
@@ -290,6 +303,18 @@ filled with clock() */
 							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_S_const[0]);
 	cl::Buffer mem_KerConstStatic_dspars_V_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_V_const[0]);
+*/
+	uint64_t mem_KerConstStatic_IntraE_atom_charges_const;
+	uint64_t mem_KerConstStatic_IntraE_atom_types_const;
+	uint64_t mem_KerConstStatic_intraE_contributors_const;
+	uint64_t mem_KerConstStatic_reqm_const;
+	uint64_t mem_KerConstStatic_reqm_hbond_const;
+	uint64_t mem_KerConstStatic_atom1_types_reqm_const;
+	uint64_t mem_KerConstStatic_atom2_types_reqm_const;
+	uint64_t mem_KerConstStatic_VWpars_AC_const;
+	uint64_t mem_KerConstStatic_VWpars_BD_const;
+	uint64_t mem_KerConstStatic_dspars_S_const;
+	uint64_t mem_KerConstStatic_dspars_V_const;
 
 	// -----------------------------------------------------------------------------------------------------
 /*
