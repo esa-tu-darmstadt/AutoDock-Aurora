@@ -15,5 +15,6 @@
 #include <libgen.h>	// processgrid.h
 #include <sys/time.h>	// main.cpp
 #include <vector>   // performdocking.h
+#include <iostream> // performdocking.h
 
 #endif /* EXT_HEADERS_H_ */
