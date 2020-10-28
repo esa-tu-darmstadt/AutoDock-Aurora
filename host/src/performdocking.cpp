@@ -62,17 +62,10 @@ parameters argc and argv:
 		contains the state of the clock tick counter at the beginning of the program
 filled with clock() */
 {
-	// This call will extract a kernel out of the program we loaded in the
-	// previous line. A kernel is an OpenCL function that is executed on the
-	// FPGA. This function is defined in the device/Krnl_GA.cl file.
+	// =======================================================================
+	// Host Setup
+	// =======================================================================
 
-/*
-	cl::Kernel kernel_ga			(program, "Krnl_GA");
-	cl::Kernel kernel_conform		(program, "Krnl_Conform");
-	cl::Kernel kernel_intere		(program, "Krnl_InterE");
-	cl::Kernel kernel_intrae		(program, "Krnl_IntraE");
-	cl::Kernel kernel_ls			(program, "Krnl_LS");
-*/
 	const char* name_k_ga = KRNL_GA;
 	const char* name_k_pc = KRNL_PC;
 	const char* name_k_ie = KRNL_IE;
@@ -97,8 +90,20 @@ filled with clock() */
 	strcpy(path_k_ls, krnl_folder); strcat(path_k_ls, "/"); strcat(path_k_ls, name_k_ls); strcat(path_k_ls, ".so"); std::cout << "path_k_ls: " << path_k_ls << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
+	// VEO code
+	wrapper_veo_api_version ();
 
+	// Loading "ve_hello" on VE node 0
+	struct veo_proc_handle *ve_process = wrapper_veo_proc_create(0);
+	uint64_t kernel_ga_handle = wrapper_veo_load_library(ve_process, path_k_ga);
+	uint64_t kernel_pc_handle = wrapper_veo_load_library(ve_process, path_k_pc);
+	uint64_t kernel_ie_handle = wrapper_veo_load_library(ve_process, path_k_ie);
+	uint64_t kernel_ia_handle = wrapper_veo_load_library(ve_process, path_k_ia);
+	uint64_t kernel_ls_handle = wrapper_veo_load_library(ve_process, path_k_ls);
+	struct veo_thr_ctxt *veo_thread_context = wrapper_veo_context_open(ve_process);
 
+	// End of Host Setup
+	// =======================================================================
 
 	clock_t clock_start_docking;
 	clock_t	clock_stop_docking;
