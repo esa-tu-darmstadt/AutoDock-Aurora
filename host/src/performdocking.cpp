@@ -73,11 +73,11 @@ filled with clock() */
 	cl::Kernel kernel_intrae		(program, "Krnl_IntraE");
 	cl::Kernel kernel_ls			(program, "Krnl_LS");
 */
-	const char* name_krnl_ga = KRNL_GA;
-	const char* name_krnl_pc = KRNL_PC;
-	const char* name_krnl_ie = KRNL_IE;
-	const char* name_krnl_ia = KRNL_IA;
-	const char* name_krnl_ls = KRNL_LS;
+	const char* name_k_ga = KRNL_GA;
+	const char* name_k_pc = KRNL_PC;
+	const char* name_k_ie = KRNL_IE;
+	const char* name_k_ia = KRNL_IA;
+	const char* name_k_ls = KRNL_LS;
 
 	const char* krnl_folder = KRNL_BIN_FOLDER;
 
@@ -86,6 +86,16 @@ filled with clock() */
 	char path_k_ie[100];
 	char path_k_ia[100];
 	char path_k_ls[100];
+
+	std::cout << "\n---------------------------------------------------------------------------------\n";
+	std::cout << "Kernel binaries (VEO libraries)" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n";
+	strcpy(path_k_ga, krnl_folder); strcat(path_k_ga, "/"); strcat(path_k_ga, name_k_ga); strcat(path_k_ga, ".so"); std::cout << "path_k_ga: " << path_k_ga << std::endl;
+	strcpy(path_k_pc, krnl_folder); strcat(path_k_pc, "/"); strcat(path_k_pc, name_k_pc); strcat(path_k_pc, ".so"); std::cout << "path_k_pc: " << path_k_pc << std::endl;
+	strcpy(path_k_ie, krnl_folder); strcat(path_k_ie, "/"); strcat(path_k_ie, name_k_ie); strcat(path_k_ie, ".so"); std::cout << "path_k_ie: " << path_k_ie << std::endl;
+	strcpy(path_k_ia, krnl_folder); strcat(path_k_ia, "/"); strcat(path_k_ia, name_k_ia); strcat(path_k_ia, ".so"); std::cout << "path_k_ia: " << path_k_ia << std::endl;
+	strcpy(path_k_ls, krnl_folder); strcat(path_k_ls, "/"); strcat(path_k_ls, name_k_ls); strcat(path_k_ls, ".so"); std::cout << "path_k_ls: " << path_k_ls << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
 
 
