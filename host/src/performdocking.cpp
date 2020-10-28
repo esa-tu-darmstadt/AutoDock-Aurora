@@ -217,6 +217,7 @@ filled with clock() */
     // These commands will allocate memory on the FPGA. 
 
 	// Krnl_GA buffers
+/*	
 	cl::Buffer mem_dockpars_conformations_current_Initial
 							(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, 
 							size_populations_nbytes,	cpu_init_populations.data());
@@ -229,6 +230,13 @@ filled with clock() */
 							size_evals_of_runs_nbytes, 	cpu_evals_of_runs.data());
 	cl::Buffer mem_gens_performed			(context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, 
 							size_evals_of_runs_nbytes,	cpu_gens_of_runs.data());
+*/
+	uint64_t mem_dockpars_conformations_current_Initial;
+	uint64_t mem_dockpars_conformations_current_Final;
+	uint64_t mem_dockpars_energies_current;
+	uint64_t mem_evals_performed;
+	uint64_t mem_gens_performed;
+
 	// Krnl_Conform buffers
 	cl::Buffer mem_KerConstStatic_rotlist_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
 							MAX_NUM_OF_ROTATIONS*sizeof(int),	&KerConstStatic.rotlist_const[0]);
