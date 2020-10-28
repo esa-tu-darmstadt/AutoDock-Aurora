@@ -53,33 +53,21 @@ filled with clock() */
 	// This call will extract a kernel out of the program we loaded in the
 	// previous line. A kernel is an OpenCL function that is executed on the
 	// FPGA. This function is defined in the device/Krnl_GA.cl file.
-/*	
-	#ifdef ENABLE_KRNL_GA
-*/	
+
+/*
 	cl::Kernel kernel_ga			(program, "Krnl_GA");
-/*	
-	#endif
-	#ifdef ENABLE_KRNL_CONFORM
-*/	
 	cl::Kernel kernel_conform		(program, "Krnl_Conform");
-/*	
-	#endif
-	#ifdef ENABLE_KRNL_INTERE
-*/	
 	cl::Kernel kernel_intere		(program, "Krnl_InterE");
-/*	
-	#endif
-	#ifdef ENABLE_KRNL_INTRAE
-*/	
 	cl::Kernel kernel_intrae		(program, "Krnl_IntraE");
-/*	
-	#endif
-	#ifdef ENABLE_KRNL_LS
-*/	
 	cl::Kernel kernel_ls			(program, "Krnl_LS");
-/*	
-	#endif
-*/	
+*/
+	const char* name_krnl_lga = "Krnl_LGA";
+	const char* name_krnl_posecalc = "Krnl_PoseCalc";
+	const char* name_krnl_intere = "Krnl_InterE";
+	const char* name_krnl_intrae = "Krnl_IntraE";
+	const char* name_krnl_ls = "Krnl_LS";
+
+
 
 	clock_t clock_start_docking;
 	clock_t	clock_stop_docking;
