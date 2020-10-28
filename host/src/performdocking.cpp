@@ -3,7 +3,14 @@
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s)	STRINGIZE2(s)
 #define KRNL_BIN_FOLDER STRINGIZE(KRNL_LIB_DIRECTORY)
-
+#define KRNL_SRC_FOLDER STRINGIZE(KRNL_SRC_DIRECTORY)
+#define KRNL_SRC_COMMON STRINGIZE(KCMN_SRC_DIRECTORY)
+#define KRNL0 	STRINGIZE(K0)
+#define KRNL_GA STRINGIZE(K_GA)
+#define KRNL_PC STRINGIZE(K_PC)
+#define KRNL_IE STRINGIZE(K_IE)
+#define KRNL_IA STRINGIZE(K_IA)
+#define KRNL_LS STRINGIZE(K_LS)
 
 //// --------------------------------
 //// Device memory buffers
@@ -66,13 +73,20 @@ filled with clock() */
 	cl::Kernel kernel_intrae		(program, "Krnl_IntraE");
 	cl::Kernel kernel_ls			(program, "Krnl_LS");
 */
-	const char* name_krnl_lga = "Krnl_LGA";
-	const char* name_krnl_posecalc = "Krnl_PoseCalc";
-	const char* name_krnl_intere = "Krnl_InterE";
-	const char* name_krnl_intrae = "Krnl_IntraE";
-	const char* name_krnl_ls = "Krnl_LS";
+	const char* name_krnl_ga = KRNL_GA;
+	const char* name_krnl_pc = KRNL_PC;
+	const char* name_krnl_ie = KRNL_IE;
+	const char* name_krnl_ia = KRNL_IA;
+	const char* name_krnl_ls = KRNL_LS;
 
 	const char* krnl_folder = KRNL_BIN_FOLDER;
+
+	char path_k_ga[100];
+	char path_k_pc[100];
+	char path_k_ie[100];
+	char path_k_ia[100];
+	char path_k_ls[100];
+
 
 
 

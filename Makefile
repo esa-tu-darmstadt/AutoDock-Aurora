@@ -32,38 +32,36 @@ CFLAGS=$(IFLAGS) $(LFLAGS)
 
 # Device sources
 K0_NAME=libhello
-K1_NAME=libkernel1
-K2_NAME=libkernel2
-K3_NAME=libkernel3
-K4_NAME=libkernel4
-K7_NAME=libkernel7
+K_GA_NAME=libkernel_ga
+K_PC_NAME=libkernel_pc
+K_IE_NAME=libkernel_ie
+K_IA_NAME=libkernel_ia
+K_LS_NAME=libkernel_ls
 
 KRNL0_SRC=$(KRNL_DIR)/$(K0_NAME).c
 KRNL0_LIB=$(BIN_DIR)/$(K0_NAME).so
 
-KRNL1_SRC=$(KRNL_DIR)/$(K1_NAME).c
-KRNL1_LIB=$(BIN_DIR)/$(K1_NAME).so
+KRNL_GA_SRC=$(KRNL_DIR)/$(K_GA_NAME).c
+KRNL_GA_LIB=$(BIN_DIR)/$(K_GA_NAME).so
 
-KRNL2_SRC=$(KRNL_DIR)/$(K2_NAME).c
-KRNL2_LIB=$(BIN_DIR)/$(K2_NAME).so
+KRNL_PC_SRC=$(KRNL_DIR)/$(K_PC_NAME).c
+KRNL_PC_LIB=$(BIN_DIR)/$(K_PC_NAME).so
 
-KRNL3_SRC=$(KRNL_DIR)/$(K3_NAME).c
-KRNL3_LIB=$(BIN_DIR)/$(K3_NAME).so
+KRNL_IE_SRC=$(KRNL_DIR)/$(K_IE_NAME).c
+KRNL_IE_LIB=$(BIN_DIR)/$(K_IE_NAME).so
 
-KRNL4_SRC=$(KRNL_DIR)/$(K4_NAME).c
-KRNL4_LIB=$(BIN_DIR)/$(K4_NAME).so
+KRNL_IA_SRC=$(KRNL_DIR)/$(K_IA_NAME).c
+KRNL_IA_LIB=$(BIN_DIR)/$(K_IA_NAME).so
 
-KRNL7_SRC=$(KRNL_DIR)/$(K7_NAME).c
-KRNL7_LIB=$(BIN_DIR)/$(K7_NAME).so
+KRNL_LS_SRC=$(KRNL_DIR)/$(K_LS_NAME).c
+KRNL_LS_LIB=$(BIN_DIR)/$(K_LS_NAME).so
 
 K_NAMES=-DK0=$(K0_NAME) \
-        -DK1=$(K1_NAME) \
-				-DK2=$(K2_NAME) \
-				-DK3=$(K3_NAME) \
-				-DK4=$(K4_NAME) \
-				-DK5=$(K5_NAME) \
-				-DK6=$(K6_NAME) \
-				-DK7=$(K7_NAME)
+        -DK_GA=$(K_GA_NAME) \
+		-DK_PC=$(K_PC_NAME) \
+		-DK_IE=$(K_IE_NAME) \
+		-DK_IA=$(K_IA_NAME) \
+		-DK_LS=$(K_LS_NAME)
 
 # Kernel flags
 KFLAGS=-DKRNL_LIB_DIRECTORY=$(BIN_DIR) \
@@ -150,7 +148,7 @@ endef
 # ------------------------------------------------------
 # Compiling host and device codes
 
-all: veodock kernel0 kernel1 kernel2 kernel3 kernel4 kernel7
+all: veodock kernel0 kernel_ga kernel_pc kernel_ie kernel_ia kernel_ls
 
 # Notice: kernel0 is compiled without -shared
 # otherwise PROGINFO (via "make profile")
@@ -159,24 +157,24 @@ kernel0: $(KRNL0_SRC)
 	$(VE_COMPILER) -fpic  -I$(COMMON_DIR) -I$(KRNL_DIR) -o $(KRNL0_LIB) $(KRNL0_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
-kernel1: $(KRNL1_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL1_LIB) $(KRNL1_SRC) $(OPT_KRNL)
+kernel_ga: $(KRNL_GA_SRC)
+	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
-kernel2: $(KRNL2_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL2_LIB) $(KRNL2_SRC) $(OPT_KRNL)
+kernel_pc: $(KRNL_PC_SRC)
+	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_PC_LIB) $(KRNL_PC_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
-kernel3: $(KRNL3_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL3_LIB) $(KRNL3_SRC) $(OPT_KRNL)
+kernel_ie: $(KRNL_IE_SRC)
+	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_IE_LIB) $(KRNL_IE_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
-kernel4: $(KRNL4_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL4_LIB) $(KRNL4_SRC) $(OPT_KRNL)
+kernel_ia: $(KRNL_IA_SRC)
+	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_IA_LIB) $(KRNL_IA_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
-kernel7: $(KRNL7_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL7_LIB) $(KRNL7_SRC) $(OPT_KRNL)
+kernel_ls: $(KRNL_LS_SRC)
+	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_LS_LIB) $(KRNL_LS_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
 export VE_PROGINF := DETAIL
