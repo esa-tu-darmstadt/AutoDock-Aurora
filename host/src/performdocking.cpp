@@ -1,5 +1,10 @@
 #include "performdocking.h"
 
+#define STRINGIZE2(s) #s
+#define STRINGIZE(s)	STRINGIZE2(s)
+#define KRNL_BIN_FOLDER STRINGIZE(KRNL_LIB_DIRECTORY)
+
+
 //// --------------------------------
 //// Device memory buffers
 //// --------------------------------
@@ -66,6 +71,8 @@ filled with clock() */
 	const char* name_krnl_intere = "Krnl_InterE";
 	const char* name_krnl_intrae = "Krnl_IntraE";
 	const char* name_krnl_ls = "Krnl_LS";
+
+	const char* krnl_folder = KRNL_BIN_FOLDER;
 
 
 
