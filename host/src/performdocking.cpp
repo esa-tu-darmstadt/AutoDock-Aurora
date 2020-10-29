@@ -409,19 +409,18 @@ filled with clock() */
 	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	// Other kernel args are configured at every docking run
 
-/*	
-	#endif
-	#ifdef ENABLE_KRNL_CONFORM
-*/	
+	// Kernel PoseCalculation (Conform)
+	// Creating a VEO arguments object
+	struct veo_args *kernel_pc_arg_ptr = wrapper_veo_args_alloc ();
 	narg = 0;
-	kernel_conform.setArg(narg++, mem_KerConstStatic_rotlist_const);
-	kernel_conform.setArg(narg++, mem_KerConstStatic_ref_coords_const);
-	kernel_conform.setArg(narg++, mem_KerConstStatic_rotbonds_moving_vectors_const);
-	kernel_conform.setArg(narg++, mem_KerConstStatic_rotbonds_unit_vectors_const);
-	kernel_conform.setArg(narg++, dockpars.rotbondlist_length);
-	kernel_conform.setArg(narg++, dockpars.num_of_atoms);
-	kernel_conform.setArg(narg++, dockpars.num_of_genes);
-	kernel_conform.setArg(narg++, mem_KerConstStatic_ref_orientation_quats_const);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_rotlist_const);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_coords_const);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_rotbonds_moving_vectors_const);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_rotbonds_unit_vectors_const);
+	wrapper_veo_args_set_u32 	(kernel_pc_arg_ptr, narg++, dockpars.rotbondlist_length);
+	wrapper_veo_args_set_u8     (kernel_pc_arg_ptr, narg++, dockpars.num_of_atoms);
+	wrapper_veo_args_set_u8     (kernel_pc_arg_ptr, narg++, dockpars.num_of_genes);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_orientation_quats_const);
 	// Other kernel args are configured at every docking run
 /*	
 	#endif
