@@ -16,5 +16,6 @@
 #include <sys/time.h>	// main.cpp
 #include <vector>   // performdocking.h
 #include <iostream> // performdocking.h
+#include <iomanip>  // performdocking.h: setw()
 
 #endif /* EXT_HEADERS_H_ */
