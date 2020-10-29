@@ -381,17 +381,6 @@ filled with clock() */
 
 
 	// -----------------------------------------------------------------------------------------------------
-	// These commands will load CPU-sources vectors from the host
-   	// application and into cl::Buffer objects. 
-	// The data will be be transferred from system memory 
-	// over PCIe to the FPGA on-board DDR memory.
-/*	
-	command_queue_ga.enqueueMigrateMemObjects(inBufVec,0); // 2nd arg 0 means from host
-*/	
-
-
-
-	// -----------------------------------------------------------------------------------------------------
 
 	clock_start_docking = clock();
 
