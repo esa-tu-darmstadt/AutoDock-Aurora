@@ -378,41 +378,9 @@ filled with clock() */
 
 
 	// -----------------------------------------------------------------------------------------------------
-/*
-	//Separate Read/write Buffer vector is needed to migrate data between host/device
-	std::vector<cl::Memory> inBufVec, outBufVec;
 
-	// Krnl_GA
-	inBufVec.push_back(mem_dockpars_conformations_current_Initial);
-	// Krnl_Conform
-	inBufVec.push_back(mem_KerConstStatic_rotlist_const);
-	inBufVec.push_back(mem_KerConstStatic_ref_coords_const);
-	inBufVec.push_back(mem_KerConstStatic_rotbonds_moving_vectors_const);
-	inBufVec.push_back(mem_KerConstStatic_rotbonds_unit_vectors_const);
-	inBufVec.push_back(mem_KerConstStatic_ref_orientation_quats_const);
-	// Krnl_InterE
-	inBufVec.push_back(mem_dockpars_fgrids);
-	inBufVec.push_back(mem_KerConstStatic_InterE_atom_charges_const);
-	inBufVec.push_back(mem_KerConstStatic_InterE_atom_types_const);
-	// Krnl_IntraE
-	inBufVec.push_back(mem_KerConstStatic_IntraE_atom_charges_const);
-	inBufVec.push_back(mem_KerConstStatic_IntraE_atom_types_const);
-	inBufVec.push_back(mem_KerConstStatic_intraE_contributors_const);
-	inBufVec.push_back(mem_KerConstStatic_reqm_const);
-	inBufVec.push_back(mem_KerConstStatic_reqm_hbond_const);
-	inBufVec.push_back(mem_KerConstStatic_atom1_types_reqm_const);
-	inBufVec.push_back(mem_KerConstStatic_atom2_types_reqm_const);
-	inBufVec.push_back(mem_KerConstStatic_VWpars_AC_const);
-	inBufVec.push_back(mem_KerConstStatic_VWpars_BD_const);
-	inBufVec.push_back(mem_KerConstStatic_dspars_S_const);
-	inBufVec.push_back(mem_KerConstStatic_dspars_V_const);
 
-	// Krnl_GA
-    outBufVec.push_back(mem_dockpars_conformations_current_Final);
-	outBufVec.push_back(mem_dockpars_energies_current);
-	outBufVec.push_back(mem_evals_performed);
-	outBufVec.push_back(mem_gens_performed);
-*/
+
 	// -----------------------------------------------------------------------------------------------------
 	// These commands will load CPU-sources vectors from the host
    	// application and into cl::Buffer objects. 
