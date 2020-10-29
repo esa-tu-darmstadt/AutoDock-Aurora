@@ -385,28 +385,30 @@ filled with clock() */
 	clock_start_docking = clock();
 
 	int narg;
-/*	
-	#ifdef ENABLE_KRNL_GA
-*/	
+
+	// Kernel GA
+	// Creating a VEO arguments object
+	struct veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc ();
 	narg = 0;
-	kernel_ga.setArg(narg++, mem_dockpars_conformations_current_Initial);
-	kernel_ga.setArg(narg++, mem_dockpars_conformations_current_Final);
-	kernel_ga.setArg(narg++, mem_dockpars_energies_current);
-	kernel_ga.setArg(narg++, mem_evals_performed);
-	kernel_ga.setArg(narg++, mem_gens_performed);
-	kernel_ga.setArg(narg++, dockpars.pop_size);
-	kernel_ga.setArg(narg++, dockpars.num_of_energy_evals);
-	kernel_ga.setArg(narg++, dockpars.num_of_generations);
-	kernel_ga.setArg(narg++, dockpars.tournament_rate);
-	kernel_ga.setArg(narg++, dockpars.mutation_rate);
-	kernel_ga.setArg(narg++, dockpars.abs_max_dmov);
-	kernel_ga.setArg(narg++, dockpars.abs_max_dang);
-	kernel_ga.setArg(narg++, two_absmaxdmov);
-	kernel_ga.setArg(narg++, two_absmaxdang);
-	kernel_ga.setArg(narg++, dockpars.crossover_rate);
-	kernel_ga.setArg(narg++, dockpars.num_of_lsentities);
-	kernel_ga.setArg(narg++, dockpars.num_of_genes);
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Initial);
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Final);
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed):
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_gens_performed);
+	wrapper_veo_args_set_i32   (kernel_ga_arg_ptr, narg++, dockpars.pop_size);
+	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_energy_evals);
+	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_generations);
+	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.tournament_rate);
+	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.mutation_rate);
+	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.abs_max_dmov);
+	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.abs_max_dang);
+	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, two_absmaxdmov);
+	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, two_absmaxdang);
+	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.crossover_rate);
+	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_lsentities);
+	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	// Other kernel args are configured at every docking run
+
 /*	
 	#endif
 	#ifdef ENABLE_KRNL_CONFORM
