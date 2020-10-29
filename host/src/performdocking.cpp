@@ -447,33 +447,30 @@ filled with clock() */
 	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, mul_tmp2);
 	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, mul_tmp3);
 
-/*	
-	#endif
-	#ifdef ENABLE_KRNL_INTRAE
-*/	
+	// Kernel IA
+	// Creating a VEO arguments object
+	struct veo_args *kernel_ia_arg_ptr = wrapper_veo_args_alloc ();
 	narg = 0;
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_IntraE_atom_charges_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_IntraE_atom_types_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_intraE_contributors_const);
-	kernel_intrae.setArg(narg++, dockpars.smooth);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_reqm_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_reqm_hbond_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_atom1_types_reqm_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_atom2_types_reqm_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_VWpars_AC_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_VWpars_BD_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_dspars_S_const);
-	kernel_intrae.setArg(narg++, mem_KerConstStatic_dspars_V_const);
-	kernel_intrae.setArg(narg++, dockpars.num_of_atoms);
-	kernel_intrae.setArg(narg++, dockpars.num_of_intraE_contributors);
-	kernel_intrae.setArg(narg++, dockpars.grid_spacing);
-	kernel_intrae.setArg(narg++, dockpars.num_of_atypes);
-	kernel_intrae.setArg(narg++, dockpars.coeff_elec);
-	kernel_intrae.setArg(narg++, dockpars.qasp);
-	kernel_intrae.setArg(narg++, dockpars.coeff_desolv);
-/*	
-	#endif
-*/
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_IntraE_atom_charges_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_IntraE_atom_types_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_intraE_contributors_const);
+	wrapper_veo_args_set_float 	(kernel_ia_arg_ptr, narg++, dockpars.smooth);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_reqm_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_reqm_hbond_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_atom1_types_reqm_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_atom2_types_reqm_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_VWpars_AC_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_VWpars_BD_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_dspars_S_const);
+	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_dspars_V_const);
+	wrapper_veo_args_set_u8     (kernel_ia_arg_ptr, narg++, dockpars.num_of_atoms);
+	wrapper_veo_args_set_u32 	(kernel_ia_arg_ptr, narg++, dockpars.num_of_intraE_contributors);
+	wrapper_veo_args_set_float 	(kernel_ia_arg_ptr, narg++, dockpars.grid_spacing);
+	wrapper_veo_args_set_u8     (kernel_ia_arg_ptr, narg++, dockpars.num_of_atypes);
+	wrapper_veo_args_set_float 	(kernel_ia_arg_ptr, narg++, dockpars.coeff_elec);
+	wrapper_veo_args_set_float 	(kernel_ia_arg_ptr, narg++, dockpars.qasp);
+	wrapper_veo_args_set_float 	(kernel_ia_arg_ptr, narg++, dockpars.coeff_desolv);
+
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
 /*
