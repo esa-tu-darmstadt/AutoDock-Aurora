@@ -480,7 +480,7 @@ filled with clock() */
 	wrapper_veo_args_set_u8     (kernel_ls_arg_ptr, narg++, dockpars.num_of_genes);
 	wrapper_veo_args_set_float	(kernel_ls_arg_ptr, narg++, dockpars.base_dang_mul_sqrt3);
 	wrapper_veo_args_set_u8	    (kernel_ls_arg_ptr, narg++, Host_cons_limit);
-	
+
 	// -----------------------------------------------------------------------------------------------------
 
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
@@ -489,59 +489,31 @@ filled with clock() */
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
 		printf(" %u", run_cnt+1); 
 		fflush(stdout);
-/*
-		#ifdef ENABLE_KRNL_GA
-*/		
+
+		// Kernel GA
 		unsigned short ushort_run_cnt  = (unsigned ushort) run_cnt;
 		unsigned int   Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int   Host_Offset_Ene = run_cnt * dockpars.pop_size;
-		kernel_ga.setArg(17, ushort_run_cnt);
-		kernel_ga.setArg(18, Host_Offset_Pop);
-		kernel_ga.setArg(19, Host_Offset_Ene);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_CONFORM
-*/		
-		kernel_conform.setArg(8, ushort_run_cnt);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
-*/		
+		// FIXME: check arg numbers
+		wrapper_veo_args_set_u16   (kernel_ga_arg_ptr, 17, ushort_run_cnt);
+		wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, 18, Host_Offset_Pop);
+		wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, 19, Host_Offset_Ene);
+
+		// Kernel PC	
+		// FIXME: check arg numbers
+		wrapper_veo_args_set_u16   (kernel_pc_arg_ptr, 8, ushort_run_cnt);
+
+		// ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
 		kernel_prng_bt_ushort_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt]);
 		kernel_prng_bt_ushort_float.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 1]);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_GA
-*/		
+	
 		command_queue_ga.enqueueTask(kernel_ga);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_CONFORM
-*/		
-		command_queue_conform.enqueueTask(kernel_conform);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_INTERE
-*/		
-		command_queue_intere.enqueueTask(kernel_intere);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_INTRAE
-*/		
-		command_queue_intrae.enqueueTask(kernel_intrae);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
-*/		
-		command_queue_prng_bt_ushort_float.enqueueTask(kernel_prng_bt_ushort_float);
-/*		
-		#endif
-		#ifdef ENABLE_KRNL_LS
-*/		
+		command_queue_conform.enqueueTask(kernel_conform);	
+		command_queue_intere.enqueueTask(kernel_intere);	
+		command_queue_intrae.enqueueTask(kernel_intrae);		
+		command_queue_prng_bt_ushort_float.enqueueTask(kernel_prng_bt_ushort_float);	
 		command_queue_ls.enqueueTask(kernel_ls);
-/*		
-		#endif
-*/
+
 		clock_stop_docking = clock();
 	} // End of for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++)
 
