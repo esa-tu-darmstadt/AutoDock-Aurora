@@ -378,10 +378,6 @@ filled with clock() */
 
 	// -----------------------------------------------------------------------------------------------------
 
-
-
-	// -----------------------------------------------------------------------------------------------------
-
 	clock_start_docking = clock();
 
 	int narg;
@@ -473,19 +469,20 @@ filled with clock() */
 
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
-/*
-	#ifdef ENABLE_KRNL_LS
-*/	
+
+	// Kernel LS
+	// Creating a VEO arguments object
+	struct veo_args *kernel_ls_arg_ptr = wrapper_veo_args_alloc ();
 	narg = 0;
-	kernel_ls.setArg(narg++, Host_max_num_of_iters);
-	kernel_ls.setArg(narg++, dockpars.rho_lower_bound);
-	kernel_ls.setArg(narg++, dockpars.base_dmov_mul_sqrt3);
-	kernel_ls.setArg(narg++, dockpars.num_of_genes);
-	kernel_ls.setArg(narg++, dockpars.base_dang_mul_sqrt3);
-	kernel_ls.setArg(narg++, Host_cons_limit);
-/*	
-	#endif
-*/
+	wrapper_veo_args_set_u16	(kernel_ls_arg_ptr, narg++, Host_max_num_of_iters);
+	wrapper_veo_args_set_float	(kernel_ls_arg_ptr, narg++, dockpars.rho_lower_bound);
+	wrapper_veo_args_set_float	(kernel_ls_arg_ptr, narg++, dockpars.base_dmov_mul_sqrt3);
+	wrapper_veo_args_set_u8     (kernel_ls_arg_ptr, narg++, dockpars.num_of_genes);
+	wrapper_veo_args_set_float	(kernel_ls_arg_ptr, narg++, dockpars.base_dang_mul_sqrt3);
+	wrapper_veo_args_set_u8	    (kernel_ls_arg_ptr, narg++, Host_cons_limit);
+	
+	// -----------------------------------------------------------------------------------------------------
+
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
 	printf("Execution run: ");
 
