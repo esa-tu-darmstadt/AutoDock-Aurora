@@ -219,11 +219,11 @@ filled with clock() */
 
 	// Krnl_GA buffers
 /*	
-	cl::Buffer mem_dockpars_conformations_current_Initial (context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, size_populations_nbytes, cpu_init_populations.data());
-	cl::Buffer mem_dockpars_conformations_current_Final (context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, size_populations_nbytes,	cpu_final_populations.data());
-	cl::Buffer mem_dockpars_energies_current (context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, size_energies_nbytes, cpu_energies.data());
-	cl::Buffer mem_evals_performed (context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, size_evals_of_runs_nbytes, cpu_evals_of_runs.data());
-	cl::Buffer mem_gens_performed (context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, size_evals_of_runs_nbytes,	cpu_gens_of_runs.data());
+	mem_dockpars_conformations_current_Initial (CL_MEM_READ_ONLY, size_populations_nbytes, cpu_init_populations.data());
+	mem_dockpars_conformations_current_Final (CL_MEM_WRITE_ONLY, size_populations_nbytes,	cpu_final_populations.data());
+	mem_dockpars_energies_current (CL_MEM_WRITE_ONLY, size_energies_nbytes, cpu_energies.data());
+	mem_evals_performed (CL_MEM_WRITE_ONLY, size_evals_of_runs_nbytes, cpu_evals_of_runs.data());
+	mem_gens_performed (CL_MEM_WRITE_ONLY, size_evals_of_runs_nbytes,	cpu_gens_of_runs.data());
 */
 	uint64_t mem_dockpars_conformations_current_Initial;
 	uint64_t mem_dockpars_conformations_current_Final;
@@ -239,16 +239,11 @@ filled with clock() */
 
 	// Krnl_Conform buffers
 /*	
-	cl::Buffer mem_KerConstStatic_rotlist_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ROTATIONS*sizeof(int),	&KerConstStatic.rotlist_const[0]);
-	cl::Buffer mem_KerConstStatic_ref_coords_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATOMS*sizeof(cl_float3),	&KerConstStatic.ref_coords_const[0]);	
-	cl::Buffer mem_KerConstStatic_rotbonds_moving_vectors_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,  
-							MAX_NUM_OF_ROTBONDS*sizeof(cl_float3),	&KerConstStatic.rotbonds_moving_vectors_const[0]);
-	cl::Buffer mem_KerConstStatic_rotbonds_unit_vectors_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ROTBONDS*sizeof(cl_float3),	&KerConstStatic.rotbonds_unit_vectors_const[0]);
-	cl::Buffer mem_KerConstStatic_ref_orientation_quats_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_RUNS*sizeof(cl_float4),   	&KerConstStatic.ref_orientation_quats_const[0]);
+	mem_KerConstStatic_rotlist_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ROTATIONS*sizeof(int), &KerConstStatic.rotlist_const[0]);
+	mem_KerConstStatic_ref_coords_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(cl_float3), &KerConstStatic.ref_coords_const[0]);	
+	mem_KerConstStatic_rotbonds_moving_vectors_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ROTBONDS*sizeof(cl_float3), &KerConstStatic.rotbonds_moving_vectors_const[0]);
+	mem_KerConstStatic_rotbonds_unit_vectors_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ROTBONDS*sizeof(cl_float3),	&KerConstStatic.rotbonds_unit_vectors_const[0]);
+	mem_KerConstStatic_ref_orientation_quats_const(CL_MEM_READ_ONLY, MAX_NUM_OF_RUNS*sizeof(cl_float4), &KerConstStatic.ref_orientation_quats_const[0]);
 */
 	uint64_t mem_KerConstStatic_rotlist_const;
 	uint64_t mem_KerConstStatic_ref_coords_const;
@@ -279,12 +274,9 @@ filled with clock() */
 
 	// Krnl_InterE buffers
 /*	
-	cl::Buffer mem_dockpars_fgrids			(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							size_floatgrids_nbytes,		cpu_floatgrids);	
-	cl::Buffer mem_KerConstStatic_InterE_atom_charges_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATOMS*sizeof(float),	&KerConstStatic.atom_charges_const[0]);
-	cl::Buffer mem_KerConstStatic_InterE_atom_types_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATOMS*sizeof(char),	&KerConstStatic.atom_types_const[0]);
+	mem_dockpars_fgrids (CL_MEM_READ_ONLY, size_floatgrids_nbytes, cpu_floatgrids);	
+	mem_KerConstStatic_InterE_atom_charges_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(float),	&KerConstStatic.atom_charges_const[0]);
+	mem_KerConstStatic_InterE_atom_types_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(char),	&KerConstStatic.atom_types_const[0]);
 */
 	uint64_t mem_dockpars_fgrids;
 	uint64_t mem_KerConstStatic_InterE_atom_charges_const;
@@ -302,28 +294,17 @@ filled with clock() */
 
 	// Krnl_IntraE buffers
 /*	
-	cl::Buffer mem_KerConstStatic_IntraE_atom_charges_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATOMS*sizeof(float),	&KerConstStatic.atom_charges_const[0]);
-	cl::Buffer mem_KerConstStatic_IntraE_atom_types_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATOMS*sizeof(char), &KerConstStatic.atom_types_const[0]);
-	cl::Buffer mem_KerConstStatic_intraE_contributors_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_INTRAE_CONTRIBUTORS*sizeof(cl_char3), &KerConstStatic.intraE_contributors_const[0]);
-	cl::Buffer mem_KerConstStatic_reqm_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							ATYPE_NUM*sizeof(float),	&KerConstStatic.reqm_const);	
-	cl::Buffer mem_KerConstStatic_reqm_hbond_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							ATYPE_NUM*sizeof(float),	&KerConstStatic.reqm_hbond_const);
-	cl::Buffer mem_KerConstStatic_atom1_types_reqm_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							ATYPE_NUM*sizeof(unsigned int),	&KerConstStatic.atom1_types_reqm_const);
-	cl::Buffer mem_KerConstStatic_atom2_types_reqm_const(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							ATYPE_NUM*sizeof(unsigned int),	&KerConstStatic.atom2_types_reqm_const);
-	cl::Buffer mem_KerConstStatic_VWpars_AC_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES*sizeof(float),	&KerConstStatic.VWpars_AC_const[0]);
-	cl::Buffer mem_KerConstStatic_VWpars_BD_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES*sizeof(float),	&KerConstStatic.VWpars_BD_const[0]);
-	cl::Buffer mem_KerConstStatic_dspars_S_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_S_const[0]);
-	cl::Buffer mem_KerConstStatic_dspars_V_const	(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY,
-							MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_V_const[0]);
+	mem_KerConstStatic_IntraE_atom_charges_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(float),	&KerConstStatic.atom_charges_const[0]);
+	mem_KerConstStatic_IntraE_atom_types_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(char), &KerConstStatic.atom_types_const[0]);
+	mem_KerConstStatic_intraE_contributors_const(CL_MEM_READ_ONLY, MAX_INTRAE_CONTRIBUTORS*sizeof(cl_char3), &KerConstStatic.intraE_contributors_const[0]);
+	mem_KerConstStatic_reqm_const (CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(float),	&KerConstStatic.reqm_const);	
+	mem_KerConstStatic_reqm_hbond_const	(CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(float),	&KerConstStatic.reqm_hbond_const);
+	mem_KerConstStatic_atom1_types_reqm_const(CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(unsigned int),	&KerConstStatic.atom1_types_reqm_const);
+	mem_KerConstStatic_atom2_types_reqm_const(CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(unsigned int),	&KerConstStatic.atom2_types_reqm_const);
+	mem_KerConstStatic_VWpars_AC_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES*sizeof(float),	&KerConstStatic.VWpars_AC_const[0]);
+	mem_KerConstStatic_VWpars_BD_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES*sizeof(float),	&KerConstStatic.VWpars_BD_const[0]);
+	mem_KerConstStatic_dspars_S_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_S_const[0]);
+	mem_KerConstStatic_dspars_V_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_V_const[0]);
 */
 	uint64_t mem_KerConstStatic_IntraE_atom_charges_const;
 	uint64_t mem_KerConstStatic_IntraE_atom_types_const;
