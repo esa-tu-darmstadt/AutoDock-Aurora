@@ -422,31 +422,31 @@ filled with clock() */
 	wrapper_veo_args_set_u8     (kernel_pc_arg_ptr, narg++, dockpars.num_of_genes);
 	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_orientation_quats_const);
 	// Other kernel args are configured at every docking run
-/*	
-	#endif
-*/
+
+	// Kernel IE
 	unsigned char gridsizex_minus1 = dockpars.gridsize_x - 1;
 	unsigned char gridsizey_minus1 = dockpars.gridsize_y - 1;
 	unsigned char gridsizez_minus1 = dockpars.gridsize_z - 1;
 	float fgridsizex_minus1 = (float) gridsizex_minus1;
 	float fgridsizey_minus1 = (float) gridsizey_minus1;
 	float fgridsizez_minus1 = (float) gridsizez_minus1;
-/*
-	#ifdef ENABLE_KRNL_INTERE
-*/	
+
+	// Creating a VEO arguments object
+	struct veo_args *kernel_ie_arg_ptr = wrapper_veo_args_alloc ();
 	narg = 0;
-	kernel_intere.setArg(narg++, mem_dockpars_fgrids);
-	kernel_intere.setArg(narg++, mem_KerConstStatic_InterE_atom_charges_const);
-	kernel_intere.setArg(narg++, mem_KerConstStatic_InterE_atom_types_const);
-	kernel_intere.setArg(narg++, dockpars.g1);
-	kernel_intere.setArg(narg++, dockpars.g2);
-	kernel_intere.setArg(narg++, dockpars.g3);
-	kernel_intere.setArg(narg++, dockpars.num_of_atoms);
-	kernel_intere.setArg(narg++, fgridsizex_minus1);
-	kernel_intere.setArg(narg++, fgridsizey_minus1);
-	kernel_intere.setArg(narg++, fgridsizez_minus1);
-	kernel_intere.setArg(narg++, mul_tmp2);
-	kernel_intere.setArg(narg++, mul_tmp3);
+	wrapper_veo_args_set_u64	(kernel_ie_arg_ptr, narg++, mem_dockpars_fgrids);
+	wrapper_veo_args_set_u64	(kernel_ie_arg_ptr, narg++, mem_KerConstStatic_InterE_atom_charges_const);
+	wrapper_veo_args_set_u64	(kernel_ie_arg_ptr, narg++, mem_KerConstStatic_InterE_atom_types_const);
+	wrapper_veo_args_set_u8     (kernel_ie_arg_ptr, narg++, dockpars.g1);
+	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, dockpars.g2);
+	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, dockpars.g3);
+	wrapper_veo_args_set_u8     (kernel_ie_arg_ptr, narg++, dockpars.num_of_atoms);
+	wrapper_veo_args_set_float 	(kernel_ie_arg_ptr, narg++, fgridsizex_minus1);
+	wrapper_veo_args_set_float 	(kernel_ie_arg_ptr, narg++, fgridsizey_minus1);
+	wrapper_veo_args_set_float 	(kernel_ie_arg_ptr, narg++, fgridsizez_minus1);
+	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, mul_tmp2);
+	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, mul_tmp3);
+
 /*	
 	#endif
 	#ifdef ENABLE_KRNL_INTRAE
