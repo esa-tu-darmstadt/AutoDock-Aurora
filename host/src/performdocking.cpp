@@ -231,13 +231,6 @@ filled with clock() */
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
 	// Krnl_GA buffers
-/*	
-	mem_dockpars_conformations_current_Initial (CL_MEM_READ_ONLY, size_populations_nbytes, cpu_init_populations.data());
-	mem_dockpars_conformations_current_Final (CL_MEM_WRITE_ONLY, size_populations_nbytes,	cpu_final_populations.data());
-	mem_dockpars_energies_current (CL_MEM_WRITE_ONLY, size_energies_nbytes, cpu_energies.data());
-	mem_evals_performed (CL_MEM_WRITE_ONLY, size_evals_of_runs_nbytes, cpu_evals_of_runs.data());
-	mem_gens_performed (CL_MEM_WRITE_ONLY, size_evals_of_runs_nbytes,	cpu_gens_of_runs.data());
-*/
 	uint64_t mem_dockpars_conformations_current_Initial;
 	uint64_t mem_dockpars_conformations_current_Final;
 	uint64_t mem_dockpars_energies_current;
@@ -250,14 +243,9 @@ filled with clock() */
 	wrapper_veo_alloc_mem (ve_process, &mem_evals_performed, size_evals_of_runs_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_gens_performed, size_evals_of_runs_nbytes);
 
+	wrapper_veo_write_mem (ve_process, mem_dockpars_conformations_current_Initial, cpu_init_populations.data(), size_populations_nbytes);
+
 	// Krnl_Conform buffers
-/*	
-	mem_KerConstStatic_rotlist_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ROTATIONS*sizeof(int), &KerConstStatic.rotlist_const[0]);
-	mem_KerConstStatic_ref_coords_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(cl_float3), &KerConstStatic.ref_coords_const[0]);	
-	mem_KerConstStatic_rotbonds_moving_vectors_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ROTBONDS*sizeof(cl_float3), &KerConstStatic.rotbonds_moving_vectors_const[0]);
-	mem_KerConstStatic_rotbonds_unit_vectors_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ROTBONDS*sizeof(cl_float3),	&KerConstStatic.rotbonds_unit_vectors_const[0]);
-	mem_KerConstStatic_ref_orientation_quats_const(CL_MEM_READ_ONLY, MAX_NUM_OF_RUNS*sizeof(cl_float4), &KerConstStatic.ref_orientation_quats_const[0]);
-*/
 	uint64_t mem_KerConstStatic_rotlist_const;
 	uint64_t mem_KerConstStatic_ref_coords_const;
 	uint64_t mem_KerConstStatic_rotbonds_moving_vectors_const;
@@ -285,12 +273,13 @@ filled with clock() */
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_rotbonds_unit_vectors_const, size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_ref_orientation_quats_const, size_ref_orientation_quats_nbytes);
 
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_rotlist_const, &KerConstStatic.rotlist_const[0], size_rotlist_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_ref_coords_const, &KerConstStatic.ref_coords_const[0], size_ref_coords_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_rotbonds_moving_vectors_const, &KerConstStatic.rotbonds_moving_vectors_const[0], size_rotbonds_moving_vectors_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_rotbonds_unit_vectors_const, &KerConstStatic.rotbonds_unit_vectors_const[0], size_rotbonds_unit_vectors_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_ref_orientation_quats_const, &KerConstStatic.ref_orientation_quats_const[0], size_ref_orientation_quats_nbytes);
+
 	// Krnl_InterE buffers
-/*	
-	mem_dockpars_fgrids (CL_MEM_READ_ONLY, size_floatgrids_nbytes, cpu_floatgrids);	
-	mem_KerConstStatic_InterE_atom_charges_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(float),	&KerConstStatic.atom_charges_const[0]);
-	mem_KerConstStatic_InterE_atom_types_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(char),	&KerConstStatic.atom_types_const[0]);
-*/
 	uint64_t mem_dockpars_fgrids;
 	uint64_t mem_KerConstStatic_InterE_atom_charges_const;
 	uint64_t mem_KerConstStatic_InterE_atom_types_const;
@@ -305,20 +294,11 @@ filled with clock() */
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_InterE_atom_charges_const, size_InterE_atom_charges_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_InterE_atom_types_const, size_InterE_atom_types_nbytes);
 
+	wrapper_veo_write_mem (ve_process, mem_dockpars_fgrids, cpu_floatgrids, size_floatgrids_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_InterE_atom_charges_const, &KerConstStatic.atom_charges_const[0], size_InterE_atom_charges_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_InterE_atom_types_const, &KerConstStatic.atom_types_const[0], size_InterE_atom_types_nbytes);
+
 	// Krnl_IntraE buffers
-/*	
-	mem_KerConstStatic_IntraE_atom_charges_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(float),	&KerConstStatic.atom_charges_const[0]);
-	mem_KerConstStatic_IntraE_atom_types_const(CL_MEM_READ_ONLY, MAX_NUM_OF_ATOMS*sizeof(char), &KerConstStatic.atom_types_const[0]);
-	mem_KerConstStatic_intraE_contributors_const(CL_MEM_READ_ONLY, MAX_INTRAE_CONTRIBUTORS*sizeof(cl_char3), &KerConstStatic.intraE_contributors_const[0]);
-	mem_KerConstStatic_reqm_const (CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(float),	&KerConstStatic.reqm_const);	
-	mem_KerConstStatic_reqm_hbond_const	(CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(float),	&KerConstStatic.reqm_hbond_const);
-	mem_KerConstStatic_atom1_types_reqm_const(CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(unsigned int),	&KerConstStatic.atom1_types_reqm_const);
-	mem_KerConstStatic_atom2_types_reqm_const(CL_MEM_READ_ONLY, ATYPE_NUM*sizeof(unsigned int),	&KerConstStatic.atom2_types_reqm_const);
-	mem_KerConstStatic_VWpars_AC_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES*sizeof(float),	&KerConstStatic.VWpars_AC_const[0]);
-	mem_KerConstStatic_VWpars_BD_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES*sizeof(float),	&KerConstStatic.VWpars_BD_const[0]);
-	mem_KerConstStatic_dspars_S_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_S_const[0]);
-	mem_KerConstStatic_dspars_V_const	(CL_MEM_READ_ONLY, MAX_NUM_OF_ATYPES*sizeof(float),			&KerConstStatic.dspars_V_const[0]);
-*/
 	uint64_t mem_KerConstStatic_IntraE_atom_charges_const;
 	uint64_t mem_KerConstStatic_IntraE_atom_types_const;
 	uint64_t mem_KerConstStatic_intraE_contributors_const;
@@ -375,6 +355,22 @@ filled with clock() */
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_VWpars_BD_const, size_VWpars_BD_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_dspars_S_const, size_dspars_S_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_dspars_V_const, size_dspars_V_nbytes);
+
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_IntraE_atom_charges_const, &KerConstStatic.atom_charges_const[0], size_IntraE_atom_charges_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_IntraE_atom_types_const, &KerConstStatic.atom_types_const[0], size_IntraE_atom_types_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_intraE_contributors_const, &KerConstStatic.intraE_contributors_const[0], size_intraE_contributors_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_reqm_const, &KerConstStatic.reqm_const, size_reqm_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_reqm_hbond_const, &KerConstStatic.reqm_hbond_const, size_reqm_hbond_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_atom1_types_reqm_const, &KerConstStatic.atom1_types_reqm_const, size_atom1_types_reqm_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_atom2_types_reqm_const, &KerConstStatic.atom2_types_reqm_const, size_atom2_types_reqm_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_VWpars_AC_const, &KerConstStatic.VWpars_AC_const[0], size_VWpars_AC_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_VWpars_BD_const, &KerConstStatic.VWpars_BD_const[0], size_VWpars_BD_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_dspars_S_const, &KerConstStatic.dspars_S_const[0], size_dspars_S_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_dspars_V_const, &KerConstStatic.dspars_V_const[0], size_dspars_V_nbytes);
+
+	// -----------------------------------------------------------------------------------------------------
+
+
 
 	// -----------------------------------------------------------------------------------------------------
 
@@ -523,7 +519,7 @@ filled with clock() */
 		kernel_prng_bt_ushort_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt]);
 		kernel_prng_bt_ushort_float.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 1]);
 */
-	
+
 		// Launching kernels
 		kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
 		wrapper_veo_call_wait_result(veo_thread_context, kernel_ga_id, &retval_ga);
@@ -547,13 +543,13 @@ filled with clock() */
 	fflush(stdout);
 
 	// -----------------------------------------------------------------------------------------------------
-    	// These commands will load CPU-sources vectors from the host
-   	// application and into cl::Buffer objects. 
-	// The data will be be transferred from system memory 
-	// over PCIe to the FPGA on-board DDR memory.
-/*	
-	command_queue_ga.enqueueMigrateMemObjects(outBufVec,CL_MIGRATE_MEM_OBJECT_HOST);
-*/
+	// Reading results
+
+	wrapper_veo_read_mem (ve_process, cpu_final_populations.data(), mem_dockpars_conformations_current_Final, size_populations_nbytes);
+	wrapper_veo_read_mem (ve_process, cpu_energies.data(), mem_dockpars_energies_current, size_energies_nbytes);
+	wrapper_veo_read_mem (ve_process, cpu_evals_of_runs.data(), mem_evals_performed, size_evals_of_runs_nbytes);
+	wrapper_veo_read_mem (ve_process, cpu_gens_of_runs.data(), mem_gens_performed, size_evals_of_runs_nbytes);
+
 	// -----------------------------------------------------------------------------------------------------
 
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
