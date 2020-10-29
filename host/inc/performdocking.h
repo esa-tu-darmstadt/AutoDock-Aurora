@@ -11,6 +11,8 @@
 
 #include "veo_api_wrappers.h"
 
+#define sizeKB(x) x/1000.0f
+
 #define ELAPSEDSECS(stop,start) ((float) stop-start)/((float) CLOCKS_PER_SEC)
 
 int docking_with_fpga(const     Gridinfo* 	mygrid,
