@@ -518,9 +518,11 @@ filled with clock() */
 		// FIXME: check arg numbers
 		wrapper_veo_args_set_u16   (kernel_pc_arg_ptr, 8, ushort_run_cnt);
 
-		// ENABLE_KRNL_PRNG_BT_USHORT_FLOAT
+		// FIXME: missing passing of random numbers
+/*		
 		kernel_prng_bt_ushort_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt]);
 		kernel_prng_bt_ushort_float.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 1]);
+*/
 	
 		// Launching kernels
 		kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
