@@ -217,6 +217,19 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
     // These commands will allocate memory on the FPGA. 
 
+	// FIXME: should be commented out for the final version ?
+	// Printing sizes
+	std::cout << "\n---------------------------------------------------------------------------------\n";
+	std::cout << std::left << std::setw(40) << "Memory sizes" << std::right << std::setw(31) << "Bytes" << std::right << std::setw(10) << "KB" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n";
+
+	std::cout << std::left << std::setw(40) << "size_floatgrids_nbytes" << std::right << std::setw(31) << size_floatgrids_nbytes << std::right << std::setw(10) << sizeKB(size_floatgrids_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_populations_nbytes" << std::right << std::setw(31) << size_populations_nbytes << std::right << std::setw(10) << sizeKB(size_populations_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_energies_nbytes" << std::right << std::setw(31) << size_energies_nbytes << std::right << std::setw(10) << sizeKB(size_energies_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_evals_of_runs_nbytes" << std::right << std::setw(31) << size_evals_of_runs_nbytes << std::right << std::setw(10) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_prng_seeds_nbytes" << std::right << std::setw(31) << size_prng_seeds_nbytes << std::right << std::setw(10) << sizeKB(size_prng_seeds_nbytes) << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
+
 	// Krnl_GA buffers
 /*	
 	mem_dockpars_conformations_current_Initial (CL_MEM_READ_ONLY, size_populations_nbytes, cpu_init_populations.data());
@@ -362,20 +375,6 @@ filled with clock() */
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_VWpars_BD_const, size_VWpars_BD_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_dspars_S_const, size_dspars_S_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_dspars_V_const, size_dspars_V_nbytes);
-
-	// FIXME: should be commented out for the final version ?
-	// Printing sizes
-	std::cout << "\n---------------------------------------------------------------------------------\n";
-	std::cout << std::left << std::setw(40) << "Memory sizes" << std::right << std::setw(31) << "Bytes" << std::right << std::setw(10) << "KB" << std::endl;
-	std::cout << "---------------------------------------------------------------------------------\n";
-
-	std::cout << std::left << std::setw(40) << "size_floatgrids_nbytes" << std::right << std::setw(31) << size_floatgrids_nbytes << std::right << std::setw(10) << sizeKB(size_floatgrids_nbytes) << std::endl;
-	std::cout << std::left << std::setw(40) << "size_populations_nbytes" << std::right << std::setw(31) << size_populations_nbytes << std::right << std::setw(10) << sizeKB(size_populations_nbytes) << std::endl;
-	std::cout << std::left << std::setw(40) << "size_energies_nbytes" << std::right << std::setw(31) << size_energies_nbytes << std::right << std::setw(10) << sizeKB(size_energies_nbytes) << std::endl;
-	std::cout << std::left << std::setw(40) << "size_evals_of_runs_nbytes" << std::right << std::setw(31) << size_evals_of_runs_nbytes << std::right << std::setw(10) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
-	std::cout << std::left << std::setw(40) << "size_prng_seeds_nbytes" << std::right << std::setw(31) << size_prng_seeds_nbytes << std::right << std::setw(10) << sizeKB(size_prng_seeds_nbytes) << std::endl;
-	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
-
 
 	// -----------------------------------------------------------------------------------------------------
 
