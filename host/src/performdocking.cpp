@@ -393,7 +393,7 @@ filled with clock() */
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Initial);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Final);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed):
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_gens_performed);
 	wrapper_veo_args_set_i32   (kernel_ga_arg_ptr, narg++, dockpars.pop_size);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_energy_evals);
