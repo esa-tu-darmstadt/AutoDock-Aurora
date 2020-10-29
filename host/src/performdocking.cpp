@@ -297,8 +297,8 @@ filled with clock() */
 	size_t size_InterE_atom_types_nbytes = size_InterE_atom_types_nelems * sizeof(char);
 
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_fgrids, size_floatgrids_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_InterE_atom_charges_const, );
-	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_InterE_atom_types_const, );
+	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_InterE_atom_charges_const, size_InterE_atom_charges_nbytes);
+	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_InterE_atom_types_const, size_InterE_atom_types_nbytes);
 
 	// Krnl_IntraE buffers
 /*	
