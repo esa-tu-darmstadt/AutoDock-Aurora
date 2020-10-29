@@ -111,65 +111,66 @@ filled with clock() */
 
 	Liganddata myligand_reference;
 
- 	//allocating FPGA memory for floatgrids,
+ 	// Allocating memory for floatgrids,
 	size_t size_floatgrids_nbytes = sizeof(float) * (mygrid->num_of_atypes+2) *
 					(mygrid->size_xyz[0]) * (mygrid->size_xyz[1]) * (mygrid->size_xyz[2]);
 
-	size_t size_populations_nbytes = mypars->num_of_runs * mypars->pop_size * ACTUAL_GENOTYPE_LENGTH * sizeof(float);
 	size_t size_populations_nelems = mypars->num_of_runs * mypars->pop_size * ACTUAL_GENOTYPE_LENGTH;
-
-	size_t size_energies_nbytes = mypars->num_of_runs * mypars->pop_size * sizeof(float);
+	size_t size_populations_nbytes = size_populations_nelems * sizeof(float);
+	
 	size_t size_energies_nelems = mypars->num_of_runs * mypars->pop_size;
-
-	//allocating and initializing CPU memory for initial population
+	size_t size_energies_nbytes = size_energies_nelems * sizeof(float);
+	
+	// Allocating and initializing CPU memory for initial population
 	std::vector<float> cpu_init_populations (size_populations_nelems, 0.0f);
 
-	//allocating CPU memory for final population
+	// Allocating CPU memory for final population
 	std::vector<float> cpu_final_populations (size_populations_nelems);
 
-	//allocating CPU memory for results
+	// Allocating CPU memory for results
 	std::vector<float> cpu_energies (size_energies_nelems);
 
-	//allocating CPU memory for resulting ligands
+	// Allocating CPU memory for resulting ligands
 	std::vector<Ligandresult> cpu_result_ligands (mypars->num_of_runs);
 
-	//allocating memory in CPU for reference orientation angles
+	// Allocating memory in CPU for reference orientation angles
 	std::vector<float> cpu_ref_ori_angles (mypars->num_of_runs*3);
 
-	//generating initial populations and random orientation angles of reference ligand
-	//(ligand will be moved to origo and scaled as well)
+	// Generating initial populations and random orientation angles of reference ligand
+	// (ligand will be moved to origo and scaled as well)
 	myligand_reference = *myligand_init;
 	gen_initpop_and_reflig(mypars, cpu_init_populations.data(), cpu_ref_ori_angles.data(), &myligand_reference, mygrid);
 
-	//allocating memory in CPU for pseudorandom number generator seeds
+	// Allocating memory in CPU for pseudorandom number generator seeds
 	const unsigned int num_of_prng_blocks = 25;
 	size_t size_prng_seeds_nelems = num_of_prng_blocks * mypars->num_of_runs;
+	size_t size_prng_seeds_nbytes = size_prng_seeds_nelems * sizeof(unsigned int);
 	std::vector<unsigned int> cpu_prng_seeds (size_prng_seeds_nelems);
 	
-	//initializing seed generator
+	// Initializing seed generator
 	genseed(time(NULL));	
 
-	//generating seeds (for each thread during GA)
+	// Generating seeds (for each thread during GA)
 	for (unsigned int i=0; i<size_prng_seeds_nelems; i++) {
 		cpu_prng_seeds[i] = genseed(0u);
 	}
 
-	size_t size_evals_of_runs_nbytes = mypars->num_of_runs*sizeof(int);
 	size_t size_evals_of_runs_nelems = mypars->num_of_runs;
+	size_t size_evals_of_runs_nbytes = size_evals_of_runs_nelems * sizeof(int);
 
-	// allocating memory in CPU for evaluation counters
+	// Allocating memory in CPU for evaluation counters
 	std::vector<int> cpu_evals_of_runs (size_evals_of_runs_nelems, 0);
 	
-	// allocating memory in CPU for generation counters
+	// Allocating memory in CPU for generation counters
 	std::vector<int> cpu_gens_of_runs (size_evals_of_runs_nelems, 0);
 
-	//preparing the constant data fields for the FPGA (calcenergy.cpp)
+	// Preparing the constant data fields for the accelerator (calcenergy.cpp)
 	// -----------------------------------------------------------------------------------------------------
 	kernelconstant_static  KerConstStatic;
 	if (prepare_conststatic_fields_for_fpga(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic) == 1)
 		return 1;
 
-	//preparing parameter struct
+	// Preparing parameter struct
 	Dockparameters dockpars;
 	dockpars.num_of_atoms  			= ((unsigned char)  myligand_reference.num_of_atoms);
 	dockpars.num_of_atypes 			= ((unsigned char)  myligand_reference.num_of_atypes);
@@ -203,12 +204,12 @@ filled with clock() */
 	dockpars.qasp 				= mypars->qasp;
 	dockpars.smooth 			= mypars->smooth;
 
-	// these variables hold multiplications between kernel-constants
+	// These variables hold multiplications between kernel-constants
 	// better calculate them here and then pass them to Krnl_GA
 	const float two_absmaxdmov = 2.0 * dockpars.abs_max_dmov;
 	const float two_absmaxdang = 2.0 * dockpars.abs_max_dang;
 
-	// these variables hold multiplications between kernel-constants
+	// These variables hold multiplications between kernel-constants
 	// better calculate them here and then pass them to Krnl_InterE and Krnl_InterE2
 	const unsigned int mul_tmp2 = dockpars.num_of_atypes * dockpars.g3;
 	const unsigned int mul_tmp3 = (dockpars.num_of_atypes + 1) * dockpars.g3;
@@ -315,6 +316,20 @@ filled with clock() */
 	uint64_t mem_KerConstStatic_VWpars_BD_const;
 	uint64_t mem_KerConstStatic_dspars_S_const;
 	uint64_t mem_KerConstStatic_dspars_V_const;
+
+	// FIXME: should be commented out for the final version ?
+	// Printing sizes
+	std::cout << "\n---------------------------------------------------------------------------------\n";
+	std::cout << std::left << std::setw(40) << "Memory sizes" << std::right << std::setw(31) << "Bytes" << std::right << std::setw(10) << "KB" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n";
+
+	std::cout << std::left << std::setw(40) << "size_floatgrids_nbytes" << std::right << std::setw(31) << size_floatgrids_nbytes << std::right << std::setw(10) << sizeKB(size_floatgrids_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_populations_nbytes" << std::right << std::setw(31) << size_populations_nbytes << std::right << std::setw(10) << sizeKB(size_populations_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_energies_nbytes" << std::right << std::setw(31) << size_energies_nbytes << std::right << std::setw(10) << sizeKB(size_energies_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_evals_of_runs_nbytes" << std::right << std::setw(31) << size_evals_of_runs_nbytes << std::right << std::setw(10) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
+	std::cout << std::left << std::setw(40) << "size_prng_seeds_nbytes" << std::right << std::setw(31) << size_prng_seeds_nbytes << std::right << std::setw(10) << sizeKB(size_prng_seeds_nbytes) << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
+
 
 	// -----------------------------------------------------------------------------------------------------
 /*
