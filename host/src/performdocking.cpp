@@ -483,6 +483,21 @@ filled with clock() */
 
 	// -----------------------------------------------------------------------------------------------------
 
+	uint64_t kernel_ga_id;
+	uint64_t retval_ga;
+
+	uint64_t kernel_pc_id;
+	uint64_t retval_pc;
+
+	uint64_t kernel_ie_id;
+	uint64_t retval_ie;
+
+	uint64_t kernel_ia_id;
+	uint64_t retval_ia;
+
+	uint64_t kernel_ls_id;
+	uint64_t retval_ls;
+
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
 	printf("Execution run: ");
 
@@ -507,12 +522,21 @@ filled with clock() */
 		kernel_prng_bt_ushort_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt]);
 		kernel_prng_bt_ushort_float.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 1]);
 	
-		command_queue_ga.enqueueTask(kernel_ga);
-		command_queue_conform.enqueueTask(kernel_conform);	
-		command_queue_intere.enqueueTask(kernel_intere);	
-		command_queue_intrae.enqueueTask(kernel_intrae);		
-		command_queue_prng_bt_ushort_float.enqueueTask(kernel_prng_bt_ushort_float);	
-		command_queue_ls.enqueueTask(kernel_ls);
+		// Launching kernels
+		kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
+		wrapper_veo_call_wait_result(veo_thread_context, kernel_ga_id, &retval_ga);
+
+		kernel_pc_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_pc_handle, name_k_pc, kernel_pc_arg_ptr);
+		wrapper_veo_call_wait_result(veo_thread_context, kernel_pc_id, &retval_pc);
+
+		kernel_ie_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ie_handle, name_k_ie, kernel_ie_arg_ptr);
+		wrapper_veo_call_wait_result(veo_thread_context, kernel_ie_id, &retval_ie);
+
+		kernel_ia_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ia_handle, name_k_ia, kernel_ia_arg_ptr);
+		wrapper_veo_call_wait_result(veo_thread_context, kernel_ia_id, &retval_ia);
+
+		kernel_ls_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ls_handle, name_k_ls, kernel_ls_arg_ptr);
+		wrapper_veo_call_wait_result(veo_thread_context, kernel_ls_id, &retval_ls);
 
 		clock_stop_docking = clock();
 	} // End of for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++)
