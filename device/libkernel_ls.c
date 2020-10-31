@@ -21,13 +21,6 @@ void Krnl_LS(
 	printf("LS: DockConst_cons_limit: %u\n",           DockConst_cons_limit);
 	#endif
 
-	/*bool valid = true;*/
-	char valid = 0x01;
-
-// LOOP_WHILE_LS_MAIN
-while(valid) {
-
-	/*int active;*/
 	int active = 0;
 	nb_pipe_status valid_active = PIPE_STATUS_FAILURE;
 
@@ -40,15 +33,7 @@ while(valid) {
 		valid_energy = read_pipe(pipe00ga2ls00ls100energy,  &current_energy);
 	}
 
-	// (active == 1) means stop LS
-	/*valid = (active != 1) || (valid_energy == PIPE_STATUS_SUCCESS);*/
-	/*valid = ! ((valid_active == PIPE_STATUS_SUCCESS) && (active == 1)) || (valid_energy == PIPE_STATUS_SUCCESS);*/
 
-	// Received something on pipe: chan_GA2LS_Off_active?
-	// If so, then turn this kernel off
-	valid = (valid_active == PIPE_STATUS_SUCCESS)? 0x00:0x01;
-
-	if (valid) {
 		float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
 		// LOOP_FOR_LS_READ_INPUT_GENOTYPE
@@ -205,11 +190,6 @@ while(valid) {
 			}
 			write_pipe_block(pipe00ls2ga00ls100genotype, &genotype [i]);
 		}
-
-	} // End of if (valid)
-
-} // End of while (valid)		
-
 
 #if defined (DEBUG_ACTIVE_KERNEL)
 printf("	%-20s: %s\n", "Krnl_LS1", "disabled");		
