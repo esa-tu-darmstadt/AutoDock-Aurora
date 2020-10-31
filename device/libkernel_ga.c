@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "math.h"
 
 //IC:  initial calculation of energy of populations
 //GG:  genetic generation 

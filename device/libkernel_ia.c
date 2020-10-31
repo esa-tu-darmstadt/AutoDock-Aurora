@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "math.h"
 
 // sqrt7 ////https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
 __attribute__((always_inline))

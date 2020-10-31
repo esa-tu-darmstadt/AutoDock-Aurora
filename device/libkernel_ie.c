@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "math.h"
 
 // --------------------------------------------------------------------------
 // InterE calculates the intermolecular energy of a ligand given by 
