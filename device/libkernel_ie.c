@@ -7,18 +7,18 @@
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void libkernel_ie (
-	const 	float* restrict GlobFgrids,
- 	/*__constant*/ float*     restrict KerConstStatic_atom_charges_const,
- 	/*__constant*/ char*      restrict KerConstStatic_atom_types_const,
-			unsigned char                    DockConst_g1,
-  			unsigned int                     DockConst_g2,
-			unsigned int                     DockConst_g3,
-   			unsigned char                    DockConst_num_of_atoms,
-			float                   	     DockConst_gridsize_x_minus1,
-			float                    	     DockConst_gridsize_y_minus1,
-			float                    	     DockConst_gridsize_z_minus1,
-	    	unsigned int                     Host_mul_tmp2,
-			unsigned int                     Host_mul_tmp3
+	const	float* 			restrict GlobFgrids,
+ 	const 	float*     		restrict KerConstStatic_atom_charges_const,
+ 	const 	char*      		restrict KerConstStatic_atom_types_const,
+			unsigned char            DockConst_g1,
+  			unsigned int             DockConst_g2,
+			unsigned int             DockConst_g3,
+   			unsigned char            DockConst_num_of_atoms,
+			float                    DockConst_gridsize_x_minus1,
+			float                    DockConst_gridsize_y_minus1,
+			float                    DockConst_gridsize_z_minus1,
+	    	unsigned int             Host_mul_tmp2,
+			unsigned int             Host_mul_tmp3
 )
 {
 	char active = 0x01;

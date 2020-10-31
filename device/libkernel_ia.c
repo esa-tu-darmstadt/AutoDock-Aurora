@@ -14,21 +14,21 @@ float sqrt_custom(const float x)
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void libkernel_ia (
-	/*__constant*/     float* restrict KerConstStatic_atom_charges_const,
- 	/*__constant  */   char*  restrict KerConstStatic_atom_types_const,
+	const   float* restrict KerConstStatic_atom_charges_const,
+ 	const	char*  restrict KerConstStatic_atom_types_const,
 
-	const char3* restrict KerConstStatic_intraE_contributors_const,
+	const 	char3* restrict KerConstStatic_intraE_contributors_const,
 
-	float 				 DockConst_smooth,
-	/*__constant*/     float* restrict KerConstStatic_reqm,
-	/*__constant*/     float* restrict KerConstStatic_reqm_hbond,    
-	/*__constant*/     uint*  restrict KerConstStatic_atom1_types_reqm,
-	/*__constant*/     uint*  restrict KerConstStatic_atom2_types_reqm,  
+			float 				 DockConst_smooth,
+	const   float* restrict KerConstStatic_reqm,
+	const   float* restrict KerConstStatic_reqm_hbond,    
+	const   uint*  restrict KerConstStatic_atom1_types_reqm,
+	const   uint*  restrict KerConstStatic_atom2_types_reqm,  
 
-	/*__constant*/     float* restrict KerConstStatic_VWpars_AC_const,
-	/*__constant*/     float* restrict KerConstStatic_VWpars_BD_const,
-	/*__constant*/     float* restrict KerConstStatic_dspars_S_const,
- 	/*__constant*/     float* restrict KerConstStatic_dspars_V_const,
+	const   float* restrict KerConstStatic_VWpars_AC_const,
+	const   float* restrict KerConstStatic_VWpars_BD_const,
+	const   float* restrict KerConstStatic_dspars_S_const,
+ 	const   float* restrict KerConstStatic_dspars_V_const,
 
 			unsigned char                    DockConst_num_of_atoms,
 		   	unsigned int                     DockConst_num_of_intraE_contributors,
@@ -61,9 +61,7 @@ while(active) {
 
 	char actmode;
 	read_pipe_block(pipe00conf2intrae00actmode, &actmode);
-/*
-	mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 	active = actmode;
 	mode   = actmode;
 
