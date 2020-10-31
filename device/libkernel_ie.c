@@ -24,13 +24,8 @@ void libkernel_ie (
 			unsigned int             Host_mul_tmp3
 )
 {
-	char active = 0x01;
-
 	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
 	const float* GlobFgrids3 = & GlobFgrids [Host_mul_tmp3];
-
-// LOOP_WHILE_INTERE_MAIN
-while(active) {
 
 	char mode;
 
@@ -44,7 +39,6 @@ while(active) {
 	char actmode;
 	read_pipe_block(pipe00conf2intere00actmode, &actmode);
 
-	active = actmode;
 	mode   = actmode;
 
 	// LOOP_FOR_INTERE_READ_XYZ
@@ -295,8 +289,6 @@ while(active) {
 	printf("AFTER Out INTERE CHANNEL\n");
 	#endif
  	
-} // End of while(active)
-
 	#if defined (DEBUG_ACTIVE_KERNEL)
 	printf("	%-20s: %s\n", "Krnl_InterE", "disabled");
 	#endif
