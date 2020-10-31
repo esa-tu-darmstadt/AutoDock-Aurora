@@ -203,7 +203,7 @@ void libkernel_pc (
 	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float3 tmp_coords[2];
 
-		LOOP_CONFORM_OUT:
+		// LOOP_CONFORM_OUT
 		for (unsigned char i=0; i<2; i++) {
 			tmp_coords[i] = loc_coords[pipe_cnt+i];
 		}
