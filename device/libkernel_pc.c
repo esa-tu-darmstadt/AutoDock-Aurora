@@ -47,7 +47,7 @@ void libkernel_pc (
 	LOOP_FOR_CONFORM_READ_GENOTYPE:
 	for (uchar i=0; i<DockConst_num_of_genes; i++) {
 		float fl_tmp;
-			
+
 		if (i > 2) {
 			fl_tmp = fl_tmp * DEG_TO_RAD;
 		}
@@ -209,9 +209,10 @@ void libkernel_pc (
 
 		tmp.s0 = tmp_coords[0].x; tmp.s1 = tmp_coords[0].y; tmp.s2 = tmp_coords[0].z; //tmp.s3
 		tmp.s4 = tmp_coords[1].x; tmp.s5 = tmp_coords[1].y; tmp.s6 = tmp_coords[1].z; //tmp.s7
-
+/*
 		write_pipe_block(pipe00conf2intere00xyz, &tmp);
 		write_pipe_block(pipe00conf2intrae00xyz, &tmp);
+*/		
 	}
 
 	// --------------------------------------------------------------
