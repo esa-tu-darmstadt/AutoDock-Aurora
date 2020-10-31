@@ -31,7 +31,7 @@ void libkernel_pc (
 
 	char active = 0x01;	
 
-	__local int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
+	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 
 	LOOP_FOR_CONFORM_ROTBONDLIST:
 	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
@@ -51,7 +51,7 @@ while(active) {
 
 	char actmode;
 	read_pipe_block(pipe00igl2conform00actmode, &actmode);
-	
+
 	active = actmode;
 	mode   = actmode;
 

@@ -42,7 +42,7 @@ void Krnl_IntraE(
 {
 	char active = 0x01;
 
-	__local char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
+	char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
 
 	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_INTRAE_CONTRIBUTORS:
