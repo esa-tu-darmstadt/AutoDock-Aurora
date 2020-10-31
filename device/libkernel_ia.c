@@ -13,23 +13,22 @@ float sqrt_custom(const float x)
 // contributor-pairs.
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
-void Krnl_IntraE(
- 	     __constant     float* restrict KerConstStatic_atom_charges_const,
- 	     __constant     char*  restrict KerConstStatic_atom_types_const,
+void libkernel_ia (
+	/*__constant*/     float* restrict KerConstStatic_atom_charges_const,
+ 	/*__constant  */   char*  restrict KerConstStatic_atom_types_const,
 
-	     __global const char3* restrict KerConstStatic_intraE_contributors_const,
+	const char3* restrict KerConstStatic_intraE_contributors_const,
 
-			float 				 DockConst_smooth,
-	     __constant     float* restrict KerConstStatic_reqm,
-	     __constant     float* restrict KerConstStatic_reqm_hbond,    
-	     __constant     uint*  restrict KerConstStatic_atom1_types_reqm,
-	     __constant     uint*  restrict KerConstStatic_atom2_types_reqm,  
+	float 				 DockConst_smooth,
+	/*__constant*/     float* restrict KerConstStatic_reqm,
+	/*__constant*/     float* restrict KerConstStatic_reqm_hbond,    
+	/*__constant*/     uint*  restrict KerConstStatic_atom1_types_reqm,
+	/*__constant*/     uint*  restrict KerConstStatic_atom2_types_reqm,  
 
-	     __constant     float* restrict KerConstStatic_VWpars_AC_const,
-	     __constant     float* restrict KerConstStatic_VWpars_BD_const,
-	     __constant     float* restrict KerConstStatic_dspars_S_const,
- 	     __constant     float* restrict KerConstStatic_dspars_V_const,
+	/*__constant*/     float* restrict KerConstStatic_VWpars_AC_const,
+	/*__constant*/     float* restrict KerConstStatic_VWpars_BD_const,
+	/*__constant*/     float* restrict KerConstStatic_dspars_S_const,
+ 	/*__constant*/     float* restrict KerConstStatic_dspars_V_const,
 
 			unsigned char                    DockConst_num_of_atoms,
 		   	unsigned int                     DockConst_num_of_intraE_contributors,
@@ -44,27 +43,15 @@ void Krnl_IntraE(
 
 	char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_INTRAE_CONTRIBUTORS:
 	for (ushort i=0; i<MAX_INTRAE_CONTRIBUTORS; i++) {
 		intraE_contributors_localcache [i] = KerConstStatic_intraE_contributors_const [i];	
 	}
 
-__attribute__((xcl_pipeline_loop))
 LOOP_WHILE_INTRAE_MAIN:
 while(active) {
 	char mode;
 
-/*
-	float3 __attribute__ ((
-			      memory,
-			      numbanks(2),
-			      bankwidth(16),
-			      singlepump,
-			      numreadports(2),
-			      numwriteports(1)
-			    )) loc_coords[MAX_NUM_OF_ATOMS];
-*/
 	float3 loc_coords[MAX_NUM_OF_ATOMS];
 
 	//printf("BEFORE In INTRA CHANNEL\n");
@@ -80,7 +67,6 @@ while(active) {
 	active = actmode;
 	mode   = actmode;
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_INTRAE_READ_XYZ:
 	for (uchar pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float8 tmp;
@@ -104,7 +90,6 @@ while(active) {
 
 	// For each intramolecular atom contributor pair
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_INTRAE_MAIN:
 	for (ushort contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
 
