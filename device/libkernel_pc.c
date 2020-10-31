@@ -36,46 +36,21 @@ void libkernel_pc (
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
-	char mode;
-
-
 	float  phi;
 	float  theta;
 	float  genrotangle;
 	float3 genotype_xyz;
 	float3 loc_coords [MAX_NUM_OF_ATOMS];
 
-	char actmode;
-	read_pipe_block(pipe00igl2conform00actmode, &actmode);
-
-	mode   = actmode;
-
-//printf("Conform: %u\n", mode);
-
 	float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
 	LOOP_FOR_CONFORM_READ_GENOTYPE:
 	for (uchar i=0; i<DockConst_num_of_genes; i++) {
 		float fl_tmp;
-		switch (mode) {
-			case 'I':  read_pipe_block(pipe00ic2conf00genotype,      &fl_tmp); break;
-			case 'G':  read_pipe_block(pipe00gg2conf00genotype,      &fl_tmp); break;
-			case 0x01: read_pipe_block(pipe00ls2conf00ls100genotype, &fl_tmp); break;
-			case 0x02: read_pipe_block(pipe00ls2conf00ls200genotype, &fl_tmp); break;
-			case 0x03: read_pipe_block(pipe00ls2conf00ls300genotype, &fl_tmp); break;
-			case 0x04: read_pipe_block(pipe00ls2conf00ls400genotype, &fl_tmp); break;
-			case 0x05: read_pipe_block(pipe00ls2conf00ls500genotype, &fl_tmp); break;
-			case 0x06: read_pipe_block(pipe00ls2conf00ls600genotype, &fl_tmp); break;
-			case 0x07: read_pipe_block(pipe00ls2conf00ls700genotype, &fl_tmp); break;
-			case 0x08: read_pipe_block(pipe00ls2conf00ls800genotype, &fl_tmp); break;
-			case 0x09: read_pipe_block(pipe00ls2conf00ls900genotype, &fl_tmp); break;
-		}
-		
+			
 		if (i > 2) {
 			fl_tmp = fl_tmp * DEG_TO_RAD;
 		}
-
-//printf("Conform: %u %u\n", mode, i);
 
 		switch (i) {
 			case 0: genotype_xyz.x = fl_tmp; break;
@@ -223,11 +198,6 @@ void libkernel_pc (
 	// --------------------------------------------------------------
 	LOOP_FOR_CONFORM_WRITE_XYZ:
 	for (uchar pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
-		if (pipe_cnt == 0) {
-			write_pipe_block(pipe00conf2intere00actmode, &mode);
-			write_pipe_block(pipe00conf2intrae00actmode, &mode);
-		}
-
 		float3 tmp_coords[2];
 
 		LOOP_CONFORM_OUT:
