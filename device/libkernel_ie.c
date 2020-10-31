@@ -87,12 +87,12 @@ void libkernel_ie (
 		} 
 		else 
 		{
-			int x_low  = convert_int(floor(x));
-			int y_low  = convert_int(floor(y));
-			int z_low  = convert_int(floor(z));
-			int x_high = convert_int(ceil(x));	 
-			int y_high = convert_int(ceil(y));
-			int z_high = convert_int(ceil(z));
+			int x_low  = (int) floor(x);
+			int y_low  = (int) floor(y);
+			int z_low  = (int) floor(z);
+			int x_high = (int) ceil(x);	 
+			int y_high = (int) ceil(y);
+			int z_high = (int) ceil(z);
 
 			float dx = x - x_low; 
 			float dy = y - y_low; 
