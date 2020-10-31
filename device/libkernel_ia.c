@@ -49,18 +49,12 @@ void libkernel_ia (
 		intraE_contributors_localcache [i] = KerConstStatic_intraE_contributors_const [i];	
 	}
 
-	char mode;
-
 	float3 loc_coords[MAX_NUM_OF_ATOMS];
 
 	//printf("BEFORE In INTRA CHANNEL\n");
 	// --------------------------------------------------------------
 	// Wait for ligand atomic coordinates in channel
 	// --------------------------------------------------------------
-
-	char actmode;
-	read_pipe_block(pipe00conf2intrae00actmode, &actmode);
-	mode   = actmode;
 
 	// LOOP_FOR_INTRAE_READ_XYZ
 	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
@@ -224,6 +218,7 @@ void libkernel_ia (
 	// --------------------------------------------------------------
 	// Send intramolecular energy to channel
 	// --------------------------------------------------------------
+/*	
 	switch (mode) {
 		case 'I':  write_pipe_block(pipe00intrae2storeic00intrae,      &intraE); break;
 		case 'G':  write_pipe_block(pipe00intrae2storegg00intrae,      &intraE); break;
@@ -237,6 +232,7 @@ void libkernel_ia (
 		case 0x08: write_pipe_block(pipe00intrae2storels00ls800intrae, &intraE); break;
 		case 0x09: write_pipe_block(pipe00intrae2storels00ls900intrae, &intraE); break;
 	}
+*/	
 	// --------------------------------------------------------------
 
 	#if defined (DEBUG_KRNL_INTRAE)
