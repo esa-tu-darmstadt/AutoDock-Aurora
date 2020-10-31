@@ -29,8 +29,6 @@ void libkernel_pc (
 	// just to keep sizes equal to power of 2
 	// __local float  __attribute__((numbanks(8), bankwidth(16))) loc_coords[MAX_NUM_OF_ATOMS][4];
 
-	char active = 0x01;	
-
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 
 	LOOP_FOR_CONFORM_ROTBONDLIST:
@@ -38,8 +36,6 @@ void libkernel_pc (
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
-LOOP_WHILE_CONFORM_MAIN:
-while(active) {
 	char mode;
 
 
@@ -52,7 +48,6 @@ while(active) {
 	char actmode;
 	read_pipe_block(pipe00igl2conform00actmode, &actmode);
 
-	active = actmode;
 	mode   = actmode;
 
 //printf("Conform: %u\n", mode);
@@ -254,7 +249,6 @@ while(active) {
 	printf("AFTER Out CONFORM CHANNEL\n");
 	#endif
 
-} // End of while(active)
 
 #if defined (DEBUG_ACTIVE_KERNEL)
 printf("	%-20s: %s\n", "Krnl_Conform", "disabled");
