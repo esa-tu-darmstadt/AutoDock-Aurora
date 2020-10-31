@@ -34,7 +34,7 @@ void libkernel_pc (
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 
 	LOOP_FOR_CONFORM_ROTBONDLIST:
-	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
+	for (unsigned short c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
@@ -70,13 +70,13 @@ void libkernel_pc (
 	#endif
 
 	LOOP_FOR_CONFORM_MAIN:
-	for (ushort rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
+	for (unsigned short rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = rotlist_localcache [rotation_counter];
 
 		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0)	// If not dummy rotation
 		{
-			uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
+			unsigned int atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
 			// Capturing atom coordinates
 			float3 atom_to_rotate;
@@ -111,7 +111,7 @@ void libkernel_pc (
 			}
 			else	// If rotating around rotatable bond
 			{
-				uint rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
+				unsigned int rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
 
 				rotation_unitvec = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
 				
