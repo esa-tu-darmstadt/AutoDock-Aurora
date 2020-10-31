@@ -34,7 +34,7 @@ void libkernel_pc (
 
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 
-	LOOP_FOR_CONFORM_ROTBONDLIST:
+	// LOOP_FOR_CONFORM_ROTBONDLIST
 	for (unsigned short c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
@@ -47,7 +47,7 @@ void libkernel_pc (
 
 	float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
-	LOOP_FOR_CONFORM_READ_GENOTYPE:
+	// LOOP_FOR_CONFORM_READ_GENOTYPE
 	for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 		float fl_tmp;
 
@@ -70,7 +70,7 @@ void libkernel_pc (
 	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_Conform", "must be disabled");}
 	#endif
 
-	LOOP_FOR_CONFORM_MAIN:
+	// LOOP_FOR_CONFORM_MAIN
 	for (unsigned short rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = rotlist_localcache [rotation_counter];
@@ -199,7 +199,7 @@ void libkernel_pc (
 	// --------------------------------------------------------------
 	// Send ligand atomic coordinates to channel 
 	// --------------------------------------------------------------
-	LOOP_FOR_CONFORM_WRITE_XYZ:
+	// LOOP_FOR_CONFORM_WRITE_XYZ
 	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float3 tmp_coords[2];
 

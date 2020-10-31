@@ -46,12 +46,12 @@ void libkernel_ia (
 
 	char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
 
-	LOOP_FOR_INTRAE_CONTRIBUTORS:
+	// LOOP_FOR_INTRAE_CONTRIBUTORS
 	for (unsigned short i=0; i<MAX_INTRAE_CONTRIBUTORS; i++) {
 		intraE_contributors_localcache [i] = KerConstStatic_intraE_contributors_const [i];	
 	}
 
-LOOP_WHILE_INTRAE_MAIN:
+// LOOP_WHILE_INTRAE_MAIN
 while(active) {
 	char mode;
 
@@ -68,7 +68,7 @@ while(active) {
 	active = actmode;
 	mode   = actmode;
 
-	LOOP_FOR_INTRAE_READ_XYZ:
+	// LOOP_FOR_INTRAE_READ_XYZ
 	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float8 tmp;
 		read_pipe_block(pipe00conf2intrae00xyz, &tmp);
@@ -91,7 +91,7 @@ while(active) {
 
 	// For each intramolecular atom contributor pair
 
-	LOOP_FOR_INTRAE_MAIN:
+	// LOOP_FOR_INTRAE_MAIN
 	for (unsigned short contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
 
 		char3 ref_intraE_contributors_const;

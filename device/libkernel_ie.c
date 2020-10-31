@@ -29,7 +29,7 @@ void libkernel_ie (
 	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
 	const float* GlobFgrids3 = & GlobFgrids [Host_mul_tmp3];
 
-LOOP_WHILE_INTERE_MAIN:
+// LOOP_WHILE_INTERE_MAIN
 while(active) {
 
 	char mode;
@@ -47,7 +47,7 @@ while(active) {
 	active = actmode;
 	mode   = actmode;
 
-	LOOP_FOR_INTERE_READ_XYZ:
+	// LOOP_FOR_INTERE_READ_XYZ
 	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float8 tmp;
 		read_pipe_block(pipe00conf2intere00xyz, &tmp);
@@ -68,7 +68,7 @@ while(active) {
 	float interE = 0.0f;
 
 	// For each ligand atom
-	LOOP_FOR_INTER_MAIN:
+	// LOOP_FOR_INTER_MAIN
 	for (unsigned char atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
 	{
 		char atom1_typeid = KerConstStatic_atom_types_const [atom1_id];
