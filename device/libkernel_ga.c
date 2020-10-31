@@ -266,14 +266,12 @@ void libkernel_ga (
 	// ------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
 	// ------------------------------------------------------------------
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_GA_IC_OUTER:
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// Calculate energy
 		const int tmp_int_zero = 0;
 		write_pipe_block(pipe00ga2igl00ic00active, &tmp_int_zero);
 
-		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE:
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_ic;
@@ -294,7 +292,6 @@ void libkernel_ga (
 		nb_pipe_status intra_valid = PIPE_STATUS_FAILURE;
 		nb_pipe_status inter_valid = PIPE_STATUS_FAILURE;	
 
-		__attribute__((xcl_pipeline_loop))
 		LOOP_WHILE_GA_IC_INNER_READ_ENERGY:
 		while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
 
@@ -318,7 +315,6 @@ void libkernel_ga (
 
 	uint generation_cnt = 0;
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_WHILE_GA_MAIN:
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
 
@@ -331,7 +327,6 @@ void libkernel_ga (
 		float loc_energies[MAX_POPSIZE];
 		ushort best_entity = 0;
 
-		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_GA_SHIFT: 
 //		for (ushort pop_cnt=1; pop_cnt<DockConst_pop_size; pop_cnt++) {
 		for (ushort pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
@@ -356,7 +351,6 @@ void libkernel_ga (
 		#pragma ivdep array (LocalPopNext)
 		#pragma ivdep array (LocalEneNext)
 		*/
-		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_GA_OUTER_GLOBAL: 
 		for (ushort new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
 
@@ -364,7 +358,6 @@ void libkernel_ga (
 			// Elitism: copying the best entity to new population
 			// ---------------------------------------------------
 			if (new_pop_cnt == 1) {
-				__attribute__((xcl_pipeline_loop))
 				LOOP_FOR_GA_INNER_ELITISM:
 				for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 					LocalPopNext[0][gene_cnt & MASK_GENOTYPE] = LocalPopCurr[best_entity][gene_cnt & MASK_GENOTYPE]; 	
@@ -434,7 +427,6 @@ void libkernel_ga (
 				if (bt_tmp_f3 < DockConst_tournament_rate) {parent2 = bt_tmp_u3;}
 				else			                   {parent2 = bt_tmp_u2;}}
 
-			__attribute__((xcl_pipeline_loop))
 			LOOP_FOR_GA_INNER_BT:
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
@@ -474,7 +466,6 @@ void libkernel_ga (
 
 //printf("test point 3\n");
 
-			__attribute__((xcl_pipeline_loop))
 			LOOP_FOR_GA_INNER_CROSS_MUT:
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				float prngGG;
@@ -528,7 +519,6 @@ void libkernel_ga (
 			nb_pipe_status intra_valid = PIPE_STATUS_FAILURE;
 			nb_pipe_status inter_valid = PIPE_STATUS_FAILURE;
 
-			__attribute__((xcl_pipeline_loop))
 			LOOP_WHILE_GA_INNER_READ_ENERGIES:
 			while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
 
@@ -558,7 +548,6 @@ void libkernel_ga (
 		/*
 		#pragma ivdep
 		*/
-		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_GA_LS_OUTER:
 		for (ushort ls_ent_cnt=0; ls_ent_cnt<DockConst_num_of_lsentities; ls_ent_cnt+=9) {
 
@@ -590,7 +579,6 @@ void libkernel_ga (
 
 //printf("test point LS 2\n");
 
-			__attribute__((xcl_pipeline_loop))
 			LOOP_GA_LS_INNER_WRITE_GENOTYPE:
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
@@ -626,7 +614,6 @@ void libkernel_ga (
 			nb_pipe_status ls8_done = PIPE_STATUS_FAILURE;
 			nb_pipe_status ls9_done = PIPE_STATUS_FAILURE;  
 
-			__attribute__((xcl_pipeline_loop))
 			LOOP_WHILE_GA_LS_INNER_READ_ENERGIES:
 			while( (ls1_done != PIPE_STATUS_SUCCESS) || 
 			       (ls2_done != PIPE_STATUS_SUCCESS) || 
@@ -705,7 +692,6 @@ void libkernel_ga (
 			/*
 			#pragma ivdep
 			*/
-			__attribute__((xcl_pipeline_loop))
 			LOOP_FOR_GA_LS_INNER_READ_GENOTYPE:
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 
@@ -730,11 +716,8 @@ void libkernel_ga (
 		// ------------------------------------------------------------------
 
 		// Update current pops & energies
-		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_GA_UPDATEPOP_OUTER:
 		for (ushort pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
-
-			__attribute__((xcl_pipeline_loop))
 			LOOP_GA_UPDATEPOP_INNER:
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = LocalPopNext[pop_cnt][gene_cnt & MASK_GENOTYPE];
@@ -790,11 +773,8 @@ void libkernel_ga (
 	write_pipe_block(pipe00iglarbiter00off,     		&tmp_int_one);
 
 	// Write final pop & energies back to FPGA-board DDRs
-	__attribute__((xcl_pipeline_loop))
 	LOOP_GA_WRITEPOP2DDR_OUTER:
 	for (ushort pop_cnt=0;pop_cnt<DockConst_pop_size; pop_cnt++) { 	
-
-		__attribute__((xcl_pipeline_loop))
 		LOOP_GA_WRITEPOP2DDR_INNER:
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE];
