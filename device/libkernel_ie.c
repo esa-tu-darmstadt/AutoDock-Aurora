@@ -1,3 +1,5 @@
+#include "defines.h"
+
 // --------------------------------------------------------------------------
 // InterE calculates the intermolecular energy of a ligand given by 
 // ligand xyz-positions, and a receptor represented as a grid. 

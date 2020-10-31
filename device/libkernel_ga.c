@@ -1,9 +1,9 @@
+#include "defines.h"
+
 //IC:  initial calculation of energy of populations
 //GG:  genetic generation 
 //LS:  local search
 //OFF: turn off 
-
-#include "../defines.h"
 
 #define PIPE_DEPTH_16  16
 #define PIPE_DEPTH_64  64

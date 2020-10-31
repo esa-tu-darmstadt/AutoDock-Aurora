@@ -1,3 +1,5 @@
+#include "defines.h"
+
 // --------------------------------------------------------------------------
 // Conform changes the conformation of the ligand according to 
 // the genotype fed by any producer logic/kernel (IC, GG, LSs).
