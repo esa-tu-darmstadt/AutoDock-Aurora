@@ -6,9 +6,9 @@
 float sqrt_custom(const float x) 
 { 	//uint i = as_uint(x);	
 	unsigned int i = *(unsigned int*) &x;    	
-	i  += 127 << 23;	// adjust bias   	
-	i >>= 1; 		// approximation of square root 	
-	return as_float(i);	// return *(float*) &i; 
+	i  += 127 << 23;		// adjust bias   	
+	i >>= 1; 				// approximation of square root 	
+	return *(float*) &i; 	// return as_float(i);
 }  
 
 // --------------------------------------------------------------------------
@@ -220,7 +220,7 @@ void libkernel_ia (
 	// Send intramolecular energy to channel
 	// --------------------------------------------------------------
 	*final_intraE = intraE;
-	
+
 	// --------------------------------------------------------------
 
 	#if defined (DEBUG_KRNL_INTRAE)
