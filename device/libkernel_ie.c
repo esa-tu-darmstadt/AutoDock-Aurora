@@ -21,7 +21,8 @@ void libkernel_ie (
 			float                    DockConst_gridsize_y_minus1,
 			float                    DockConst_gridsize_z_minus1,
 	    	unsigned int             Host_mul_tmp2,
-			unsigned int             Host_mul_tmp3
+			unsigned int             Host_mul_tmp3,
+			float* 					 final_interE
 )
 {
 	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
@@ -261,23 +262,8 @@ void libkernel_ie (
 	// --------------------------------------------------------------
 	// Send intermolecular energy to chanel
 	// --------------------------------------------------------------
-	float final_interE = interE;
+	*final_interE = interE;
 
-/*
-	switch (mode) {
-		case 'I':  write_pipe_block(pipe00intere2storeic00intere,      &final_interE); break;
-		case 'G':  write_pipe_block(pipe00intere2storegg00intere,      &final_interE); break;
-		case 0x01: write_pipe_block(pipe00intere2storels00ls100intere, &final_interE); break;
-		case 0x02: write_pipe_block(pipe00intere2storels00ls200intere, &final_interE); break;
-		case 0x03: write_pipe_block(pipe00intere2storels00ls300intere, &final_interE); break;
-		case 0x04: write_pipe_block(pipe00intere2storels00ls400intere, &final_interE); break;
-		case 0x05: write_pipe_block(pipe00intere2storels00ls500intere, &final_interE); break;
-		case 0x06: write_pipe_block(pipe00intere2storels00ls600intere, &final_interE); break;
-		case 0x07: write_pipe_block(pipe00intere2storels00ls700intere, &final_interE); break;
-		case 0x08: write_pipe_block(pipe00intere2storels00ls800intere, &final_interE); break;
-		case 0x09: write_pipe_block(pipe00intere2storels00ls900intere, &final_interE); break;
-	}
-*/	
 	// --------------------------------------------------------------
 
 	#if defined (DEBUG_KRNL_INTERE)
