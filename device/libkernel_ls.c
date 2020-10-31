@@ -24,7 +24,7 @@ void Krnl_LS(
 	/*bool valid = true;*/
 	char valid = 0x01;
 
-LOOP_WHILE_LS_MAIN:
+// LOOP_WHILE_LS_MAIN
 while(valid) {
 
 	/*int active;*/
@@ -34,7 +34,7 @@ while(valid) {
 	float current_energy;
 	nb_pipe_status valid_energy = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_LS_ACTIVE:
+	// LOOP_WHILE_LS_ACTIVE
 	while( (valid_active != PIPE_STATUS_SUCCESS) && (valid_energy != PIPE_STATUS_SUCCESS)) {
 		valid_active = read_pipe(pipe00ga2ls00off100active, &active);
 		valid_energy = read_pipe(pipe00ga2ls00ls100energy,  &current_energy);
@@ -51,7 +51,7 @@ while(valid) {
 	if (valid) {
 		float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
-		LOOP_FOR_LS_READ_INPUT_GENOTYPE:
+		// LOOP_FOR_LS_READ_INPUT_GENOTYPE
 		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			read_pipe_block(pipe00ga2ls00ls100genotype, &genotype [i]);
 		}
@@ -64,7 +64,7 @@ while(valid) {
 		bool   positive_direction = true;
 
 		// performing local search
-		LOOP_WHILE_LS_ITERATION_RHO:
+		// LOOP_WHILE_LS_ITERATION_RHO
 		while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
 			// -----------------------------------------------
 			// Exit condition is groups here. It allows pipelining
@@ -100,7 +100,7 @@ while(valid) {
 
 			// new random deviate
 			// rho is the deviation of the uniform distribution
-			LOOP_FOR_LS_WRITE_GENOTYPE:
+			// LOOP_FOR_LS_WRITE_GENOTYPE
 			for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 				float tmp_prng;
 				read_pipe_block(pipe00prng2ls00float00prng, &tmp_prng);
@@ -143,7 +143,7 @@ while(valid) {
 			nb_pipe_status intra_valid = PIPE_STATUS_FAILURE;
 			nb_pipe_status inter_valid = PIPE_STATUS_FAILURE;
 
-			LOOP_WHILE_LS_READ_ENERGIES:
+			// LOOP_WHILE_LS_READ_ENERGIES
 			while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
 
 				if (intra_valid != PIPE_STATUS_SUCCESS) {
@@ -163,7 +163,7 @@ while(valid) {
 				// updating offspring_genotype
 				// updating genotype_bias
 
-				LOOP_FOR_LS_FLOATPT_UPDATE_POS_GENOTYPE:
+				// LOOP_FOR_LS_FLOATPT_UPDATE_POS_GENOTYPE
 				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (positive_direction == true) ? deviate_plus_bias  [i] : 
 											   deviate_minus_bias [i] ;
@@ -178,7 +178,7 @@ while(valid) {
 			else {
 				// updating (halving) genotype_bias
 
-				LOOP_FOR_LS_FLOATPT_UPDATE_NEG_GENOTYPE:
+				// LOOP_FOR_LS_FLOATPT_UPDATE_NEG_GENOTYPE
 				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (iteration_cnt == 1)? 0.0f: (0.5f*genotype_bias [i]);
 				}
@@ -197,7 +197,7 @@ while(valid) {
 		#endif
 		
 		// write back data to GA
-		LOOP_FOR_LS_WRITEBACK2GA:
+		// LOOP_FOR_LS_WRITEBACK2GA
 		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			if (i == 0) {
 				float2 evalenergy  = {*(float*)&LS_eval, current_energy};
