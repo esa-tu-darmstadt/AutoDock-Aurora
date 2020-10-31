@@ -2,7 +2,6 @@
 // PRNG generators are implemented as Linear Feedback Shift Registers (LFSR)
 // All are 32-bit LFRS, feedback taps: 30, 20, 26, 25
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_BT_ushort_float(
 			       unsigned int Host_seed1,
 			       unsigned int Host_seed2,
