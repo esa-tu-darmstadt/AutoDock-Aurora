@@ -1,8 +1,8 @@
 #include "defines.h"
 #include "math.h"
 
-// sqrt7 ////https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
-__attribute__((always_inline))
+// sqrt7 
+//https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
 float sqrt_custom(const float x) 
 { 	//uint i = as_uint(x);	
 	unsigned int i = *(unsigned int*) &x;    	
@@ -39,7 +39,8 @@ void libkernel_ia (
 			unsigned char                    DockConst_num_of_atypes,
 			float                            DockConst_coeff_elec,
 			float                            DockConst_qasp,
-			float                            DockConst_coeff_desolv
+			float                            DockConst_coeff_desolv,
+			float* 					 		 final_intraE
 )
 {
 	char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
@@ -218,21 +219,8 @@ void libkernel_ia (
 	// --------------------------------------------------------------
 	// Send intramolecular energy to channel
 	// --------------------------------------------------------------
-/*	
-	switch (mode) {
-		case 'I':  write_pipe_block(pipe00intrae2storeic00intrae,      &intraE); break;
-		case 'G':  write_pipe_block(pipe00intrae2storegg00intrae,      &intraE); break;
-		case 0x01: write_pipe_block(pipe00intrae2storels00ls100intrae, &intraE); break;
-		case 0x02: write_pipe_block(pipe00intrae2storels00ls200intrae, &intraE); break;
-		case 0x03: write_pipe_block(pipe00intrae2storels00ls300intrae, &intraE); break;
-		case 0x04: write_pipe_block(pipe00intrae2storels00ls400intrae, &intraE); break;
-		case 0x05: write_pipe_block(pipe00intrae2storels00ls500intrae, &intraE); break;
-		case 0x06: write_pipe_block(pipe00intrae2storels00ls600intrae, &intraE); break;
-		case 0x07: write_pipe_block(pipe00intrae2storels00ls700intrae, &intraE); break;
-		case 0x08: write_pipe_block(pipe00intrae2storels00ls800intrae, &intraE); break;
-		case 0x09: write_pipe_block(pipe00intrae2storels00ls900intrae, &intraE); break;
-	}
-*/	
+	*final_intraE = intraE;
+	
 	// --------------------------------------------------------------
 
 	#if defined (DEBUG_KRNL_INTRAE)
