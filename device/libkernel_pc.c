@@ -9,12 +9,12 @@
 void libkernel_pc (
 	const 	int*  			restrict KerConstStatic_rotlist_const,
 	const 	float3*   		restrict KerConstStatic_ref_coords_const,
-	const 	float3*   		restrict KerConstStatic_rotbonds_moving_vectors_const,
-	const 	float3*   		restrict KerConstStatic_rotbonds_unit_vectors_const,  
+	const 	float*   		restrict KerConstStatic_rotbonds_moving_vectors_const,
+	const 	float*   		restrict KerConstStatic_rotbonds_unit_vectors_const,  
 			unsigned int          	 DockConst_rotbondlist_length,
 			unsigned char         	 DockConst_num_of_atoms,
 			unsigned char         	 DockConst_num_of_genes,
-	const 	float4*   		restrict KerConstStatic_ref_orientation_quats_const,
+	const 	float*   		restrict KerConstStatic_ref_orientation_quats_const,
 			unsigned short        	 Host_RunId
 )
 {
