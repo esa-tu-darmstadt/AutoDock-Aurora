@@ -6,14 +6,6 @@ void Krnl_Prng_BT_ushort_float(
 			       unsigned int Host_seed1,
 			       unsigned int Host_seed2,
 			       unsigned int DockConst_pop_size
-
-#if !defined(SW_EMU)
-			      // IMPORTANT: enable this dummy global argument only for "hw" build.
-			      // Check ../common_xilinx/utility/boards.mk
-			      // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-			      ,
-			      __global int *dummy
-#endif
 ){
 	uint2 lfsr;
 	lfsr.x = Host_seed1;
@@ -73,18 +65,9 @@ void Krnl_Prng_BT_ushort_float(
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_GG_uchar(
 			unsigned int  Host_seed, 
 		        unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			// IMPORTANT: enable this dummy global argument only for "hw" build.
-			// Check ../common_xilinx/utility/boards.mk
-		        // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-			,
-			__global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -124,18 +107,9 @@ void Krnl_Prng_GG_uchar(
 	} // while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_GG_float(
 			unsigned int  Host_seed,
 		        unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			// IMPORTANT: enable this dummy global argument only for "hw" build.
-			// Check ../common_xilinx/utility/boards.mk
-		        // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		        ,
-		        __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -171,7 +145,6 @@ void Krnl_Prng_GG_float(
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS123_ushort(
 			    unsigned int Host_seed1,
 			    unsigned int Host_seed2, 
@@ -183,14 +156,6 @@ void Krnl_Prng_LS123_ushort(
 			    unsigned int Host_seed8,
 			    unsigned int Host_seed9, 
 		            unsigned int DockConst_pop_size
-
-#if !defined(SW_EMU)
-			    // IMPORTANT: enable this dummy global argument only for "hw" build.
-			    // Check ../common_xilinx/utility/boards.mk
-		            // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-			    ,
-			    __global int *dummy
-#endif
 ){
 	uint lfsr[9];
 	lfsr[0] = Host_seed1;
@@ -269,18 +234,9 @@ void Krnl_Prng_LS123_ushort(
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS_float(
 			unsigned int  Host_seed,
 		        unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			// IMPORTANT: enable this dummy global argument only for "hw" build.
-			// Check ../common_xilinx/utility/boards.mk
- 		        // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-			,
-			__global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -314,18 +270,9 @@ void Krnl_Prng_LS_float(
 	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS2_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -359,18 +306,9 @@ void Krnl_Prng_LS2_float(
 	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS3_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -404,18 +342,9 @@ void Krnl_Prng_LS3_float(
 	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS4_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -449,18 +378,9 @@ void Krnl_Prng_LS4_float(
 	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS5_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -494,18 +414,9 @@ void Krnl_Prng_LS5_float(
 	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS6_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -539,18 +450,9 @@ void Krnl_Prng_LS6_float(
 	} // End of while(active)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS7_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -584,18 +486,9 @@ void Krnl_Prng_LS7_float(
 	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS8_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
@@ -629,18 +522,9 @@ void Krnl_Prng_LS8_float(
 	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_Prng_LS9_float(
 			 unsigned int  Host_seed,
 			 unsigned char DockConst_num_of_genes
-
-#if !defined(SW_EMU)
-			 // IMPORTANT: enable this dummy global argument only for "hw" build.
-			 // Check ../common_xilinx/utility/boards.mk
- 		         // https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		         , 
-         		 __global int *dummy
-#endif
 ){
 	uint lfsr = Host_seed;
 
