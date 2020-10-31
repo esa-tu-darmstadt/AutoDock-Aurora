@@ -47,7 +47,7 @@ while(active) {
 	mode   = actmode;
 
 	LOOP_FOR_INTERE_READ_XYZ:
-	for (uchar pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
+	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float8 tmp;
 		read_pipe_block(pipe00conf2intere00xyz, &tmp);
 
@@ -68,7 +68,7 @@ while(active) {
 
 	// For each ligand atom
 	LOOP_FOR_INTER_MAIN:
-	for (uchar atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
+	for (unsigned char atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
 	{
 		char atom1_typeid = KerConstStatic_atom_types_const [atom1_id];
 
@@ -138,34 +138,34 @@ while(active) {
 			#endif
 
 			// Added temporal variables
-			uint cube_000, cube_100, cube_010, cube_110, cube_001, cube_101, cube_011, cube_111;
+			unsigned int cube_000, cube_100, cube_010, cube_110, cube_001, cube_101, cube_011, cube_111;
 
-			uint ylow_times_g1  = y_low  * DockConst_g1;	
-			uint yhigh_times_g1 = y_high * DockConst_g1;
-        	        uint zlow_times_g2  = z_low  * DockConst_g2;	
-			uint zhigh_times_g2 = z_high * DockConst_g2;
+			unsigned int ylow_times_g1  = y_low  * DockConst_g1;	
+			unsigned int yhigh_times_g1 = y_high * DockConst_g1;
+        	unsigned int zlow_times_g2  = z_low  * DockConst_g2;	
+			unsigned int zhigh_times_g2 = z_high * DockConst_g2;
 
-        	        cube_000 = x_low  + ylow_times_g1  + zlow_times_g2;
-        	        cube_100 = x_high + ylow_times_g1  + zlow_times_g2;
-        	        cube_010 = x_low  + yhigh_times_g1 + zlow_times_g2;
-        	        cube_110 = x_high + yhigh_times_g1 + zlow_times_g2;
-        	        cube_001 = x_low  + ylow_times_g1  + zhigh_times_g2;
-        	        cube_101 = x_high + ylow_times_g1  + zhigh_times_g2;
-        	        cube_011 = x_low  + yhigh_times_g1 + zhigh_times_g2;
-        	        cube_111 = x_high + yhigh_times_g1 + zhigh_times_g2;
+        	cube_000 = x_low  + ylow_times_g1  + zlow_times_g2;
+        	cube_100 = x_high + ylow_times_g1  + zlow_times_g2;
+        	cube_010 = x_low  + yhigh_times_g1 + zlow_times_g2;
+        	cube_110 = x_high + yhigh_times_g1 + zlow_times_g2;
+        	cube_001 = x_low  + ylow_times_g1  + zhigh_times_g2;
+        	cube_101 = x_high + ylow_times_g1  + zhigh_times_g2;
+        	cube_011 = x_low  + yhigh_times_g1 + zhigh_times_g2;
+        	cube_111 = x_high + yhigh_times_g1 + zhigh_times_g2;
 
-			uint mul_tmp = atom1_typeid * DockConst_g3;
+			unsigned int mul_tmp = atom1_typeid * DockConst_g3;
 
 			// Energy contribution of the current grid type
 			float cube [2][2][2];
-	                cube [0][0][0] = GlobFgrids[cube_000 + mul_tmp];
-        	        cube [1][0][0] = GlobFgrids[cube_100 + mul_tmp];
-        	        cube [0][1][0] = GlobFgrids[cube_010 + mul_tmp];
-        	        cube [1][1][0] = GlobFgrids[cube_110 + mul_tmp];
-        	        cube [0][0][1] = GlobFgrids[cube_001 + mul_tmp];
-        	        cube [1][0][1] = GlobFgrids[cube_101 + mul_tmp];
-        	        cube [0][1][1] = GlobFgrids[cube_011 + mul_tmp];
-        	        cube [1][1][1] = GlobFgrids[cube_111 + mul_tmp];
+	        cube [0][0][0] = GlobFgrids[cube_000 + mul_tmp];
+        	cube [1][0][0] = GlobFgrids[cube_100 + mul_tmp];
+        	cube [0][1][0] = GlobFgrids[cube_010 + mul_tmp];
+        	cube [1][1][0] = GlobFgrids[cube_110 + mul_tmp];
+        	cube [0][0][1] = GlobFgrids[cube_001 + mul_tmp];
+        	cube [1][0][1] = GlobFgrids[cube_101 + mul_tmp];
+        	cube [0][1][1] = GlobFgrids[cube_011 + mul_tmp];
+        	cube [1][1][1] = GlobFgrids[cube_111 + mul_tmp];
 		
 			#if defined (DEBUG_KRNL_INTERE)
 			printf("Interpolation of van der Waals map:\n");

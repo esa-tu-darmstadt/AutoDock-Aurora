@@ -267,13 +267,13 @@ void libkernel_ga (
 	// Initial Calculation (IC) of scores
 	// ------------------------------------------------------------------
 	LOOP_FOR_GA_IC_OUTER:
-	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+	for (unsigned short pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// Calculate energy
 		const int tmp_int_zero = 0;
 		write_pipe_block(pipe00ga2igl00ic00active, &tmp_int_zero);
 
 		LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE:
-		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+		for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_ic;
 			tmp_ic = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 
@@ -311,9 +311,9 @@ void libkernel_ga (
 	}
 	// ------------------------------------------------------------------
 
-	uint eval_cnt = DockConst_pop_size; // takes into account the IC evals
+	unsigned int eval_cnt = DockConst_pop_size; // takes into account the IC evals
 
-	uint generation_cnt = 0;
+	unsigned int generation_cnt = 0;
 
 	LOOP_WHILE_GA_MAIN:
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
@@ -325,11 +325,11 @@ void libkernel_ga (
 		// Genetic Generation (GG)
 		// ------------------------------------------------------------------
 		float loc_energies[MAX_POPSIZE];
-		ushort best_entity = 0;
+		unsigned short best_entity = 0;
 
 		LOOP_FOR_GA_SHIFT: 
-//		for (ushort pop_cnt=1; pop_cnt<DockConst_pop_size; pop_cnt++) {
-		for (ushort pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
+//		for (unsigned short pop_cnt=1; pop_cnt<DockConst_pop_size; pop_cnt++) {
+		for (unsigned short pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
 			// copy energy to local memory
 			loc_energies[pop_cnt] = LocalEneCurr[pop_cnt];
 
@@ -352,14 +352,14 @@ void libkernel_ga (
 		#pragma ivdep array (LocalEneNext)
 		*/
 		LOOP_FOR_GA_OUTER_GLOBAL: 
-		for (ushort new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
+		for (unsigned short new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
 
 			// ---------------------------------------------------
 			// Elitism: copying the best entity to new population
 			// ---------------------------------------------------
 			if (new_pop_cnt == 1) {
 				LOOP_FOR_GA_INNER_ELITISM:
-				for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+				for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 					LocalPopNext[0][gene_cnt & MASK_GENOTYPE] = LocalPopCurr[best_entity][gene_cnt & MASK_GENOTYPE]; 	
 				} 		
 				LocalEneNext[0] = loc_energies[best_entity];
@@ -397,10 +397,10 @@ void libkernel_ga (
 */
 			// Check "Krnl_Prng_BT_ushort_float"
 			// To surpass error in hw_emu		
-			ushort bt_tmp_u0 = bt_tmp_uf0;
-			ushort bt_tmp_u1 = bt_tmp_uf1;
-			ushort bt_tmp_u2 = bt_tmp_uf2;
-			ushort bt_tmp_u3 = bt_tmp_uf3;
+			unsigned short bt_tmp_u0 = bt_tmp_uf0;
+			unsigned short bt_tmp_u1 = bt_tmp_uf1;
+			unsigned short bt_tmp_u2 = bt_tmp_uf2;
+			unsigned short bt_tmp_u3 = bt_tmp_uf3;
 
 			// float prng ready to used, replace float prng_BT_F[4];
 			float bt_tmp_f0 = bt_tmp.s1;
@@ -408,8 +408,8 @@ void libkernel_ga (
 			float bt_tmp_f2 = bt_tmp.s5;
 			float bt_tmp_f3 = bt_tmp.s7;
 
-			ushort parent1;
-			ushort parent2; 
+			unsigned short parent1;
+			unsigned short parent2; 
 
 			// First parent
 			if (loc_energies[bt_tmp_u0] < loc_energies[bt_tmp_u1]) {
@@ -429,7 +429,7 @@ void libkernel_ga (
 
 			LOOP_FOR_GA_INNER_BT:
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				local_entity_1[gene_cnt & MASK_GENOTYPE] = LocalPopCurr[parent1][gene_cnt & MASK_GENOTYPE];
 				local_entity_2[gene_cnt & MASK_GENOTYPE] = LocalPopCurr[parent2][gene_cnt & MASK_GENOTYPE];
 			}
@@ -445,8 +445,8 @@ void libkernel_ga (
 
 //printf("test point 2\n");
 
-			uchar covr_point_low;
-			uchar covr_point_high;
+			unsigned char covr_point_low;
+			unsigned char covr_point_high;
 			bool twopoint_cross_yes = false;
 
 			if (prng_GG_C.x == prng_GG_C.y) {covr_point_low = prng_GG_C.x;}
@@ -467,7 +467,7 @@ void libkernel_ga (
 //printf("test point 3\n");
 
 			LOOP_FOR_GA_INNER_CROSS_MUT:
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				float prngGG;
 				read_pipe_block(pipe00prng2ga00gg00float00prng, &prngGG);
 
@@ -543,13 +543,13 @@ void libkernel_ga (
 		// Subject num_of_entity_for_ls pieces of offsprings to LS 
 		// ------------------------------------------------------------------
 
-		uint ls_eval_cnt = 0;
+		unsigned int ls_eval_cnt = 0;
 
 		/*
 		#pragma ivdep
 		*/
 		LOOP_FOR_GA_LS_OUTER:
-		for (ushort ls_ent_cnt=0; ls_ent_cnt<DockConst_num_of_lsentities; ls_ent_cnt+=9) {
+		for (unsigned short ls_ent_cnt=0; ls_ent_cnt<DockConst_num_of_lsentities; ls_ent_cnt+=9) {
 
 			// Choose random & different entities on every iteration
 			ushort16 entity_ls;
@@ -557,15 +557,15 @@ void libkernel_ga (
 
 //printf("test point LS 1\n");
 
-			ushort entity_ls1 = entity_ls.s0;
-			ushort entity_ls2 = entity_ls.s1;
-			ushort entity_ls3 = entity_ls.s2;
-			ushort entity_ls4 = entity_ls.s3;
-			ushort entity_ls5 = entity_ls.s4;
-			ushort entity_ls6 = entity_ls.s5;
-			ushort entity_ls7 = entity_ls.s6;
-			ushort entity_ls8 = entity_ls.s7;
-			ushort entity_ls9 = entity_ls.s8;
+			unsigned short entity_ls1 = entity_ls.s0;
+			unsigned short entity_ls2 = entity_ls.s1;
+			unsigned short entity_ls3 = entity_ls.s2;
+			unsigned short entity_ls4 = entity_ls.s3;
+			unsigned short entity_ls5 = entity_ls.s4;
+			unsigned short entity_ls6 = entity_ls.s5;
+			unsigned short entity_ls7 = entity_ls.s6;
+			unsigned short entity_ls8 = entity_ls.s7;
+			unsigned short entity_ls9 = entity_ls.s8;
 
 			write_pipe_block(pipe00ga2ls00ls100energy, &LocalEneNext[entity_ls1]);
 			write_pipe_block(pipe00ga2ls00ls200energy, &LocalEneNext[entity_ls2]);
@@ -580,7 +580,7 @@ void libkernel_ga (
 //printf("test point LS 2\n");
 
 			LOOP_GA_LS_INNER_WRITE_GENOTYPE:
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
 				write_pipe_block(pipe00ga2ls00ls200genotype, &LocalPopNext[entity_ls2][gene_cnt & MASK_GENOTYPE]);
 				write_pipe_block(pipe00ga2ls00ls300genotype, &LocalPopNext[entity_ls3][gene_cnt & MASK_GENOTYPE]);
@@ -669,15 +669,15 @@ void libkernel_ga (
 			float eetmp8 = evalenergy_tmp8.x;
 			float eetmp9 = evalenergy_tmp9.x;
 
-			uint eval_tmp1 = *(uint*)&eetmp1;
-			uint eval_tmp2 = *(uint*)&eetmp2;
-			uint eval_tmp3 = *(uint*)&eetmp3;
-			uint eval_tmp4 = *(uint*)&eetmp4;
-			uint eval_tmp5 = *(uint*)&eetmp5;
-			uint eval_tmp6 = *(uint*)&eetmp6;
-			uint eval_tmp7 = *(uint*)&eetmp7;
-			uint eval_tmp8 = *(uint*)&eetmp8;
-			uint eval_tmp9 = *(uint*)&eetmp9;
+			unsigned int eval_tmp1 = *(unsigned int*)&eetmp1;
+			unsigned int eval_tmp2 = *(unsigned int*)&eetmp2;
+			unsigned int eval_tmp3 = *(unsigned int*)&eetmp3;
+			unsigned int eval_tmp4 = *(unsigned int*)&eetmp4;
+			unsigned int eval_tmp5 = *(unsigned int*)&eetmp5;
+			unsigned int eval_tmp6 = *(unsigned int*)&eetmp6;
+			unsigned int eval_tmp7 = *(unsigned int*)&eetmp7;
+			unsigned int eval_tmp8 = *(unsigned int*)&eetmp8;
+			unsigned int eval_tmp9 = *(unsigned int*)&eetmp9;
 
 			LocalEneNext[entity_ls1] = evalenergy_tmp1.y;
 			LocalEneNext[entity_ls2] = evalenergy_tmp2.y;
@@ -693,7 +693,7 @@ void libkernel_ga (
 			#pragma ivdep
 			*/
 			LOOP_FOR_GA_LS_INNER_READ_GENOTYPE:
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 
 				read_pipe_block(pipe00ls2ga00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
 				read_pipe_block(pipe00ls2ga00ls200genotype, &LocalPopNext[entity_ls2][gene_cnt & MASK_GENOTYPE]);
@@ -717,9 +717,9 @@ void libkernel_ga (
 
 		// Update current pops & energies
 		LOOP_FOR_GA_UPDATEPOP_OUTER:
-		for (ushort pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
+		for (unsigned short pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
 			LOOP_GA_UPDATEPOP_INNER:
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = LocalPopNext[pop_cnt][gene_cnt & MASK_GENOTYPE];
 			}
 
@@ -774,9 +774,9 @@ void libkernel_ga (
 
 	// Write final pop & energies back to FPGA-board DDRs
 	LOOP_GA_WRITEPOP2DDR_OUTER:
-	for (ushort pop_cnt=0;pop_cnt<DockConst_pop_size; pop_cnt++) { 	
+	for (unsigned short pop_cnt=0;pop_cnt<DockConst_pop_size; pop_cnt++) { 	
 		LOOP_GA_WRITEPOP2DDR_INNER:
-		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+		for (unsigned char gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE];
 		}
 

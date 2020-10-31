@@ -47,7 +47,7 @@ void libkernel_pc (
 	float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
 	LOOP_FOR_CONFORM_READ_GENOTYPE:
-	for (uchar i=0; i<DockConst_num_of_genes; i++) {
+	for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 		float fl_tmp;
 
 		if (i > 2) {
@@ -199,11 +199,11 @@ void libkernel_pc (
 	// Send ligand atomic coordinates to channel 
 	// --------------------------------------------------------------
 	LOOP_FOR_CONFORM_WRITE_XYZ:
-	for (uchar pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
+	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float3 tmp_coords[2];
 
 		LOOP_CONFORM_OUT:
-		for (uchar i=0; i<2; i++) {
+		for (unsigned char i=0; i<2; i++) {
 			tmp_coords[i] = loc_coords[pipe_cnt+i];
 		}
 
