@@ -47,23 +47,11 @@ while(active) {
 	float  theta;
 	float  genrotangle;
 	float3 genotype_xyz;
-/*
-	float3 __attribute__ ((
-			      memory,
-			      numbanks(1),
-			      bankwidth(16),
-			      singlepump,
-			      numreadports(3),
-			      numwriteports(1)
-			    )) loc_coords [MAX_NUM_OF_ATOMS];
-*/
 	float3 loc_coords [MAX_NUM_OF_ATOMS];
 
 	char actmode;
 	read_pipe_block(pipe00igl2conform00actmode, &actmode);
-/*
-	mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+	
 	active = actmode;
 	mode   = actmode;
 
@@ -227,7 +215,7 @@ while(active) {
 
 		} // End if-statement not dummy rotation
 
-		mem_fence(CLK_LOCAL_MEM_FENCE);
+		//mem_fence(CLK_LOCAL_MEM_FENCE);
 
 	} // End rotation_counter for-loop
 
@@ -244,9 +232,6 @@ while(active) {
 			write_pipe_block(pipe00conf2intere00actmode, &mode);
 			write_pipe_block(pipe00conf2intrae00actmode, &mode);
 		}
-/*
-		mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
 
 		float3 tmp_coords[2];
 
