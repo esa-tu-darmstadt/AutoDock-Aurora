@@ -27,19 +27,12 @@ void libkernel_ie (
 	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
 	const float* GlobFgrids3 = & GlobFgrids [Host_mul_tmp3];
 
-	char mode;
-
 	float3 loc_coords[MAX_NUM_OF_ATOMS];
 
 	//printf("BEFORE In INTER CHANNEL\n");
 	// --------------------------------------------------------------
 	// Wait for ligand atomic coordinates in channel
 	// --------------------------------------------------------------
-
-	char actmode;
-	read_pipe_block(pipe00conf2intere00actmode, &actmode);
-
-	mode   = actmode;
 
 	// LOOP_FOR_INTERE_READ_XYZ
 	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
@@ -270,6 +263,7 @@ void libkernel_ie (
 	// --------------------------------------------------------------
 	float final_interE = interE;
 
+/*
 	switch (mode) {
 		case 'I':  write_pipe_block(pipe00intere2storeic00intere,      &final_interE); break;
 		case 'G':  write_pipe_block(pipe00intere2storegg00intere,      &final_interE); break;
@@ -283,6 +277,7 @@ void libkernel_ie (
 		case 0x08: write_pipe_block(pipe00intere2storels00ls800intere, &final_interE); break;
 		case 0x09: write_pipe_block(pipe00intere2storels00ls900intere, &final_interE); break;
 	}
+*/	
 	// --------------------------------------------------------------
 
 	#if defined (DEBUG_KRNL_INTERE)
