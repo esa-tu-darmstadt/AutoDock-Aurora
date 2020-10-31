@@ -1,6 +1,8 @@
+#include "defines.h"
+#include "math.h"
+
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
 void Krnl_LS(
 		unsigned short            DockConst_max_num_of_iters,
 		float                     DockConst_rho_lower_bound,
@@ -61,15 +63,15 @@ while(valid) {
 
 		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_LS_READ_INPUT_GENOTYPE:
-		for (uchar i=0; i<DockConst_num_of_genes; i++) {
+		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			read_pipe_block(pipe00ga2ls00ls100genotype, &genotype [i]);
 		}
 	
 		float rho = 1.0f;
-		ushort iteration_cnt = 0;
-		uchar  cons_succ     = 0;
-		uchar  cons_fail     = 0;
-		uint   LS_eval       = 0;
+		unsigned short iteration_cnt = 0;
+		unsigned char  cons_succ     = 0;
+		unsigned char  cons_fail     = 0;
+		unsigned int   LS_eval       = 0;
 		bool   positive_direction = true;
 
 		// performing local search
@@ -116,7 +118,7 @@ while(valid) {
 			// rho is the deviation of the uniform distribution
 			__attribute__((xcl_pipeline_loop))
 			LOOP_FOR_LS_WRITE_GENOTYPE:
-			for (uchar i=0; i<DockConst_num_of_genes; i++) {
+			for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 				float tmp_prng;
 				read_pipe_block(pipe00prng2ls00float00prng, &tmp_prng);
 /*
@@ -184,7 +186,7 @@ while(valid) {
 
 				__attribute__((xcl_pipeline_loop))
 				LOOP_FOR_LS_FLOATPT_UPDATE_POS_GENOTYPE:
-				for (uchar i=0; i<DockConst_num_of_genes; i++) {
+				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (positive_direction == true) ? deviate_plus_bias  [i] : 
 											   deviate_minus_bias [i] ;
 					genotype [i] = entity_possible_new_genotype [i];
@@ -200,7 +202,7 @@ while(valid) {
 
 				__attribute__((xcl_pipeline_loop))
 				LOOP_FOR_LS_FLOATPT_UPDATE_NEG_GENOTYPE:
-				for (uchar i=0; i<DockConst_num_of_genes; i++) {
+				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (iteration_cnt == 1)? 0.0f: (0.5f*genotype_bias [i]);
 				}
 
@@ -220,7 +222,7 @@ while(valid) {
 		// write back data to GA
 		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_LS_WRITEBACK2GA:
-		for (uchar i=0; i<DockConst_num_of_genes; i++) {
+		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			if (i == 0) {
 				float2 evalenergy  = {*(float*)&LS_eval, current_energy};
 				write_pipe_block(pipe00ls2ga00ls100evalenergy, &evalenergy);	
