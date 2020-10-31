@@ -11,11 +11,11 @@ void Krnl_Prng_BT_ushort_float(
 	lfsr.x = Host_seed1;
 	lfsr.y = Host_seed2;
 
-		uint   u_tmp[4]; // used as short in GA
+		unsigned int   u_tmp[4]; // used as short in GA
 		float  f_tmp[4];	
 
 		// LOOP_FOR_PRNG_BT_USHORT_FLOAT
-		for(uchar i=0; i<4; i++) {
+		for(unsigned char i=0; i<4; i++) {
 			uchar2 lsb;
 
 			lsb.x = lfsr.x & 0x01u;
@@ -54,21 +54,19 @@ void Krnl_Prng_GG_uchar(
 			unsigned int  Host_seed, 
 		        unsigned char DockConst_num_of_genes
 ){
-	uint lfsr = Host_seed;
+	unsigned int lfsr = Host_seed;
 
-		uchar tmp[2];
+		unsigned char tmp[2];
 
 		// LOOP_FOR_PRNG_GG_UCHAR
-		for(uchar i=0; i<2; i++) {
-			uchar lsb;
+		for(unsigned char i=0; i<2; i++) {
+			unsigned char lsb;
 			lsb = lfsr & 0x01u;
 			lfsr >>= 1;
 			lfsr ^= (-lsb) & 0xA3000000u;
 			tmp[i] = (lfsr/MAX_UINT)*DockConst_num_of_genes;
 
 		}
-
-		nb_pipe_status success = PIPE_STATUS_FAILURE;
 
 		uchar2 utmp;
 		utmp.x = tmp[0];
@@ -83,19 +81,16 @@ void Krnl_Prng_GG_float(
 			unsigned int  Host_seed,
 		        unsigned char DockConst_num_of_genes
 ){
-	uint lfsr = Host_seed;
+	unsigned int lfsr = Host_seed;
 
 		// LOOP_FOR_PRNG_GG_FLOAT
-		for(uchar i=0; i<DockConst_num_of_genes; i++) {
+		for(unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
-			uchar lsb;
+			unsigned char lsb;
 			lsb = lfsr & 0x01u;
 			lfsr >>= 1;
 			lfsr ^= (-lsb) & 0xA3000000u;
 			tmp = (0.999999f/MAX_UINT)*lfsr;
-
-			nb_pipe_status success = PIPE_STATUS_FAILURE;
-
 /*
 			success = write_pipe(pipe00prng2ga00gg00float00prng, &tmp);
 */
@@ -116,7 +111,7 @@ void Krnl_Prng_LS123_ushort(
 			    unsigned int Host_seed9, 
 		            unsigned int DockConst_pop_size
 ){
-	uint lfsr[9];
+	unsigned int lfsr[9];
 	lfsr[0] = Host_seed1;
 	lfsr[1] = Host_seed2;
 	lfsr[2] = Host_seed3;
@@ -127,11 +122,11 @@ void Krnl_Prng_LS123_ushort(
 	lfsr[7] = Host_seed8;
 	lfsr[8] = Host_seed9;
 
-		ushort tmp[9];
+		unsigned short tmp[9];
 		
 		// LOOP_FOR_PRNG_LS123_USHORT
-		for (uint i=0; i<9; i++){
-			uchar  lsb[9];
+		for (unsigned int i=0; i<9; i++){
+			unsigned char  lsb[9];
 			lsb [i] = lfsr[i] & 0x01u;
 			lfsr[i] >>= 1;
 			lfsr[i] ^= (-lsb[i]) & 0xA3000000u;
@@ -182,12 +177,12 @@ void Krnl_Prng_LS_float(
 			unsigned int  Host_seed,
 		        unsigned char DockConst_num_of_genes
 ){
-	uint lfsr = Host_seed;
+	unsigned int lfsr = Host_seed;
 
 		// LOOP_FOR_PRNG_LS_FLOAT
-		for(uchar i=0; i<DockConst_num_of_genes; i++) {
+		for(unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
-			uchar lsb;
+			unsigned char lsb;
 			lsb = lfsr & 0x01u;
 			lfsr >>= 1;
 			lfsr ^= (-lsb) & 0xA3000000u;
