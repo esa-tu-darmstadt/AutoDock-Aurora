@@ -85,16 +85,6 @@ void Krnl_Prng_GG_float(
 ){
 	uint lfsr = Host_seed;
 
-	nb_pipe_status valid = PIPE_STATUS_FAILURE;
-
-	// LOOP_WHILE_PRNG_GG_FLOAT
-	while(valid != PIPE_STATUS_SUCCESS) {
-/*
-		bool active = true;
-*/
-		int active;
-		valid = read_pipe(pipe00ga2prng00gg00float00off, &active);
-
 		// LOOP_FOR_PRNG_GG_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
@@ -106,11 +96,10 @@ void Krnl_Prng_GG_float(
 
 			nb_pipe_status success = PIPE_STATUS_FAILURE;
 
-			if(valid != PIPE_STATUS_SUCCESS) {
-				success = write_pipe(pipe00prng2ga00gg00float00prng, &tmp);
-			}
+/*
+			success = write_pipe(pipe00prng2ga00gg00float00prng, &tmp);
+*/
 		}
-	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
 // --------------------------------------------------------------------------
@@ -137,16 +126,6 @@ void Krnl_Prng_LS123_ushort(
 	lfsr[6] = Host_seed7;
 	lfsr[7] = Host_seed8;
 	lfsr[8] = Host_seed9;
-
-	nb_pipe_status valid = PIPE_STATUS_FAILURE;
-
-	// LOOP_WHILE_PRNG_LS123_USHORT
-	while(valid != PIPE_STATUS_SUCCESS) {
-/*
-		bool active = true;
-*/
-		int active;
-		valid  = read_pipe(pipe00ga2prng00ls12300ushort00off, &active);
 
 		ushort tmp[9];
 		
@@ -180,8 +159,6 @@ void Krnl_Prng_LS123_ushort(
 			tmp[8] = tmp[7] + 8;
 		}
 
-		nb_pipe_status success = PIPE_STATUS_FAILURE;
-
 		ushort16 tmp123;
 		tmp123.s0 = tmp[0];
 		tmp123.s1 = tmp[1];
@@ -193,11 +170,10 @@ void Krnl_Prng_LS123_ushort(
 		tmp123.s7 = tmp[7];
 		tmp123.s8 = tmp[8];
 
-		if(valid != PIPE_STATUS_SUCCESS) {
-			success = write_pipe(pipe00prng2ga00ls12300ushort00prng, &tmp123);
-		}
+/*
+		success = write_pipe(pipe00prng2ga00ls12300ushort00prng, &tmp123);
+*/
 
-	} // End of while(valid != PIPE_STATUS_SUCCESS)
 }
 
 // --------------------------------------------------------------------------
