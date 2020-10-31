@@ -13,7 +13,7 @@ void Krnl_Prng_BT_ushort_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 	
-	LOOP_WHILE_PRNG_BT_USHORT_FLOAT:
+	// LOOP_WHILE_PRNG_BT_USHORT_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {	
 /*
 		bool active = true;
@@ -24,7 +24,7 @@ void Krnl_Prng_BT_ushort_float(
 		uint   u_tmp[4]; // used as short in GA
 		float  f_tmp[4];	
 
-		LOOP_FOR_PRNG_BT_USHORT_FLOAT:
+		// LOOP_FOR_PRNG_BT_USHORT_FLOAT
 		for(uchar i=0; i<4; i++) {
 			uchar2 lsb;
 
@@ -71,7 +71,7 @@ void Krnl_Prng_GG_uchar(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_GG_UCHAR:
+	// LOOP_WHILE_PRNG_GG_UCHAR
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -81,7 +81,7 @@ void Krnl_Prng_GG_uchar(
 
 		uchar tmp[2];
 
-		LOOP_FOR_PRNG_GG_UCHAR:
+		// LOOP_FOR_PRNG_GG_UCHAR
 		for(uchar i=0; i<2; i++) {
 			uchar lsb;
 			lsb = lfsr & 0x01u;
@@ -111,7 +111,7 @@ void Krnl_Prng_GG_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_GG_FLOAT:
+	// LOOP_WHILE_PRNG_GG_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -119,7 +119,7 @@ void Krnl_Prng_GG_float(
 		int active;
 		valid = read_pipe(pipe00ga2prng00gg00float00off, &active);
 
-		LOOP_FOR_PRNG_GG_FLOAT:
+		// LOOP_FOR_PRNG_GG_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -164,7 +164,7 @@ void Krnl_Prng_LS123_ushort(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS123_USHORT:
+	// LOOP_WHILE_PRNG_LS123_USHORT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -174,7 +174,7 @@ void Krnl_Prng_LS123_ushort(
 
 		ushort tmp[9];
 		
-		LOOP_FOR_PRNG_LS123_USHORT:
+		// LOOP_FOR_PRNG_LS123_USHORT
 		for (uint i=0; i<9; i++){
 			uchar  lsb[9];
 			lsb [i] = lfsr[i] & 0x01u;
@@ -234,7 +234,7 @@ void Krnl_Prng_LS_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS_FLOAT:
+	// LOOP_WHILE_PRNG_LS_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -242,7 +242,7 @@ void Krnl_Prng_LS_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls00float00off, &active);
 	
-		LOOP_FOR_PRNG_LS_FLOAT:
+		// LOOP_FOR_PRNG_LS_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -268,7 +268,7 @@ void Krnl_Prng_LS2_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS2_FLOAT:
+	// LOOP_WHILE_PRNG_LS2_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -276,7 +276,7 @@ void Krnl_Prng_LS2_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls200float00off, &active);
 	
-		LOOP_FOR_PRNG_LS2_FLOAT:
+		// LOOP_FOR_PRNG_LS2_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -302,7 +302,7 @@ void Krnl_Prng_LS3_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS3_FLOAT:
+	// LOOP_WHILE_PRNG_LS3_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -310,7 +310,7 @@ void Krnl_Prng_LS3_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls300float00off, &active);
 	
-		LOOP_FOR_PRNG_LS3_FLOAT:
+		// LOOP_FOR_PRNG_LS3_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -336,7 +336,7 @@ void Krnl_Prng_LS4_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS4_FLOAT:
+	// LOOP_WHILE_PRNG_LS4_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -344,7 +344,7 @@ void Krnl_Prng_LS4_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls400float00off, &active);
 	
-		LOOP_FOR_PRNG_LS4_FLOAT:
+		// LOOP_FOR_PRNG_LS4_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -370,7 +370,7 @@ void Krnl_Prng_LS5_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS5_FLOAT:
+	// LOOP_WHILE_PRNG_LS5_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -378,7 +378,7 @@ void Krnl_Prng_LS5_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls500float00off, &active);
 	
-		LOOP_FOR_PRNG_LS5_FLOAT:
+		// LOOP_FOR_PRNG_LS5_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -404,7 +404,7 @@ void Krnl_Prng_LS6_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS6_FLOAT:
+	// LOOP_WHILE_PRNG_LS6_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -412,7 +412,7 @@ void Krnl_Prng_LS6_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls600float00off, &active);
 	
-		LOOP_FOR_PRNG_LS6_FLOAT:
+		// LOOP_FOR_PRNG_LS6_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -438,7 +438,7 @@ void Krnl_Prng_LS7_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS7_FLOAT:
+	// LOOP_WHILE_PRNG_LS7_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -446,7 +446,7 @@ void Krnl_Prng_LS7_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls700float00off, &active);
 	
-		LOOP_FOR_PRNG_LS7_FLOAT:
+		// LOOP_FOR_PRNG_LS7_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -472,7 +472,7 @@ void Krnl_Prng_LS8_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS8_FLOAT:
+	// LOOP_WHILE_PRNG_LS8_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -480,7 +480,7 @@ void Krnl_Prng_LS8_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls800float00off, &active);
 	
-		LOOP_FOR_PRNG_LS8_FLOAT:
+		// LOOP_FOR_PRNG_LS8_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
@@ -506,7 +506,7 @@ void Krnl_Prng_LS9_float(
 
 	nb_pipe_status valid = PIPE_STATUS_FAILURE;
 
-	LOOP_WHILE_PRNG_LS9_FLOAT:
+	// LOOP_WHILE_PRNG_LS9_FLOAT
 	while(valid != PIPE_STATUS_SUCCESS) {
 /*
 		bool active = true;
@@ -514,7 +514,7 @@ void Krnl_Prng_LS9_float(
 		int active;
 		valid  = read_pipe(pipe00ga2prng00ls900float00off, &active);
 	
-		LOOP_FOR_PRNG_LS9_FLOAT:
+		// LOOP_FOR_PRNG_LS9_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
 			uchar lsb;
