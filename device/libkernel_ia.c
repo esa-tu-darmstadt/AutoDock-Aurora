@@ -179,7 +179,7 @@ while(active) {
 		float distance_pow_2  = atomic_distance*atomic_distance; 
 
 		float smoothed_distance_pow_2 = smoothed_distance*smoothed_distance; 
-		float inverse_smoothed_distance_pow_2  = native_divide(1.0f, smoothed_distance_pow_2);
+		float inverse_smoothed_distance_pow_2  = (1.0f / smoothed_distance_pow_2);
 		float inverse_smoothed_distance_pow_4  = inverse_smoothed_distance_pow_2 * inverse_smoothed_distance_pow_2;
 		float inverse_smoothed_distance_pow_6  = inverse_smoothed_distance_pow_4 * inverse_smoothed_distance_pow_2;
 		float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
@@ -205,13 +205,21 @@ while(active) {
 		if (atomic_distance < 20.48f)
 		{
 			// Calculating electrostatic term
-			partialE3 += native_divide(  (DockConst_coeff_elec*KerConstStatic_atom_charges_const[atom1_id]*KerConstStatic_atom_charges_const[atom2_id]) , (atomic_distance*(-8.5525f + native_divide(86.9525f, (1.0f + 7.7839f*native_exp(-0.3154f*atomic_distance)))))       );
+			partialE3 += (  
+							(DockConst_coeff_elec*KerConstStatic_atom_charges_const[atom1_id]*KerConstStatic_atom_charges_const[atom2_id]) 
+							/
+							(
+								atomic_distance*(
+									-8.5525f + (86.9525f / (1.0f + 7.7839f*exp(-0.3154f*atomic_distance)))
+								)
+							)       
+						);
 
 			// Calculating desolvation term
 			partialE4 += (
 				  (KerConstStatic_dspars_S_const [atom1_typeid] + DockConst_qasp*fabs(KerConstStatic_atom_charges_const[atom1_id])) * KerConstStatic_dspars_V_const [atom2_typeid] + 
 				  (KerConstStatic_dspars_S_const [atom2_typeid] + DockConst_qasp*fabs(KerConstStatic_atom_charges_const[atom2_id])) * KerConstStatic_dspars_V_const [atom1_typeid]) * 
-				 DockConst_coeff_desolv*native_exp(-0.0386f*distance_pow_2);
+				 DockConst_coeff_desolv*exp(-0.0386f*distance_pow_2);
 		} // if cuttoff2 - internuclear-distance at 20.48A
 	
 		intraE += partialE1 + partialE2 + partialE3 + partialE4;

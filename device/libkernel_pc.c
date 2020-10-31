@@ -99,10 +99,10 @@ void libkernel_pc (
 			{
 				float  sin_theta, cos_theta;
 				float3 genrot_unitvec;
-				sin_theta = native_sin(theta);
-				cos_theta = native_cos(theta);
-				genrot_unitvec.x = sin_theta*native_cos(phi);
-				genrot_unitvec.y = sin_theta*native_sin(phi);
+				sin_theta = sin(theta);
+				cos_theta = cos(theta);
+				genrot_unitvec.x = sin_theta*cos(phi);
+				genrot_unitvec.y = sin_theta*sin(phi);
 				genrot_unitvec.z = cos_theta;
 
 				rotation_unitvec = genrot_unitvec;
@@ -131,8 +131,8 @@ void libkernel_pc (
 			rotation_angle = rotation_angle*0.5f;
 
 			float sin_angle, cos_angle;
-			sin_angle      = native_sin(rotation_angle);
-			cos_angle      = native_cos(rotation_angle);
+			sin_angle      = sin(rotation_angle);
+			cos_angle      = cos(rotation_angle);
 			quatrot_left.x = sin_angle*rotation_unitvec.x;
 			quatrot_left.y = sin_angle*rotation_unitvec.y;
 			quatrot_left.z = sin_angle*rotation_unitvec.z;
