@@ -10,14 +10,6 @@ void Krnl_LS(
 		unsigned char             DockConst_num_of_genes,
    		float                     DockConst_base_dang_mul_sqrt3,
 		unsigned char             DockConst_cons_limit
-
-#if !defined(SW_EMU)
-		// IMPORTANT: enable this dummy global argument only for "hw" build.
-		// Check ../common_xilinx/utility/boards.mk
-		// https://forums.xilinx.com/t5/SDAccel/ERROR-KernelCheck-83-114-in-sdx-2017-4/td-p/818135
-		,
-		__global int *dummy
-#endif
 )
 {	
 	#if 0
@@ -32,7 +24,6 @@ void Krnl_LS(
 	/*bool valid = true;*/
 	char valid = 0x01;
 
-__attribute__((xcl_pipeline_loop))	
 LOOP_WHILE_LS_MAIN:
 while(valid) {
 
@@ -43,7 +34,6 @@ while(valid) {
 	float current_energy;
 	nb_pipe_status valid_energy = PIPE_STATUS_FAILURE;
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_WHILE_LS_ACTIVE:
 	while( (valid_active != PIPE_STATUS_SUCCESS) && (valid_energy != PIPE_STATUS_SUCCESS)) {
 		valid_active = read_pipe(pipe00ga2ls00off100active, &active);
@@ -61,7 +51,6 @@ while(valid) {
 	if (valid) {
 		float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
-		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_LS_READ_INPUT_GENOTYPE:
 		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			read_pipe_block(pipe00ga2ls00ls100genotype, &genotype [i]);
@@ -75,7 +64,6 @@ while(valid) {
 		bool   positive_direction = true;
 
 		// performing local search
-		__attribute__((xcl_pipeline_loop))
 		LOOP_WHILE_LS_ITERATION_RHO:
 		while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
 			// -----------------------------------------------
@@ -110,20 +98,12 @@ while(valid) {
 			int tmp_int = (rho < DockConst_rho_lower_bound)?0:1;
 			write_pipe_block(pipe00ls2arbiter00ls100end, &tmp_int);
 
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
-
 			// new random deviate
 			// rho is the deviation of the uniform distribution
-			__attribute__((xcl_pipeline_loop))
 			LOOP_FOR_LS_WRITE_GENOTYPE:
 			for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 				float tmp_prng;
 				read_pipe_block(pipe00prng2ls00float00prng, &tmp_prng);
-/*
-				mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
 
 				// tmp1 is genotype_deviate
 				float tmp1 = rho * (2.0f*tmp_prng - 1.0f);
@@ -163,7 +143,6 @@ while(valid) {
 			nb_pipe_status intra_valid = PIPE_STATUS_FAILURE;
 			nb_pipe_status inter_valid = PIPE_STATUS_FAILURE;
 
-			__attribute__((xcl_pipeline_loop))
 			LOOP_WHILE_LS_READ_ENERGIES:
 			while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
 
@@ -184,7 +163,6 @@ while(valid) {
 				// updating offspring_genotype
 				// updating genotype_bias
 
-				__attribute__((xcl_pipeline_loop))
 				LOOP_FOR_LS_FLOATPT_UPDATE_POS_GENOTYPE:
 				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (positive_direction == true) ? deviate_plus_bias  [i] : 
@@ -200,7 +178,6 @@ while(valid) {
 			else {
 				// updating (halving) genotype_bias
 
-				__attribute__((xcl_pipeline_loop))
 				LOOP_FOR_LS_FLOATPT_UPDATE_NEG_GENOTYPE:
 				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (iteration_cnt == 1)? 0.0f: (0.5f*genotype_bias [i]);
@@ -220,17 +197,12 @@ while(valid) {
 		#endif
 		
 		// write back data to GA
-		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_LS_WRITEBACK2GA:
 		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 			if (i == 0) {
 				float2 evalenergy  = {*(float*)&LS_eval, current_energy};
 				write_pipe_block(pipe00ls2ga00ls100evalenergy, &evalenergy);	
 			}
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
-
 			write_pipe_block(pipe00ls2ga00ls100genotype, &genotype [i]);
 		}
 
