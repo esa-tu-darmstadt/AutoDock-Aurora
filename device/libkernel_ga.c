@@ -257,14 +257,12 @@ void Krnl_GA(
 	printf("%-40s %u\n", "DockConst_num_of_genes: ",        	DockConst_num_of_genes);
 	#endif
 
-	// Other banking configuration (see PopNext, eneNext) might reduce logic
-	// but makes PopCurr stallable
-	__local float LocalPopCurr[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
-	__local float LocalEneCurr[MAX_POPSIZE];
+	float LocalPopCurr[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
+	float LocalEneCurr[MAX_POPSIZE];
 
-	__global const float* GlobPopCurrInitial = & GlobPopulationCurrentInitial [Host_Offset_Pop];
-	__global       float* GlobPopCurrFinal   = & GlobPopulationCurrentFinal   [Host_Offset_Pop];
-	__global       float* GlobEneCurr        = & GlobEnergyCurrent     	  [Host_Offset_Ene];
+	const float* GlobPopCurrInitial = & GlobPopulationCurrentInitial [Host_Offset_Pop];
+	      float* GlobPopCurrFinal   = & GlobPopulationCurrentFinal   [Host_Offset_Pop];
+	      float* GlobEneCurr        = & GlobEnergyCurrent     	     [Host_Offset_Ene];
 
 	// ------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
@@ -275,9 +273,7 @@ void Krnl_GA(
 		// Calculate energy
 		const int tmp_int_zero = 0;
 		write_pipe_block(pipe00ga2igl00ic00active, &tmp_int_zero);
-/*
-		mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 		__attribute__((xcl_pipeline_loop))
 		LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE:
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
@@ -327,43 +323,13 @@ void Krnl_GA(
 	LOOP_WHILE_GA_MAIN:
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
 
-		//float LocalPopNext[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
-		//float LocalEneNext[MAX_POPSIZE];
-
-		// This configuration reduces logic and does not increase block RAM usage
-/*
-		float __attribute__ ((
-				       memory,
-		   		       numbanks(4),
-			               bankwidth(32),
-			              )) LocalPopNext[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
-*/
 		float LocalPopNext[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
-
-/*
-		float __attribute__ ((
-				       memory,
-		   		       numbanks(4),
-			               bankwidth(4),
-			              )) LocalEneNext[MAX_POPSIZE];
-*/
 		float LocalEneNext[MAX_POPSIZE];
 
 		// ------------------------------------------------------------------
 		// Genetic Generation (GG)
 		// ------------------------------------------------------------------
-/*
-		float __attribute__ ((
-				       memory,
-		   		       numbanks(1),
-			               bankwidth(64),
-			               singlepump,
- 			               numreadports(6),
-			               numwriteports(1)
-			              )) loc_energies[MAX_POPSIZE];
-*/
 		float loc_energies[MAX_POPSIZE];
-
 		ushort best_entity = 0;
 
 		__attribute__((xcl_pipeline_loop))
@@ -422,9 +388,7 @@ void Krnl_GA(
 			// Get float binary_tournament selection prngs (tournament rate)
 			float8 bt_tmp;
 			read_pipe_block(pipe00prng2ga00bt00ushort00float00prng, &bt_tmp);
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 //printf("test point 1\n");
 			// Convert: float prng that must be still converted to short
 			float bt_tmp_uf0 = bt_tmp.s0;
@@ -487,9 +451,7 @@ void Krnl_GA(
 			// get float genetic_generation prngs (mutation rate)
 			uchar2 prng_GG_C;
 			read_pipe_block(pipe00prng2ga00gg00uchar00prng, &prng_GG_C);
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 //printf("test point 2\n");
 
 			uchar covr_point_low;
@@ -510,9 +472,7 @@ void Krnl_GA(
 
 			const int tmp_int_zero = 0;
 			write_pipe_block(pipe00ga2igl00gg00active, &tmp_int_zero);
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 //printf("test point 3\n");
 
 			__attribute__((xcl_pipeline_loop))
@@ -520,9 +480,7 @@ void Krnl_GA(
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				float prngGG;
 				read_pipe_block(pipe00prng2ga00gg00float00prng, &prngGG);
-/*
-				mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 //printf("test point 4\n");
 
 				float tmp_offspring;
@@ -608,9 +566,7 @@ void Krnl_GA(
 			// Choose random & different entities on every iteration
 			ushort16 entity_ls;
 			read_pipe_block(pipe00prng2ga00ls12300ushort00prng, &entity_ls);
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 //printf("test point LS 1\n");
 
 			ushort entity_ls1 = entity_ls.s0;
@@ -634,9 +590,7 @@ void Krnl_GA(
 			write_pipe_block(pipe00ga2ls00ls900energy, &LocalEneNext[entity_ls9]);
 
 //printf("test point LS 2\n");
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 			__attribute__((xcl_pipeline_loop))
 			LOOP_GA_LS_INNER_WRITE_GENOTYPE:
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
@@ -650,9 +604,7 @@ void Krnl_GA(
 				write_pipe_block(pipe00ga2ls00ls800genotype, &LocalPopNext[entity_ls8][gene_cnt & MASK_GENOTYPE]);
 				write_pipe_block(pipe00ga2ls00ls900genotype, &LocalPopNext[entity_ls9][gene_cnt & MASK_GENOTYPE]);
 			}
-/*
-			mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 //printf("test point LS 3\n");
 
 			float2 evalenergy_tmp1;
@@ -823,9 +775,6 @@ void Krnl_GA(
 	write_pipe_block(pipe00ga2prng00ls700float00off, &tmp_int_one);
 	write_pipe_block(pipe00ga2prng00ls800float00off, &tmp_int_one);
 	write_pipe_block(pipe00ga2prng00ls900float00off, &tmp_int_one);
-/*
-	mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
 
 	// Turn off LS kernels
 	write_pipe_block(pipe00ga2ls00off100active, &tmp_int_one);
@@ -837,15 +786,9 @@ void Krnl_GA(
 	write_pipe_block(pipe00ga2ls00off700active, &tmp_int_one);
 	write_pipe_block(pipe00ga2ls00off800active, &tmp_int_one);
 	write_pipe_block(pipe00ga2ls00off900active, &tmp_int_one);
-/*
-	mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
 
 	// Turn off IGL_Arbiter, Conform, InterE, IntraE kernerls
 	write_pipe_block(pipe00iglarbiter00off,     		&tmp_int_one);
-/*
-	mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
 
 	// Write final pop & energies back to FPGA-board DDRs
 	__attribute__((xcl_pipeline_loop))
