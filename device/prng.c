@@ -184,16 +184,6 @@ void Krnl_Prng_LS_float(
 ){
 	uint lfsr = Host_seed;
 
-	nb_pipe_status valid = PIPE_STATUS_FAILURE;
-
-	// LOOP_WHILE_PRNG_LS_FLOAT
-	while(valid != PIPE_STATUS_SUCCESS) {
-/*
-		bool active = true;
-*/
-		int active;
-		valid  = read_pipe(pipe00ga2prng00ls00float00off, &active);
-	
 		// LOOP_FOR_PRNG_LS_FLOAT
 		for(uchar i=0; i<DockConst_num_of_genes; i++) {
 			float tmp;
@@ -202,14 +192,11 @@ void Krnl_Prng_LS_float(
 			lfsr >>= 1;
 			lfsr ^= (-lsb) & 0xA3000000u;
 			tmp = (0.999999f/MAX_UINT)*lfsr;
-
-			nb_pipe_status success = PIPE_STATUS_FAILURE;
-
-			if(valid != PIPE_STATUS_SUCCESS) {
+/*
 				success = write_pipe(pipe00prng2ls00float00prng, &tmp);
-			}
+*/
 		}
-	} // End of while(valid != PIPE_STATUS_SUCCESS)
+
 }
 
 void Krnl_Prng_LS2_float(
