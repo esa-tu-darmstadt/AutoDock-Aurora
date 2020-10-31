@@ -41,7 +41,7 @@ float map_angle_360(float angle)
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search) 
 // Originally from: searchoptimum.c
 // --------------------------------------------------------------------------
-void libkernel_ga (
+uint64_t libkernel_ga (
 	const 	float*           restrict GlobPopulationCurrentInitial,
 			float*           restrict GlobPopulationCurrentFinal,
 			float*           restrict GlobEnergyCurrent,
@@ -64,6 +64,10 @@ void libkernel_ga (
 			unsigned int	      	  Host_Offset_Ene
 )
 {
+	#ifdef PRINT_ALL_KRNL
+  	printf("Starting libkernel_ga ... \n");
+  	#endif
+
 	#if defined (DEBUG_KRNL_GA)
 	printf("\n");
 	printf("%-40s %u\n", "DockConst_pop_size: ",        		DockConst_pop_size);
@@ -620,6 +624,11 @@ void libkernel_ga (
 	GlobGens_performed [Host_RunId] = generation_cnt;
 
 	/*printf("Host_RunId: %u, eval_cnt: %u, generation_cnt: %u\n", Host_RunId, eval_cnt, generation_cnt);*/
+
+  	#ifdef PRINT_ALL_KRNL
+  	printf("\tFinishing libkernel_ga\n");
+  	#endif
+	return 0;
 }
 
 // --------------------------------------------------------------------------
