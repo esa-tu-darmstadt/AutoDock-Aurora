@@ -22,15 +22,12 @@ void Krnl_LS(
 	#endif
 
 	float current_energy;
-	nb_pipe_status valid_energy = PIPE_STATUS_FAILURE;
 
-	// LOOP_WHILE_LS_ACTIVE
-	while( (valid_active != PIPE_STATUS_SUCCESS) && (valid_energy != PIPE_STATUS_SUCCESS)) {
-		valid_energy = read_pipe(pipe00ga2ls00ls100energy,  &current_energy);
-	}
+/*
+	valid_energy = read_pipe(pipe00ga2ls00ls100energy,  &current_energy);
+*/
 
-
-		float   genotype [ACTUAL_GENOTYPE_LENGTH];
+	float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
 		// LOOP_FOR_LS_READ_INPUT_GENOTYPE
 		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
@@ -122,16 +119,8 @@ void Krnl_LS(
 			float energyIE_LS_rx;
 
 /*
-			// LOOP_WHILE_LS_READ_ENERGIES
-			while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
-
-				if (intra_valid != PIPE_STATUS_SUCCESS) {
-					intra_valid = read_pipe(pipe00intrae2storels00ls100intrae, &energyIA_LS_rx);
-				}
-				else if (inter_valid != PIPE_STATUS_SUCCESS) {
-					inter_valid = read_pipe(pipe00intere2storels00ls100intere, &energyIE_LS_rx);
-				}
-			}
+			intra_valid = read_pipe(pipe00intrae2storels00ls100intrae, &energyIA_LS_rx);
+			inter_valid = read_pipe(pipe00intere2storels00ls100intere, &energyIE_LS_rx);
 */
 
 			float candidate_energy = energyIA_LS_rx + energyIE_LS_rx;
