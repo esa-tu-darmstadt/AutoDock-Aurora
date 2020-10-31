@@ -7,7 +7,7 @@
 // PRNG generators are implemented as Linear Feedback Shift Registers (LFSR)
 // All are 32-bit LFRS, feedback taps: 30, 20, 26, 25
 // --------------------------------------------------------------------------
-void Krnl_Prng_BT_ushort_float(
+void prng_BT_ushort_float(
 	unsigned int Host_seed1,
 	unsigned int Host_seed2,
 	unsigned int DockConst_pop_size
@@ -54,7 +54,7 @@ void Krnl_Prng_BT_ushort_float(
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-void Krnl_Prng_GG_uchar(
+void prng_GG_uchar(
 	unsigned int  Host_seed, 
 	unsigned char DockConst_num_of_genes
 ){
@@ -79,7 +79,7 @@ void Krnl_Prng_GG_uchar(
 */
 }
 
-void Krnl_Prng_GG_float(
+void prng_GG_float(
 	unsigned int  Host_seed,
 	unsigned char DockConst_num_of_genes
 ){
@@ -101,7 +101,7 @@ void Krnl_Prng_GG_float(
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-void Krnl_Prng_LS123_ushort(
+void prng_LS123_ushort(
 	unsigned int Host_seed1,
 	unsigned int Host_seed2, 
 	unsigned int Host_seed3,
@@ -173,7 +173,7 @@ void Krnl_Prng_LS123_ushort(
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-void Krnl_Prng_LS_float(
+void prng_LS_float(
 	unsigned int  Host_seed,
 	unsigned char DockConst_num_of_genes
 ){
