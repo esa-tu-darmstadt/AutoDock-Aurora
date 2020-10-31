@@ -21,15 +21,11 @@ void Krnl_LS(
 	printf("LS: DockConst_cons_limit: %u\n",           DockConst_cons_limit);
 	#endif
 
-	int active = 0;
-	nb_pipe_status valid_active = PIPE_STATUS_FAILURE;
-
 	float current_energy;
 	nb_pipe_status valid_energy = PIPE_STATUS_FAILURE;
 
 	// LOOP_WHILE_LS_ACTIVE
 	while( (valid_active != PIPE_STATUS_SUCCESS) && (valid_energy != PIPE_STATUS_SUCCESS)) {
-		valid_active = read_pipe(pipe00ga2ls00off100active, &active);
 		valid_energy = read_pipe(pipe00ga2ls00ls100energy,  &current_energy);
 	}
 
@@ -125,9 +121,7 @@ void Krnl_LS(
 			float energyIA_LS_rx;
 			float energyIE_LS_rx;
 
-			nb_pipe_status intra_valid = PIPE_STATUS_FAILURE;
-			nb_pipe_status inter_valid = PIPE_STATUS_FAILURE;
-
+/*
 			// LOOP_WHILE_LS_READ_ENERGIES
 			while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
 
@@ -138,6 +132,7 @@ void Krnl_LS(
 					inter_valid = read_pipe(pipe00intere2storels00ls100intere, &energyIE_LS_rx);
 				}
 			}
+*/
 
 			float candidate_energy = energyIA_LS_rx + energyIE_LS_rx;
 
