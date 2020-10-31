@@ -6,43 +6,31 @@
 // a very high value will be added to the current energy as a penalty. 
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
-void Krnl_InterE(
-             __global const float* restrict GlobFgrids,
- 	     __constant float*     restrict KerConstStatic_atom_charges_const,
- 	     __constant char*      restrict KerConstStatic_atom_types_const,
-			    unsigned char                    DockConst_g1,
-  			    unsigned int                     DockConst_g2,
-			    unsigned int                     DockConst_g3,
-   			    unsigned char                    DockConst_num_of_atoms,
-			    float                   	     DockConst_gridsize_x_minus1,
-			    float                    	     DockConst_gridsize_y_minus1,
-			    float                    	     DockConst_gridsize_z_minus1,
-	    		    unsigned int                     Host_mul_tmp2,
-			    unsigned int                     Host_mul_tmp3
+void libkernel_ie (
+	const 	float* restrict GlobFgrids,
+ 	/*__constant*/ float*     restrict KerConstStatic_atom_charges_const,
+ 	/*__constant*/ char*      restrict KerConstStatic_atom_types_const,
+			unsigned char                    DockConst_g1,
+  			unsigned int                     DockConst_g2,
+			unsigned int                     DockConst_g3,
+   			unsigned char                    DockConst_num_of_atoms,
+			float                   	     DockConst_gridsize_x_minus1,
+			float                    	     DockConst_gridsize_y_minus1,
+			float                    	     DockConst_gridsize_z_minus1,
+	    	unsigned int                     Host_mul_tmp2,
+			unsigned int                     Host_mul_tmp3
 )
 {
 	char active = 0x01;
 
-	__global const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
-	__global const float* GlobFgrids3 = & GlobFgrids [Host_mul_tmp3];
+	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
+	const float* GlobFgrids3 = & GlobFgrids [Host_mul_tmp3];
 
-__attribute__((xcl_pipeline_loop))
 LOOP_WHILE_INTERE_MAIN:
 while(active) {
 
 	char mode;
 
-/*
-	float3 __attribute__ ((
-			      memory,
-			      numbanks(2),
-			      bankwidth(16),
-			      singlepump,
-			      numreadports(1),
-			      numwriteports(1)
-			    )) loc_coords[MAX_NUM_OF_ATOMS];
-*/
 	float3 loc_coords[MAX_NUM_OF_ATOMS];
 
 	//printf("BEFORE In INTER CHANNEL\n");
@@ -52,13 +40,10 @@ while(active) {
 
 	char actmode;
 	read_pipe_block(pipe00conf2intere00actmode, &actmode);
-/*
-	mem_fence(CLK_CHANNEL_MEM_FENCE);
-*/
+
 	active = actmode;
 	mode   = actmode;
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_INTERE_READ_XYZ:
 	for (uchar pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		float8 tmp;
@@ -80,7 +65,6 @@ while(active) {
 	float interE = 0.0f;
 
 	// For each ligand atom
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_INTER_MAIN:
 	for (uchar atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
 	{
