@@ -11,16 +11,6 @@ void Krnl_Prng_BT_ushort_float(
 	lfsr.x = Host_seed1;
 	lfsr.y = Host_seed2;
 
-	nb_pipe_status valid = PIPE_STATUS_FAILURE;
-	
-	// LOOP_WHILE_PRNG_BT_USHORT_FLOAT
-	while(valid != PIPE_STATUS_SUCCESS) {	
-/*
-		bool active = true;
-*/
-		int active;
-		valid = read_pipe(pipe00ga2prng00bt00ushort00float00off, &active);
-
 		uint   u_tmp[4]; // used as short in GA
 		float  f_tmp[4];	
 
@@ -41,9 +31,6 @@ void Krnl_Prng_BT_ushort_float(
 			f_tmp[i] = (0.999999f/MAX_UINT)*lfsr.y;
 		}
 
-		nb_pipe_status success = PIPE_STATUS_FAILURE;
-
-		if(valid != PIPE_STATUS_SUCCESS) {
 			// Check "Krnl_GA"
 			// To surpass error in hw_emu
 			float u_tmp_float_0 = u_tmp[0];
@@ -56,9 +43,9 @@ void Krnl_Prng_BT_ushort_float(
 				      u_tmp_float_2, f_tmp[2],
 				      u_tmp_float_3, f_tmp[3]};
 
+/*
 			success = write_pipe(pipe00prng2ga00bt00ushort00float00prng, &tmp);
-		}
-	} // End of while(valid != PIPE_STATUS_SUCCESS)
+*/			
 }
 
 // --------------------------------------------------------------------------
@@ -68,16 +55,6 @@ void Krnl_Prng_GG_uchar(
 		        unsigned char DockConst_num_of_genes
 ){
 	uint lfsr = Host_seed;
-
-	nb_pipe_status valid = PIPE_STATUS_FAILURE;
-
-	// LOOP_WHILE_PRNG_GG_UCHAR
-	while(valid != PIPE_STATUS_SUCCESS) {
-/*
-		bool active = true;
-*/
-		int active;
-		valid = read_pipe(pipe00ga2prng00gg00uchar00off, &active);		
 
 		uchar tmp[2];
 
@@ -97,10 +74,9 @@ void Krnl_Prng_GG_uchar(
 		utmp.x = tmp[0];
 		utmp.y = tmp[1];
 
-		if(valid != PIPE_STATUS_SUCCESS) {
-			success = write_pipe(pipe00prng2ga00gg00uchar00prng, &utmp);
-		}
-	} // while(valid != PIPE_STATUS_SUCCESS)
+/*
+		success = write_pipe(pipe00prng2ga00gg00uchar00prng, &utmp);
+*/
 }
 
 void Krnl_Prng_GG_float(
