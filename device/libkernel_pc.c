@@ -3,17 +3,16 @@
 // the genotype fed by any producer logic/kernel (IC, GG, LSs).
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
-void Krnl_Conform(
-	     __global const int*  restrict KerConstStatic_rotlist_const,
-	     __constant float3*   restrict KerConstStatic_ref_coords_const,
-	     __constant float3*   restrict KerConstStatic_rotbonds_moving_vectors_const,
-	     __constant float3*   restrict KerConstStatic_rotbonds_unit_vectors_const,  
-			      unsigned int          DockConst_rotbondlist_length,
-			      unsigned char         DockConst_num_of_atoms,
-			      unsigned char         DockConst_num_of_genes,
-	     __constant float4*   restrict KerConstStatic_ref_orientation_quats_const,
-			      unsigned short        Host_RunId
+void libkernel_pc (
+	const 	int*  			 restrict KerConstStatic_rotlist_const,
+	/*__constant*/ float3*   restrict KerConstStatic_ref_coords_const,
+	/*__constant*/ float3*   restrict KerConstStatic_rotbonds_moving_vectors_const,
+	/*__constant*/ float3*   restrict KerConstStatic_rotbonds_unit_vectors_const,  
+			unsigned int          	  DockConst_rotbondlist_length,
+			unsigned char         	  DockConst_num_of_atoms,
+			unsigned char         	  DockConst_num_of_genes,
+	/*__constant*/ float4*   restrict KerConstStatic_ref_orientation_quats_const,
+			unsigned short        	  Host_RunId
 )
 {
 	#if defined (DEBUG_KRNL_Conform) 
@@ -34,13 +33,11 @@ void Krnl_Conform(
 
 	__local int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_CONFORM_ROTBONDLIST:
 	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
-__attribute__((xcl_pipeline_loop))
 LOOP_WHILE_CONFORM_MAIN:
 while(active) {
 	char mode;
@@ -74,7 +71,6 @@ while(active) {
 
 	float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_CONFORM_READ_GENOTYPE:
 	for (uchar i=0; i<DockConst_num_of_genes; i++) {
 		float fl_tmp;
@@ -113,7 +109,6 @@ while(active) {
 	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_Conform", "must be disabled");}
 	#endif
 
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_CONFORM_MAIN:
 	for (ushort rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
@@ -243,7 +238,6 @@ while(active) {
 	// --------------------------------------------------------------
 	// Send ligand atomic coordinates to channel 
 	// --------------------------------------------------------------
-	__attribute__((xcl_pipeline_loop))
 	LOOP_FOR_CONFORM_WRITE_XYZ:
 	for (uchar pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
 		if (pipe_cnt == 0) {
@@ -256,7 +250,6 @@ while(active) {
 
 		float3 tmp_coords[2];
 
-		__attribute__((opencl_unroll_hint))
 		LOOP_CONFORM_OUT:
 		for (uchar i=0; i<2; i++) {
 			tmp_coords[i] = loc_coords[pipe_cnt+i];
