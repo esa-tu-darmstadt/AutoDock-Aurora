@@ -217,29 +217,28 @@ float map_angle_360(float angle)
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search) 
 // Originally from: searchoptimum.c
 // --------------------------------------------------------------------------
-__kernel __attribute__ ((reqd_work_group_size(1,1,1)))
-void Krnl_GA(
-	     __global const float*           restrict GlobPopulationCurrentInitial,
-	     __global       float*           restrict GlobPopulationCurrentFinal,
-	     __global       float*           restrict GlobEnergyCurrent,
-   	     __global       unsigned int*    restrict GlobEvals_performed,
-             __global       unsigned int*    restrict GlobGens_performed,
-			    unsigned int              DockConst_pop_size,
-		     	    unsigned int              DockConst_num_of_energy_evals,
-			    unsigned int              DockConst_num_of_generations,
-		      	    float                     DockConst_tournament_rate,
-			    float                     DockConst_mutation_rate,
-		    	    float                     DockConst_abs_max_dmov,
-			    float                     DockConst_abs_max_dang,
-		    	    float                     Host_two_absmaxdmov,
-			    float                     Host_two_absmaxdang,
-			    float                     DockConst_crossover_rate,
-			    unsigned int              DockConst_num_of_lsentities,
-			    unsigned char             DockConst_num_of_genes,
-	                    unsigned short            Host_RunId,
-			    unsigned int 	      Host_Offset_Pop,
-			    unsigned int	      Host_Offset_Ene
-	     )
+void libkernel_ga (
+	const 	float*           restrict GlobPopulationCurrentInitial,
+			float*           restrict GlobPopulationCurrentFinal,
+			float*           restrict GlobEnergyCurrent,
+			unsigned int*    restrict GlobEvals_performed,
+            unsigned int*    restrict GlobGens_performed,
+			unsigned int              DockConst_pop_size,
+		    unsigned int              DockConst_num_of_energy_evals,
+			unsigned int              DockConst_num_of_generations,
+		    float                     DockConst_tournament_rate,
+			float                     DockConst_mutation_rate,
+		    float                     DockConst_abs_max_dmov,
+			float                     DockConst_abs_max_dang,
+		    float                     Host_two_absmaxdmov,
+			float                     Host_two_absmaxdang,
+			float                     DockConst_crossover_rate,
+			unsigned int              DockConst_num_of_lsentities,
+			unsigned char             DockConst_num_of_genes,
+	        unsigned short            Host_RunId,
+			unsigned int 	      	  Host_Offset_Pop,
+			unsigned int	      	  Host_Offset_Ene
+)
 {
 	#if defined (DEBUG_KRNL_GA)
 	printf("\n");
@@ -822,6 +821,7 @@ void Krnl_GA(
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 
+/*
 #include "Krnl_PRNG.cl"
 
 #include "Krnl_LS.cl"
@@ -839,4 +839,4 @@ void Krnl_GA(
 #include "Krnl_Conform.cl"
 #include "Krnl_InterE.cl"
 #include "Krnl_IntraE.cl"
-
+*/
