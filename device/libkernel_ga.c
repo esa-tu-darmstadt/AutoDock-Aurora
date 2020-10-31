@@ -6,21 +6,6 @@
 //LS:  local search
 //OFF: turn off 
 
-#define PIPE_DEPTH_16  16
-#define PIPE_DEPTH_64  64
-#define PIPE_DEPTH_512 512
-
-// Status of pipe operation
-// Success: 0
-// Failure: negative value, e.g.: -1, -2, etc
-
-// Important: the evaluation of failure of "pipe-expr" 
-// must be done: (pipe-expr != PIPE_STATUS_SUCCESS),
-// as a failure is characterize by any negative integer number.
-typedef int nb_pipe_status;
-#define PIPE_STATUS_SUCCESS      0
-#define PIPE_STATUS_FAILURE	-1
-
 // --------------------------------------------------------------------------
 // Map the argument into the interval 0 - 180, or 0 - 360
 // by adding/subtracting n*ang_max to/from it.
