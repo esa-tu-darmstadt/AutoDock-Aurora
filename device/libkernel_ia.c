@@ -42,8 +42,6 @@ void libkernel_ia (
 			float                            DockConst_coeff_desolv
 )
 {
-	char active = 0x01;
-
 	char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
 
 	// LOOP_FOR_INTRAE_CONTRIBUTORS
@@ -51,8 +49,6 @@ void libkernel_ia (
 		intraE_contributors_localcache [i] = KerConstStatic_intraE_contributors_const [i];	
 	}
 
-// LOOP_WHILE_INTRAE_MAIN
-while(active) {
 	char mode;
 
 	float3 loc_coords[MAX_NUM_OF_ATOMS];
@@ -64,8 +60,6 @@ while(active) {
 
 	char actmode;
 	read_pipe_block(pipe00conf2intrae00actmode, &actmode);
-
-	active = actmode;
 	mode   = actmode;
 
 	// LOOP_FOR_INTRAE_READ_XYZ
@@ -248,8 +242,6 @@ while(active) {
 	#if defined (DEBUG_KRNL_INTRAE)
 	printf("AFTER Out INTRAE CHANNEL\n");
 	#endif
-
-} // End of while(active)
 
 	#if defined (DEBUG_ACTIVE_KERNEL)
 	printf("	%-20s: %s\n", "Krnl_IntraE", "disabled");
