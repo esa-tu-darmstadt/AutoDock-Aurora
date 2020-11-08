@@ -39,6 +39,11 @@ float sqrt_custom(const float x)
 	return *(float*) &i; 	// return as_float(i);
 }  
 
-
+/* 
+ * -----------------------------------------------
+ * Local-Search
+ * -----------------------------------------------
+ * */
+typedef enum {False, True} boolean;
 
 #endif /* AUXILIARY_H_ */
