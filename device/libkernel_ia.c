@@ -1,15 +1,6 @@
 #include "defines.h"
 #include "math.h"
-
-// sqrt7 
-//https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
-float sqrt_custom(const float x) 
-{ 	//uint i = as_uint(x);	
-	unsigned int i = *(unsigned int*) &x;    	
-	i  += 127 << 23;		// adjust bias   	
-	i >>= 1; 				// approximation of square root 	
-	return *(float*) &i; 	// return as_float(i);
-}  
+#include "auxiliary.c"
 
 // --------------------------------------------------------------------------
 // IntraE calculates the intramolecular energy of a set of atomic ligand 
