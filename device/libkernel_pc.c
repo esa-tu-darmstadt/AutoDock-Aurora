@@ -28,7 +28,10 @@ void libkernel_pc (
 	const 	float*   		restrict KerConstStatic_ref_orientation_quats_const,
 			unsigned short        	 Host_RunId,
 
-			float* 					 genotype
+	const	float* 			restrict genotype,
+			float* 			restrict local_coords_x,
+			float* 			restrict local_coords_y,
+			float* 			restrict local_coords_z
 )
 {
 	#if defined (DEBUG_KRNL_Conform) 
@@ -45,17 +48,14 @@ void libkernel_pc (
 	// just to keep sizes equal to power of 2
 	// __local float  __attribute__((numbanks(8), bankwidth(16))) local_coords[MAX_NUM_OF_ATOMS][4];
 
-	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
-
 	// LOOP_FOR_CONFORM_ROTBONDLIST
+	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 	for (unsigned short c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
-	float local_coords [MAX_NUM_OF_ATOMS][3];
-	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
-
 	// LOOP_FOR_CONFORM_READ_GENOTYPE
+	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
 	for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
 		if (i < 3) {
 			local_genotype [i] = genotype[i];
@@ -92,9 +92,9 @@ void libkernel_pc (
 			}
 			else
 			{	
-				atom_to_rotate[0] = local_coords[atom_id][0];
-				atom_to_rotate[1] = local_coords[atom_id][1];
-				atom_to_rotate[2] = local_coords[atom_id][2];
+				atom_to_rotate[0] = local_coords_x[atom_id];
+				atom_to_rotate[1] = local_coords_y[atom_id];
+				atom_to_rotate[2] = local_coords_z[atom_id];
 			}
 
 			// Capturing rotation vectors and angle
@@ -207,46 +207,14 @@ void libkernel_pc (
 			atom_to_rotate[2] = esa_dot4(quatrot_temp_2, left_4z);
 
 			// Performing final movement and storing values
-			local_coords[atom_id][0] = atom_to_rotate[0] + rotation_movingvec[0];
-			local_coords[atom_id][1] = atom_to_rotate[1] + rotation_movingvec[1];
-			local_coords[atom_id][2] = atom_to_rotate[2] + rotation_movingvec[2];
+			local_coords_x[atom_id] = atom_to_rotate[0] + rotation_movingvec[0];
+			local_coords_y[atom_id] = atom_to_rotate[1] + rotation_movingvec[1];
+			local_coords_z[atom_id] = atom_to_rotate[2] + rotation_movingvec[2];
 		} // End if-statement not dummy rotation
 
 		//mem_fence(CLK_LOCAL_MEM_FENCE);
 
 	} // End rotation_counter for-loop
-
-	#if defined (DEBUG_KRNL_CONFORM)
-	printf("BEFORE Out CONFORM CHANNEL\n");
-	#endif
-
-	// --------------------------------------------------------------
-	// Send ligand atomic coordinates to channel 
-	// --------------------------------------------------------------
-	// LOOP_FOR_CONFORM_WRITE_XYZ
-	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
-		float3 tmp_coords[2];
-
-		// LOOP_CONFORM_OUT
-		for (unsigned char i=0; i<2; i++) {
-			tmp_coords[i] = local_coords[pipe_cnt+i];
-		}
-
-		float8 tmp;
-
-		tmp.s0 = tmp_coords[0].x; tmp.s1 = tmp_coords[0].y; tmp.s2 = tmp_coords[0].z; //tmp.s3
-		tmp.s4 = tmp_coords[1].x; tmp.s5 = tmp_coords[1].y; tmp.s6 = tmp_coords[1].z; //tmp.s7
-/*
-		write_pipe_block(pipe00conf2intere00xyz, &tmp);
-		write_pipe_block(pipe00conf2intrae00xyz, &tmp);
-*/		
-	}
-
-	// --------------------------------------------------------------
-	#if defined (DEBUG_KRNL_CONFORM)
-	printf("AFTER Out CONFORM CHANNEL\n");
-	#endif
-
 
 #if defined (DEBUG_ACTIVE_KERNEL)
 printf("	%-20s: %s\n", "Krnl_Conform", "disabled");
