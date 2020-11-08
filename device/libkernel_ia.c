@@ -40,7 +40,11 @@ void libkernel_ia (
 			float                            DockConst_coeff_elec,
 			float                            DockConst_qasp,
 			float                            DockConst_coeff_desolv,
-			float* 					 		 final_intraE
+			float* 					 		 final_intraE,
+
+			float* 			restrict local_coords_x,
+			float* 			restrict local_coords_y,
+			float* 			restrict local_coords_z
 )
 {
 	char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
@@ -50,33 +54,11 @@ void libkernel_ia (
 		intraE_contributors_localcache [i] = KerConstStatic_intraE_contributors_const [i];	
 	}
 
-	float3 loc_coords[MAX_NUM_OF_ATOMS];
-
-	//printf("BEFORE In INTRA CHANNEL\n");
-	// --------------------------------------------------------------
-	// Wait for ligand atomic coordinates in channel
-	// --------------------------------------------------------------
-
-	// LOOP_FOR_INTRAE_READ_XYZ
-	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
-		float8 tmp;
-		read_pipe_block(pipe00conf2intrae00xyz, &tmp);
-
-		float3 tmp1 = {tmp.s0, tmp.s1, tmp.s2};
-		float3 tmp2 = {tmp.s4, tmp.s5, tmp.s6};
-		loc_coords[pipe_cnt] = tmp1;
-		loc_coords[pipe_cnt+1] = tmp2;
-	}
-
-	// --------------------------------------------------------------
-	//printf("AFTER In INTRA CHANNEL\n");
-
 	#if defined (DEBUG_ACTIVE_KERNEL)
 	if (active == 0) {printf("	%-20s: %s\n", "Krnl_IntraE", "must be disabled");}
 	#endif
 
 	float intraE = 0.0f;
-
 
 	// For each intramolecular atom contributor pair
 
@@ -89,11 +71,9 @@ void libkernel_ia (
 		char atom1_id = ref_intraE_contributors_const.x;
 		char atom2_id = ref_intraE_contributors_const.y;
 
-		float3 loc_coords_atid1 = loc_coords[atom1_id];
-		float3 loc_coords_atid2 = loc_coords[atom2_id];
-		float subx = loc_coords_atid1.x - loc_coords_atid2.x;
-		float suby = loc_coords_atid1.y - loc_coords_atid2.y;
-		float subz = loc_coords_atid1.z - loc_coords_atid2.z;
+		float subx = local_coords_x[atom1_id] - local_coords_x[atom2_id];
+		float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
+		float subz = local_coords_z[atom1_id] - local_coords_z[atom2_id];
 
 		//atomic_distance = sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 		float atomic_distance = sqrt_custom(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
