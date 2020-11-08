@@ -80,112 +80,134 @@ void libkernel_pc (
 			unsigned int atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
 			// Capturing atom coordinates
-			float3 atom_to_rotate;
+			float atom_to_rotate[3];
 
 			if ((rotation_list_element & RLIST_FIRSTROT_MASK) != 0)	// If first rotation of this atom
 			{	
-				atom_to_rotate = KerConstStatic_ref_coords_const [atom_id];
+				atom_to_rotate[0] = KerConstStatic_ref_coords_const [atom_id];
+				atom_to_rotate[1] = KerConstStatic_ref_coords_const [atom_id];
+				atom_to_rotate[2] = KerConstStatic_ref_coords_const [atom_id];
 			}
 			else
 			{	
-				atom_to_rotate = loc_coords[atom_id];
+				atom_to_rotate[0] = loc_coords[atom_id];
+				atom_to_rotate[1] = loc_coords[atom_id];
+				atom_to_rotate[2] = loc_coords[atom_id];
 			}
 
 			// Capturing rotation vectors and angle
-			float3   rotation_unitvec;
-			float3   rotation_movingvec;
-			float    rotation_angle;
+			float rotation_unitvec[3];
+			float rotation_movingvec[3];
+			float rotation_angle;
 
 			if ((rotation_list_element & RLIST_GENROT_MASK) != 0)	// If general rotation
 			{
 				float  sin_theta, cos_theta;
-				float3 genrot_unitvec;
+				float genrot_unitvec[3];
 				sin_theta = sin(theta);
 				cos_theta = cos(theta);
-				genrot_unitvec.x = sin_theta*cos(phi);
-				genrot_unitvec.y = sin_theta*sin(phi);
-				genrot_unitvec.z = cos_theta;
+				genrot_unitvec[0] = sin_theta*cos(phi);
+				genrot_unitvec[1] = sin_theta*sin(phi);
+				genrot_unitvec[2] = cos_theta;
 
-				rotation_unitvec = genrot_unitvec;
+				rotation_unitvec[0] = genrot_unitvec[0];
+				rotation_unitvec[1] = genrot_unitvec[1];
+				rotation_unitvec[2] = genrot_unitvec[2];
+				
+				rotation_movingvec[0] = genotype_xyz;
+				rotation_movingvec[1] = genotype_xyz;
+				rotation_movingvec[2] = genotype_xyz;
+
 				rotation_angle = genrotangle;
-				rotation_movingvec = genotype_xyz;
 			}
 			else	// If rotating around rotatable bond
 			{
 				unsigned int rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
 
-				rotation_unitvec = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
+				rotation_unitvec[0] = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
+				rotation_unitvec[1] = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
+				rotation_unitvec[2] = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
 				
-				rotation_angle = genotype [6+rotbond_id];
+				rotation_movingvec[0] = KerConstStatic_rotbonds_moving_vectors_const [rotbond_id];
+				rotation_movingvec[1] = KerConstStatic_rotbonds_moving_vectors_const [rotbond_id];
+				rotation_movingvec[2] = KerConstStatic_rotbonds_moving_vectors_const [rotbond_id];
 
-				rotation_movingvec = KerConstStatic_rotbonds_moving_vectors_const [rotbond_id];
+				rotation_angle = genotype [6+rotbond_id];
 
 				// In addition performing the first movement 
 				// which is needed only if rotating around rotatable bond
-				atom_to_rotate -= rotation_movingvec;
+				atom_to_rotate[0] -= rotation_movingvec[0];
+				atom_to_rotate[1] -= rotation_movingvec[1];
+				atom_to_rotate[2] -= rotation_movingvec[2];
 			}
 
 			// Performing rotation
-			float4 quatrot_left;
-			float4 quatrot_temp;
+			float quatrot_left_q, quatrot_left_x, quatrot_left_y, quatrot_left_z;
+			float quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z;
 
 			rotation_angle = rotation_angle*0.5f;
 
 			float sin_angle, cos_angle;
 			sin_angle      = sin(rotation_angle);
 			cos_angle      = cos(rotation_angle);
-			quatrot_left.x = sin_angle*rotation_unitvec.x;
-			quatrot_left.y = sin_angle*rotation_unitvec.y;
-			quatrot_left.z = sin_angle*rotation_unitvec.z;
-			quatrot_left.w = cos_angle;
+			quatrot_left_q = cos_angle;
+			quatrot_left_x = sin_angle * rotation_unitvec[0];
+			quatrot_left_y = sin_angle * rotation_unitvec[1];
+			quatrot_left_z = sin_angle * rotation_unitvec[2];
+			
 
 			if ((rotation_list_element & RLIST_GENROT_MASK) != 0)	// If general rotation, 
 										// two rotations should be performed 
 										// (multiplying the quaternions)
 			{
-				const float4 ref_orientation_quats_const = KerConstStatic_ref_orientation_quats_const[Host_RunId];
-				const float  ref_orientation_quats_const_0 = ref_orientation_quats_const.x;
-				const float  ref_orientation_quats_const_1 = ref_orientation_quats_const.y;
-				const float  ref_orientation_quats_const_2 = ref_orientation_quats_const.z;
-				const float  ref_orientation_quats_const_3 = ref_orientation_quats_const.w;
+				const float  ref_ori_quats_const_q = KerConstStatic_ref_orientation_quats_const[Host_RunId];
+				const float  ref_ori_quats_const_x = KerConstStatic_ref_orientation_quats_const[Host_RunId];
+				const float  ref_ori_quats_const_y = KerConstStatic_ref_orientation_quats_const[Host_RunId];
+				const float  ref_ori_quats_const_z = KerConstStatic_ref_orientation_quats_const[Host_RunId];
 
 				// Calculating quatrot_left*ref_orientation_quats_const, 
 				// which means that reference orientation rotation is the first
-				quatrot_temp = quatrot_left;
+				quatrot_temp_q = quatrot_left_q;
+				quatrot_temp_x = quatrot_left_x;
+				quatrot_temp_y = quatrot_left_y;
+				quatrot_temp_z = quatrot_left_z;
+				float quatrot_temp[4] = { quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z };
 
 				// Taking the first element of ref_orientation_quats_const member
-				float4 ref4x = {   ref_orientation_quats_const_0,   ref_orientation_quats_const_3, - ref_orientation_quats_const_2, ref_orientation_quats_const_1};
-				float4 ref4y = { - ref_orientation_quats_const_3,   ref_orientation_quats_const_0,   ref_orientation_quats_const_1, ref_orientation_quats_const_2};
-				float4 ref4z = {   ref_orientation_quats_const_2, - ref_orientation_quats_const_1,   ref_orientation_quats_const_0, ref_orientation_quats_const_3};
-				float4 ref4w = { - ref_orientation_quats_const_1, - ref_orientation_quats_const_2, - ref_orientation_quats_const_3, ref_orientation_quats_const_0};
+				float ref_4q[4] = {  ref_ori_quats_const_q, -ref_ori_quats_const_x, -ref_ori_quats_const_y, -ref_ori_quats_const_z };
+				float ref_4x[4] = {  ref_ori_quats_const_x,  ref_ori_quats_const_q, -ref_ori_quats_const_z,  ref_ori_quats_const_y };
+				float ref_4y[4] = { -ref_ori_quats_const_y,  ref_ori_quats_const_z,  ref_ori_quats_const_q,  ref_ori_quats_const_x };
+				float ref_4z[4] = {  ref_ori_quats_const_z, -ref_ori_quats_const_y,  ref_ori_quats_const_x,  ref_ori_quats_const_q };
 
-				quatrot_left.x = dot(quatrot_temp, ref4x);
-				quatrot_left.y = dot(quatrot_temp, ref4y);
-				quatrot_left.z = dot(quatrot_temp, ref4z);
-				quatrot_left.w = dot(quatrot_temp, ref4w);
+				quatrot_left_q = dot(quatrot_temp, ref_4q);
+				quatrot_left_x = dot(quatrot_temp, ref_4x);
+				quatrot_left_y = dot(quatrot_temp, ref_4y);
+				quatrot_left_z = dot(quatrot_temp, ref_4z);
 			}
 
-			float3 left3x = {  quatrot_left.w, - quatrot_left.z,   quatrot_left.y};
-			float3 left3y = {  quatrot_left.z,   quatrot_left.w, - quatrot_left.x};
-			float3 left3z = {- quatrot_left.y,   quatrot_left.x,   quatrot_left.w};
-			float3 left3w = {- quatrot_left.x, - quatrot_left.y, - quatrot_left.z};
+			float left_3q[3] = {-quatrot_left_x, -quatrot_left_y, -quatrot_left_z };
+			float left_3x[3] = { quatrot_left_q, -quatrot_left_z,  quatrot_left_y };
+			float left_3y[3] = { quatrot_left_z,  quatrot_left_q, -quatrot_left_x };
+			float left_3z[3] = {-quatrot_left_y,  quatrot_left_x,  quatrot_left_q };
+			
+			quatrot_temp_q = dot(left_3q, atom_to_rotate);
+			quatrot_temp_x = dot(left_3x, atom_to_rotate);
+			quatrot_temp_y = dot(left_3y, atom_to_rotate);
+			quatrot_temp_z = dot(left_3z, atom_to_rotate);
+			float quatrot_temp_2[4] = { quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z };
 
-			quatrot_temp.x = dot(left3x, atom_to_rotate);
-			quatrot_temp.y = dot(left3y, atom_to_rotate);
-			quatrot_temp.z = dot(left3z, atom_to_rotate);
-			quatrot_temp.w = dot(left3w, atom_to_rotate);
+			float left_4x[4] = { -quatrot_left_x,  quatrot_left_q, -quatrot_left_z,  quatrot_left_y };
+			float left_4y[4] = { -quatrot_left_y,  quatrot_left_z,  quatrot_left_q, -quatrot_left_x };
+			float left_4z[4] = { -quatrot_left_z, -quatrot_left_y,  quatrot_left_x,  quatrot_left_q };
 
-			float4 left4x = {  quatrot_left.w, - quatrot_left.z,   quatrot_left.y, - quatrot_left.x};
-			float4 left4y = {  quatrot_left.z,   quatrot_left.w, - quatrot_left.x, - quatrot_left.y};
-			float4 left4z = {- quatrot_left.y,   quatrot_left.x,   quatrot_left.w, - quatrot_left.z};
-
-			atom_to_rotate.x = dot(quatrot_temp, left4x);
-			atom_to_rotate.y = dot(quatrot_temp, left4y);
-			atom_to_rotate.z = dot(quatrot_temp, left4z);
+			atom_to_rotate[0] = dot(quatrot_temp_2, left_4x);
+			atom_to_rotate[1] = dot(quatrot_temp_2, left_4y);
+			atom_to_rotate[2] = dot(quatrot_temp_2, left_4z);
 
 			// Performing final movement and storing values
-			loc_coords[atom_id] = atom_to_rotate + rotation_movingvec;
-
+			loc_coords[atom_id] = atom_to_rotate[0] + rotation_movingvec[0];
+			loc_coords[atom_id] = atom_to_rotate[1] + rotation_movingvec[1];
+			loc_coords[atom_id] = atom_to_rotate[2] + rotation_movingvec[2];
 		} // End if-statement not dummy rotation
 
 		//mem_fence(CLK_LOCAL_MEM_FENCE);
