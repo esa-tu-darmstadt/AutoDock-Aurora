@@ -22,32 +22,15 @@ void libkernel_ie (
 			float                    DockConst_gridsize_z_minus1,
 	    	unsigned int             Host_mul_tmp2,
 			unsigned int             Host_mul_tmp3,
-			float* 					 final_interE
+			float* 					 final_interE,
+
+			float* 			restrict local_coords_x,
+			float* 			restrict local_coords_y,
+			float* 			restrict local_coords_z
 )
 {
 	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
 	const float* GlobFgrids3 = & GlobFgrids [Host_mul_tmp3];
-
-	float3 loc_coords[MAX_NUM_OF_ATOMS];
-
-	//printf("BEFORE In INTER CHANNEL\n");
-	// --------------------------------------------------------------
-	// Wait for ligand atomic coordinates in channel
-	// --------------------------------------------------------------
-
-	// LOOP_FOR_INTERE_READ_XYZ
-	for (unsigned char pipe_cnt=0; pipe_cnt<DockConst_num_of_atoms; pipe_cnt+=2) {
-		float8 tmp;
-		read_pipe_block(pipe00conf2intere00xyz, &tmp);
-
-		float3 tmp1 = {tmp.s0, tmp.s1, tmp.s2};
-		float3 tmp2 = {tmp.s4, tmp.s5, tmp.s6};
-		loc_coords[pipe_cnt] = tmp1;
-		loc_coords[pipe_cnt+1] = tmp2;
-	}
-
-	// --------------------------------------------------------------
-	//printf("AFTER In INTER CHANNEL\n");
 
 	#if defined (DEBUG_ACTIVE_KERNEL)
 	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_InterE", "must be disabled");}
@@ -61,12 +44,9 @@ void libkernel_ie (
 	{
 		char atom1_typeid = KerConstStatic_atom_types_const [atom1_id];
 
-		float3 loc_coords_atid1 = loc_coords[atom1_id];
-
-		float x = loc_coords_atid1.x;
-		float y = loc_coords_atid1.y;
-		float z = loc_coords_atid1.z;
-
+		float x = local_coords_x[atom1_id];
+		float y = local_coords_y[atom1_id];
+		float z = local_coords_z[atom1_id];
 		float q = KerConstStatic_atom_charges_const [atom1_id];
 
 		float partialE1;
