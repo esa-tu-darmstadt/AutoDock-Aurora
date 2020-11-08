@@ -23,7 +23,6 @@ void libkernel_pc (
 	const 	float*   		restrict KerConstStatic_rotbonds_moving_vectors_const,
 	const 	float*   		restrict KerConstStatic_rotbonds_unit_vectors_const,  
 			unsigned int          	 DockConst_rotbondlist_length,
-			unsigned char         	 DockConst_num_of_atoms,
 			unsigned char         	 DockConst_num_of_genes,
 	const 	float*   		restrict KerConstStatic_ref_orientation_quats_const,
 			unsigned short        	 Host_RunId,
@@ -37,7 +36,6 @@ void libkernel_pc (
 	#if defined (DEBUG_KRNL_Conform) 
 	printf("\n");
 	printf("%-40s %u\n", "DockConst->rotbondlist_length: ",	DockConst_rotbondlist_length);
-	printf("%-40s %u\n", "DockConst->num_of_atoms: ",  	DockConst_num_of_atoms);
 	printf("%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);	
 	#endif
 
