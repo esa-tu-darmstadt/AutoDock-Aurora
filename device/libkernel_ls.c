@@ -130,7 +130,7 @@ void Krnl_LS(
 
 				// LOOP_FOR_LS_FLOATPT_UPDATE_POS_GENOTYPE
 				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
-					genotype_bias [i] = (positive_direction == true) ? deviate_plus_bias  [i] : 
+					genotype_bias [i] = (positive_direction == True) ? deviate_plus_bias  [i] : 
 											   deviate_minus_bias [i] ;
 					genotype [i] = entity_possible_new_genotype [i];
 				}	
