@@ -16,21 +16,21 @@ void libkernel_ia (
 			float 				 DockConst_smooth,
 	const   float* restrict KerConstStatic_reqm,
 	const   float* restrict KerConstStatic_reqm_hbond,    
-	const   unsigned int*  restrict KerConstStatic_atom1_types_reqm,
-	const   unsigned int*  restrict KerConstStatic_atom2_types_reqm,  
+	const   uint*  restrict KerConstStatic_atom1_types_reqm,
+	const   uint*  restrict KerConstStatic_atom2_types_reqm,  
 
 	const   float* restrict KerConstStatic_VWpars_AC_const,
 	const   float* restrict KerConstStatic_VWpars_BD_const,
 	const   float* restrict KerConstStatic_dspars_S_const,
  	const   float* restrict KerConstStatic_dspars_V_const,
 
-		   	unsigned int                     DockConst_num_of_intraE_contributors,
-		  	float                            DockConst_grid_spacing,
-			unsigned char                    DockConst_num_of_atypes,
-			float                            DockConst_coeff_elec,
-			float                            DockConst_qasp,
-			float                            DockConst_coeff_desolv,
-			float* 					 		 final_intraE,
+		   	uint			DockConst_num_of_intraE_contributors,
+		  	float           DockConst_grid_spacing,
+			uchar           DockConst_num_of_atypes,
+			float           DockConst_coeff_elec,
+			float           DockConst_qasp,
+			float           DockConst_coeff_desolv,
+			float* 			final_intraE,
 
 			float* 			restrict local_coords_x,
 			float* 			restrict local_coords_y,
@@ -46,7 +46,7 @@ void libkernel_ia (
 	// For each intramolecular atom contributor pair
 
 	// LOOP_FOR_INTRAE_MAIN
-	for (unsigned short contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
+	for (ushort contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
 
 		char atom1_id = KerConstStatic_intraE_contributors_const[3*contributor_counter];
 		char atom2_id = KerConstStatic_intraE_contributors_const[3*contributor_counter + 1];
@@ -97,8 +97,8 @@ void libkernel_ia (
 		// 	 (sum of the vdW radii of two like atoms (A)) in the case of hbond 
 		float opt_distance;
 
-		unsigned int atom1_type_vdw_hb = KerConstStatic_atom1_types_reqm [atom1_typeid];
-     	unsigned int atom2_type_vdw_hb = KerConstStatic_atom2_types_reqm [atom2_typeid];
+		uint atom1_type_vdw_hb = KerConstStatic_atom1_types_reqm [atom1_typeid];
+     	uint atom2_type_vdw_hb = KerConstStatic_atom2_types_reqm [atom2_typeid];
 
 		if (KerConstStatic_intraE_contributors_const[3*contributor_counter + 2] == 1)	// H-bond
 		{

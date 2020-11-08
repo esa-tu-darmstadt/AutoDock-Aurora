@@ -8,6 +8,7 @@
  * */
 typedef unsigned char uchar;
 typedef unsigned char ushort;
+typedef unsigned int  uint;
 
 /* 
  * -----------------------------------------------

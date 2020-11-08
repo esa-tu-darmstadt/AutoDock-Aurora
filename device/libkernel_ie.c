@@ -1,5 +1,6 @@
 #include "defines.h"
 #include "math.h"
+#include "auxiliary.c"
 
 // --------------------------------------------------------------------------
 // InterE calculates the intermolecular energy of a ligand given by 
@@ -13,15 +14,15 @@ void libkernel_ie (
 	const	float* 			restrict GlobFgrids,
  	const 	float*     		restrict KerConstStatic_atom_charges_const,
  	const 	char*      		restrict KerConstStatic_atom_types_const,
-			unsigned char            DockConst_g1,
-  			unsigned int             DockConst_g2,
-			unsigned int             DockConst_g3,
-   			unsigned char            DockConst_num_of_atoms,
+			uchar                    DockConst_g1,
+  			uint                     DockConst_g2,
+			uint                     DockConst_g3,
+   			uchar                    DockConst_num_of_atoms,
 			float                    DockConst_gridsize_x_minus1,
 			float                    DockConst_gridsize_y_minus1,
 			float                    DockConst_gridsize_z_minus1,
-	    	unsigned int             Host_mul_tmp2,
-			unsigned int             Host_mul_tmp3,
+	    	uint                     Host_mul_tmp2,
+			uint                     Host_mul_tmp3,
 			float* 					 final_interE,
 
 			float* 			restrict local_coords_x,
@@ -40,7 +41,7 @@ void libkernel_ie (
 
 	// For each ligand atom
 	// LOOP_FOR_INTER_MAIN
-	for (unsigned char atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
+	for (uchar atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
 	{
 		char atom1_typeid = KerConstStatic_atom_types_const [atom1_id];
 
@@ -107,12 +108,12 @@ void libkernel_ie (
 			#endif
 
 			// Added temporal variables
-			unsigned int cube_000, cube_100, cube_010, cube_110, cube_001, cube_101, cube_011, cube_111;
+			uint cube_000, cube_100, cube_010, cube_110, cube_001, cube_101, cube_011, cube_111;
 
-			unsigned int ylow_times_g1  = y_low  * DockConst_g1;	
-			unsigned int yhigh_times_g1 = y_high * DockConst_g1;
-        	unsigned int zlow_times_g2  = z_low  * DockConst_g2;	
-			unsigned int zhigh_times_g2 = z_high * DockConst_g2;
+			uint ylow_times_g1  = y_low  * DockConst_g1;	
+			uint yhigh_times_g1 = y_high * DockConst_g1;
+        	uint zlow_times_g2  = z_low  * DockConst_g2;	
+			uint zhigh_times_g2 = z_high * DockConst_g2;
 
         	cube_000 = x_low  + ylow_times_g1  + zlow_times_g2;
         	cube_100 = x_high + ylow_times_g1  + zlow_times_g2;
@@ -123,7 +124,7 @@ void libkernel_ie (
         	cube_011 = x_low  + yhigh_times_g1 + zhigh_times_g2;
         	cube_111 = x_high + yhigh_times_g1 + zhigh_times_g2;
 
-			unsigned int mul_tmp = atom1_typeid * DockConst_g3;
+			uint mul_tmp = atom1_typeid * DockConst_g3;
 
 			// Energy contribution of the current grid type
 			float cube [2][2][2];

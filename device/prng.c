@@ -1,5 +1,6 @@
 #include "defines.h"
 #include "math.h"
+#include "auxiliary.c"
 
 // TODO: add float* args to store prng status
 
@@ -8,19 +9,19 @@
 // All are 32-bit LFRS, feedback taps: 30, 20, 26, 25
 // --------------------------------------------------------------------------
 void prng_BT_ushort_float(
-	unsigned int Host_seed1,
-	unsigned int Host_seed2,
-	unsigned int DockConst_pop_size
+	uint Host_seed1,
+	uint Host_seed2,
+	uint DockConst_pop_size
 ){
 	uint2 lfsr;
 	lfsr.x = Host_seed1;
 	lfsr.y = Host_seed2;
 
-	unsigned int   u_tmp[4]; // used as short in GA
+	uint   u_tmp[4]; // used as short in GA
 	float  f_tmp[4];	
 
 	// LOOP_FOR_PRNG_BT_USHORT_FLOAT
-	for(unsigned char i=0; i<4; i++) {
+	for(uchar i=0; i<4; i++) {
 		uchar2 lsb;
 
 		lsb.x = lfsr.x & 0x01u;
@@ -55,16 +56,16 @@ void prng_BT_ushort_float(
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 void prng_GG_uchar(
-	unsigned int  Host_seed, 
-	unsigned char DockConst_num_of_genes
+	uint  Host_seed, 
+	uchar DockConst_num_of_genes
 ){
-	unsigned int lfsr = Host_seed;
+	uint lfsr = Host_seed;
 
-	unsigned char tmp[2];
+	uchar tmp[2];
 
 	// LOOP_FOR_PRNG_GG_UCHAR
-	for(unsigned char i=0; i<2; i++) {
-		unsigned char lsb;
+	for(uchar i=0; i<2; i++) {
+		uchar lsb;
 		lsb = lfsr & 0x01u;
 		lfsr >>= 1;
 		lfsr ^= (-lsb) & 0xA3000000u;
@@ -80,15 +81,15 @@ void prng_GG_uchar(
 }
 
 void prng_GG_float(
-	unsigned int  Host_seed,
-	unsigned char DockConst_num_of_genes
+	uint  Host_seed,
+	uchar DockConst_num_of_genes
 ){
-	unsigned int lfsr = Host_seed;
+	uint lfsr = Host_seed;
 
 	// LOOP_FOR_PRNG_GG_FLOAT
-	for(unsigned char i=0; i<DockConst_num_of_genes; i++) {
+	for(uchar i=0; i<DockConst_num_of_genes; i++) {
 		float tmp;
-		unsigned char lsb;
+		uchar lsb;
 		lsb = lfsr & 0x01u;
 		lfsr >>= 1;
 		lfsr ^= (-lsb) & 0xA3000000u;
@@ -102,18 +103,18 @@ void prng_GG_float(
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 void prng_LS123_ushort(
-	unsigned int Host_seed1,
-	unsigned int Host_seed2, 
-	unsigned int Host_seed3,
-	unsigned int Host_seed4,
-	unsigned int Host_seed5, 
-	unsigned int Host_seed6, 
-	unsigned int Host_seed7,
-	unsigned int Host_seed8,
-	unsigned int Host_seed9, 
-	unsigned int DockConst_pop_size
+	uint Host_seed1,
+	uint Host_seed2, 
+	uint Host_seed3,
+	uint Host_seed4,
+	uint Host_seed5, 
+	uint Host_seed6, 
+	uint Host_seed7,
+	uint Host_seed8,
+	uint Host_seed9, 
+	uint DockConst_pop_size
 ){
-	unsigned int lfsr[9];
+	uint lfsr[9];
 	lfsr[0] = Host_seed1;
 	lfsr[1] = Host_seed2;
 	lfsr[2] = Host_seed3;
@@ -124,11 +125,11 @@ void prng_LS123_ushort(
 	lfsr[7] = Host_seed8;
 	lfsr[8] = Host_seed9;
 
-	unsigned short tmp[9];
+	ushort tmp[9];
 		
 	// LOOP_FOR_PRNG_LS123_USHORT
-	for (unsigned int i=0; i<9; i++){
-		unsigned char  lsb[9];
+	for (uint i=0; i<9; i++){
+		uchar  lsb[9];
 		lsb [i] = lfsr[i] & 0x01u;
 		lfsr[i] >>= 1;
 		lfsr[i] ^= (-lsb[i]) & 0xA3000000u;
@@ -174,15 +175,15 @@ void prng_LS123_ushort(
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 void prng_LS_float(
-	unsigned int  Host_seed,
-	unsigned char DockConst_num_of_genes
+	uint  Host_seed,
+	uchar DockConst_num_of_genes
 ){
-	unsigned int lfsr = Host_seed;
+	uint lfsr = Host_seed;
 
 	// LOOP_FOR_PRNG_LS_FLOAT
-	for(unsigned char i=0; i<DockConst_num_of_genes; i++) {
+	for(uchar i=0; i<DockConst_num_of_genes; i++) {
 		float tmp;
-		unsigned char lsb;
+		uchar lsb;
 		lsb = lfsr & 0x01u;
 		lfsr >>= 1;
 		lfsr ^= (-lsb) & 0xA3000000u;

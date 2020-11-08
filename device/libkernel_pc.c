@@ -14,10 +14,10 @@ void libkernel_pc (
 	const 	float*   		restrict KerConstStatic_ref_coords_z_const,
 	const 	float*   		restrict KerConstStatic_rotbonds_moving_vectors_const,
 	const 	float*   		restrict KerConstStatic_rotbonds_unit_vectors_const,  
-			unsigned int          	 DockConst_rotbondlist_length,
-			uchar         	 DockConst_num_of_genes,
+			uint          	         DockConst_rotbondlist_length,
+			uchar         	         DockConst_num_of_genes,
 	const 	float*   		restrict KerConstStatic_ref_orientation_quats_const,
-			unsigned short        	 Host_RunId,
+			ushort        	 		 Host_RunId,
 
 	const	float* 			restrict genotype,
 			float* 			restrict local_coords_x,
@@ -40,7 +40,7 @@ void libkernel_pc (
 
 	// LOOP_FOR_CONFORM_ROTBONDLIST
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
-	for (unsigned short c = 0; c < DockConst_rotbondlist_length; c++) {
+	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
@@ -63,13 +63,13 @@ void libkernel_pc (
 	#endif
 
 	// LOOP_FOR_CONFORM_MAIN
-	for (unsigned short rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
+	for (ushort rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = rotlist_localcache [rotation_counter];
 
 		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0)	// If not dummy rotation
 		{
-			unsigned int atom_id = rotation_list_element & RLIST_ATOMID_MASK;
+			uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
 			// Capturing atom coordinates
 			float atom_to_rotate[3];
@@ -114,7 +114,7 @@ void libkernel_pc (
 			}
 			else	// If rotating around rotatable bond
 			{
-				unsigned int rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
+				uint rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
 
 				rotation_unitvec[0] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
 				rotation_unitvec[1] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
