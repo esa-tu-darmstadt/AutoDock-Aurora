@@ -20,7 +20,7 @@ void libkernel_ia (
 	const   float* restrict KerConstStatic_atom_charges_const,
  	const	char*  restrict KerConstStatic_atom_types_const,
 
-	const 	char3* restrict KerConstStatic_intraE_contributors_const,
+	const 	char*  restrict KerConstStatic_intraE_contributors_const,
 
 			float 				 DockConst_smooth,
 	const   float* restrict KerConstStatic_reqm,
@@ -47,13 +47,6 @@ void libkernel_ia (
 			float* 			restrict local_coords_z
 )
 {
-	char3  intraE_contributors_localcache   [MAX_INTRAE_CONTRIBUTORS];
-
-	// LOOP_FOR_INTRAE_CONTRIBUTORS
-	for (unsigned short i=0; i<MAX_INTRAE_CONTRIBUTORS; i++) {
-		intraE_contributors_localcache [i] = KerConstStatic_intraE_contributors_const [i];	
-	}
-
 	#if defined (DEBUG_ACTIVE_KERNEL)
 	if (active == 0) {printf("	%-20s: %s\n", "Krnl_IntraE", "must be disabled");}
 	#endif
@@ -65,11 +58,8 @@ void libkernel_ia (
 	// LOOP_FOR_INTRAE_MAIN
 	for (unsigned short contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
 
-		char3 ref_intraE_contributors_const;
-		ref_intraE_contributors_const = intraE_contributors_localcache[contributor_counter];
-
-		char atom1_id = ref_intraE_contributors_const.x;
-		char atom2_id = ref_intraE_contributors_const.y;
+		char atom1_id = KerConstStatic_intraE_contributors_const[3*contributor_counter];
+		char atom2_id = KerConstStatic_intraE_contributors_const[3*contributor_counter + 1];
 
 		float subx = local_coords_x[atom1_id] - local_coords_x[atom2_id];
 		float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
@@ -120,7 +110,7 @@ void libkernel_ia (
 		unsigned int atom1_type_vdw_hb = KerConstStatic_atom1_types_reqm [atom1_typeid];
      	unsigned int atom2_type_vdw_hb = KerConstStatic_atom2_types_reqm [atom2_typeid];
 
-		if (ref_intraE_contributors_const.z == 1)	// H-bond
+		if (KerConstStatic_intraE_contributors_const[3*contributor_counter + 2] == 1)	// H-bond
 		{
 			opt_distance = KerConstStatic_reqm_hbond [atom1_type_vdw_hb] + KerConstStatic_reqm_hbond [atom2_type_vdw_hb];
 		}
@@ -164,7 +154,7 @@ void libkernel_ia (
 
 			float tmp_pE2 = KerConstStatic_VWpars_BD_const [atom1_typeid*DockConst_num_of_atypes+atom2_typeid];
 
-			if (ref_intraE_contributors_const.z == 1)	// H-bond
+			if (KerConstStatic_intraE_contributors_const[3*contributor_counter + 2] == 1)	// H-bond
 				partialE2 -= tmp_pE2 * inverse_smoothed_distance_pow_10;
 			else	// Van der Waals
 				partialE2 -= tmp_pE2 * inverse_smoothed_distance_pow_6;
