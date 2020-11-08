@@ -152,7 +152,7 @@ void Krnl_LS(
 					cons_fail++;
 					cons_succ = 0;
 				}
-				positive_direction = !positive_direction;
+				positive_direction = (positive_direction == True) ? False: True;
 			}
 
 		} // end of while (iteration_cnt) && (rho)
