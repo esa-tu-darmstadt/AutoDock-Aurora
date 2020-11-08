@@ -15,7 +15,7 @@ void libkernel_pc (
 	const 	float*   		restrict KerConstStatic_rotbonds_moving_vectors_const,
 	const 	float*   		restrict KerConstStatic_rotbonds_unit_vectors_const,  
 			unsigned int          	 DockConst_rotbondlist_length,
-			unsigned char         	 DockConst_num_of_genes,
+			uchar         	 DockConst_num_of_genes,
 	const 	float*   		restrict KerConstStatic_ref_orientation_quats_const,
 			unsigned short        	 Host_RunId,
 
@@ -46,7 +46,7 @@ void libkernel_pc (
 
 	// LOOP_FOR_CONFORM_READ_GENOTYPE
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
-	for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
+	for (uchar i=0; i<DockConst_num_of_genes; i++) {
 		if (i < 3) {
 			local_genotype [i] = genotype[i];
 		} else {
