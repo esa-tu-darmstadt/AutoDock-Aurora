@@ -26,7 +26,9 @@ void libkernel_pc (
 			unsigned char         	 DockConst_num_of_atoms,
 			unsigned char         	 DockConst_num_of_genes,
 	const 	float*   		restrict KerConstStatic_ref_orientation_quats_const,
-			unsigned short        	 Host_RunId
+			unsigned short        	 Host_RunId,
+
+			float* 					 genotype
 )
 {
 	#if defined (DEBUG_KRNL_Conform) 
@@ -41,7 +43,7 @@ void libkernel_pc (
 	// Only first three indexes of the lower array are used
 	// however size of lower array was declared as 4, 
 	// just to keep sizes equal to power of 2
-	// __local float  __attribute__((numbanks(8), bankwidth(16))) loc_coords[MAX_NUM_OF_ATOMS][4];
+	// __local float  __attribute__((numbanks(8), bankwidth(16))) local_coords[MAX_NUM_OF_ATOMS][4];
 
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 
@@ -50,32 +52,21 @@ void libkernel_pc (
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
-	float  phi;
-	float  theta;
-	float  genrotangle;
-	float3 genotype_xyz;
-	float3 loc_coords [MAX_NUM_OF_ATOMS];
-
-	float   genotype [ACTUAL_GENOTYPE_LENGTH];
+	float local_coords [MAX_NUM_OF_ATOMS][3];
+	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
 
 	// LOOP_FOR_CONFORM_READ_GENOTYPE
 	for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
-		float fl_tmp;
-
-		if (i > 2) {
-			fl_tmp = fl_tmp * DEG_TO_RAD;
+		if (i < 3) {
+			local_genotype [i] = genotype[i];
+		} else {
+			local_genotype [i] = genotype[i] * DEG_TO_RAD;
 		}
-
-		switch (i) {
-			case 0: genotype_xyz.x = fl_tmp; break;
-			case 1: genotype_xyz.y = fl_tmp; break;
-			case 2: genotype_xyz.z = fl_tmp; break;
-			case 3: phi            = fl_tmp; break;
-			case 4: theta          = fl_tmp; break;
-			case 5: genrotangle    = fl_tmp; break;
-		}
-		genotype [i] = fl_tmp;
 	}
+
+	float phi = local_genotype[3];
+	float theta = local_genotype[4];
+	float genrotangle = local_genotype[5];
 
 	#if defined (DEBUG_ACTIVE_KERNEL)
 	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_Conform", "must be disabled");}
@@ -101,9 +92,9 @@ void libkernel_pc (
 			}
 			else
 			{	
-				atom_to_rotate[0] = loc_coords[atom_id];
-				atom_to_rotate[1] = loc_coords[atom_id];
-				atom_to_rotate[2] = loc_coords[atom_id];
+				atom_to_rotate[0] = local_coords[atom_id][0];
+				atom_to_rotate[1] = local_coords[atom_id][1];
+				atom_to_rotate[2] = local_coords[atom_id][2];
 			}
 
 			// Capturing rotation vectors and angle
@@ -125,9 +116,9 @@ void libkernel_pc (
 				rotation_unitvec[1] = genrot_unitvec[1];
 				rotation_unitvec[2] = genrot_unitvec[2];
 				
-				rotation_movingvec[0] = genotype_xyz;
-				rotation_movingvec[1] = genotype_xyz;
-				rotation_movingvec[2] = genotype_xyz;
+				rotation_movingvec[0] = local_genotype[0];
+				rotation_movingvec[1] = local_genotype[1];
+				rotation_movingvec[2] = local_genotype[2];
 
 				rotation_angle = genrotangle;
 			}
@@ -135,15 +126,15 @@ void libkernel_pc (
 			{
 				unsigned int rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
 
-				rotation_unitvec[0] = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
-				rotation_unitvec[1] = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
-				rotation_unitvec[2] = KerConstStatic_rotbonds_unit_vectors_const [rotbond_id];
+				rotation_unitvec[0] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
+				rotation_unitvec[1] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
+				rotation_unitvec[2] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
 				
-				rotation_movingvec[0] = KerConstStatic_rotbonds_moving_vectors_const [rotbond_id];
-				rotation_movingvec[1] = KerConstStatic_rotbonds_moving_vectors_const [rotbond_id];
-				rotation_movingvec[2] = KerConstStatic_rotbonds_moving_vectors_const [rotbond_id];
+				rotation_movingvec[0] = KerConstStatic_rotbonds_moving_vectors_const[rotbond_id];
+				rotation_movingvec[1] = KerConstStatic_rotbonds_moving_vectors_const[rotbond_id];
+				rotation_movingvec[2] = KerConstStatic_rotbonds_moving_vectors_const[rotbond_id];
 
-				rotation_angle = genotype [6+rotbond_id];
+				rotation_angle = local_genotype[6+rotbond_id];
 
 				// In addition performing the first movement 
 				// which is needed only if rotating around rotatable bond
@@ -216,9 +207,9 @@ void libkernel_pc (
 			atom_to_rotate[2] = esa_dot4(quatrot_temp_2, left_4z);
 
 			// Performing final movement and storing values
-			loc_coords[atom_id] = atom_to_rotate[0] + rotation_movingvec[0];
-			loc_coords[atom_id] = atom_to_rotate[1] + rotation_movingvec[1];
-			loc_coords[atom_id] = atom_to_rotate[2] + rotation_movingvec[2];
+			local_coords[atom_id][0] = atom_to_rotate[0] + rotation_movingvec[0];
+			local_coords[atom_id][1] = atom_to_rotate[1] + rotation_movingvec[1];
+			local_coords[atom_id][2] = atom_to_rotate[2] + rotation_movingvec[2];
 		} // End if-statement not dummy rotation
 
 		//mem_fence(CLK_LOCAL_MEM_FENCE);
@@ -238,7 +229,7 @@ void libkernel_pc (
 
 		// LOOP_CONFORM_OUT
 		for (unsigned char i=0; i<2; i++) {
-			tmp_coords[i] = loc_coords[pipe_cnt+i];
+			tmp_coords[i] = local_coords[pipe_cnt+i];
 		}
 
 		float8 tmp;
