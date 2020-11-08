@@ -71,11 +71,6 @@ void Krnl_LS(
 			float deviate_plus_bias              [ACTUAL_GENOTYPE_LENGTH];
 			float deviate_minus_bias             [ACTUAL_GENOTYPE_LENGTH];
 
-			// Tell Krnl_Conf_Arbiter, LS1 is done
-			// Not completely strict as the (iteration_cnt < DockConst_max_num_of_iters) is ignored
-			// In practice, rho condition dominates most of the cases
-			int tmp_int = (rho < DockConst_rho_lower_bound)?0:1;
-
 			// new random deviate
 			// rho is the deviation of the uniform distribution
 			// LOOP_FOR_LS_WRITE_GENOTYPE
