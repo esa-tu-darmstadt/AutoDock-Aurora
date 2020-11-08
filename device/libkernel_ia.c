@@ -33,7 +33,6 @@ void libkernel_ia (
 	const   float* restrict KerConstStatic_dspars_S_const,
  	const   float* restrict KerConstStatic_dspars_V_const,
 
-			unsigned char                    DockConst_num_of_atoms,
 		   	unsigned int                     DockConst_num_of_intraE_contributors,
 		  	float                            DockConst_grid_spacing,
 			unsigned char                    DockConst_num_of_atypes,
