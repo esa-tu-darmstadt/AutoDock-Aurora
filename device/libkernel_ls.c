@@ -5,12 +5,17 @@
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 void Krnl_LS(
-		unsigned short            DockConst_max_num_of_iters,
-		float                     DockConst_rho_lower_bound,
-		float                     DockConst_base_dmov_mul_sqrt3,
-		unsigned char             DockConst_num_of_genes,
-   		float                     DockConst_base_dang_mul_sqrt3,
-		unsigned char             DockConst_cons_limit
+			unsigned short            DockConst_max_num_of_iters,
+			float                     DockConst_rho_lower_bound,
+			float                     DockConst_base_dmov_mul_sqrt3,
+			unsigned char             DockConst_num_of_genes,
+   			float                     DockConst_base_dang_mul_sqrt3,
+			unsigned char             DockConst_cons_limit,
+
+	const	float* 			restrict  in_genotype,
+	const 	float*			restrict  in_energy,
+			float* 			restrict  out_genotype,
+			float*			restrict  out_energy
 )
 {	
 	#if 0
@@ -22,20 +27,20 @@ void Krnl_LS(
 	printf("LS: DockConst_cons_limit: %u\n",           DockConst_cons_limit);
 	#endif
 
-	float current_energy;
-	float   genotype [ACTUAL_GENOTYPE_LENGTH];
+	float current_energy = *in_energy;
+	float genotype [ACTUAL_GENOTYPE_LENGTH];
 
-		// LOOP_FOR_LS_READ_INPUT_GENOTYPE
-		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
-			read_pipe_block(pipe00ga2ls00ls100genotype, &genotype [i]);
-		}
+	// LOOP_FOR_LS_READ_INPUT_GENOTYPE
+	for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
+		genotype[i] = in_genotype[i];
+	}
 	
-		float rho = 1.0f;
-		unsigned short iteration_cnt = 0;
-		unsigned char  cons_succ     = 0;
-		unsigned char  cons_fail     = 0;
-		unsigned int   LS_eval       = 0;
-		boolean positive_direction = True;
+	float rho = 1.0f;
+	unsigned short iteration_cnt = 0;
+	unsigned char  cons_succ     = 0;
+	unsigned char  cons_fail     = 0;
+	unsigned int   LS_eval       = 0;
+	boolean positive_direction = True;
 
 		// performing local search
 		// LOOP_WHILE_LS_ITERATION_RHO
@@ -70,7 +75,6 @@ void Krnl_LS(
 			// Not completely strict as the (iteration_cnt < DockConst_max_num_of_iters) is ignored
 			// In practice, rho condition dominates most of the cases
 			int tmp_int = (rho < DockConst_rho_lower_bound)?0:1;
-			write_pipe_block(pipe00ls2arbiter00ls100end, &tmp_int);
 
 			// new random deviate
 			// rho is the deviation of the uniform distribution
@@ -114,11 +118,8 @@ void Krnl_LS(
 			float energyIA_LS_rx;
 			float energyIE_LS_rx;
 
-/*
-			intra_valid = read_pipe(pipe00intrae2storels00ls100intrae, &energyIA_LS_rx);
-			inter_valid = read_pipe(pipe00intere2storels00ls100intere, &energyIE_LS_rx);
-*/
-
+			// FIXME
+			// Add energy calculation here!
 			float candidate_energy = energyIA_LS_rx + energyIE_LS_rx;
 
 			// update LS energy-evaluation count
@@ -130,8 +131,7 @@ void Krnl_LS(
 
 				// LOOP_FOR_LS_FLOATPT_UPDATE_POS_GENOTYPE
 				for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
-					genotype_bias [i] = (positive_direction == True) ? deviate_plus_bias  [i] : 
-											   deviate_minus_bias [i] ;
+					genotype_bias [i] = (positive_direction == True) ? deviate_plus_bias[i] : deviate_minus_bias [i];
 					genotype [i] = entity_possible_new_genotype [i];
 				}	
 
@@ -161,15 +161,11 @@ void Krnl_LS(
 		printf("Out of while iter LS1\n");
 		#endif
 		
-		// write back data to GA
-		// LOOP_FOR_LS_WRITEBACK2GA
-		for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
-			if (i == 0) {
-				float2 evalenergy  = {*(float*)&LS_eval, current_energy};
-				write_pipe_block(pipe00ls2ga00ls100evalenergy, &evalenergy);	
-			}
-			write_pipe_block(pipe00ls2ga00ls100genotype, &genotype [i]);
-		}
+	// Writing back data to GA
+	*out_energy = current_energy;
+	for (unsigned char i=0; i<DockConst_num_of_genes; i++) {
+		out_genotype[i] = genotype[i];
+	}
 
 #if defined (DEBUG_ACTIVE_KERNEL)
 printf("	%-20s: %s\n", "Krnl_LS1", "disabled");		
