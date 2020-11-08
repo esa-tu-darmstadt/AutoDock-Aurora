@@ -19,7 +19,9 @@ float esa_dot4(float a[4], float b[4]) {
 // --------------------------------------------------------------------------
 void libkernel_pc (
 	const 	int*  			restrict KerConstStatic_rotlist_const,
-	const 	float3*   		restrict KerConstStatic_ref_coords_const,
+	const 	float*   		restrict KerConstStatic_ref_coords_x_const,
+	const 	float*   		restrict KerConstStatic_ref_coords_y_const,
+	const 	float*   		restrict KerConstStatic_ref_coords_z_const,
 	const 	float*   		restrict KerConstStatic_rotbonds_moving_vectors_const,
 	const 	float*   		restrict KerConstStatic_rotbonds_unit_vectors_const,  
 			unsigned int          	 DockConst_rotbondlist_length,
@@ -84,9 +86,9 @@ void libkernel_pc (
 
 			if ((rotation_list_element & RLIST_FIRSTROT_MASK) != 0)	// If first rotation of this atom
 			{	
-				atom_to_rotate[0] = KerConstStatic_ref_coords_const [atom_id];
-				atom_to_rotate[1] = KerConstStatic_ref_coords_const [atom_id];
-				atom_to_rotate[2] = KerConstStatic_ref_coords_const [atom_id];
+				atom_to_rotate[0] = KerConstStatic_ref_coords_x_const [atom_id];
+				atom_to_rotate[1] = KerConstStatic_ref_coords_y_const [atom_id];
+				atom_to_rotate[2] = KerConstStatic_ref_coords_z_const [atom_id];
 			}
 			else
 			{	
