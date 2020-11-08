@@ -1,41 +1,13 @@
 #include "defines.h"
 #include "math.h"
+#include "auxiliary.c"
 
 //IC:  initial calculation of energy of populations
 //GG:  genetic generation 
 //LS:  local search
 //OFF: turn off 
 
-// --------------------------------------------------------------------------
-// Map the argument into the interval 0 - 180, or 0 - 360
-// by adding/subtracting n*ang_max to/from it.
-// Originally from: searchoptimum.c
-// --------------------------------------------------------------------------
-__attribute__((always_inline))
-float map_angle_180(float angle)
-{
-	float x = angle;
-	//while (x < 0.0f)
-	if (x < 0.0f)   
-	{ x += 180.0f; }
-	//while (x > 180.0f)
-	if (x > 180.0f) 
-	{ x -= 180.0f; }
-	return x;
-}
 
-__attribute__((always_inline))
-float map_angle_360(float angle)
-{
-	float x = angle;
-	//while (x < 0.0f)
-	if (x < 0.0f)
-	{ x += 360.0f; }
-	//while (x > 360.0f)
-	if (x > 360.0f)
-	{ x -= 360.0f;}
-	return x;
-}
 
 // --------------------------------------------------------------------------
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search) 
