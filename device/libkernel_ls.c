@@ -1,6 +1,8 @@
 #include "defines.h"
 #include "math.h"
 
+typedef enum {False, True} boolean;
+
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 void Krnl_LS(
@@ -22,11 +24,6 @@ void Krnl_LS(
 	#endif
 
 	float current_energy;
-
-/*
-	valid_energy = read_pipe(pipe00ga2ls00ls100energy,  &current_energy);
-*/
-
 	float   genotype [ACTUAL_GENOTYPE_LENGTH];
 
 		// LOOP_FOR_LS_READ_INPUT_GENOTYPE
@@ -39,14 +36,14 @@ void Krnl_LS(
 		unsigned char  cons_succ     = 0;
 		unsigned char  cons_fail     = 0;
 		unsigned int   LS_eval       = 0;
-		bool   positive_direction = true;
+		boolean positive_direction = True;
 
 		// performing local search
 		// LOOP_WHILE_LS_ITERATION_RHO
 		while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
 			// -----------------------------------------------
 			// Exit condition is groups here. It allows pipelining
-			if (positive_direction == true) { 
+			if (positive_direction == True) { 
 				if (cons_succ >= DockConst_cons_limit) {
 					rho = LS_EXP_FACTOR*rho;
 					cons_fail = 0;
@@ -100,7 +97,7 @@ void Krnl_LS(
 				deviate_minus_bias [i] = deviate - bias;
 
 				float tmp2 = tmp1 + tmp_bias;
-				float tmp3 = (positive_direction == true)? (genotype [i] + tmp2): (genotype [i] - tmp2);
+				float tmp3 = (positive_direction == True)? (genotype [i] + tmp2): (genotype [i] - tmp2);
 
 				if (i>2) {if (i==4) { tmp3 = map_angle_180(tmp3); }
 					  else      { tmp3 = map_angle_360(tmp3); }}
@@ -142,7 +139,7 @@ void Krnl_LS(
 				current_energy = candidate_energy;
 				cons_succ++;
 				cons_fail = 0;
-				positive_direction = true;				
+				positive_direction = True;				
 			}
 			else {
 				// updating (halving) genotype_bias
@@ -152,7 +149,7 @@ void Krnl_LS(
 					genotype_bias [i] = (iteration_cnt == 1)? 0.0f: (0.5f*genotype_bias [i]);
 				}
 
-				if (positive_direction == false) {
+				if (positive_direction == False) {
 					cons_fail++;
 					cons_succ = 0;
 				}
