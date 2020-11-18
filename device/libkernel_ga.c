@@ -214,7 +214,7 @@ uint64_t libkernel_ga (
 
 			if (prng_GG_C.x == prng_GG_C.y) {covr_point_low = prng_GG_C.x;}
 			else {
-				twopoint_cross_yes = true;
+				twopoint_cross_yes = True;
 				if (prng_GG_C.x < prng_GG_C.y) { covr_point_low  = prng_GG_C.x;
 					                         covr_point_high = prng_GG_C.y; }
 				else {		      		 covr_point_low  = prng_GG_C.y;
@@ -238,8 +238,8 @@ uint64_t libkernel_ga (
 				// Performing crossover
 				if (   	(
 					crossover_yes && (										// crossover
-					( (twopoint_cross_yes == true)  && ((gene_cnt <= covr_point_low) || (gene_cnt > covr_point_high)) )  ||	// two-point crossover 			 		
-					( (twopoint_cross_yes == false) && (gene_cnt <= covr_point_low))  					// one-point crossover
+					( (twopoint_cross_yes == True)  && ((gene_cnt <= covr_point_low) || (gene_cnt > covr_point_high)) )  ||	// two-point crossover 			 		
+					( (twopoint_cross_yes == False) && (gene_cnt <= covr_point_low))  					// one-point crossover
 					)) || 
 					(!crossover_yes)	// no crossover
 				   ) {
