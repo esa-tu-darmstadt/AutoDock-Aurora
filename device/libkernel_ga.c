@@ -1,42 +1,40 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "defines.h"
-#include "math.h"
 #include "auxiliary.c"
+#include "math.h"
 
 //IC:  initial calculation of energy of populations
 //GG:  genetic generation 
 //LS:  local search
 //OFF: turn off 
 
-
-
-// --------------------------------------------------------------------------
-// Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search) 
-// Originally from: searchoptimum.c
-// --------------------------------------------------------------------------
+/*
+ * -----------------------------------------------
+ * Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
+ * -----------------------------------------------
+ * */
 uint64_t libkernel_ga (
-	const 	float*           restrict GlobPopulationCurrentInitial,
-			float*           restrict GlobPopulationCurrentFinal,
-			float*           restrict GlobEnergyCurrent,
-			uint*    restrict GlobEvals_performed,
-            uint*    restrict GlobGens_performed,
-			uint              DockConst_pop_size,
-		    uint              DockConst_num_of_energy_evals,
-			uint              DockConst_num_of_generations,
-		    float                     DockConst_tournament_rate,
-			float                     DockConst_mutation_rate,
-		    float                     DockConst_abs_max_dmov,
-			float                     DockConst_abs_max_dang,
-		    float                     Host_two_absmaxdmov,
-			float                     Host_two_absmaxdang,
-			float                     DockConst_crossover_rate,
-			uint              DockConst_num_of_lsentities,
-			uchar             DockConst_num_of_genes,
-	        ushort            Host_RunId,
-			uint 	      	  Host_Offset_Pop,
-			uint	      	  Host_Offset_Ene
+	const 	float*	restrict 	GlobPopulationCurrentInitial,
+			float*  restrict	GlobPopulationCurrentFinal,
+			float*  restrict 	GlobEnergyCurrent,
+			uint*	restrict 	GlobEvals_performed,
+            uint*	restrict 	GlobGens_performed,
+			uint				DockConst_pop_size,
+		    uint              	DockConst_num_of_energy_evals,
+			uint              	DockConst_num_of_generations,
+		    float               DockConst_tournament_rate,
+			float               DockConst_mutation_rate,
+		    float               DockConst_abs_max_dmov,
+			float               DockConst_abs_max_dang,
+		    float               Host_two_absmaxdmov,
+			float               Host_two_absmaxdang,
+			float               DockConst_crossover_rate,
+			uint              	DockConst_num_of_lsentities,
+			uchar             	DockConst_num_of_genes,
+	        ushort            	Host_RunId,
+			uint 	      	  	Host_Offset_Pop,
+			uint	      	  	Host_Offset_Ene
 )
 {
 	#ifdef PRINT_ALL_KRNL
@@ -102,8 +100,7 @@ uint64_t libkernel_ga (
 		ushort best_entity = 0;
 
 		// LOOP_FOR_GA_SHIFT
-//		for (ushort pop_cnt=1; pop_cnt<DockConst_pop_size; pop_cnt++) {
-		for (ushort pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
+		for (ushort pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// copy energy to local memory
 			loc_energies[pop_cnt] = LocalEneCurr[pop_cnt];
 
@@ -290,7 +287,7 @@ uint64_t libkernel_ga (
 		#pragma ivdep
 		*/
 		// LOOP_FOR_GA_LS_OUTER
-		for (ushort ls_ent_cnt=0; ls_ent_cnt<DockConst_num_of_lsentities; ls_ent_cnt+=9) {
+		for (ushort ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt+=9) {
 
 			// Choose random & different entities on every iteration
 			ushort16 entity_ls;
@@ -354,7 +351,7 @@ uint64_t libkernel_ga (
 
 		// Update current pops & energies
 		// LOOP_FOR_GA_UPDATEPOP_OUTER
-		for (ushort pop_cnt=0; pop_cnt<DockConst_pop_size; pop_cnt++) {
+		for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// LOOP_GA_UPDATEPOP_INNER
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = LocalPopNext[pop_cnt][gene_cnt & MASK_GENOTYPE];
@@ -379,7 +376,7 @@ uint64_t libkernel_ga (
 	// ------------------------------------------------------------------
 
 	// LOOP_GA_WRITEPOP2DDR_OUTER
-	for (ushort pop_cnt=0;pop_cnt<DockConst_pop_size; pop_cnt++) { 	
+	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// LOOP_GA_WRITEPOP2DDR_INNER
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE];
