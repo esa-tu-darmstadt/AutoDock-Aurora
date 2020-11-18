@@ -1,6 +1,8 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
+// TODO: check with current ones in AutoDock-GPU
+
 // -----------------------------------------------------------------------------
 // DOCKING CONSTANTS
 // -----------------------------------------------------------------------------
