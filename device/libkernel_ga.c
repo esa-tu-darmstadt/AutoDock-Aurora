@@ -34,12 +34,16 @@ uint64_t libkernel_ga (
 			uchar             	DockConst_num_of_genes,
 	        ushort            	Host_RunId,
 			uint 	      	  	Host_Offset_Pop,
-			uint	      	  	Host_Offset_Ene
+			uint	      	  	Host_Offset_Ene,
+
+			uint64_t       		VEVMA_dockpars_prng_states
 )
 {
 	#ifdef PRINT_ALL_KRNL
   	printf("Starting libkernel_ga ... \n");
   	#endif
+
+	unsigned int* dockpars_prng_states = (unsigned int*) VEVMA_dockpars_prng_states;
 
 	#if defined (DEBUG_KRNL_GA)
 	printf("\n");
@@ -147,29 +151,21 @@ uint64_t libkernel_ga (
 			// Binary-Tournament (BT) selection
 			// ---------------------------------------------------
 
+			// TODO: FIX INDEXES
+			// TODO: VECTORIZE IT
 			// Get ushort binary_tournament selection prngs (parent index)
+			ushort bt_tmp_u0 = rand(&dockpars_prng_states[new_pop_cnt]);
+			ushort bt_tmp_u1 = rand(&dockpars_prng_states[new_pop_cnt]);
+			ushort bt_tmp_u2 = rand(&dockpars_prng_states[new_pop_cnt + 1]);
+			ushort bt_tmp_u3 = rand(&dockpars_prng_states[new_pop_cnt + 1]);
+
+			// TODO: FIX INDEXES
+			// TODO: VECTORIZE IT
 			// Get float binary_tournament selection prngs (tournament rate)
-			float8 bt_tmp;
-			// TODO: READ PRNGs
-
-			// Convert: float prng that must be still converted to short
-			float bt_tmp_uf0 = bt_tmp.s0;
-			float bt_tmp_uf1 = bt_tmp.s2;
-			float bt_tmp_uf2 = bt_tmp.s4;
-			float bt_tmp_uf3 = bt_tmp.s6;
-
-			// Check "Krnl_Prng_BT_ushort_float"
-			// To surpass error in hw_emu		
-			ushort bt_tmp_u0 = bt_tmp_uf0;
-			ushort bt_tmp_u1 = bt_tmp_uf1;
-			ushort bt_tmp_u2 = bt_tmp_uf2;
-			ushort bt_tmp_u3 = bt_tmp_uf3;
-
-			// float prng ready to used, replace float prng_BT_F[4];
-			float bt_tmp_f0 = bt_tmp.s1;
-			float bt_tmp_f1 = bt_tmp.s3;
-			float bt_tmp_f2 = bt_tmp.s5;
-			float bt_tmp_f3 = bt_tmp.s7;
+			float bt_tmp_f0 = randf(&dockpars_prng_states[new_pop_cnt + 2]);
+			float bt_tmp_f1 = randf(&dockpars_prng_states[new_pop_cnt + 2]);
+			float bt_tmp_f2 = randf(&dockpars_prng_states[new_pop_cnt + 3]);
+			float bt_tmp_f3 = randf(&dockpars_prng_states[new_pop_cnt + 3]);
 
 			ushort parent1;
 			ushort parent2; 
@@ -177,18 +173,22 @@ uint64_t libkernel_ga (
 			// First parent
 			if (loc_energies[bt_tmp_u0] < loc_energies[bt_tmp_u1]) {
 				if (bt_tmp_f0 < DockConst_tournament_rate) {parent1 = bt_tmp_u0;}
-				else				           {parent1 = bt_tmp_u1;}}
+				else				           {parent1 = bt_tmp_u1;}
+			}
 			else {
 				if (bt_tmp_f1 < DockConst_tournament_rate) {parent1 = bt_tmp_u1;}
-				else				           {parent1 = bt_tmp_u0;}}
+				else				           {parent1 = bt_tmp_u0;}
+			}
 
 			// The better will be the second parent
 			if (loc_energies[bt_tmp_u2] < loc_energies[bt_tmp_u3]) {
 				if (bt_tmp_f2 < DockConst_tournament_rate) {parent2 = bt_tmp_u2;}
-				else		          	           {parent2 = bt_tmp_u3;}}
+				else		          	           {parent2 = bt_tmp_u3;}
+			}
 			else {
 				if (bt_tmp_f3 < DockConst_tournament_rate) {parent2 = bt_tmp_u3;}
-				else			                   {parent2 = bt_tmp_u2;}}
+				else			                   {parent2 = bt_tmp_u2;}
+			}
 
 			// LOOP_FOR_GA_INNER_BT
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
