@@ -72,7 +72,7 @@ uint64_t libkernel_ga (
 	// LOOP_FOR_GA_IC_OUTER
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// Calculate energy
-		LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE:
+		// LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_ic;
 			tmp_ic = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
