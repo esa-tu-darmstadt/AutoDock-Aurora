@@ -314,15 +314,11 @@ uint64_t libkernel_ga (
 				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
 			}
 */
+
+			// TODO: FIX THESE DECLARATIONS
+/*
 			float2 evalenergy_tmp1;
-			float2 evalenergy_tmp2;
-			float2 evalenergy_tmp3;
-			float2 evalenergy_tmp4;
-			float2 evalenergy_tmp5;
-			float2 evalenergy_tmp6;
-			float2 evalenergy_tmp7;
-			float2 evalenergy_tmp8;
-			float2 evalenergy_tmp9;
+*/
 
 		
 			#if defined (DEBUG_KRNL_LS)
