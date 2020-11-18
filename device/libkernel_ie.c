@@ -40,7 +40,6 @@ void libkernel_ie (
 	float interE = 0.0f;
 
 	// For each ligand atom
-	// LOOP_FOR_INTER_MAIN
 	for (uchar atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
 	{
 		char atom1_typeid = KerConstStatic_atom_types_const [atom1_id];

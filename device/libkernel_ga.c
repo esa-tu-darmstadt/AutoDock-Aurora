@@ -71,10 +71,8 @@ uint64_t libkernel_ga (
 	// ------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
 	// ------------------------------------------------------------------
-	// LOOP_FOR_GA_IC_OUTER
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// Calculate energy
-		// LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_gene = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
@@ -91,7 +89,6 @@ uint64_t libkernel_ga (
 
 	uint generation_cnt = 0;
 
-	// LOOP_WHILE_GA_MAIN
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
 
 		float LocalPopNext[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
@@ -103,7 +100,6 @@ uint64_t libkernel_ga (
 		float loc_energies[MAX_POPSIZE];
 		ushort best_entity = 0;
 
-		// LOOP_FOR_GA_SHIFT
 		for (ushort pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// copy energy to local memory
 			loc_energies[pop_cnt] = LocalEneCurr[pop_cnt];
@@ -126,14 +122,12 @@ uint64_t libkernel_ga (
 		#pragma ivdep array (LocalPopNext)
 		#pragma ivdep array (LocalEneNext)
 		*/
-		// LOOP_FOR_GA_OUTER_GLOBAL
 		for (ushort new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
 
 			// ---------------------------------------------------
 			// Elitism: copying the best entity to new population
 			// ---------------------------------------------------
 			if (new_pop_cnt == 1) {
-				// LOOP_FOR_GA_INNER_ELITISM
 				for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 					LocalPopNext[0][gene_cnt] = LocalPopCurr[best_entity][gene_cnt];
 				} 		
@@ -190,7 +184,6 @@ uint64_t libkernel_ga (
 				else			                   {parent2 = bt_tmp_u2;}
 			}
 
-			// LOOP_FOR_GA_INNER_BT
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
 			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				local_entity_1[gene_cnt] = LocalPopCurr[parent1][gene_cnt];
@@ -229,7 +222,7 @@ uint64_t libkernel_ga (
 			// Reuse of bt prng float as crossover-rate
 			boolean crossover_yes = (DockConst_crossover_rate > bt_tmp_f0);
 
-			// LOOP_FOR_GA_INNER_CROSS_MUT
+			// Crossover and mutation
 			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 
 				// TODO: VERIFY IT
@@ -295,7 +288,6 @@ uint64_t libkernel_ga (
 		/*
 		#pragma ivdep
 		*/
-		// LOOP_FOR_GA_LS_OUTER
 		for (ushort ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
 
 			// TODO: FIX INDEX FOR PRNG
@@ -329,8 +321,7 @@ uint64_t libkernel_ga (
 /*			
 			LocalEneNext[entity_ls1] = evalenergy_tmp1.y;
 */
-			// TODO> READ RETURNING GENOTYPES
-			// LOOP_FOR_GA_LS_INNER_READ_GENOTYPE
+			// TODO: READ RETURNING GENOTYPES
 /*			
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				read_pipe_block(pipe00ls2ga00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt]);
@@ -348,9 +339,7 @@ uint64_t libkernel_ga (
 		// ------------------------------------------------------------------
 
 		// Update current pops & energies
-		// LOOP_FOR_GA_UPDATEPOP_OUTER
 		for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-			// LOOP_GA_UPDATEPOP_INNER
 			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				LocalPopCurr[pop_cnt][gene_cnt] = LocalPopNext[pop_cnt][gene_cnt];
 			}
@@ -372,10 +361,7 @@ uint64_t libkernel_ga (
 	// ------------------------------------------------------------------
 	// Write final pop & energies back to FPGA-board DDRs
 	// ------------------------------------------------------------------
-
-	// LOOP_GA_WRITEPOP2DDR_OUTER
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-		// LOOP_GA_WRITEPOP2DDR_INNER
 		for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
 		}

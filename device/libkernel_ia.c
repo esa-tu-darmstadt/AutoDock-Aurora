@@ -44,8 +44,6 @@ void libkernel_ia (
 	float intraE = 0.0f;
 
 	// For each intramolecular atom contributor pair
-
-	// LOOP_FOR_INTRAE_MAIN
 	for (ushort contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
 
 		char atom1_id = KerConstStatic_intraE_contributors_const[3*contributor_counter];

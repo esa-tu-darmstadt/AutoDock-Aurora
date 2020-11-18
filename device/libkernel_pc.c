@@ -38,13 +38,11 @@ void libkernel_pc (
 	// just to keep sizes equal to power of 2
 	// __local float  __attribute__((numbanks(8), bankwidth(16))) local_coords[MAX_NUM_OF_ATOMS][4];
 
-	// LOOP_FOR_CONFORM_ROTBONDLIST
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
 	}
 
-	// LOOP_FOR_CONFORM_READ_GENOTYPE
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
 	for (uchar i=0; i<DockConst_num_of_genes; i++) {
 		if (i < 3) {
@@ -62,7 +60,6 @@ void libkernel_pc (
 	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_Conform", "must be disabled");}
 	#endif
 
-	// LOOP_FOR_CONFORM_MAIN
 	for (ushort rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = rotlist_localcache [rotation_counter];
