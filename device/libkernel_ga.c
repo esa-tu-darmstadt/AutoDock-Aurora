@@ -375,41 +375,9 @@ uint64_t libkernel_ga (
 	} // End while eval_cnt & generation_cnt
 
 	// ------------------------------------------------------------------
-	// Off: turn off all other kernels
+	// Write final pop & energies back to FPGA-board DDRs
 	// ------------------------------------------------------------------
 
-	// Turn off PRNG kernels
-	const int tmp_int_one = 1;
-	write_pipe_block(pipe00ga2prng00bt00ushort00float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00gg00uchar00off, 	&tmp_int_one);
-	write_pipe_block(pipe00ga2prng00gg00float00off, 	&tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls12300ushort00off,  	&tmp_int_one);
-
-	write_pipe_block(pipe00ga2prng00ls00float00off,  &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls200float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls300float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls400float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls500float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls600float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls700float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls800float00off, &tmp_int_one);
-	write_pipe_block(pipe00ga2prng00ls900float00off, &tmp_int_one);
-
-	// Turn off LS kernels
-	write_pipe_block(pipe00ga2ls00off100active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off200active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off300active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off400active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off500active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off600active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off700active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off800active, &tmp_int_one);
-	write_pipe_block(pipe00ga2ls00off900active, &tmp_int_one);
-
-	// Turn off IGL_Arbiter, Conform, InterE, IntraE kernerls
-	write_pipe_block(pipe00iglarbiter00off,     		&tmp_int_one);
-
-	// Write final pop & energies back to FPGA-board DDRs
 	// LOOP_GA_WRITEPOP2DDR_OUTER
 	for (ushort pop_cnt=0;pop_cnt<DockConst_pop_size; pop_cnt++) { 	
 		// LOOP_GA_WRITEPOP2DDR_INNER
@@ -442,23 +410,3 @@ uint64_t libkernel_ga (
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-
-/*
-#include "Krnl_PRNG.cl"
-
-#include "Krnl_LS.cl"
-#include "Krnl_LS2.cl"
-#include "Krnl_LS3.cl"
-#include "Krnl_LS4.cl"
-#include "Krnl_LS5.cl"
-#include "Krnl_LS6.cl"
-#include "Krnl_LS7.cl"
-#include "Krnl_LS8.cl"
-#include "Krnl_LS9.cl"
-
-#include "Krnl_IGL_SimplifArbiter.cl"
-
-#include "Krnl_Conform.cl"
-#include "Krnl_InterE.cl"
-#include "Krnl_IntraE.cl"
-*/
