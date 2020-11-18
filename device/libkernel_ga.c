@@ -231,9 +231,9 @@ uint64_t libkernel_ga (
 
 			// LOOP_FOR_GA_INNER_CROSS_MUT
 			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-				float prngGG;
-				// TODO: READ PRNGs
 
+				// TODO: VERIFY IT
+				float prngGG = randf(&dockpars_prng_states[new_pop_cnt + 5]);
 				float tmp_offspring;
 
 				// Performing crossover
