@@ -154,7 +154,7 @@ uint64_t libkernel_ga (
 			float8 bt_tmp;
 			read_pipe_block(pipe00prng2ga00bt00ushort00float00prng, &bt_tmp);
 
-//printf("test point 1\n");
+
 			// Convert: float prng that must be still converted to short
 			float bt_tmp_uf0 = bt_tmp.s0;
 			float bt_tmp_uf1 = bt_tmp.s2;
@@ -216,7 +216,7 @@ uint64_t libkernel_ga (
 			uchar2 prng_GG_C;
 			read_pipe_block(pipe00prng2ga00gg00uchar00prng, &prng_GG_C);
 
-//printf("test point 2\n");
+
 
 			uchar covr_point_low;
 			uchar covr_point_high;
@@ -234,14 +234,14 @@ uint64_t libkernel_ga (
 			// Reuse of bt prng float as crossover-rate
 			bool crossover_yes = (DockConst_crossover_rate > bt_tmp_f0);
 
-//printf("test point 3\n");
+
 
 			// LOOP_FOR_GA_INNER_CROSS_MUT
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				float prngGG;
 				read_pipe_block(pipe00prng2ga00gg00float00prng, &prngGG);
 
-//printf("test point 4\n");
+
 
 				float tmp_offspring;
 
@@ -275,7 +275,7 @@ uint64_t libkernel_ga (
 				// Calculate energy
 				LocalPopNext [new_pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_offspring;
 				write_pipe_block(pipe00gg2conf00genotype, &tmp_offspring);
-//printf("test point 5\n");
+
 			}
 
 			#if defined (DEBUG_KRNL_GG)
@@ -301,7 +301,7 @@ uint64_t libkernel_ga (
 
 //printf("intra_valid: %i, inter_valid: %i\n", intra_valid, inter_valid);
 			}
-//printf("test point 5\n");			
+		
 			LocalEneNext[new_pop_cnt] = energyIA_GG_rx + energyIE_GG_rx;
 
 			#if defined (DEBUG_KRNL_GG)
