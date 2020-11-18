@@ -78,9 +78,10 @@ uint64_t libkernel_ga (
 			LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_gene;
 		}
 
+		float energyIA_IC_rx;
+		float energyIE_IC_rx;
 		// TODO: CALC ENERGY
-
-		//LocalEneCurr[pop_cnt] = energyIA_IC_rx + energyIE_IC_rx;
+		LocalEneCurr[pop_cnt] = energyIA_IC_rx + energyIE_IC_rx;
 	}
 	// ------------------------------------------------------------------
 
@@ -262,9 +263,6 @@ uint64_t libkernel_ga (
 
 				// Calculate energy
 				LocalPopNext [new_pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_offspring;
-
-				// TODO: CALC ENERGY
-
 			}
 
 			#if defined (DEBUG_KRNL_GG)
@@ -274,23 +272,7 @@ uint64_t libkernel_ga (
 			// Read energy
 			float energyIA_GG_rx;
 			float energyIE_GG_rx;
-
-			nb_pipe_status intra_valid = PIPE_STATUS_FAILURE;
-			nb_pipe_status inter_valid = PIPE_STATUS_FAILURE;
-
-			// LOOP_WHILE_GA_INNER_READ_ENERGIES
-			while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
-
-				if (intra_valid != PIPE_STATUS_SUCCESS) {
-					intra_valid = read_pipe(pipe00intrae2storegg00intrae, &energyIA_GG_rx);
-				}
-				else if (inter_valid != PIPE_STATUS_SUCCESS) {
-					inter_valid = read_pipe(pipe00intere2storegg00intere, &energyIE_GG_rx);
-				}
-
-//printf("intra_valid: %i, inter_valid: %i\n", intra_valid, inter_valid);
-			}
-		
+			// TODO: CALC ENERGY
 			LocalEneNext[new_pop_cnt] = energyIA_GG_rx + energyIE_GG_rx;
 
 			#if defined (DEBUG_KRNL_GG)
