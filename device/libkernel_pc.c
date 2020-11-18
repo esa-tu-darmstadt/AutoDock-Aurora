@@ -1,6 +1,5 @@
-#include "defines.h"
-#include "math.h"
 #include "auxiliary.c"
+#include "math.h"
 
 // --------------------------------------------------------------------------
 // Conform changes the conformation of the ligand according to 

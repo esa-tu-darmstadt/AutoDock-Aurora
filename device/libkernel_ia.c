@@ -1,6 +1,5 @@
-#include "defines.h"
-#include "math.h"
 #include "auxiliary.c"
+#include "math.h"
 
 // --------------------------------------------------------------------------
 // IntraE calculates the intramolecular energy of a set of atomic ligand 
