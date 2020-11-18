@@ -74,40 +74,13 @@ uint64_t libkernel_ga (
 		// Calculate energy
 		// LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-			float tmp_ic;
-			tmp_ic = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
-
-			LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_ic;
-			write_pipe_block(pipe00ic2conf00genotype, &tmp_ic);	
+			float tmp_gene = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
+			LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_gene;
 		}
 
-		#if defined (DEBUG_KRNL_IC)
-		printf("\nIC - tx pop: %u", pop_cnt); 		
-		#endif
-
-		// Read energy
-		float energyIA_IC_rx;
-		float energyIE_IC_rx;
-
-		nb_pipe_status intra_valid = PIPE_STATUS_FAILURE;
-		nb_pipe_status inter_valid = PIPE_STATUS_FAILURE;	
-
-		// LOOP_WHILE_GA_IC_INNER_READ_ENERGY
-		while( (intra_valid != PIPE_STATUS_SUCCESS) || (inter_valid != PIPE_STATUS_SUCCESS)) {
-
-			if (intra_valid != PIPE_STATUS_SUCCESS) {
-				intra_valid = read_pipe(pipe00intrae2storeic00intrae, &energyIA_IC_rx);
-			}
-			else if (inter_valid != PIPE_STATUS_SUCCESS) {
-				inter_valid = read_pipe(pipe00intere2storeic00intere, &energyIE_IC_rx);
-			}
-		}
+		// TODO: CALC ENERGY
 
 		LocalEneCurr[pop_cnt] = energyIA_IC_rx + energyIE_IC_rx;
-
-		#if defined (DEBUG_KRNL_IC)
-		printf(", IC - rx pop: %u\n", pop_cnt); 		
-		#endif
 	}
 	// ------------------------------------------------------------------
 
