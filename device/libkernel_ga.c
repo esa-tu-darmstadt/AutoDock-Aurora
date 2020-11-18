@@ -154,10 +154,10 @@ uint64_t libkernel_ga (
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
 			// Get ushort binary_tournament selection prngs (parent index)
-			ushort bt_tmp_u0 = rand(&dockpars_prng_states[new_pop_cnt]);
-			ushort bt_tmp_u1 = rand(&dockpars_prng_states[new_pop_cnt]);
-			ushort bt_tmp_u2 = rand(&dockpars_prng_states[new_pop_cnt + 1]);
-			ushort bt_tmp_u3 = rand(&dockpars_prng_states[new_pop_cnt + 1]);
+			ushort bt_tmp_u0 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt]));
+			ushort bt_tmp_u1 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt]));
+			ushort bt_tmp_u2 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt + 1]));
+			ushort bt_tmp_u3 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt + 1]));
 
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
@@ -201,27 +201,28 @@ uint64_t libkernel_ga (
 			// Mating parents
 			// ---------------------------------------------------	
 
+			// TODO: VECTORIZE IT
 			// get uchar genetic_generation prngs (gene index)
 			// get float genetic_generation prngs (mutation rate)
-			uchar2 prng_GG_C;
-			// TODO: READ PRNGs
+			uchar prng_GG_C_x = (uchar) (DockConst_num_of_genes * randf(&dockpars_prng_states[new_pop_cnt + 4]));
+			uchar prng_GG_C_y = (uchar) (DockConst_num_of_genes * randf(&dockpars_prng_states[new_pop_cnt + 4]));
 
 			uchar covr_point_low;
 			uchar covr_point_high;
 			boolean twopoint_cross_yes = False;
 
-			if (prng_GG_C.x == prng_GG_C.y) {
-				covr_point_low = prng_GG_C.x;
+			if (prng_GG_C_x == prng_GG_C_y) {
+				covr_point_low = prng_GG_C_x;
 			}
 			else {
 				twopoint_cross_yes = True;
-				if (prng_GG_C.x < prng_GG_C.y) {
-					covr_point_low = prng_GG_C.x;
-					covr_point_high = prng_GG_C.y;
+				if (prng_GG_C_x < prng_GG_C_y) {
+					covr_point_low = prng_GG_C_x;
+					covr_point_high = prng_GG_C_y;
 				}
 				else {
-					covr_point_low  = prng_GG_C.y;
-					covr_point_high = prng_GG_C.x;
+					covr_point_low  = prng_GG_C_y;
+					covr_point_high = prng_GG_C_x;
 				}
 			}
 			
