@@ -229,9 +229,7 @@ uint64_t libkernel_ga (
 			// LOOP_FOR_GA_INNER_CROSS_MUT
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				float prngGG;
-				read_pipe_block(pipe00prng2ga00gg00float00prng, &prngGG);
-
-
+				// TODO: READ PRNGs
 
 				float tmp_offspring;
 
@@ -264,7 +262,8 @@ uint64_t libkernel_ga (
 
 				// Calculate energy
 				LocalPopNext [new_pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_offspring;
-				write_pipe_block(pipe00gg2conf00genotype, &tmp_offspring);
+
+				// TODO: CALC ENERGY
 
 			}
 
