@@ -306,29 +306,14 @@ uint64_t libkernel_ga (
 			ushort entity_ls8 = entity_ls.s7;
 			ushort entity_ls9 = entity_ls.s8;
 
+			// TODO: READ ENERGY Of ENTITY CHOSEN FOR LS
+/*			
 			write_pipe_block(pipe00ga2ls00ls100energy, &LocalEneNext[entity_ls1]);
-			write_pipe_block(pipe00ga2ls00ls200energy, &LocalEneNext[entity_ls2]);
-			write_pipe_block(pipe00ga2ls00ls300energy, &LocalEneNext[entity_ls3]);
-			write_pipe_block(pipe00ga2ls00ls400energy, &LocalEneNext[entity_ls4]);
-			write_pipe_block(pipe00ga2ls00ls500energy, &LocalEneNext[entity_ls5]);
-			write_pipe_block(pipe00ga2ls00ls600energy, &LocalEneNext[entity_ls6]);
-			write_pipe_block(pipe00ga2ls00ls700energy, &LocalEneNext[entity_ls7]);
-			write_pipe_block(pipe00ga2ls00ls800energy, &LocalEneNext[entity_ls8]);
-			write_pipe_block(pipe00ga2ls00ls900energy, &LocalEneNext[entity_ls9]);
-
 			// LOOP_GA_LS_INNER_WRITE_GENOTYPE
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls200genotype, &LocalPopNext[entity_ls2][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls300genotype, &LocalPopNext[entity_ls3][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls400genotype, &LocalPopNext[entity_ls4][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls500genotype, &LocalPopNext[entity_ls5][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls600genotype, &LocalPopNext[entity_ls6][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls700genotype, &LocalPopNext[entity_ls7][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls800genotype, &LocalPopNext[entity_ls8][gene_cnt & MASK_GENOTYPE]);
-				write_pipe_block(pipe00ga2ls00ls900genotype, &LocalPopNext[entity_ls9][gene_cnt & MASK_GENOTYPE]);
 			}
-
+*/
 			float2 evalenergy_tmp1;
 			float2 evalenergy_tmp2;
 			float2 evalenergy_tmp3;
@@ -339,110 +324,31 @@ uint64_t libkernel_ga (
 			float2 evalenergy_tmp8;
 			float2 evalenergy_tmp9;
 
-			nb_pipe_status ls1_done = PIPE_STATUS_FAILURE;
-			nb_pipe_status ls2_done = PIPE_STATUS_FAILURE;
-			nb_pipe_status ls3_done = PIPE_STATUS_FAILURE;
-		 	nb_pipe_status ls4_done = PIPE_STATUS_FAILURE;
-			nb_pipe_status ls5_done = PIPE_STATUS_FAILURE;
-			nb_pipe_status ls6_done = PIPE_STATUS_FAILURE;
-			nb_pipe_status ls7_done = PIPE_STATUS_FAILURE;
-			nb_pipe_status ls8_done = PIPE_STATUS_FAILURE;
-			nb_pipe_status ls9_done = PIPE_STATUS_FAILURE;  
-
-			// LOOP_WHILE_GA_LS_INNER_READ_ENERGIES
-			while( (ls1_done != PIPE_STATUS_SUCCESS) || 
-			       (ls2_done != PIPE_STATUS_SUCCESS) || 
-			       (ls3_done != PIPE_STATUS_SUCCESS) || 
-			       (ls4_done != PIPE_STATUS_SUCCESS) || 
-			       (ls5_done != PIPE_STATUS_SUCCESS) ||
-			       (ls6_done != PIPE_STATUS_SUCCESS) || 
-			       (ls7_done != PIPE_STATUS_SUCCESS) || 
-			       (ls8_done != PIPE_STATUS_SUCCESS) || 
-			       (ls9_done != PIPE_STATUS_SUCCESS) 
-			)
-			{
-				if (ls1_done != PIPE_STATUS_SUCCESS) {
-					ls1_done = read_pipe(pipe00ls2ga00ls100evalenergy, &evalenergy_tmp1);
-				}
-				else if (ls2_done != PIPE_STATUS_SUCCESS) {
-					ls2_done = read_pipe(pipe00ls2ga00ls200evalenergy, &evalenergy_tmp2);
-				}
-				else if (ls3_done != PIPE_STATUS_SUCCESS) {
-					ls3_done = read_pipe(pipe00ls2ga00ls300evalenergy, &evalenergy_tmp3);
-				}
-				else if (ls4_done != PIPE_STATUS_SUCCESS) {
-					ls4_done = read_pipe(pipe00ls2ga00ls400evalenergy, &evalenergy_tmp4);
-				}
-				else if (ls5_done != PIPE_STATUS_SUCCESS) {
-					ls5_done = read_pipe(pipe00ls2ga00ls500evalenergy, &evalenergy_tmp5);
-				}
-				else if (ls6_done != PIPE_STATUS_SUCCESS) {
-					ls6_done = read_pipe(pipe00ls2ga00ls600evalenergy, &evalenergy_tmp6);
-				}
-				else if (ls7_done != PIPE_STATUS_SUCCESS) {
-					ls7_done = read_pipe(pipe00ls2ga00ls700evalenergy, &evalenergy_tmp7);
-				}
-				else if (ls8_done != PIPE_STATUS_SUCCESS) {
-					ls8_done = read_pipe(pipe00ls2ga00ls800evalenergy, &evalenergy_tmp8);
-				}
-				else if (ls9_done != PIPE_STATUS_SUCCESS) {
-					ls9_done = read_pipe(pipe00ls2ga00ls900evalenergy, &evalenergy_tmp9);
-				}
-			}
 		
 			#if defined (DEBUG_KRNL_LS)
 			printf("LS - got all eval & energies back\n");
 			#endif
 
+			// TODO: RETURNING ENERGYCALC COUNT
+/*
 			float eetmp1 = evalenergy_tmp1.x;
-			float eetmp2 = evalenergy_tmp2.x;
-			float eetmp3 = evalenergy_tmp3.x;
-			float eetmp4 = evalenergy_tmp4.x;
-			float eetmp5 = evalenergy_tmp5.x;
-			float eetmp6 = evalenergy_tmp6.x;
-			float eetmp7 = evalenergy_tmp7.x;
-			float eetmp8 = evalenergy_tmp8.x;
-			float eetmp9 = evalenergy_tmp9.x;
-
 			uint eval_tmp1 = *(uint*)&eetmp1;
-			uint eval_tmp2 = *(uint*)&eetmp2;
-			uint eval_tmp3 = *(uint*)&eetmp3;
-			uint eval_tmp4 = *(uint*)&eetmp4;
-			uint eval_tmp5 = *(uint*)&eetmp5;
-			uint eval_tmp6 = *(uint*)&eetmp6;
-			uint eval_tmp7 = *(uint*)&eetmp7;
-			uint eval_tmp8 = *(uint*)&eetmp8;
-			uint eval_tmp9 = *(uint*)&eetmp9;
-
+*/
+			// TODO: RETURNING ENERGIES CALCULATED
+/*			
 			LocalEneNext[entity_ls1] = evalenergy_tmp1.y;
-			LocalEneNext[entity_ls2] = evalenergy_tmp2.y;
-			LocalEneNext[entity_ls3] = evalenergy_tmp3.y;
-			LocalEneNext[entity_ls4] = evalenergy_tmp4.y;
-			LocalEneNext[entity_ls5] = evalenergy_tmp5.y;
-			LocalEneNext[entity_ls6] = evalenergy_tmp6.y;
-			LocalEneNext[entity_ls7] = evalenergy_tmp7.y;
-			LocalEneNext[entity_ls8] = evalenergy_tmp8.y;
-			LocalEneNext[entity_ls9] = evalenergy_tmp9.y;
-
-			/*
-			#pragma ivdep
-			*/
+*/
+			// TODO> READ RETURNING GENOTYPES
 			// LOOP_FOR_GA_LS_INNER_READ_GENOTYPE
+/*			
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-
 				read_pipe_block(pipe00ls2ga00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls200genotype, &LocalPopNext[entity_ls2][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls300genotype, &LocalPopNext[entity_ls3][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls400genotype, &LocalPopNext[entity_ls4][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls500genotype, &LocalPopNext[entity_ls5][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls600genotype, &LocalPopNext[entity_ls6][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls700genotype, &LocalPopNext[entity_ls7][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls800genotype, &LocalPopNext[entity_ls8][gene_cnt & MASK_GENOTYPE]);
-				read_pipe_block(pipe00ls2ga00ls900genotype, &LocalPopNext[entity_ls9][gene_cnt & MASK_GENOTYPE]);
 			}
-
+*/
+			// TODO: SUM UP EVALS
+/*
 			ls_eval_cnt += eval_tmp1 + eval_tmp2 + eval_tmp3 + eval_tmp4 + eval_tmp5 + eval_tmp6 + eval_tmp7 + eval_tmp8 + eval_tmp9;
-
+*/
 			#if defined (DEBUG_KRNL_LS)
 			printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
 			printf("LS - got all genotypes back\n");
