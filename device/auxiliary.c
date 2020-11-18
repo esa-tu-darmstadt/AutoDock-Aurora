@@ -10,6 +10,53 @@ typedef unsigned char uchar;
 typedef unsigned char ushort;
 typedef unsigned int  uint;
 
+/*
+ * -----------------------------------------------
+ * Random
+ * -----------------------------------------------
+ * */
+
+/*
+ * Scalar implementation rand().
+ * This kernel subfunction generates a random int
+ * with a linear congruential generator (LCG).
+ * It uses the gcc LCG constants.
+ */
+unsigned int rand(unsigned int* input) {
+  unsigned int rand;
+
+  // Calculating next state
+#if defined (REPRO)
+  rand = 1;
+#else
+  rand = (RAND_A * input[0] + RAND_C);
+#endif
+
+  // Saving next state to memory
+  input[0] = rand;
+
+  return rand;
+}
+
+/*
+ * Scalar implementation randf().
+ * This kernel subfunction generates a random floatq
+ * greater than (or equal to) 0 and less than 1.
+ * It uses rand() function.
+ */
+float randf(unsigned int* input) {
+  float randf;
+
+  // State will be between 0 and 1
+#if defined (REPRO)
+  randf = 0.55f;
+#else
+	randf = (rand(input) / MAX_UINT) *0.999999f;
+#endif
+
+  return randf;
+}
+
 /* 
  * -----------------------------------------------
  * Pose calculation 
