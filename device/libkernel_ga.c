@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdint.h>
+
 #include "defines.h"
 #include "math.h"
 #include "auxiliary.c"
