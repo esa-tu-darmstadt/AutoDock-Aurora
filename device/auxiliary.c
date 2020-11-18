@@ -1,6 +1,8 @@
 #ifndef AUXILIARY_H_
 #define AUXILIARY_H_
 
+#include "defines.h"
+
 /* 
  * -----------------------------------------------
  * Overall
