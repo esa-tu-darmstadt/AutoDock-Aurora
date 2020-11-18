@@ -294,9 +294,7 @@ uint64_t libkernel_ga (
 
 			// Choose random & different entities on every iteration
 			ushort16 entity_ls;
-			read_pipe_block(pipe00prng2ga00ls12300ushort00prng, &entity_ls);
-
-//printf("test point LS 1\n");
+			// TODO: READ PRNGs
 
 			ushort entity_ls1 = entity_ls.s0;
 			ushort entity_ls2 = entity_ls.s1;
@@ -318,8 +316,6 @@ uint64_t libkernel_ga (
 			write_pipe_block(pipe00ga2ls00ls800energy, &LocalEneNext[entity_ls8]);
 			write_pipe_block(pipe00ga2ls00ls900energy, &LocalEneNext[entity_ls9]);
 
-//printf("test point LS 2\n");
-
 			// LOOP_GA_LS_INNER_WRITE_GENOTYPE
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
@@ -332,8 +328,6 @@ uint64_t libkernel_ga (
 				write_pipe_block(pipe00ga2ls00ls800genotype, &LocalPopNext[entity_ls8][gene_cnt & MASK_GENOTYPE]);
 				write_pipe_block(pipe00ga2ls00ls900genotype, &LocalPopNext[entity_ls9][gene_cnt & MASK_GENOTYPE]);
 			}
-
-//printf("test point LS 3\n");
 
 			float2 evalenergy_tmp1;
 			float2 evalenergy_tmp2;
