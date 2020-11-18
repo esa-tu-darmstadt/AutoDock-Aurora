@@ -296,23 +296,12 @@ uint64_t libkernel_ga (
 		#pragma ivdep
 		*/
 		// LOOP_FOR_GA_LS_OUTER
-		for (ushort ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt+=9) {
+		for (ushort ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
 
+			// TODO: FIX INDEX FOR PRNG
 			// Choose random & different entities on every iteration
-			ushort16 entity_ls;
-			// TODO: READ PRNGs
+			ushort entity_ls = (ushort)(DockConst_num_of_lsentities * randf(&dockpars_prng_states[ls_ent_cnt]));
 
-			ushort entity_ls1 = entity_ls.s0;
-			ushort entity_ls2 = entity_ls.s1;
-			ushort entity_ls3 = entity_ls.s2;
-			ushort entity_ls4 = entity_ls.s3;
-			ushort entity_ls5 = entity_ls.s4;
-			ushort entity_ls6 = entity_ls.s5;
-			ushort entity_ls7 = entity_ls.s6;
-			ushort entity_ls8 = entity_ls.s7;
-			ushort entity_ls9 = entity_ls.s8;
-
-			// TODO: READ ENERGY Of ENTITY CHOSEN FOR LS
 /*			
 			write_pipe_block(pipe00ga2ls00ls100energy, &LocalEneNext[entity_ls1]);
 			// LOOP_GA_LS_INNER_WRITE_GENOTYPE
@@ -362,7 +351,7 @@ uint64_t libkernel_ga (
 		// LOOP_FOR_GA_UPDATEPOP_OUTER
 		for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// LOOP_GA_UPDATEPOP_INNER
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				LocalPopCurr[pop_cnt][gene_cnt] = LocalPopNext[pop_cnt][gene_cnt];
 			}
 
