@@ -152,8 +152,7 @@ uint64_t libkernel_ga (
 			// Get ushort binary_tournament selection prngs (parent index)
 			// Get float binary_tournament selection prngs (tournament rate)
 			float8 bt_tmp;
-			read_pipe_block(pipe00prng2ga00bt00ushort00float00prng, &bt_tmp);
-
+			// TODO: READ PRNGs
 
 			// Convert: float prng that must be still converted to short
 			float bt_tmp_uf0 = bt_tmp.s0;
@@ -161,13 +160,6 @@ uint64_t libkernel_ga (
 			float bt_tmp_uf2 = bt_tmp.s4;
 			float bt_tmp_uf3 = bt_tmp.s6;
 
-			// short prng ready to be used, replace ushort prng_BT_U[4];
-/*
-			ushort bt_tmp_u0 = *(uint*)&bt_tmp_uf0;
-			ushort bt_tmp_u1 = *(uint*)&bt_tmp_uf1;
-			ushort bt_tmp_u2 = *(uint*)&bt_tmp_uf2;
-			ushort bt_tmp_u3 = *(uint*)&bt_tmp_uf3;
-*/
 			// Check "Krnl_Prng_BT_ushort_float"
 			// To surpass error in hw_emu		
 			ushort bt_tmp_u0 = bt_tmp_uf0;
@@ -214,10 +206,8 @@ uint64_t libkernel_ga (
 			// get uchar genetic_generation prngs (gene index)
 			// get float genetic_generation prngs (mutation rate)
 			uchar2 prng_GG_C;
-			read_pipe_block(pipe00prng2ga00gg00uchar00prng, &prng_GG_C);
-
-
-
+			// TODO: READ PRNGs
+			
 			uchar covr_point_low;
 			uchar covr_point_high;
 			bool twopoint_cross_yes = false;
