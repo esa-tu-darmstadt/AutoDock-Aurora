@@ -63,12 +63,12 @@ float randf(unsigned int* input) {
  * -----------------------------------------------
  * */
 
-// TODO: can be vectorized?
+// TODO: can be vectorized with a loop ?
 float esa_dot3(float a[3], float b[3]) {
 	return (a[0]*b[0] + a[1]*b[1] + a[2]*b[2]);
 }
 
-// TODO: can be vectorized?
+// TODO: can be vectorized with a loop ?
 float esa_dot4(float a[4], float b[4]) {
 	return (a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]);
 }
@@ -107,29 +107,19 @@ typedef enum {False, True} boolean;
 // by adding/subtracting n*ang_max to/from it.
 // Originally from: searchoptimum.c
 // --------------------------------------------------------------------------
-float map_angle_180(float angle)
+float map_angle_180 (float angle)
 {
 	float x = angle;
-	//while (x < 0.0f)
-	if (x < 0.0f)   
-	{ x += 180.0f; }
-	//while (x > 180.0f)
-	if (x > 180.0f) 
-	{ x -= 180.0f; }
+	while (x < 0.0f)   { x += 180.0f; }
+	while (x > 180.0f) { x -= 180.0f; }
 	return x;
 }
 
-float map_angle_360(float angle)
-{
+float map_angle_360 (float angle) {
 	float x = angle;
-	//while (x < 0.0f)
-	if (x < 0.0f)
-	{ x += 360.0f; }
-	//while (x > 360.0f)
-	if (x > 360.0f)
-	{ x -= 360.0f;}
+	while (x < 0.0f)	{ x += 360.0f; }
+	while (x > 360.0f)	{ x -= 360.0f; }
 	return x;
 }
-
 
 #endif /* AUXILIARY_H_ */
