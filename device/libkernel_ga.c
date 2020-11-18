@@ -73,7 +73,7 @@ uint64_t libkernel_ga (
 		// LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_gene = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
-			LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_gene;
+			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
 
 		float energyIA_IC_rx;
@@ -131,7 +131,7 @@ uint64_t libkernel_ga (
 			if (new_pop_cnt == 1) {
 				// LOOP_FOR_GA_INNER_ELITISM
 				for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-					LocalPopNext[0][gene_cnt & MASK_GENOTYPE] = LocalPopCurr[best_entity][gene_cnt & MASK_GENOTYPE]; 	
+					LocalPopNext[0][gene_cnt] = LocalPopCurr[best_entity][gene_cnt];
 				} 		
 				LocalEneNext[0] = loc_energies[best_entity];
 			}
@@ -193,8 +193,8 @@ uint64_t libkernel_ga (
 			// LOOP_FOR_GA_INNER_BT
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-				local_entity_1[gene_cnt & MASK_GENOTYPE] = LocalPopCurr[parent1][gene_cnt & MASK_GENOTYPE];
-				local_entity_2[gene_cnt & MASK_GENOTYPE] = LocalPopCurr[parent2][gene_cnt & MASK_GENOTYPE];
+				local_entity_1[gene_cnt] = LocalPopCurr[parent1][gene_cnt];
+				local_entity_2[gene_cnt] = LocalPopCurr[parent2][gene_cnt];
 			}
 
 			// ---------------------------------------------------
@@ -239,10 +239,10 @@ uint64_t libkernel_ga (
 					)) || 
 					(!crossover_yes)	// no crossover
 				   ) {
-					tmp_offspring = local_entity_1[gene_cnt & MASK_GENOTYPE];
+					tmp_offspring = local_entity_1[gene_cnt];
 				}
 				else {
-					tmp_offspring = local_entity_2[gene_cnt & MASK_GENOTYPE];
+					tmp_offspring = local_entity_2[gene_cnt];
 				}
 
 				// Performing mutation
@@ -259,7 +259,7 @@ uint64_t libkernel_ga (
 				}
 
 				// Calculate energy
-				LocalPopNext [new_pop_cnt][gene_cnt & MASK_GENOTYPE] = tmp_offspring;
+				LocalPopNext [new_pop_cnt][gene_cnt] = tmp_offspring;
 			}
 
 			#if defined (DEBUG_KRNL_GG)
@@ -308,7 +308,7 @@ uint64_t libkernel_ga (
 			write_pipe_block(pipe00ga2ls00ls100energy, &LocalEneNext[entity_ls1]);
 			// LOOP_GA_LS_INNER_WRITE_GENOTYPE
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
+				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt]);
 			}
 */
 
@@ -335,7 +335,7 @@ uint64_t libkernel_ga (
 			// LOOP_FOR_GA_LS_INNER_READ_GENOTYPE
 /*			
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-				read_pipe_block(pipe00ls2ga00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt & MASK_GENOTYPE]);
+				read_pipe_block(pipe00ls2ga00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt]);
 			}
 */
 			// TODO: SUM UP EVALS
@@ -354,7 +354,7 @@ uint64_t libkernel_ga (
 		for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// LOOP_GA_UPDATEPOP_INNER
 			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-				LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE] = LocalPopNext[pop_cnt][gene_cnt & MASK_GENOTYPE];
+				LocalPopCurr[pop_cnt][gene_cnt] = LocalPopNext[pop_cnt][gene_cnt];
 			}
 
 			LocalEneCurr[pop_cnt] = LocalEneNext[pop_cnt];
@@ -379,7 +379,7 @@ uint64_t libkernel_ga (
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// LOOP_GA_WRITEPOP2DDR_INNER
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt & MASK_GENOTYPE];
+			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
 		}
 
 		GlobEneCurr[pop_cnt] = LocalEneCurr[pop_cnt];
