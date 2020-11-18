@@ -7,33 +7,33 @@
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void libkernel_ia (
-	const   float* restrict KerConstStatic_atom_charges_const,
- 	const	char*  restrict KerConstStatic_atom_types_const,
+	const	float*	restrict	KerConstStatic_atom_charges_const,
+ 	const	char*	restrict	KerConstStatic_atom_types_const,
 
-	const 	char*  restrict KerConstStatic_intraE_contributors_const,
+	const	char*	restrict	KerConstStatic_intraE_contributors_const,
 
-			float 				 DockConst_smooth,
-	const   float* restrict KerConstStatic_reqm,
-	const   float* restrict KerConstStatic_reqm_hbond,    
-	const   uint*  restrict KerConstStatic_atom1_types_reqm,
-	const   uint*  restrict KerConstStatic_atom2_types_reqm,  
+			float				DockConst_smooth,
+	const	float*	restrict	KerConstStatic_reqm,
+	const	float*	restrict	KerConstStatic_reqm_hbond,
+	const	uint*	restrict	KerConstStatic_atom1_types_reqm,
+	const	uint*	restrict	KerConstStatic_atom2_types_reqm,
 
-	const   float* restrict KerConstStatic_VWpars_AC_const,
-	const   float* restrict KerConstStatic_VWpars_BD_const,
-	const   float* restrict KerConstStatic_dspars_S_const,
- 	const   float* restrict KerConstStatic_dspars_V_const,
+	const	float*	restrict	KerConstStatic_VWpars_AC_const,
+	const	float*	restrict	KerConstStatic_VWpars_BD_const,
+	const	float*	restrict	KerConstStatic_dspars_S_const,
+ 	const	float*	restrict	KerConstStatic_dspars_V_const,
 
-		   	uint			DockConst_num_of_intraE_contributors,
-		  	float           DockConst_grid_spacing,
-			uchar           DockConst_num_of_atypes,
-			float           DockConst_coeff_elec,
-			float           DockConst_qasp,
-			float           DockConst_coeff_desolv,
-			float* 			final_intraE,
+			uint				DockConst_num_of_intraE_contributors,
+			float				DockConst_grid_spacing,
+			uchar				DockConst_num_of_atypes,
+			float				DockConst_coeff_elec,
+			float				DockConst_qasp,
+			float				DockConst_coeff_desolv,
+			float*				final_intraE,
 
-			float* 			restrict local_coords_x,
-			float* 			restrict local_coords_y,
-			float* 			restrict local_coords_z
+			float*	restrict 	local_coords_x,
+			float*	restrict 	local_coords_y,
+			float* 	restrict 	local_coords_z
 )
 {
 	#if defined (DEBUG_ACTIVE_KERNEL)
