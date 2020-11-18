@@ -72,9 +72,6 @@ uint64_t libkernel_ga (
 	// LOOP_FOR_GA_IC_OUTER
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// Calculate energy
-		const int tmp_int_zero = 0;
-		write_pipe_block(pipe00ga2igl00ic00active, &tmp_int_zero);
-
 		LOOP_FOR_GA_IC_INNER_WRITE_GENOTYPE:
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_ic;
@@ -263,9 +260,6 @@ uint64_t libkernel_ga (
 			
 			// Reuse of bt prng float as crossover-rate
 			bool crossover_yes = (DockConst_crossover_rate > bt_tmp_f0);
-
-			const int tmp_int_zero = 0;
-			write_pipe_block(pipe00ga2igl00gg00active, &tmp_int_zero);
 
 //printf("test point 3\n");
 
