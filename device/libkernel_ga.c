@@ -134,7 +134,7 @@ uint64_t libkernel_ga (
 			// ---------------------------------------------------
 			if (new_pop_cnt == 1) {
 				// LOOP_FOR_GA_INNER_ELITISM
-				for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+				for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 					LocalPopNext[0][gene_cnt] = LocalPopCurr[best_entity][gene_cnt];
 				} 		
 				LocalEneNext[0] = loc_energies[best_entity];
@@ -192,7 +192,7 @@ uint64_t libkernel_ga (
 
 			// LOOP_FOR_GA_INNER_BT
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				local_entity_1[gene_cnt] = LocalPopCurr[parent1][gene_cnt];
 				local_entity_2[gene_cnt] = LocalPopCurr[parent2][gene_cnt];
 			}
@@ -210,22 +210,26 @@ uint64_t libkernel_ga (
 			uchar covr_point_high;
 			boolean twopoint_cross_yes = False;
 
-			if (prng_GG_C.x == prng_GG_C.y) {covr_point_low = prng_GG_C.x;}
+			if (prng_GG_C.x == prng_GG_C.y) {
+				covr_point_low = prng_GG_C.x;
+			}
 			else {
 				twopoint_cross_yes = True;
-				if (prng_GG_C.x < prng_GG_C.y) { covr_point_low  = prng_GG_C.x;
-					                         covr_point_high = prng_GG_C.y; }
-				else {		      		 covr_point_low  = prng_GG_C.y;
-   								 covr_point_high = prng_GG_C.x; }
+				if (prng_GG_C.x < prng_GG_C.y) {
+					covr_point_low = prng_GG_C.x;
+					covr_point_high = prng_GG_C.y;
+				}
+				else {
+					covr_point_low  = prng_GG_C.y;
+					covr_point_high = prng_GG_C.x;
+				}
 			}
 			
 			// Reuse of bt prng float as crossover-rate
 			boolean crossover_yes = (DockConst_crossover_rate > bt_tmp_f0);
 
-
-
 			// LOOP_FOR_GA_INNER_CROSS_MUT
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				float prngGG;
 				// TODO: READ PRNGs
 
@@ -247,14 +251,18 @@ uint64_t libkernel_ga (
 
 				// Performing mutation
 				if (DockConst_mutation_rate > prngGG) {
-					if(gene_cnt<3) {
+					if(gene_cnt < 3) {
 						tmp_offspring = tmp_offspring + Host_two_absmaxdmov*prngGG-DockConst_abs_max_dmov;
 					}
 					else {
 						float tmp;
 						tmp = tmp_offspring + Host_two_absmaxdang*prngGG-DockConst_abs_max_dang;
-						if (gene_cnt==4) { tmp_offspring = map_angle_180(tmp); }
-						else             { tmp_offspring = map_angle_360(tmp); }
+						if (gene_cnt == 4) {
+							tmp_offspring = map_angle_180(tmp);
+						}
+						else {
+							tmp_offspring = map_angle_360(tmp);
+						}
 					}
 				}
 
@@ -378,7 +386,7 @@ uint64_t libkernel_ga (
 	// LOOP_GA_WRITEPOP2DDR_OUTER
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		// LOOP_GA_WRITEPOP2DDR_INNER
-		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
+		for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
 		}
 
