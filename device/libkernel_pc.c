@@ -7,21 +7,21 @@
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void libkernel_pc (
-	const 	int*  			restrict KerConstStatic_rotlist_const,
-	const 	float*   		restrict KerConstStatic_ref_coords_x_const,
-	const 	float*   		restrict KerConstStatic_ref_coords_y_const,
-	const 	float*   		restrict KerConstStatic_ref_coords_z_const,
-	const 	float*   		restrict KerConstStatic_rotbonds_moving_vectors_const,
-	const 	float*   		restrict KerConstStatic_rotbonds_unit_vectors_const,  
-			uint          	         DockConst_rotbondlist_length,
-			uchar         	         DockConst_num_of_genes,
-	const 	float*   		restrict KerConstStatic_ref_orientation_quats_const,
-			ushort        	 		 Host_RunId,
+	const	int*	restrict	KerConstStatic_rotlist_const,
+	const	float*	restrict	KerConstStatic_ref_coords_x_const,
+	const	float*	restrict	KerConstStatic_ref_coords_y_const,
+	const	float*	restrict	KerConstStatic_ref_coords_z_const,
+	const	float*	restrict	KerConstStatic_rotbonds_moving_vectors_const,
+	const	float*	restrict	KerConstStatic_rotbonds_unit_vectors_const,
+			uint				DockConst_rotbondlist_length,
+			uchar				DockConst_num_of_genes,
+	const	float*	restrict	KerConstStatic_ref_orientation_quats_const,
+			ushort				Host_RunId,
 
-	const	float* 			restrict genotype,
-			float* 			restrict local_coords_x,
-			float* 			restrict local_coords_y,
-			float* 			restrict local_coords_z
+	const	float*	restrict	genotype,
+			float*	restrict 	local_coords_x,
+			float*	restrict	local_coords_y,
+			float*	restrict	local_coords_z
 )
 {
 	#if defined (DEBUG_KRNL_Conform) 
