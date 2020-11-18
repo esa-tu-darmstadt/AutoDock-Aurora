@@ -10,23 +10,23 @@
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void libkernel_ie (
-	const	float* 			restrict GlobFgrids,
- 	const 	float*     		restrict KerConstStatic_atom_charges_const,
- 	const 	char*      		restrict KerConstStatic_atom_types_const,
-			uchar                    DockConst_g1,
-  			uint                     DockConst_g2,
-			uint                     DockConst_g3,
-   			uchar                    DockConst_num_of_atoms,
-			float                    DockConst_gridsize_x_minus1,
-			float                    DockConst_gridsize_y_minus1,
-			float                    DockConst_gridsize_z_minus1,
-	    	uint                     Host_mul_tmp2,
-			uint                     Host_mul_tmp3,
-			float* 					 final_interE,
+	const	float*	restrict	GlobFgrids,
+	const	float*	restrict	KerConstStatic_atom_charges_const,
+	const	char*	restrict	KerConstStatic_atom_types_const,
+			uchar				DockConst_g1,
+			uint				DockConst_g2,
+			uint				DockConst_g3,
+			uchar				DockConst_num_of_atoms,
+			float				DockConst_gridsize_x_minus1,
+			float				DockConst_gridsize_y_minus1,
+			float				DockConst_gridsize_z_minus1,
+			uint				Host_mul_tmp2,
+			uint				Host_mul_tmp3,
+			float*				final_interE,
 
-			float* 			restrict local_coords_x,
-			float* 			restrict local_coords_y,
-			float* 			restrict local_coords_z
+			float*	restrict	local_coords_x,
+			float*	restrict	local_coords_y,
+			float*	restrict	local_coords_z
 )
 {
 	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
