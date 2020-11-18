@@ -4,17 +4,19 @@
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 void Krnl_LS(
-			ushort            DockConst_max_num_of_iters,
-			float                     DockConst_rho_lower_bound,
-			float                     DockConst_base_dmov_mul_sqrt3,
-			uchar             DockConst_num_of_genes,
-   			float                     DockConst_base_dang_mul_sqrt3,
-			uchar             DockConst_cons_limit,
+			ushort				DockConst_max_num_of_iters,
+			float				DockConst_rho_lower_bound,
+			float				DockConst_base_dmov_mul_sqrt3,
+			uchar				DockConst_num_of_genes,
+			float				DockConst_base_dang_mul_sqrt3,
+			uchar				DockConst_cons_limit,
 
-	const	float* 			restrict  in_genotype,
-	const 	float*			restrict  in_energy,
-			float* 			restrict  out_genotype,
-			float*			restrict  out_energy
+	const	float*	restrict	in_genotype,
+	const 	float*	restrict	in_energy,
+			float*	restrict	out_genotype,
+			float*	restrict	out_energy,
+
+			uint*				dockpars_prng_states
 )
 {	
 	#if 0
@@ -73,9 +75,9 @@ void Krnl_LS(
 			// new random deviate
 			// rho is the deviation of the uniform distribution
 			// LOOP_FOR_LS_WRITE_GENOTYPE
-			for (uchar i=0; i<DockConst_num_of_genes; i++) {
-				float tmp_prng;
-				read_pipe_block(pipe00prng2ls00float00prng, &tmp_prng);
+			for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+				// TODO: FIX INDEXES
+				float tmp_prng = randf(&dockpars_prng_states[i]);
 
 				// tmp1 is genotype_deviate
 				float tmp1 = rho * (2.0f*tmp_prng - 1.0f);
@@ -96,11 +98,16 @@ void Krnl_LS(
 				float tmp2 = tmp1 + tmp_bias;
 				float tmp3 = (positive_direction == True)? (genotype [i] + tmp2): (genotype [i] - tmp2);
 
-				if (i>2) {if (i==4) { tmp3 = map_angle_180(tmp3); }
-					  else      { tmp3 = map_angle_360(tmp3); }}
+				if (i > 2) {
+					if (i == 4) {
+						tmp3 = map_angle_180(tmp3);
+					}
+					else {
+						tmp3 = map_angle_360(tmp3);
+					}
+				}
 
 				entity_possible_new_genotype [i] = tmp3;
-				write_pipe_block(pipe00ls2conf00ls100genotype, &tmp3);
 
 				#if defined (DEBUG_KRNL_LS1)
 				printf("LS1_genotype sent\n");
@@ -111,9 +118,7 @@ void Krnl_LS(
 
 			float energyIA_LS_rx;
 			float energyIE_LS_rx;
-
-			// FIXME
-			// Add energy calculation here!
+			// TODO: CALC ENERGY
 			float candidate_energy = energyIA_LS_rx + energyIE_LS_rx;
 
 			// update LS energy-evaluation count
@@ -124,7 +129,7 @@ void Krnl_LS(
 				// updating genotype_bias
 
 				// LOOP_FOR_LS_FLOATPT_UPDATE_POS_GENOTYPE
-				for (uchar i=0; i<DockConst_num_of_genes; i++) {
+				for (uchar i = 0; i < DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (positive_direction == True) ? deviate_plus_bias[i] : deviate_minus_bias [i];
 					genotype [i] = entity_possible_new_genotype [i];
 				}	
@@ -138,7 +143,7 @@ void Krnl_LS(
 				// updating (halving) genotype_bias
 
 				// LOOP_FOR_LS_FLOATPT_UPDATE_NEG_GENOTYPE
-				for (uchar i=0; i<DockConst_num_of_genes; i++) {
+				for (uchar i = 0; i < DockConst_num_of_genes; i++) {
 					genotype_bias [i] = (iteration_cnt == 1)? 0.0f: (0.5f*genotype_bias [i]);
 				}
 
@@ -157,7 +162,7 @@ void Krnl_LS(
 		
 	// Writing back data to GA
 	*out_energy = current_energy;
-	for (uchar i=0; i<DockConst_num_of_genes; i++) {
+	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
 		out_genotype[i] = genotype[i];
 	}
 
