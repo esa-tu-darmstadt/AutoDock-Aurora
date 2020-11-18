@@ -43,7 +43,7 @@ uint64_t libkernel_ga (
   	printf("Starting libkernel_ga ... \n");
   	#endif
 
-	unsigned int* dockpars_prng_states = (unsigned int*) VEVMA_dockpars_prng_states;
+	uint* dockpars_prng_states = (unsigned int*) VEVMA_dockpars_prng_states;
 
 	#if defined (DEBUG_KRNL_GA)
 	printf("\n");
