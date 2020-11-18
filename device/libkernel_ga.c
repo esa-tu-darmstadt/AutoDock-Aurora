@@ -207,10 +207,10 @@ uint64_t libkernel_ga (
 			// get float genetic_generation prngs (mutation rate)
 			uchar2 prng_GG_C;
 			// TODO: READ PRNGs
-			
+
 			uchar covr_point_low;
 			uchar covr_point_high;
-			bool twopoint_cross_yes = false;
+			boolean twopoint_cross_yes = False;
 
 			if (prng_GG_C.x == prng_GG_C.y) {covr_point_low = prng_GG_C.x;}
 			else {
@@ -222,7 +222,7 @@ uint64_t libkernel_ga (
 			}
 			
 			// Reuse of bt prng float as crossover-rate
-			bool crossover_yes = (DockConst_crossover_rate > bt_tmp_f0);
+			boolean crossover_yes = (DockConst_crossover_rate > bt_tmp_f0);
 
 
 
