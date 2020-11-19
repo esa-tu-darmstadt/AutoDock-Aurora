@@ -15,35 +15,35 @@
  * -----------------------------------------------
  * */
 uint64_t libkernel_ga (
-	const 	float*	restrict 	GlobPopulationCurrentInitial,
-			float*  restrict	GlobPopulationCurrentFinal,
-			float*  restrict 	GlobEnergyCurrent,
-			uint*	restrict 	GlobEvals_performed,
-            uint*	restrict 	GlobGens_performed,
-			uint				DockConst_pop_size,
-		    uint              	DockConst_num_of_energy_evals,
-			uint              	DockConst_num_of_generations,
-		    float               DockConst_tournament_rate,
-			float               DockConst_mutation_rate,
-		    float               DockConst_abs_max_dmov,
-			float               DockConst_abs_max_dang,
-		    float               Host_two_absmaxdmov,
-			float               Host_two_absmaxdang,
-			float               DockConst_crossover_rate,
-			uint              	DockConst_num_of_lsentities,
-			uchar             	DockConst_num_of_genes,
-	        ushort            	Host_RunId,
-			uint 	      	  	Host_Offset_Pop,
-			uint	      	  	Host_Offset_Ene,
+	const 	uint64_t	VEVMA_PopulationCurrentInitial,
+			uint64_t  	VEVMA_PopulationCurrentFinal,
+			uint64_t  	VEVMA_EnergyCurrent,
+			uint64_t	VEVMA_Evals_performed,
+            uint64_t	VEVMA_Gens_performed,
+			uint		DockConst_pop_size,
+		    uint        DockConst_num_of_energy_evals,
+			uint        DockConst_num_of_generations,
+		    float       DockConst_tournament_rate,
+			float       DockConst_mutation_rate,
+		    float       DockConst_abs_max_dmov,
+			float       DockConst_abs_max_dang,
+		    float       Host_two_absmaxdmov,
+			float       Host_two_absmaxdang,
+			float       DockConst_crossover_rate,
+			uint        DockConst_num_of_lsentities,
+			uchar       DockConst_num_of_genes,
+	        ushort      Host_RunId,
+			uint 	    Host_Offset_Pop,
+			uint	    Host_Offset_Ene,
 
-			uint64_t       		VEVMA_dockpars_prng_states
+			uint64_t    VEVMA_dockpars_prng_states
 )
 {
 	#ifdef PRINT_ALL_KRNL
   	printf("Starting libkernel_ga ... \n");
   	#endif
 
-	uint* dockpars_prng_states = (unsigned int*) VEVMA_dockpars_prng_states;
+
 
 	#if defined (DEBUG_KRNL_GA)
 	printf("\n");
@@ -61,12 +61,16 @@ uint64_t libkernel_ga (
 	printf("%-40s %u\n", "DockConst_num_of_genes: ",        	DockConst_num_of_genes);
 	#endif
 
+	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial + Host_Offset_Pop);
+	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal + Host_Offset_Pop);
+	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent + Host_Offset_Ene);
+		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
+		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
+
+	uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
+
 	float LocalPopCurr[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
 	float LocalEneCurr[MAX_POPSIZE];
-
-	const float* GlobPopCurrInitial = & GlobPopulationCurrentInitial [Host_Offset_Pop];
-	      float* GlobPopCurrFinal   = & GlobPopulationCurrentFinal   [Host_Offset_Pop];
-	      float* GlobEneCurr        = & GlobEnergyCurrent     	     [Host_Offset_Ene];
 
 	// ------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
