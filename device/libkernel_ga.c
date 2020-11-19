@@ -50,9 +50,7 @@ uint64_t libkernel_ga (
 	const	uint64_t	VEVMA_Static_rotbonds_moving_vectors,
 	const	uint64_t	VEVMA_Static_rotbonds_unit_vectors,
 			uint		DockConst_rotbondlist_length,
-	//		uchar				DockConst_num_of_genes,
-	const	uint64_t	VEVMA_Static_ref_orientation_quats,
-	//		ushort				Host_RunId,
+	const	uint64_t	VEVMA_Static_ref_orientation_quats
 )
 {
 	#ifdef PRINT_ALL_KRNL
