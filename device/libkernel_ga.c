@@ -39,8 +39,20 @@ uint64_t libkernel_ga (
 	        ushort      Host_RunId,
 			uint 	    Host_Offset_Pop,
 			uint	    Host_Offset_Ene,
-
-			uint64_t    VEVMA_dockpars_prng_states
+			uint64_t    VEVMA_dockpars_prng_states,
+	/*
+	 * pc
+	 */
+	const	uint64_t	VEVMA_Static_rotlist,
+	const	uint64_t	VEVMA_Static_ref_coords_x,
+	const	uint64_t	VEVMA_Static_ref_coords_y,
+	const	uint64_t	VEVMA_Static_ref_coords_z,
+	const	uint64_t	VEVMA_Static_rotbonds_moving_vectors,
+	const	uint64_t	VEVMA_Static_rotbonds_unit_vectors,
+			uint		DockConst_rotbondlist_length,
+	//		uchar				DockConst_num_of_genes,
+	const	uint64_t	VEVMA_Static_ref_orientation_quats,
+	//		ushort				Host_RunId,
 )
 {
 	#ifdef PRINT_ALL_KRNL
@@ -65,6 +77,11 @@ uint64_t libkernel_ga (
 	printf("%-40s %u\n", "DockConst_num_of_genes: ",        	DockConst_num_of_genes);
 	#endif
 
+	// ------------------------------------------------------------------
+
+	/*
+	 * ga
+	 */
 	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial + Host_Offset_Pop);
 	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal + Host_Offset_Pop);
 	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent + Host_Offset_Ene);
@@ -72,6 +89,19 @@ uint64_t libkernel_ga (
 		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
 
 	uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
+
+	/*
+	 * pc
+	 */
+	const	int*	KerConstStatic_rotlist = (int*)(VEVMA_Static_rotlist);
+	const	float*	KerConstStatic_ref_coords_x = (float*)(VEVMA_Static_ref_coords_x);
+	const	float*	KerConstStatic_ref_coords_y = (float*)(VEVMA_Static_ref_coords_y);
+	const	float*	KerConstStatic_ref_coords_z = (float*)(VEVMA_Static_ref_coords_z);
+	const	float*	KerConstStatic_rotbonds_moving_vectors = (float*)(VEVMA_Static_rotbonds_moving_vectors);
+	const	float*	KerConstStatic_rotbonds_unit_vectors = (float*)(VEVMA_Static_rotbonds_unit_vectors);
+	const	float*	KerConstStatic_ref_orientation_quats = (float*)(VEVMA_Static_ref_orientation_quats);
+
+	// ------------------------------------------------------------------
 
 	float LocalPopCurr[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
 	float LocalEneCurr[MAX_POPSIZE];
@@ -88,7 +118,20 @@ uint64_t libkernel_ga (
 
 		float energy_ia_ic;
 		float energy_ie_ic;
-		calc_pc();
+		calc_pc(
+			KerConstStatic_rotlist,
+			KerConstStatic_ref_coords_x,
+			KerConstStatic_ref_coords_y,
+			KerConstStatic_ref_coords_z,
+			KerConstStatic_rotbonds_moving_vectors,
+			KerConstStatic_rotbonds_unit_vectors,
+			DockConst_rotbondlist_length,
+			DockConst_num_of_genes,
+			KerConstStatic_ref_orientation_quats,
+			Host_RunId,
+			LocalPopCurr[pop_cnt],
+
+		);
 		energy_ia();
 		energy_ie();
 		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
