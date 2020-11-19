@@ -7,15 +7,15 @@
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void calc_pc (
-	const	int*	restrict	KerConstStatic_rotlist_const,
-	const	float*	restrict	KerConstStatic_ref_coords_x_const,
-	const	float*	restrict	KerConstStatic_ref_coords_y_const,
-	const	float*	restrict	KerConstStatic_ref_coords_z_const,
-	const	float*	restrict	KerConstStatic_rotbonds_moving_vectors_const,
-	const	float*	restrict	KerConstStatic_rotbonds_unit_vectors_const,
+	const	int*	restrict	PC_rotlist,
+	const	float*	restrict	PC_ref_coords_x,
+	const	float*	restrict	PC_ref_coords_y,
+	const	float*	restrict	PC_ref_coords_z,
+	const	float*	restrict	PC_rotbonds_moving_vectors,
+	const	float*	restrict	PC_rotbonds_unit_vectors,
 			uint				DockConst_rotbondlist_length,
 			uchar				DockConst_num_of_genes,
-	const	float*	restrict	KerConstStatic_ref_orientation_quats_const,
+	const	float*	restrict	PC_ref_orientation_quats,
 			ushort				Host_RunId,
 
 	const	float*	restrict	genotype,
@@ -39,7 +39,7 @@ void calc_pc (
 
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
-		rotlist_localcache [c] = KerConstStatic_rotlist_const [c];
+		rotlist_localcache [c] = PC_rotlist [c];
 	}
 
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
@@ -72,9 +72,9 @@ void calc_pc (
 
 			if ((rotation_list_element & RLIST_FIRSTROT_MASK) != 0)	// If first rotation of this atom
 			{	
-				atom_to_rotate[0] = KerConstStatic_ref_coords_x_const [atom_id];
-				atom_to_rotate[1] = KerConstStatic_ref_coords_y_const [atom_id];
-				atom_to_rotate[2] = KerConstStatic_ref_coords_z_const [atom_id];
+				atom_to_rotate[0] = PC_ref_coords_x [atom_id];
+				atom_to_rotate[1] = PC_ref_coords_y [atom_id];
+				atom_to_rotate[2] = PC_ref_coords_z [atom_id];
 			}
 			else
 			{	
@@ -112,13 +112,13 @@ void calc_pc (
 			{
 				uint rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
 
-				rotation_unitvec[0] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
-				rotation_unitvec[1] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
-				rotation_unitvec[2] = KerConstStatic_rotbonds_unit_vectors_const[rotbond_id];
+				rotation_unitvec[0] = PC_rotbonds_unit_vectors[rotbond_id];
+				rotation_unitvec[1] = PC_rotbonds_unit_vectors[rotbond_id];
+				rotation_unitvec[2] = PC_rotbonds_unit_vectors[rotbond_id];
 				
-				rotation_movingvec[0] = KerConstStatic_rotbonds_moving_vectors_const[rotbond_id];
-				rotation_movingvec[1] = KerConstStatic_rotbonds_moving_vectors_const[rotbond_id];
-				rotation_movingvec[2] = KerConstStatic_rotbonds_moving_vectors_const[rotbond_id];
+				rotation_movingvec[0] = PC_rotbonds_moving_vectors[rotbond_id];
+				rotation_movingvec[1] = PC_rotbonds_moving_vectors[rotbond_id];
+				rotation_movingvec[2] = PC_rotbonds_moving_vectors[rotbond_id];
 
 				rotation_angle = local_genotype[6+rotbond_id];
 
@@ -148,10 +148,10 @@ void calc_pc (
 										// two rotations should be performed 
 										// (multiplying the quaternions)
 			{
-				const float  ref_ori_quats_const_q = KerConstStatic_ref_orientation_quats_const[Host_RunId];
-				const float  ref_ori_quats_const_x = KerConstStatic_ref_orientation_quats_const[Host_RunId];
-				const float  ref_ori_quats_const_y = KerConstStatic_ref_orientation_quats_const[Host_RunId];
-				const float  ref_ori_quats_const_z = KerConstStatic_ref_orientation_quats_const[Host_RunId];
+				const float  ref_ori_quats_const_q = PC_ref_orientation_quats[Host_RunId];
+				const float  ref_ori_quats_const_x = PC_ref_orientation_quats[Host_RunId];
+				const float  ref_ori_quats_const_y = PC_ref_orientation_quats[Host_RunId];
+				const float  ref_ori_quats_const_z = PC_ref_orientation_quats[Host_RunId];
 
 				// Calculating quatrot_left*ref_orientation_quats_const, 
 				// which means that reference orientation rotation is the first

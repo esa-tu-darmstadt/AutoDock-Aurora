@@ -117,13 +117,13 @@ uint64_t libkernel_ga (
 	/*
 	 * pc
 	 */
-	const	int*	KerConstStatic_rotlist = (int*)(VEVMA_pc_rotlist);
-	const	float*	KerConstStatic_ref_coords_x = (float*)(VEVMA_pc_ref_coords_x);
-	const	float*	KerConstStatic_ref_coords_y = (float*)(VEVMA_pc_ref_coords_y);
-	const	float*	KerConstStatic_ref_coords_z = (float*)(VEVMA_pc_ref_coords_z);
-	const	float*	KerConstStatic_rotbonds_moving_vectors = (float*)(VEVMA_pc_rotbonds_moving_vectors);
-	const	float*	KerConstStatic_rotbonds_unit_vectors = (float*)(VEVMA_pc_rotbonds_unit_vectors);
-	const	float*	KerConstStatic_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
+	const	int*	PC_rotlist = (int*)(VEVMA_pc_rotlist);
+	const	float*	PC_ref_coords_x = (float*)(VEVMA_pc_ref_coords_x);
+	const	float*	PC_ref_coords_y = (float*)(VEVMA_pc_ref_coords_y);
+	const	float*	PC_ref_coords_z = (float*)(VEVMA_pc_ref_coords_z);
+	const	float*	PC_rotbonds_moving_vectors = (float*)(VEVMA_pc_rotbonds_moving_vectors);
+	const	float*	PC_rotbonds_unit_vectors = (float*)(VEVMA_pc_rotbonds_unit_vectors);
+	const	float*	PC_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
 
 	/*
 	 * ia
