@@ -82,10 +82,10 @@ uint64_t libkernel_ga (
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
 
-		float energyIA_IC_rx;
-		float energyIE_IC_rx;
+		float energy_ia_ic;
+		float energy_ie_ic;
 		// TODO: CALC ENERGY
-		LocalEneCurr[pop_cnt] = energyIA_IC_rx + energyIE_IC_rx;
+		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
 	}
 	// ------------------------------------------------------------------
 
@@ -273,10 +273,10 @@ uint64_t libkernel_ga (
 			#endif	
 
 			// Read energy
-			float energyIA_GG_rx;
-			float energyIE_GG_rx;
+			float energy_ia_gg;
+			float energy_ie_gg;
 			// TODO: CALC ENERGY
-			LocalEneNext[new_pop_cnt] = energyIA_GG_rx + energyIE_GG_rx;
+			LocalEneNext[new_pop_cnt] = energy_ia_gg + energy_ie_gg;
 
 			#if defined (DEBUG_KRNL_GG)
 			printf(", GG - rx pop: %u\n", new_pop_cnt); 		
