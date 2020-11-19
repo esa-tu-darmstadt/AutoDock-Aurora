@@ -34,7 +34,6 @@ CFLAGS=$(IFLAGS) $(LFLAGS)
 K0_NAME=libhello
 K_GA_NAME=libkernel_ga
 K_IE_NAME=libkernel_ie
-K_IA_NAME=libkernel_ia
 K_LS_NAME=libkernel_ls
 
 KRNL0_SRC=$(KRNL_DIR)/$(K0_NAME).c
@@ -46,16 +45,12 @@ KRNL_GA_LIB=$(BIN_DIR)/$(K_GA_NAME).so
 KRNL_IE_SRC=$(KRNL_DIR)/$(K_IE_NAME).c
 KRNL_IE_LIB=$(BIN_DIR)/$(K_IE_NAME).so
 
-KRNL_IA_SRC=$(KRNL_DIR)/$(K_IA_NAME).c
-KRNL_IA_LIB=$(BIN_DIR)/$(K_IA_NAME).so
-
 KRNL_LS_SRC=$(KRNL_DIR)/$(K_LS_NAME).c
 KRNL_LS_LIB=$(BIN_DIR)/$(K_LS_NAME).so
 
 K_NAMES=-DK0=$(K0_NAME) \
         -DK_GA=$(K_GA_NAME) \
 		-DK_IE=$(K_IE_NAME) \
-		-DK_IA=$(K_IA_NAME) \
 		-DK_LS=$(K_LS_NAME)
 
 # Kernel flags
@@ -158,10 +153,6 @@ kernel_ga: $(KRNL_GA_SRC)
 
 kernel_ie: $(KRNL_IE_SRC)
 	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_IE_LIB) $(KRNL_IE_SRC) $(OPT_KRNL)
-	@echo $(newline)
-
-kernel_ia: $(KRNL_IA_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_IA_LIB) $(KRNL_IA_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
 kernel_ls: $(KRNL_LS_SRC)
