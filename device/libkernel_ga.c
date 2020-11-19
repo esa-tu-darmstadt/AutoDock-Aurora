@@ -394,7 +394,10 @@ uint64_t libkernel_ga (
 			}
 			
 			// Reuse of bt prng float as crossover-rate
-			boolean crossover_yes = (DockConst_crossover_rate > bt_tmp_f0);
+			boolean crossover_yes = False;
+			if (DockConst_crossover_rate > bt_tmp_f0) {
+				crossover_yes = True;
+			}
 
 			// Crossover and mutation
 			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
@@ -405,11 +408,11 @@ uint64_t libkernel_ga (
 
 				// Performing crossover
 				if (   	(
-					crossover_yes && (										// crossover
+					(crossover_yes == True) && (										// crossover
 					( (twopoint_cross_yes == True)  && ((gene_cnt <= covr_point_low) || (gene_cnt > covr_point_high)) )  ||	// two-point crossover 			 		
 					( (twopoint_cross_yes == False) && (gene_cnt <= covr_point_low))  					// one-point crossover
 					)) || 
-					(!crossover_yes)	// no crossover
+					(crossover_yes == False)	// no crossover
 				   ) {
 					tmp_offspring = local_entity_1[gene_cnt];
 				}
