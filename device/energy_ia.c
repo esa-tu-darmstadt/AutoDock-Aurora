@@ -7,21 +7,21 @@
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void energy_ia (
-	const	float*	restrict	KerConstStatic_atom_charges_const,
- 	const	char*	restrict	KerConstStatic_atom_types_const,
+	const	float*	restrict	IA_IE_atom_charges,
+ 	const	char*	restrict	IA_IE_atom_types,
 
-	const	char*	restrict	KerConstStatic_intraE_contributors_const,
+	const	char*	restrict	IA_intraE_contributors,
 
 			float				DockConst_smooth,
-	const	float*	restrict	KerConstStatic_reqm,
-	const	float*	restrict	KerConstStatic_reqm_hbond,
-	const	uint*	restrict	KerConstStatic_atom1_types_reqm,
-	const	uint*	restrict	KerConstStatic_atom2_types_reqm,
+	const	float*	restrict	IA_reqm,
+	const	float*	restrict	IA_reqm_hbond,
+	const	uint*	restrict	IA_atom1_types_reqm,
+	const	uint*	restrict	IA_atom2_types_reqm,
 
-	const	float*	restrict	KerConstStatic_VWpars_AC_const,
-	const	float*	restrict	KerConstStatic_VWpars_BD_const,
-	const	float*	restrict	KerConstStatic_dspars_S_const,
- 	const	float*	restrict	KerConstStatic_dspars_V_const,
+	const	float*	restrict	IA_VWpars_AC,
+	const	float*	restrict	IA_VWpars_BD,
+	const	float*	restrict	IA_dspars_S,
+ 	const	float*	restrict	IA_dspars_V,
 
 			uint				DockConst_num_of_intraE_contributors,
 			float				DockConst_grid_spacing,
@@ -45,8 +45,8 @@ void energy_ia (
 	// For each intramolecular atom contributor pair
 	for (ushort contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
 
-		char atom1_id = KerConstStatic_intraE_contributors_const[3*contributor_counter];
-		char atom2_id = KerConstStatic_intraE_contributors_const[3*contributor_counter + 1];
+		char atom1_id = IA_intraE_contributors[3*contributor_counter];
+		char atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 
 		float subx = local_coords_x[atom1_id] - local_coords_x[atom2_id];
 		float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
@@ -84,8 +84,8 @@ void energy_ia (
 		float partialE4 = 0.0f;
 
  		// Getting types ids
-		char atom1_typeid = KerConstStatic_atom_types_const [atom1_id];
-		char atom2_typeid = KerConstStatic_atom_types_const [atom2_id];
+		char atom1_typeid = IA_IE_atom_types[atom1_id];
+		char atom2_typeid = IA_IE_atom_types[atom2_id];
 
 		// Getting optimum pair distance (opt_distance) from reqm and reqm_hbond
 		// reqm: equilibrium internuclear separation 
@@ -94,16 +94,16 @@ void energy_ia (
 		// 	 (sum of the vdW radii of two like atoms (A)) in the case of hbond 
 		float opt_distance;
 
-		uint atom1_type_vdw_hb = KerConstStatic_atom1_types_reqm [atom1_typeid];
-     	uint atom2_type_vdw_hb = KerConstStatic_atom2_types_reqm [atom2_typeid];
+		uint atom1_type_vdw_hb = IA_atom1_types_reqm[atom1_typeid];
+     	uint atom2_type_vdw_hb = IA_atom2_types_reqm [atom2_typeid];
 
-		if (KerConstStatic_intraE_contributors_const[3*contributor_counter + 2] == 1)	// H-bond
+		if (IA_intraE_contributors[3*contributor_counter + 2] == 1)	// H-bond
 		{
-			opt_distance = KerConstStatic_reqm_hbond [atom1_type_vdw_hb] + KerConstStatic_reqm_hbond [atom2_type_vdw_hb];
+			opt_distance = IA_reqm_hbond[atom1_type_vdw_hb] + IA_reqm_hbond[atom2_type_vdw_hb];
 		}
 		else	// Van der Waals
 		{
-			opt_distance = 0.5f*(KerConstStatic_reqm [atom1_type_vdw_hb] + KerConstStatic_reqm [atom2_type_vdw_hb]);
+			opt_distance = 0.5f*(IA_reqm[atom1_type_vdw_hb] + IA_reqm[atom2_type_vdw_hb]);
 		}
 
 		// Getting smoothed distance
@@ -137,11 +137,11 @@ void energy_ia (
 		if (atomic_distance < 8.0f) 
 		{
 			// Calculating van der Waals / hydrogen bond term
-			partialE1 += KerConstStatic_VWpars_AC_const [atom1_typeid*DockConst_num_of_atypes+atom2_typeid]*inverse_smoothed_distance_pow_12;
+			partialE1 += IA_VWpars_AC[atom1_typeid*DockConst_num_of_atypes+atom2_typeid]*inverse_smoothed_distance_pow_12;
 
-			float tmp_pE2 = KerConstStatic_VWpars_BD_const [atom1_typeid*DockConst_num_of_atypes+atom2_typeid];
+			float tmp_pE2 = IA_VWpars_BD[atom1_typeid*DockConst_num_of_atypes+atom2_typeid];
 
-			if (KerConstStatic_intraE_contributors_const[3*contributor_counter + 2] == 1)	// H-bond
+			if (IA_intraE_contributors[3*contributor_counter + 2] == 1)	// H-bond
 				partialE2 -= tmp_pE2 * inverse_smoothed_distance_pow_10;
 			else	// Van der Waals
 				partialE2 -= tmp_pE2 * inverse_smoothed_distance_pow_6;
@@ -153,7 +153,7 @@ void energy_ia (
 		{
 			// Calculating electrostatic term
 			partialE3 += (  
-							(DockConst_coeff_elec*KerConstStatic_atom_charges_const[atom1_id]*KerConstStatic_atom_charges_const[atom2_id]) 
+							(DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id]) 
 							/
 							(
 								atomic_distance*(
@@ -164,8 +164,8 @@ void energy_ia (
 
 			// Calculating desolvation term
 			partialE4 += (
-				  (KerConstStatic_dspars_S_const [atom1_typeid] + DockConst_qasp*fabs(KerConstStatic_atom_charges_const[atom1_id])) * KerConstStatic_dspars_V_const [atom2_typeid] + 
-				  (KerConstStatic_dspars_S_const [atom2_typeid] + DockConst_qasp*fabs(KerConstStatic_atom_charges_const[atom2_id])) * KerConstStatic_dspars_V_const [atom1_typeid]) * 
+				  (IA_dspars_S[atom1_typeid] + DockConst_qasp * fabs(IA_IE_atom_charges[atom1_id])) * IA_dspars_V[atom2_typeid] + 
+				  (IA_dspars_S[atom2_typeid] + DockConst_qasp * fabs(IA_IE_atom_charges[atom2_id])) * IA_dspars_V[atom1_typeid]) * 
 				 DockConst_coeff_desolv*exp(-0.0386f*distance_pow_2);
 		} // if cuttoff2 - internuclear-distance at 20.48A
 	

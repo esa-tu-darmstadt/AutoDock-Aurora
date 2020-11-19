@@ -128,17 +128,17 @@ uint64_t libkernel_ga (
 	/*
 	 * ia
 	 * */
-	const	float*	KerConstStatic_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
-	const	char*	KerConstStatic_atom_types = (char*)(VEVMA_ia_ie_atom_types);
-	const	char*	KerConstStatic_intraE_contributors = (char*)(VEVMA_ia_intraE_contributors);
-	const	float*	KerConstStatic_reqm = (float*)(VEVMA_ia_reqm);
-	const	float*	KerConstStatic_reqm_hbond = (float*)(VEVMA_ia_reqm_hbond);
-	const	uint*	KerConstStatic_atom1_types_reqm = (uint*)(VEVMA_ia_atom1_types_reqm);
-	const	uint*	KerConstStatic_atom2_types_reqm = (uint*)(VEVMA_ia_atom2_types_reqm);
-	const	float*	KerConstStatic_VWpars_AC = (float*)(VEVMA_ia_VWpars_AC);
-	const	float*	KerConstStatic_VWpars_BD = (float*)(VEVMA_ia_VWpars_BD);
-	const	float*	KerConstStatic_dspars_S = (float*)(VEVMA_ia_dspars_S);
-	const	float*	KerConstStatic_dspars_V = (float*)(VEVMA_ia_dspars_V);
+	const	float*	IA_IE_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
+	const	char*	IA_IE_atom_types = (char*)(VEVMA_ia_ie_atom_types);
+	const	char*	IA_intraE_contributors = (char*)(VEVMA_ia_intraE_contributors);
+	const	float*	IA_reqm = (float*)(VEVMA_ia_reqm);
+	const	float*	IA_reqm_hbond = (float*)(VEVMA_ia_reqm_hbond);
+	const	uint*	IA_atom1_types_reqm = (uint*)(VEVMA_ia_atom1_types_reqm);
+	const	uint*	IA_atom2_types_reqm = (uint*)(VEVMA_ia_atom2_types_reqm);
+	const	float*	IA_VWpars_AC = (float*)(VEVMA_ia_VWpars_AC);
+	const	float*	IA_VWpars_BD = (float*)(VEVMA_ia_VWpars_BD);
+	const	float*	IA_dspars_S = (float*)(VEVMA_ia_dspars_S);
+	const	float*	IA_dspars_V = (float*)(VEVMA_ia_dspars_V);
 
 	/*
 	 * ie
@@ -183,18 +183,18 @@ uint64_t libkernel_ga (
 			local_coords_z
 		);
 		energy_ia(
-			KerConstStatic_atom_charges,
-			KerConstStatic_atom_types,
-			KerConstStatic_intraE_contributors,
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			IA_intraE_contributors,
 			DockConst_smooth,
-			KerConstStatic_reqm,
-			KerConstStatic_reqm_hbond,
-			KerConstStatic_atom1_types_reqm,
-			KerConstStatic_atom2_types_reqm,
-			KerConstStatic_VWpars_AC,
-			KerConstStatic_VWpars_BD,
-			KerConstStatic_dspars_S,
-			KerConstStatic_dspars_V,
+			IA_reqm,
+			IA_reqm_hbond,
+			IA_atom1_types_reqm,
+			IA_atom2_types_reqm,
+			IA_VWpars_AC,
+			IA_VWpars_BD,
+			IA_dspars_S,
+			IA_dspars_V,
 			DockConst_num_of_intraE_contributors,
 			DockConst_grid_spacing,
 			DockConst_num_of_atypes,
