@@ -42,15 +42,46 @@ uint64_t libkernel_ga (
 			uint64_t    VEVMA_dockpars_prng_states,
 	/*
 	 * pc
-	 */
-	const	uint64_t	VEVMA_Static_rotlist,
-	const	uint64_t	VEVMA_Static_ref_coords_x,
-	const	uint64_t	VEVMA_Static_ref_coords_y,
-	const	uint64_t	VEVMA_Static_ref_coords_z,
-	const	uint64_t	VEVMA_Static_rotbonds_moving_vectors,
-	const	uint64_t	VEVMA_Static_rotbonds_unit_vectors,
+	 * */
+	const	uint64_t	VEVMA_pc_rotlist,
+	const	uint64_t	VEVMA_pc_ref_coords_x,
+	const	uint64_t	VEVMA_pc_ref_coords_y,
+	const	uint64_t	VEVMA_pc_ref_coords_z,
+	const	uint64_t	VEVMA_pc_rotbonds_moving_vectors,
+	const	uint64_t	VEVMA_pc_rotbonds_unit_vectors,
 			uint		DockConst_rotbondlist_length,
-	const	uint64_t	VEVMA_Static_ref_orientation_quats
+	const	uint64_t	VEVMA_pc_ref_orientation_quats,
+
+	/*
+	 * ia
+	 * */
+	const 	uint64_t	VEVMA_ia_ie_atom_charges,
+	const	uint64_t	VEVMA_ia_ie_atom_types,
+	const	uint64_t	VEVMA_ia_intraE_contributors,
+			float		DockConst_smooth,
+	const	uint64_t	VEVMA_ia_reqm,
+	const	uint64_t	VEVMA_ia_reqm_hbond,
+	const	uint64_t	VEVMA_ia_atom1_types_reqm,
+	const	uint64_t	VEVMA_ia_atom2_types_reqm,
+	const	uint64_t	VEVMA_ia_VWpars_AC,
+	const	uint64_t	VEVMA_ia_VWpars_BD,
+	const	uint64_t	VEVMA_ia_dspars_S,
+	const	uint64_t	VEVMA_ia_dspars_V,
+			uint		DockConst_num_of_intraE_contributors,
+			float		DockConst_grid_spacing,
+			uchar		DockConst_num_of_atypes,
+			float		DockConst_coeff_elec,
+			float		DockConst_qasp,
+			float		DockConst_coeff_desolv,
+
+			float*				final_intraE,
+			float*	restrict 	local_coords_x,
+			float*	restrict 	local_coords_y,
+			float* 	restrict 	local_coords_z
+
+	/*
+	 * ie
+	 * */
 )
 {
 	#ifdef PRINT_ALL_KRNL
@@ -91,13 +122,33 @@ uint64_t libkernel_ga (
 	/*
 	 * pc
 	 */
-	const	int*	KerConstStatic_rotlist = (int*)(VEVMA_Static_rotlist);
-	const	float*	KerConstStatic_ref_coords_x = (float*)(VEVMA_Static_ref_coords_x);
-	const	float*	KerConstStatic_ref_coords_y = (float*)(VEVMA_Static_ref_coords_y);
-	const	float*	KerConstStatic_ref_coords_z = (float*)(VEVMA_Static_ref_coords_z);
-	const	float*	KerConstStatic_rotbonds_moving_vectors = (float*)(VEVMA_Static_rotbonds_moving_vectors);
-	const	float*	KerConstStatic_rotbonds_unit_vectors = (float*)(VEVMA_Static_rotbonds_unit_vectors);
-	const	float*	KerConstStatic_ref_orientation_quats = (float*)(VEVMA_Static_ref_orientation_quats);
+	const	int*	KerConstStatic_rotlist = (int*)(VEVMA_pc_rotlist);
+	const	float*	KerConstStatic_ref_coords_x = (float*)(VEVMA_pc_ref_coords_x);
+	const	float*	KerConstStatic_ref_coords_y = (float*)(VEVMA_pc_ref_coords_y);
+	const	float*	KerConstStatic_ref_coords_z = (float*)(VEVMA_pc_ref_coords_z);
+	const	float*	KerConstStatic_rotbonds_moving_vectors = (float*)(VEVMA_pc_rotbonds_moving_vectors);
+	const	float*	KerConstStatic_rotbonds_unit_vectors = (float*)(VEVMA_pc_rotbonds_unit_vectors);
+	const	float*	KerConstStatic_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
+
+	/*
+	 * ia
+	 * */
+	const	float*	KerConstStatic_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
+	const	char*	KerConstStatic_atom_types = (char*)(VEVMA_ia_ie_atom_types);
+	const	char*	KerConstStatic_intraE_contributors = (char*)(VEVMA_ia_intraE_contributors);
+	const	float*	KerConstStatic_reqm = (float*)(VEVMA_ia_reqm);
+	const	float*	KerConstStatic_reqm_hbond = (float*)(VEVMA_ia_reqm_hbond);
+	const	uint*	KerConstStatic_atom1_types_reqm = (uint*)(VEVMA_ia_atom1_types_reqm);
+	const	uint*	KerConstStatic_atom2_types_reqm = (uint*)(VEVMA_ia_atom2_types_reqm);
+	const	float*	KerConstStatic_VWpars_AC = (float*)(VEVMA_ia_VWpars_AC);
+	const	float*	KerConstStatic_VWpars_BD = (float*)(VEVMA_ia_VWpars_BD);
+	const	float*	KerConstStatic_dspars_S = (float*)(VEVMA_ia_dspars_S);
+	const	float*	KerConstStatic_dspars_V = (float*)(VEVMA_ia_dspars_V);
+
+			float*				final_intraE,
+			float*	restrict 	local_coords_x,
+			float*	restrict 	local_coords_y,
+			float* 	restrict 	local_coords_z
 
 	// ------------------------------------------------------------------
 
@@ -136,7 +187,30 @@ uint64_t libkernel_ga (
 			local_coords_y,
 			local_coords_z
 		);
-		energy_ia();
+		energy_ia(
+			KerConstStatic_atom_charges,
+			KerConstStatic_atom_types,
+			KerConstStatic_intraE_contributors,
+			DockConst_smooth,
+			KerConstStatic_reqm,
+			KerConstStatic_reqm_hbond,
+			KerConstStatic_atom1_types_reqm,
+			KerConstStatic_atom2_types_reqm,
+			KerConstStatic_VWpars_AC,
+			KerConstStatic_VWpars_BD,
+			KerConstStatic_dspars_S,
+			KerConstStatic_dspars_V,
+			DockConst_num_of_intraE_contributors,
+			DockConst_grid_spacing,
+			DockConst_num_of_atypes,
+			DockConst_coeff_elec,
+			DockConst_qasp,
+			DockConst_coeff_desolv,
+			&energy_ia_ic,
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+		);
 		energy_ie();
 		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
 	}
