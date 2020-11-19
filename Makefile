@@ -33,7 +33,6 @@ CFLAGS=$(IFLAGS) $(LFLAGS)
 # Device sources
 K0_NAME=libhello
 K_GA_NAME=libkernel_ga
-#K_PC_NAME=libkernel_pc
 K_IE_NAME=libkernel_ie
 K_IA_NAME=libkernel_ia
 K_LS_NAME=libkernel_ls
@@ -43,9 +42,6 @@ KRNL0_LIB=$(BIN_DIR)/$(K0_NAME).so
 
 KRNL_GA_SRC=$(KRNL_DIR)/$(K_GA_NAME).c
 KRNL_GA_LIB=$(BIN_DIR)/$(K_GA_NAME).so
-
-#KRNL_PC_SRC=$(KRNL_DIR)/$(K_PC_NAME).c
-#KRNL_PC_LIB=$(BIN_DIR)/$(K_PC_NAME).so
 
 KRNL_IE_SRC=$(KRNL_DIR)/$(K_IE_NAME).c
 KRNL_IE_LIB=$(BIN_DIR)/$(K_IE_NAME).so
@@ -61,8 +57,6 @@ K_NAMES=-DK0=$(K0_NAME) \
 		-DK_IE=$(K_IE_NAME) \
 		-DK_IA=$(K_IA_NAME) \
 		-DK_LS=$(K_LS_NAME)
-#		-DK_PC=$(K_PC_NAME) \
-
 
 # Kernel flags
 KFLAGS=-DKRNL_LIB_DIRECTORY=$(BIN_DIR) \
@@ -160,10 +154,6 @@ kernel0: $(KRNL0_SRC)
 
 kernel_ga: $(KRNL_GA_SRC)
 	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
-	@echo $(newline)
-
-kernel_pc: $(KRNL_PC_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_PC_LIB) $(KRNL_PC_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
 kernel_ie: $(KRNL_IE_SRC)
