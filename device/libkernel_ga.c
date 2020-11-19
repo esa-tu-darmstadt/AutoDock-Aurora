@@ -140,10 +140,10 @@ uint64_t libkernel_ga (
 	const	float*	KerConstStatic_dspars_S = (float*)(VEVMA_ia_dspars_S);
 	const	float*	KerConstStatic_dspars_V = (float*)(VEVMA_ia_dspars_V);
 
-			float*				final_intraE,
-			float*	restrict 	local_coords_x,
-			float*	restrict 	local_coords_y,
-			float* 	restrict 	local_coords_z
+	/*
+	 * ie
+	 * */
+
 
 	// ------------------------------------------------------------------
 
