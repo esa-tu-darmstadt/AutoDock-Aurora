@@ -167,15 +167,15 @@ uint64_t libkernel_ga (
 		float energy_ia_ic;
 		float energy_ie_ic;
 		calc_pc(
-			KerConstStatic_rotlist,
-			KerConstStatic_ref_coords_x,
-			KerConstStatic_ref_coords_y,
-			KerConstStatic_ref_coords_z,
-			KerConstStatic_rotbonds_moving_vectors,
-			KerConstStatic_rotbonds_unit_vectors,
+			PC_rotlist,
+			PC_ref_coords_x,
+			PC_ref_coords_y,
+			PC_ref_coords_z,
+			PC_rotbonds_moving_vectors,
+			PC_rotbonds_unit_vectors,
 			DockConst_rotbondlist_length,
 			DockConst_num_of_genes,
-			KerConstStatic_ref_orientation_quats,
+			PC_ref_orientation_quats,
 			Host_RunId,
 			LocalPopCurr[pop_cnt],
 			local_coords_x,
