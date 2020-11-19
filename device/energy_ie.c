@@ -10,9 +10,9 @@
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
 void energy_ie (
-	const	float*	restrict	GlobFgrids,
-	const	float*	restrict	KerConstStatic_atom_charges_const,
-	const	char*	restrict	KerConstStatic_atom_types_const,
+	const	float*	restrict	IE_Fgrids,
+	const	float*	restrict	IA_IE_atom_charges,
+	const	char*	restrict	IA_IE_atom_types,
 			uchar				DockConst_g1,
 			uint				DockConst_g2,
 			uint				DockConst_g3,
@@ -29,8 +29,8 @@ void energy_ie (
 			float*	restrict	local_coords_z
 )
 {
-	const float* GlobFgrids2 = & GlobFgrids [Host_mul_tmp2];
-	const float* GlobFgrids3 = & GlobFgrids [Host_mul_tmp3];
+	const float* IE_Fgrids_2 = &IE_Fgrids[Host_mul_tmp2];
+	const float* IE_Fgrids_3 = &IE_Fgrids[Host_mul_tmp3];
 
 	#if defined (DEBUG_ACTIVE_KERNEL)
 	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_InterE", "must be disabled");}
@@ -41,12 +41,12 @@ void energy_ie (
 	// For each ligand atom
 	for (uchar atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
 	{
-		char atom1_typeid = KerConstStatic_atom_types_const [atom1_id];
+		char atom1_typeid = IA_IE_atom_types[atom1_id];
 
 		float x = local_coords_x[atom1_id];
 		float y = local_coords_y[atom1_id];
 		float z = local_coords_z[atom1_id];
-		float q = KerConstStatic_atom_charges_const [atom1_id];
+		float q = IA_IE_atom_charges[atom1_id];
 
 		float partialE1;
 		float partialE2;
@@ -126,14 +126,14 @@ void energy_ie (
 
 			// Energy contribution of the current grid type
 			float cube [2][2][2];
-	        cube [0][0][0] = GlobFgrids[cube_000 + mul_tmp];
-        	cube [1][0][0] = GlobFgrids[cube_100 + mul_tmp];
-        	cube [0][1][0] = GlobFgrids[cube_010 + mul_tmp];
-        	cube [1][1][0] = GlobFgrids[cube_110 + mul_tmp];
-        	cube [0][0][1] = GlobFgrids[cube_001 + mul_tmp];
-        	cube [1][0][1] = GlobFgrids[cube_101 + mul_tmp];
-        	cube [0][1][1] = GlobFgrids[cube_011 + mul_tmp];
-        	cube [1][1][1] = GlobFgrids[cube_111 + mul_tmp];
+	        cube [0][0][0] = IE_Fgrids[cube_000 + mul_tmp];
+			cube [1][0][0] = IE_Fgrids[cube_100 + mul_tmp];
+			cube [0][1][0] = IE_Fgrids[cube_010 + mul_tmp];
+			cube [1][1][0] = IE_Fgrids[cube_110 + mul_tmp];
+			cube [0][0][1] = IE_Fgrids[cube_001 + mul_tmp];
+			cube [1][0][1] = IE_Fgrids[cube_101 + mul_tmp];
+			cube [0][1][1] = IE_Fgrids[cube_011 + mul_tmp];
+			cube [1][1][1] = IE_Fgrids[cube_111 + mul_tmp];
 		
 			#if defined (DEBUG_KRNL_INTERE)
 			printf("Interpolation of van der Waals map:\n");
@@ -162,14 +162,14 @@ void energy_ie (
 			#endif
 
 			// Energy contribution of the electrostatic grid
-			cube [0][0][0] = GlobFgrids2[cube_000] /*GlobFgrids [Host_mul_tmp2 + cube_000]*/;
-                        cube [1][0][0] = GlobFgrids2[cube_100] /*GlobFgrids [Host_mul_tmp2 + cube_100]*/;
-                        cube [0][1][0] = GlobFgrids2[cube_010] /*GlobFgrids [Host_mul_tmp2 + cube_010]*/;
-                        cube [1][1][0] = GlobFgrids2[cube_110] /*GlobFgrids [Host_mul_tmp2 + cube_110]*/;
-                        cube [0][0][1] = GlobFgrids2[cube_001] /*GlobFgrids [Host_mul_tmp2 + cube_001]*/;
-                        cube [1][0][1] = GlobFgrids2[cube_101] /*GlobFgrids [Host_mul_tmp2 + cube_101]*/;
-                        cube [0][1][1] = GlobFgrids2[cube_011] /*GlobFgrids [Host_mul_tmp2 + cube_011]*/;
-                        cube [1][1][1] = GlobFgrids2[cube_111] /*GlobFgrids [Host_mul_tmp2 + cube_111]*/;
+			cube [0][0][0] = IE_Fgrids_2[cube_000] /*GlobFgrids [Host_mul_tmp2 + cube_000]*/;
+                        cube [1][0][0] = IE_Fgrids_2[cube_100] /*GlobFgrids [Host_mul_tmp2 + cube_100]*/;
+                        cube [0][1][0] = IE_Fgrids_2[cube_010] /*GlobFgrids [Host_mul_tmp2 + cube_010]*/;
+                        cube [1][1][0] = IE_Fgrids_2[cube_110] /*GlobFgrids [Host_mul_tmp2 + cube_110]*/;
+                        cube [0][0][1] = IE_Fgrids_2[cube_001] /*GlobFgrids [Host_mul_tmp2 + cube_001]*/;
+                        cube [1][0][1] = IE_Fgrids_2[cube_101] /*GlobFgrids [Host_mul_tmp2 + cube_101]*/;
+                        cube [0][1][1] = IE_Fgrids_2[cube_011] /*GlobFgrids [Host_mul_tmp2 + cube_011]*/;
+                        cube [1][1][1] = IE_Fgrids_2[cube_111] /*GlobFgrids [Host_mul_tmp2 + cube_111]*/;
 
 			#if defined (DEBUG_KRNL_INTERE)
 			printf("Interpolation of electrostatic map:\n");
@@ -198,14 +198,14 @@ void energy_ie (
 			#endif
 
 			// Energy contribution of the desolvation grid
-			cube [0][0][0] = GlobFgrids3[cube_000] /*GlobFgrids [Host_mul_tmp3 + cube_000]*/;
-                        cube [1][0][0] = GlobFgrids3[cube_100] /*GlobFgrids [Host_mul_tmp3 + cube_100]*/;
-                        cube [0][1][0] = GlobFgrids3[cube_010] /*GlobFgrids [Host_mul_tmp3 + cube_010]*/;
-                        cube [1][1][0] = GlobFgrids3[cube_110] /*GlobFgrids [Host_mul_tmp3 + cube_110]*/;
-                        cube [0][0][1] = GlobFgrids3[cube_001] /*GlobFgrids [Host_mul_tmp3 + cube_001]*/;
-                        cube [1][0][1] = GlobFgrids3[cube_101] /*GlobFgrids [Host_mul_tmp3 + cube_101]*/;
-                        cube [0][1][1] = GlobFgrids3[cube_011] /*GlobFgrids [Host_mul_tmp3 + cube_011]*/;
-                        cube [1][1][1] = GlobFgrids3[cube_111] /*GlobFgrids [Host_mul_tmp3 + cube_111]*/;
+			cube [0][0][0] = IE_Fgrids_3[cube_000] /*GlobFgrids [Host_mul_tmp3 + cube_000]*/;
+                        cube [1][0][0] = IE_Fgrids_3[cube_100] /*GlobFgrids [Host_mul_tmp3 + cube_100]*/;
+                        cube [0][1][0] = IE_Fgrids_3[cube_010] /*GlobFgrids [Host_mul_tmp3 + cube_010]*/;
+                        cube [1][1][0] = IE_Fgrids_3[cube_110] /*GlobFgrids [Host_mul_tmp3 + cube_110]*/;
+                        cube [0][0][1] = IE_Fgrids_3[cube_001] /*GlobFgrids [Host_mul_tmp3 + cube_001]*/;
+                        cube [1][0][1] = IE_Fgrids_3[cube_101] /*GlobFgrids [Host_mul_tmp3 + cube_101]*/;
+                        cube [0][1][1] = IE_Fgrids_3[cube_011] /*GlobFgrids [Host_mul_tmp3 + cube_011]*/;
+                        cube [1][1][1] = IE_Fgrids_3[cube_111] /*GlobFgrids [Host_mul_tmp3 + cube_111]*/;
 
 			#if defined (DEBUG_KRNL_INTERE)
 			printf("Interpolation of desolvation map:\n");

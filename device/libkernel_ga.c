@@ -72,11 +72,21 @@ uint64_t libkernel_ga (
 			uchar		DockConst_num_of_atypes,
 			float		DockConst_coeff_elec,
 			float		DockConst_qasp,
-			float		DockConst_coeff_desolv
+			float		DockConst_coeff_desolv,
 
 	/*
 	 * ie
 	 * */
+	const	uint64_t	VEVMA_Fgrids,
+			uchar		DockConst_g1,
+			uint		DockConst_g2,
+			uint		DockConst_g3,
+			uchar		DockConst_num_of_atoms,
+			float		DockConst_gridsize_x_minus1,
+			float		DockConst_gridsize_y_minus1,
+			float		DockConst_gridsize_z_minus1,
+			uint		Host_mul_tmp2,
+			uint		Host_mul_tmp3
 )
 {
 	#ifdef PRINT_ALL_KRNL
@@ -143,7 +153,7 @@ uint64_t libkernel_ga (
 	/*
 	 * ie
 	 * */
-
+	const	float*	IE_Fgrids = (float*)(VEVMA_Fgrids);
 
 	// ------------------------------------------------------------------
 
@@ -206,7 +216,24 @@ uint64_t libkernel_ga (
 			local_coords_y,
 			local_coords_z
 		);
-		energy_ie();
+		energy_ie(
+			IE_Fgrids,
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			DockConst_g1,
+			DockConst_g2,
+			DockConst_g3,
+			DockConst_num_of_atoms,
+			DockConst_gridsize_x_minus1,
+			DockConst_gridsize_y_minus1,
+			DockConst_gridsize_z_minus1,
+			Host_mul_tmp2,
+			Host_mul_tmp3,
+			&energy_ie_ic,
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+		);
 		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
 	}
 	// ------------------------------------------------------------------
