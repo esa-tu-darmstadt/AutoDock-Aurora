@@ -168,12 +168,13 @@ uint64_t libkernel_ga (
 	// Initial Calculation (IC) of scores
 	// ------------------------------------------------------------------
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-		// Calculate energy
+		// Read genotype
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_gene = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
 
+		// Calculate energy
 		float energy_ia_ic;
 		float energy_ie_ic;
 		calc_pc(
@@ -413,18 +414,74 @@ uint64_t libkernel_ga (
 					}
 				}
 
-				// Calculate energy
-				LocalPopNext [new_pop_cnt][gene_cnt] = tmp_offspring;
+				LocalPopNext[new_pop_cnt][gene_cnt] = tmp_offspring;
 			}
 
 			#if defined (DEBUG_KRNL_GG)
 			printf("GG - tx pop: %u", new_pop_cnt); 		
 			#endif	
 
-			// Read energy
+			// Calculate energy
 			float energy_ia_gg;
 			float energy_ie_gg;
-			// TODO: CALC ENERGY
+			calc_pc(
+				PC_rotlist,
+				PC_ref_coords_x,
+				PC_ref_coords_y,
+				PC_ref_coords_z,
+				PC_rotbonds_moving_vectors,
+				PC_rotbonds_unit_vectors,
+				PC_ref_orientation_quats,
+				DockConst_rotbondlist_length,
+				DockConst_num_of_genes,
+				Host_RunId,
+				LocalPopNext[new_pop_cnt],
+				local_coords_x,
+				local_coords_y,
+				local_coords_z
+			);
+			energy_ia(
+				IA_IE_atom_charges,
+				IA_IE_atom_types,
+				IA_intraE_contributors,
+				IA_reqm,
+				IA_reqm_hbond,
+				IA_atom1_types_reqm,
+				IA_atom2_types_reqm,
+				IA_VWpars_AC,
+				IA_VWpars_BD,
+				IA_dspars_S,
+				IA_dspars_V,
+				DockConst_smooth,
+				DockConst_num_of_intraE_contributors,
+				DockConst_grid_spacing,
+				DockConst_num_of_atypes,
+				DockConst_coeff_elec,
+				DockConst_qasp,
+				DockConst_coeff_desolv,
+				&energy_ia_gg,
+				local_coords_x,
+				local_coords_y,
+				local_coords_z
+			);
+			energy_ie(
+				IE_Fgrids,
+				IA_IE_atom_charges,
+				IA_IE_atom_types,
+				DockConst_g1,
+				DockConst_g2,
+				DockConst_g3,
+				DockConst_num_of_atoms,
+				DockConst_gridsize_x_minus1,
+				DockConst_gridsize_y_minus1,
+				DockConst_gridsize_z_minus1,
+				Host_mul_tmp2,
+				Host_mul_tmp3,
+				&energy_ie_gg,
+				local_coords_x,
+				local_coords_y,
+				local_coords_z
+			);
 			LocalEneNext[new_pop_cnt] = energy_ia_gg + energy_ie_gg;
 
 			#if defined (DEBUG_KRNL_GG)
