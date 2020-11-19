@@ -93,22 +93,43 @@ uint64_t libkernel_ga (
   	printf("Starting libkernel_ga ... \n");
   	#endif
 
-
-
 	#if defined (DEBUG_KRNL_GA)
 	printf("\n");
-	printf("%-40s %u\n", "DockConst_pop_size: ",        		DockConst_pop_size);
-	printf("%-40s %u\n", "DockConst_num_of_energy_evals: ",  	DockConst_num_of_energy_evals);
-	printf("%-40s %u\n", "DockConst_num_of_generations: ",  	DockConst_num_of_generations);
-	printf("%-40s %f\n", "DockConst_tournament_rate: ", 		DockConst_tournament_rate);
+	printf("%-40s %u\n", "DockConst_pop_size: ",        	DockConst_pop_size);
+	printf("%-40s %u\n", "DockConst_num_of_energy_evals: ", DockConst_num_of_energy_evals);
+	printf("%-40s %u\n", "DockConst_num_of_generations: ",  DockConst_num_of_generations);
+	printf("%-40s %f\n", "DockConst_tournament_rate: ", 	DockConst_tournament_rate);
 	printf("%-40s %f\n", "DockConst_mutation_rate: ", 		DockConst_mutation_rate);
-	printf("%-40s +/-%fA\n", "DockConst_abs_max_dmov: ",		DockConst_abs_max_dmov);
-	printf("%-40s +/-%f°\n", "DockConst_abs_max_dang: ",  		DockConst_abs_max_dang);
+	printf("%-40s +/-%fA\n", "DockConst_abs_max_dmov: ",	DockConst_abs_max_dmov);
+	printf("%-40s +/-%f°\n", "DockConst_abs_max_dang: ",  	DockConst_abs_max_dang);
 	printf("%-40s +/-%fA\n", "Host_two_absmaxdmov: ",		Host_two_absmaxdmov);
 	printf("%-40s +/-%f°\n", "Host_two_absmaxdang: ",  		Host_two_absmaxdang);
 	printf("%-40s %f\n", "DockConst_crossover_rate: ", 		DockConst_crossover_rate);
-	printf("%-40s %u\n", "DockConst_num_of_lsentities: ",   	DockConst_num_of_lsentities);
-	printf("%-40s %u\n", "DockConst_num_of_genes: ",        	DockConst_num_of_genes);
+	printf("%-40s %u\n", "DockConst_num_of_lsentities: ",   DockConst_num_of_lsentities);
+	printf("%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);
+	printf("%-40s %u\n", "Host_RunId: ",        			Host_RunId);
+	printf("%-40s %u\n", "Host_Offset_Pop: ",        		Host_Offset_Pop);
+	printf("%-40s %u\n", "Host_Offset_Ene: ",        		Host_Offset_Ene);
+	printf("\n");
+	printf("%-40s %u\n", "DockConst_rotbondlist_length: ",  DockConst_rotbondlist_length);
+	printf("\n");
+	printf("%-40s %f\n", "DockConst_smooth: ", 				DockConst_smooth);
+	printf("%-40s %u\n", "DockConst_num_of_intraE_contributors: ",	DockConst_num_of_intraE_contributors);
+	printf("%-40s %f\n", "DockConst_grid_spacing: ", 		DockConst_grid_spacing);
+	printf("%-40s %u\n", "DockConst_num_of_atypes: ",		DockConst_num_of_atypes);
+	printf("%-40s %f\n", "DockConst_coeff_elec: ", 			DockConst_coeff_elec);
+	printf("%-40s %f\n", "DockConst_qasp: ", 				DockConst_qasp);
+	printf("%-40s %f\n", "DockConst_coeff_desolv: ", 		DockConst_coeff_desolv);
+	printf("\n");
+	printf("%-40s %u\n", "DockConst_g1: ",					DockConst_g1);
+	printf("%-40s %u\n", "DockConst_g2: ",					DockConst_g2);
+	printf("%-40s %u\n", "DockConst_g3: ",					DockConst_g3);
+	printf("%-40s %u\n", "DockConst_num_of_atoms: ",		DockConst_num_of_atoms);
+	printf("%-40s %f\n", "DockConst_gridsize_x_minus1: ", 	DockConst_gridsize_x_minus1);
+	printf("%-40s %f\n", "DockConst_gridsize_y_minus1: ", 	DockConst_gridsize_y_minus1);
+	printf("%-40s %f\n", "DockConst_gridsize_z_minus1: ", 	DockConst_gridsize_z_minus1);
+	printf("%-40s %u\n", "Host_mul_tmp2: ",					Host_mul_tmp2);
+	printf("%-40s %u\n", "Host_mul_tmp3: ",					Host_mul_tmp3);
 	#endif
 
 	// ------------------------------------------------------------------
@@ -121,8 +142,7 @@ uint64_t libkernel_ga (
 	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent + Host_Offset_Ene);
 		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
 		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
-
-	uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
+		  uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
 
 	/*
 	 * pc
