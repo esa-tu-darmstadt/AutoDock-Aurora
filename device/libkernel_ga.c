@@ -106,6 +106,10 @@ uint64_t libkernel_ga (
 	float LocalPopCurr[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
 	float LocalEneCurr[MAX_POPSIZE];
 
+	float local_coords_x[MAX_NUM_OF_ATOMS];
+	float local_coords_y[MAX_NUM_OF_ATOMS];
+	float local_coords_z[MAX_NUM_OF_ATOMS];
+
 	// ------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
 	// ------------------------------------------------------------------
@@ -130,7 +134,9 @@ uint64_t libkernel_ga (
 			KerConstStatic_ref_orientation_quats,
 			Host_RunId,
 			LocalPopCurr[pop_cnt],
-
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
 		);
 		energy_ia();
 		energy_ie();
