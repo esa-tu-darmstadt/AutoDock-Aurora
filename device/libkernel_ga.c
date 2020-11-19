@@ -72,12 +72,7 @@ uint64_t libkernel_ga (
 			uchar		DockConst_num_of_atypes,
 			float		DockConst_coeff_elec,
 			float		DockConst_qasp,
-			float		DockConst_coeff_desolv,
-
-			float*				final_intraE,
-			float*	restrict 	local_coords_x,
-			float*	restrict 	local_coords_y,
-			float* 	restrict 	local_coords_z
+			float		DockConst_coeff_desolv
 
 	/*
 	 * ie
