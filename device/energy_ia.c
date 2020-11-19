@@ -6,7 +6,7 @@
 // contributor-pairs.
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
-void libkernel_ia (
+void energy_ia (
 	const	float*	restrict	KerConstStatic_atom_charges_const,
  	const	char*	restrict	KerConstStatic_atom_types_const,
 

@@ -9,7 +9,7 @@
 // a very high value will be added to the current energy as a penalty. 
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
-void libkernel_ie (
+void energy_ie (
 	const	float*	restrict	GlobFgrids,
 	const	float*	restrict	KerConstStatic_atom_charges_const,
 	const	char*	restrict	KerConstStatic_atom_types_const,

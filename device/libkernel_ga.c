@@ -84,7 +84,9 @@ uint64_t libkernel_ga (
 
 		float energy_ia_ic;
 		float energy_ie_ic;
-		// TODO: CALC ENERGY
+		calc_pc();
+		energy_ia();
+		energy_ie();
 		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
 	}
 	// ------------------------------------------------------------------

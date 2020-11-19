@@ -6,7 +6,7 @@
 // the genotype fed by any producer logic/kernel (IC, GG, LSs).
 // Originally from: processligand.c
 // --------------------------------------------------------------------------
-void libkernel_pc (
+void calc_pc (
 	const	int*	restrict	KerConstStatic_rotlist_const,
 	const	float*	restrict	KerConstStatic_ref_coords_x_const,
 	const	float*	restrict	KerConstStatic_ref_coords_y_const,
