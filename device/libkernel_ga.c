@@ -529,6 +529,8 @@ uint64_t libkernel_ga (
 		*/
 		for (ushort ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
 
+			uint ls_eval_cnt_per_iter;
+
 			// TODO: FIX INDEX FOR PRNG
 			// Choose random & different entities on every iteration
 			ushort entity_ls = (ushort)(DockConst_num_of_lsentities * randf(&dockpars_prng_states[ls_ent_cnt]));
@@ -543,6 +545,7 @@ uint64_t libkernel_ga (
 
 				LocalPopNext[entity_ls],
 				LocalEneNext,
+				&ls_eval_cnt_per_iter,
 				dockpars_prng_states,
 
 				PC_rotlist,
@@ -586,19 +589,11 @@ uint64_t libkernel_ga (
 				Host_mul_tmp3
 			);
 
-			// TODO: RETURNING ENERGYCALC COUNT
-/*
-			float eetmp1 = evalenergy_tmp1.x;
-			uint eval_tmp1 = *(uint*)&eetmp1;
-*/
+			// Accumulating number of evals
+			ls_eval_cnt += ls_eval_cnt_per_iter;
 
-			// TODO: SUM UP EVALS
-/*
-			ls_eval_cnt += eval_tmp1 + eval_tmp2 + eval_tmp3 + eval_tmp4 + eval_tmp5 + eval_tmp6 + eval_tmp7 + eval_tmp8 + eval_tmp9;
-*/
 			#if defined (DEBUG_KRNL_LS)
 			printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
-			printf("LS - got all genotypes back\n");
 			#endif
 		} // End of for-loop ls_ent_cnt
 		// ------------------------------------------------------------------

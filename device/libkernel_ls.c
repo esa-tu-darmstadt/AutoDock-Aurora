@@ -17,6 +17,7 @@ void Krnl_LS(
 
 			float*	restrict	in_out_genotype,
 			float*	restrict	in_out_energy,
+			uint*	restrict	out_eval,
 			uint*				dockpars_prng_states,
 
 	/*
@@ -266,6 +267,9 @@ void Krnl_LS(
 	printf("Out of while iter LS\n");
 	#endif
 		
+	// Writing resulting number of energy evals performed in LS
+	*out_eval = LS_eval;
+
 	// Writing resulting genotype and energy
 	*in_out_energy = current_energy;
 	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
