@@ -39,7 +39,7 @@ void energy_ia (
 	float intraE = 0.0f;
 
 	// For each intramolecular atom contributor pair
-	for (ushort contributor_counter=0; contributor_counter<DockConst_num_of_intraE_contributors; contributor_counter++) {
+	for (ushort contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++) {
 
 		char atom1_id = IA_intraE_contributors[3*contributor_counter];
 		char atom2_id = IA_intraE_contributors[3*contributor_counter + 1];

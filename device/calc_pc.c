@@ -43,7 +43,7 @@ void calc_pc (
 	}
 
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
-	for (uchar i=0; i<DockConst_num_of_genes; i++) {
+	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
 		if (i < 3) {
 			local_genotype [i] = genotype[i];
 		} else {
@@ -61,7 +61,7 @@ void calc_pc (
 
 	for (ushort rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
-		int rotation_list_element = rotlist_localcache [rotation_counter];
+		int rotation_list_element = rotlist_localcache[rotation_counter];
 
 		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0)	// If not dummy rotation
 		{

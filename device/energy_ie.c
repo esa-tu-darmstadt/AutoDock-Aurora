@@ -39,7 +39,7 @@ void energy_ie (
 	float interE = 0.0f;
 
 	// For each ligand atom
-	for (uchar atom1_id=0; atom1_id<DockConst_num_of_atoms; atom1_id++)
+	for (uchar atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++)
 	{
 		char atom1_typeid = IA_IE_atom_types[atom1_id];
 
