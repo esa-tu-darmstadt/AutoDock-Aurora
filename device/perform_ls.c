@@ -1,8 +1,4 @@
 #include "auxiliary.c"
-#include "energy_ia.c"
-#include "energy_ie.c"
-#include "calc_pc.c"
-
 #include "math.h"
 
 // --------------------------------------------------------------------------
