@@ -602,23 +602,18 @@ uint64_t libkernel_ga (
 		GlobEneCurr[pop_cnt] = LocalEneCurr[pop_cnt];
 	}
 
-	#if defined (DEBUG_KRNL_GA)
-	printf("GA: %u %u\n", active, DockConst_pop_size -1);
-	#endif
-
-	#if defined (DEBUG_ACTIVE_KERNEL)
-	printf("	%-20s: %s\n", "Krnl_GA", "disabled");
-	#endif
-
 	// Write final evals & generation counts to FPGA-board DDRs
 	GlobEvals_performed[Host_RunId] = eval_cnt;
 	GlobGens_performed [Host_RunId] = generation_cnt;
 
-	/*printf("Host_RunId: %u, eval_cnt: %u, generation_cnt: %u\n", Host_RunId, eval_cnt, generation_cnt);*/
+	#if defined (DEBUG_KRNL_GA)
+	printf("Host_RunId: %u, eval_cnt: %u, generation_cnt: %u\n", Host_RunId, eval_cnt, generation_cnt);
+	#endif
 
   	#ifdef PRINT_ALL_KRNL
   	printf("\tFinishing libkernel_ga\n");
   	#endif
+
 	return 0;
 }
 
