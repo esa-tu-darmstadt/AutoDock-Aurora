@@ -7,7 +7,7 @@
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
-void Krnl_LS(
+void perform_ls(
 			ushort				DockConst_max_num_of_iters,
 			float				DockConst_rho_lower_bound,
 			float				DockConst_base_dmov_mul_sqrt3,

@@ -41,12 +41,7 @@ KRNL0_LIB=$(BIN_DIR)/$(K0_NAME).so
 KRNL_GA_SRC=$(KRNL_DIR)/$(K_GA_NAME).c
 KRNL_GA_LIB=$(BIN_DIR)/$(K_GA_NAME).so
 
-KRNL_LS_SRC=$(KRNL_DIR)/$(K_LS_NAME).c
-KRNL_LS_LIB=$(BIN_DIR)/$(K_LS_NAME).so
-
-K_NAMES=-DK0=$(K0_NAME) \
-        -DK_GA=$(K_GA_NAME) \
-		-DK_LS=$(K_LS_NAME)
+K_NAMES=-DK0=$(K0_NAME) -DK_GA=$(K_GA_NAME)
 
 # Kernel flags
 KFLAGS=-DKRNL_LIB_DIRECTORY=$(BIN_DIR) \
@@ -144,10 +139,6 @@ kernel0: $(KRNL0_SRC)
 
 kernel_ga: $(KRNL_GA_SRC)
 	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
-	@echo $(newline)
-
-kernel_ls: $(KRNL_LS_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_LS_LIB) $(KRNL_LS_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
 export VE_PROGINF := DETAIL
