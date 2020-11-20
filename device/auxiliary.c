@@ -1,6 +1,9 @@
 #ifndef AUXILIARY_H_
 #define AUXILIARY_H_
 
+#include <stdio.h>
+#include <stdint.h>
+
 #include "defines.h"
 
 /* 
