@@ -28,6 +28,10 @@ void Krnl_LS(
 	printf("LS: DockConst_cons_limit: %u\n",           	DockConst_cons_limit);
 	#endif
 
+	float local_coords_x[MAX_NUM_OF_ATOMS];
+	float local_coords_y[MAX_NUM_OF_ATOMS];
+	float local_coords_z[MAX_NUM_OF_ATOMS];
+
 	// Reading incoming genotype and energy
 	float current_energy = *in_energy;
 	float genotype[ACTUAL_GENOTYPE_LENGTH];
@@ -109,12 +113,70 @@ void Krnl_LS(
 				}
 			}
 
-			entity_possible_new_genotype [i] = tmp3;
+			entity_possible_new_genotype[i] = tmp3;
 		}
 
 		// TODO: CALC ENERGY
 		float energy_ia_ls;
 		float energy_ie_ls;
+		calc_pc(
+			PC_rotlist,
+			PC_ref_coords_x,
+			PC_ref_coords_y,
+			PC_ref_coords_z,
+			PC_rotbonds_moving_vectors,
+			PC_rotbonds_unit_vectors,
+			PC_ref_orientation_quats,
+			DockConst_rotbondlist_length,
+			DockConst_num_of_genes,
+			Host_RunId,
+			entity_possible_new_genotype,
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+		);
+		energy_ia(
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			IA_intraE_contributors,
+			IA_reqm,
+			IA_reqm_hbond,
+			IA_atom1_types_reqm,
+			IA_atom2_types_reqm,
+			IA_VWpars_AC,
+			IA_VWpars_BD,
+			IA_dspars_S,
+			IA_dspars_V,
+			DockConst_smooth,
+			DockConst_num_of_intraE_contributors,
+			DockConst_grid_spacing,
+			DockConst_num_of_atypes,
+			DockConst_coeff_elec,
+			DockConst_qasp,
+			DockConst_coeff_desolv,
+			&energy_ia_ls,
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+		);
+		energy_ie(
+			IE_Fgrids,
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			DockConst_g1,
+			DockConst_g2,
+			DockConst_g3,
+			DockConst_num_of_atoms,
+			DockConst_gridsize_x_minus1,
+			DockConst_gridsize_y_minus1,
+			DockConst_gridsize_z_minus1,
+			Host_mul_tmp2,
+			Host_mul_tmp3,
+			&energy_ie_ls,
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+		);
 		float candidate_energy = energy_ia_ls + energy_ie_ls;
 
 		// Updating LS energy-evaluation count
