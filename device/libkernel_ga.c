@@ -42,7 +42,7 @@ uint64_t libkernel_ga (
 	 * pc
 	 * */
 	const	uint64_t	VEVMA_pc_rotlist,
-	const	uint64_t	VEVMA_pc_ref_coords_x,
+	const	uint64_t	VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
 	const	uint64_t	VEVMA_pc_ref_coords_y,
 	const	uint64_t	VEVMA_pc_ref_coords_z,
 	const	uint64_t	VEVMA_pc_rotbonds_moving_vectors,
