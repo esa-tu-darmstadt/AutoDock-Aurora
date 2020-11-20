@@ -7,10 +7,6 @@
 #define KRNL_SRC_COMMON STRINGIZE(KCMN_SRC_DIRECTORY)
 #define KRNL0 	STRINGIZE(K0)
 #define KRNL_GA STRINGIZE(K_GA)
-#define KRNL_PC STRINGIZE(K_PC)
-#define KRNL_IE STRINGIZE(K_IE)
-#define KRNL_IA STRINGIZE(K_IA)
-#define KRNL_LS STRINGIZE(K_LS)
 
 //// --------------------------------
 //// Device memory buffers
@@ -67,27 +63,13 @@ filled with clock() */
 	// =======================================================================
 
 	const char* name_k_ga = KRNL_GA;
-	const char* name_k_pc = KRNL_PC;
-	const char* name_k_ie = KRNL_IE;
-	const char* name_k_ia = KRNL_IA;
-	const char* name_k_ls = KRNL_LS;
-
 	const char* krnl_folder = KRNL_BIN_FOLDER;
-
 	char path_k_ga[100];
-	char path_k_pc[100];
-	char path_k_ie[100];
-	char path_k_ia[100];
-	char path_k_ls[100];
 
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << "Kernel binaries (VEO libraries)" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
 	strcpy(path_k_ga, krnl_folder); strcat(path_k_ga, "/"); strcat(path_k_ga, name_k_ga); strcat(path_k_ga, ".so"); std::cout << "path_k_ga: " << path_k_ga << std::endl;
-	strcpy(path_k_pc, krnl_folder); strcat(path_k_pc, "/"); strcat(path_k_pc, name_k_pc); strcat(path_k_pc, ".so"); std::cout << "path_k_pc: " << path_k_pc << std::endl;
-	strcpy(path_k_ie, krnl_folder); strcat(path_k_ie, "/"); strcat(path_k_ie, name_k_ie); strcat(path_k_ie, ".so"); std::cout << "path_k_ie: " << path_k_ie << std::endl;
-	strcpy(path_k_ia, krnl_folder); strcat(path_k_ia, "/"); strcat(path_k_ia, name_k_ia); strcat(path_k_ia, ".so"); std::cout << "path_k_ia: " << path_k_ia << std::endl;
-	strcpy(path_k_ls, krnl_folder); strcat(path_k_ls, "/"); strcat(path_k_ls, name_k_ls); strcat(path_k_ls, ".so"); std::cout << "path_k_ls: " << path_k_ls << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
 	// VEO code
@@ -96,10 +78,6 @@ filled with clock() */
 	// Loading "ve_hello" on VE node 0
 	struct veo_proc_handle *ve_process = wrapper_veo_proc_create(0);
 	uint64_t kernel_ga_handle = wrapper_veo_load_library(ve_process, path_k_ga);
-	uint64_t kernel_pc_handle = wrapper_veo_load_library(ve_process, path_k_pc);
-	uint64_t kernel_ie_handle = wrapper_veo_load_library(ve_process, path_k_ie);
-	uint64_t kernel_ia_handle = wrapper_veo_load_library(ve_process, path_k_ia);
-	uint64_t kernel_ls_handle = wrapper_veo_load_library(ve_process, path_k_ls);
 	struct veo_thr_ctxt *veo_thread_context = wrapper_veo_context_open(ve_process);
 
 	// End of Host Setup
