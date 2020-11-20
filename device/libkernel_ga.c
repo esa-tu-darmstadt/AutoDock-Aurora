@@ -83,7 +83,16 @@ uint64_t libkernel_ga (
 			float		DockConst_gridsize_y_minus1,
 			float		DockConst_gridsize_z_minus1,
 			uint		Host_mul_tmp2,
-			uint		Host_mul_tmp3
+			uint		Host_mul_tmp3,
+
+	/*
+	 * ls
+	 * */
+			ushort		DockConst_max_num_of_iters,
+			float		DockConst_rho_lower_bound,
+			float		DockConst_base_dmov_mul_sqrt3,
+			float		DockConst_base_dang_mul_sqrt3,
+			uchar		DockConst_cons_limit
 )
 {
 	#ifdef PRINT_ALL_KRNL
@@ -524,39 +533,65 @@ uint64_t libkernel_ga (
 			// Choose random & different entities on every iteration
 			ushort entity_ls = (ushort)(DockConst_num_of_lsentities * randf(&dockpars_prng_states[ls_ent_cnt]));
 
-/*			
-			write_pipe_block(pipe00ga2ls00ls100energy, &LocalEneNext[entity_ls1]);
-			// LOOP_GA_LS_INNER_WRITE_GENOTYPE
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-				write_pipe_block(pipe00ga2ls00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt]);
-			}
-*/
+			perform_ls(
+				DockConst_max_num_of_iters,
+				DockConst_rho_lower_bound,
+				DockConst_base_dmov_mul_sqrt3,
+				DockConst_num_of_genes,
+				DockConst_base_dang_mul_sqrt3,
+				DockConst_cons_limit,
 
-			// TODO: FIX THESE DECLARATIONS
-/*
-			float2 evalenergy_tmp1;
-*/
+				LocalPopNext[entity_ls],
+				LocalEneNext,
+				dockpars_prng_states,
 
-		
-			#if defined (DEBUG_KRNL_LS)
-			printf("LS - got all eval & energies back\n");
-			#endif
+				PC_rotlist,
+				PC_ref_coords_x,
+				PC_ref_coords_y,
+				PC_ref_coords_z,
+				PC_rotbonds_moving_vectors,
+				PC_rotbonds_unit_vectors,
+				PC_ref_orientation_quats,
+				DockConst_rotbondlist_length,
+				Host_RunId,
+
+				IA_IE_atom_charges,
+				IA_IE_atom_types,
+				IA_intraE_contributors,
+				IA_reqm,
+				IA_reqm_hbond,
+				IA_atom1_types_reqm,
+				IA_atom2_types_reqm,
+				IA_VWpars_AC,
+				IA_VWpars_BD,
+				IA_dspars_S,
+				IA_dspars_V,
+				DockConst_smooth,
+				DockConst_num_of_intraE_contributors,
+				DockConst_grid_spacing,
+				DockConst_num_of_atypes,
+				DockConst_coeff_elec,
+				DockConst_qasp,
+				DockConst_coeff_desolv,
+
+				IE_Fgrids,
+				DockConst_g1,
+				DockConst_g2,
+				DockConst_g3,
+				DockConst_num_of_atoms,
+				DockConst_gridsize_x_minus1,
+				DockConst_gridsize_y_minus1,
+				DockConst_gridsize_z_minus1,
+				Host_mul_tmp2,
+				Host_mul_tmp3
+			);
 
 			// TODO: RETURNING ENERGYCALC COUNT
 /*
 			float eetmp1 = evalenergy_tmp1.x;
 			uint eval_tmp1 = *(uint*)&eetmp1;
 */
-			// TODO: RETURNING ENERGIES CALCULATED
-/*			
-			LocalEneNext[entity_ls1] = evalenergy_tmp1.y;
-*/
-			// TODO: READ RETURNING GENOTYPES
-/*			
-			for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-				read_pipe_block(pipe00ls2ga00ls100genotype, &LocalPopNext[entity_ls1][gene_cnt]);
-			}
-*/
+
 			// TODO: SUM UP EVALS
 /*
 			ls_eval_cnt += eval_tmp1 + eval_tmp2 + eval_tmp3 + eval_tmp4 + eval_tmp5 + eval_tmp6 + eval_tmp7 + eval_tmp8 + eval_tmp9;

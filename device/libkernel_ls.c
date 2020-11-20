@@ -15,11 +15,58 @@ void Krnl_LS(
 			float				DockConst_base_dang_mul_sqrt3,
 			uchar				DockConst_cons_limit,
 
-	const	float*	restrict	in_genotype,
-	const 	float*	restrict	in_energy,
-			float*	restrict	out_genotype,
-			float*	restrict	out_energy,
-			uint*				dockpars_prng_states
+			float*	restrict	in_out_genotype,
+			float*	restrict	in_out_energy,
+			uint*				dockpars_prng_states,
+
+	/*
+	 * pc
+	 * */
+	const	int*	restrict	PC_rotlist,
+	const	float*	restrict	PC_ref_coords_x,
+	const	float*	restrict	PC_ref_coords_y,
+	const	float*	restrict	PC_ref_coords_z,
+	const	float*	restrict	PC_rotbonds_moving_vectors,
+	const	float*	restrict	PC_rotbonds_unit_vectors,
+	const	float*	restrict	PC_ref_orientation_quats,
+			uint				DockConst_rotbondlist_length,
+			ushort				Host_RunId,
+
+	/*
+	 * ia
+	 * */
+	const	float*	restrict	IA_IE_atom_charges,
+	const	char*	restrict	IA_IE_atom_types,
+	const	char*	restrict	IA_intraE_contributors,
+	const	float*	restrict	IA_reqm,
+	const	float*	restrict	IA_reqm_hbond,
+	const	uint*	restrict	IA_atom1_types_reqm,
+	const	uint*	restrict	IA_atom2_types_reqm,
+	const	float*	restrict	IA_VWpars_AC,
+	const	float*	restrict	IA_VWpars_BD,
+	const	float*	restrict	IA_dspars_S,
+	const	float*	restrict	IA_dspars_V,
+			float				DockConst_smooth,
+			uint				DockConst_num_of_intraE_contributors,
+			float				DockConst_grid_spacing,
+			uchar				DockConst_num_of_atypes,
+			float				DockConst_coeff_elec,
+			float				DockConst_qasp,
+			float				DockConst_coeff_desolv,
+
+	/*
+	 * ie
+	 * */
+	const	float*	restrict	IE_Fgrids,
+			uchar				DockConst_g1,
+			uint				DockConst_g2,
+			uint				DockConst_g3,
+			uchar				DockConst_num_of_atoms,
+			float				DockConst_gridsize_x_minus1,
+			float				DockConst_gridsize_y_minus1,
+			float				DockConst_gridsize_z_minus1,
+			uint				Host_mul_tmp2,
+			uint				Host_mul_tmp3
 )
 {	
 	#if 0
@@ -37,10 +84,10 @@ void Krnl_LS(
 	float local_coords_z[MAX_NUM_OF_ATOMS];
 
 	// Reading incoming genotype and energy
-	float current_energy = *in_energy;
+	float current_energy = *in_out_energy;
 	float genotype[ACTUAL_GENOTYPE_LENGTH];
-	for (uchar i=0; i<DockConst_num_of_genes; i++) {
-		genotype[i] = in_genotype[i];
+	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+		genotype[i] = in_out_genotype[i];
 	}
 	
 	float rho = 1.0f;
@@ -220,9 +267,9 @@ void Krnl_LS(
 	#endif
 		
 	// Writing resulting genotype and energy
-	*out_energy = current_energy;
+	*in_out_energy = current_energy;
 	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
-		out_genotype[i] = genotype[i];
+		in_out_genotype[i] = genotype[i];
 	}
 	
 }
