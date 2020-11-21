@@ -478,7 +478,7 @@ filled with clock() */
 
 		// Kernel PC	
 		// FIXME: check arg numbers
-		wrapper_veo_args_set_u16   (kernel_pc_arg_ptr, 8, ushort_run_cnt);
+		wrapper_veo_args_set_u16   (kernel_ga_arg_ptr, 8, ushort_run_cnt);
 
 		// FIXME: missing passing of random numbers
 /*		
