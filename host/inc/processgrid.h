@@ -36,12 +36,8 @@ typedef struct
 
 int get_gridinfo(const char*, Gridinfo*);
 
-/*
 int get_gridvalues_f(const Gridinfo* mygrid,
-		     float* fgrids);
-*/
-int get_gridvalues_f(const Gridinfo* mygrid,
-		     float** fgrids);
+						   float** fgrids);
 
 
 #endif /* PROCESSGRID_H_ */

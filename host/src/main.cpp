@@ -47,9 +47,7 @@ int main(int argc, char* argv[])
 
 	//allocating CPU memory for floatgrids
 	size_t size_fgrid_nelems = (mygrid.num_of_atypes+2) * mygrid.size_xyz[0] * mygrid.size_xyz[1] * mygrid.size_xyz[2];
-/*	
-	std::vector<float> floatgrids(size_fgrid_nelems);
-*/
+
 	float* floatgrids;
 
 	// Filling the atom types filed of myligand according to the grid types
@@ -61,9 +59,6 @@ int main(int argc, char* argv[])
 		return 1;
 
 	//Reading the grid files and storing values in the memory region pointed by floatgrids
-/*	
-	if (get_gridvalues_f(&mygrid, floatgrids.data()) != 0)
-*/	
 	if (get_gridvalues_f(&mygrid, &floatgrids) != 0)
 		return 1;
 
@@ -76,25 +71,20 @@ int main(int argc, char* argv[])
 	// Calculating energies of reference ligand if required
 	//------------------------------------------------------------
 	if (mypars.reflig_en_reqired == 1) {
-		print_ref_lig_energies_f(myligand_init,
-					 mypars.smooth,
-					 mygrid,
-/*
-					 floatgrids.data(),
-*/
-					 floatgrids,
-					 mypars.coeffs.scaled_AD4_coeff_elec,
-					 mypars.coeffs.AD4_coeff_desolv,
-					 mypars.qasp);
+		print_ref_lig_energies_f(
+					myligand_init,
+					mypars.smooth,
+					mygrid,
+					floatgrids,
+					mypars.coeffs.scaled_AD4_coeff_elec,
+					mypars.coeffs.AD4_coeff_desolv,
+					mypars.qasp);
 	}
 
 	//------------------------------------------------------------
 	// Starting Docking
 	//------------------------------------------------------------
 	if (docking_with_aurora(&mygrid,
-/*
-							floatgrids.data(),
-*/
 							floatgrids,
 							&mypars, &myligand_init, &argc, argv, clock_start_program) != 0)
 		return 1;
