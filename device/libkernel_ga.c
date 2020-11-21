@@ -699,7 +699,7 @@ uint64_t libkernel_ga (
 	// Write final pop & energies back to FPGA-board DDRs
 	// ------------------------------------------------------------------
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-		printf("\n")
+		printf("\n");
 		printf("pop_cnt: %u\n", pop_cnt);
 		for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 			GlobPopCurrFinal[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
