@@ -15,10 +15,7 @@ void perform_ls(
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
 			uint*				dockpars_prng_states,
-
-	/*
-	 * pc
-	 * */
+	// pc
 	const	int*	restrict	PC_rotlist,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
@@ -28,10 +25,7 @@ void perform_ls(
 	const	float*	restrict	PC_ref_orientation_quats,
 			uint				DockConst_rotbondlist_length,
 			ushort				Host_RunId,
-
-	/*
-	 * ia
-	 * */
+	// ia
 	const	float*	restrict	IA_IE_atom_charges,
 	const	char*	restrict	IA_IE_atom_types,
 	const	char*	restrict	IA_intraE_contributors,
@@ -50,10 +44,7 @@ void perform_ls(
 			float				DockConst_coeff_elec,
 			float				DockConst_qasp,
 			float				DockConst_coeff_desolv,
-
-	/*
-	 * ie
-	 * */
+	// ie
 	const	float*	restrict	IE_Fgrids,
 			uchar				DockConst_g1,
 			uint				DockConst_g2,

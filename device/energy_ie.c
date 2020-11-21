@@ -2,12 +2,11 @@
 #include "math.h"
 
 // --------------------------------------------------------------------------
-// InterE calculates the intermolecular energy of a ligand given by 
+// Calculates the intermolecular energy of a ligand given by
 // ligand xyz-positions, and a receptor represented as a grid. 
 // The grid point values must be stored at the location which starts at GlobFgrids. 
 // If an atom is remains outside the grid, 
 // a very high value will be added to the current energy as a penalty. 
-// Originally from: processligand.c
 // --------------------------------------------------------------------------
 void energy_ie (
 	const	float*	restrict	IE_Fgrids,
@@ -173,14 +172,14 @@ void energy_ie (
 			#endif
 
 			// Energy contribution of the electrostatic grid
-			cube [0][0][0] = IE_Fgrids_2[cube_000] /*GlobFgrids [Host_mul_tmp2 + cube_000]*/;
-                        cube [1][0][0] = IE_Fgrids_2[cube_100] /*GlobFgrids [Host_mul_tmp2 + cube_100]*/;
-                        cube [0][1][0] = IE_Fgrids_2[cube_010] /*GlobFgrids [Host_mul_tmp2 + cube_010]*/;
-                        cube [1][1][0] = IE_Fgrids_2[cube_110] /*GlobFgrids [Host_mul_tmp2 + cube_110]*/;
-                        cube [0][0][1] = IE_Fgrids_2[cube_001] /*GlobFgrids [Host_mul_tmp2 + cube_001]*/;
-                        cube [1][0][1] = IE_Fgrids_2[cube_101] /*GlobFgrids [Host_mul_tmp2 + cube_101]*/;
-                        cube [0][1][1] = IE_Fgrids_2[cube_011] /*GlobFgrids [Host_mul_tmp2 + cube_011]*/;
-                        cube [1][1][1] = IE_Fgrids_2[cube_111] /*GlobFgrids [Host_mul_tmp2 + cube_111]*/;
+			cube [0][0][0] = IE_Fgrids_2[cube_000];
+                        cube [1][0][0] = IE_Fgrids_2[cube_100];
+                        cube [0][1][0] = IE_Fgrids_2[cube_010];
+                        cube [1][1][0] = IE_Fgrids_2[cube_110];
+                        cube [0][0][1] = IE_Fgrids_2[cube_001];
+                        cube [1][0][1] = IE_Fgrids_2[cube_101];
+                        cube [0][1][1] = IE_Fgrids_2[cube_011];
+                        cube [1][1][1] = IE_Fgrids_2[cube_111];
 
 			#if defined (PRINT_ALL)
 			printf("Interpolation of electrostatic map:\n");
@@ -209,14 +208,14 @@ void energy_ie (
 			#endif
 
 			// Energy contribution of the desolvation grid
-			cube [0][0][0] = IE_Fgrids_3[cube_000] /*GlobFgrids [Host_mul_tmp3 + cube_000]*/;
-                        cube [1][0][0] = IE_Fgrids_3[cube_100] /*GlobFgrids [Host_mul_tmp3 + cube_100]*/;
-                        cube [0][1][0] = IE_Fgrids_3[cube_010] /*GlobFgrids [Host_mul_tmp3 + cube_010]*/;
-                        cube [1][1][0] = IE_Fgrids_3[cube_110] /*GlobFgrids [Host_mul_tmp3 + cube_110]*/;
-                        cube [0][0][1] = IE_Fgrids_3[cube_001] /*GlobFgrids [Host_mul_tmp3 + cube_001]*/;
-                        cube [1][0][1] = IE_Fgrids_3[cube_101] /*GlobFgrids [Host_mul_tmp3 + cube_101]*/;
-                        cube [0][1][1] = IE_Fgrids_3[cube_011] /*GlobFgrids [Host_mul_tmp3 + cube_011]*/;
-                        cube [1][1][1] = IE_Fgrids_3[cube_111] /*GlobFgrids [Host_mul_tmp3 + cube_111]*/;
+			cube [0][0][0] = IE_Fgrids_3[cube_000];
+                        cube [1][0][0] = IE_Fgrids_3[cube_100];
+                        cube [0][1][0] = IE_Fgrids_3[cube_010];
+                        cube [1][1][0] = IE_Fgrids_3[cube_110];
+                        cube [0][0][1] = IE_Fgrids_3[cube_001];
+                        cube [1][0][1] = IE_Fgrids_3[cube_101];
+                        cube [0][1][1] = IE_Fgrids_3[cube_011];
+                        cube [1][1][1] = IE_Fgrids_3[cube_111];
 
 			#if defined (PRINT_ALL)
 			printf("Interpolation of desolvation map:\n");

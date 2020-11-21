@@ -2,9 +2,8 @@
 #include "math.h"
 
 // --------------------------------------------------------------------------
-// IntraE calculates the intramolecular energy of a set of atomic ligand 
+// Calculates the intramolecular energy of a set of atomic ligand
 // contributor-pairs.
-// Originally from: processligand.c
 // --------------------------------------------------------------------------
 void energy_ia (
 	const	float*	restrict	IA_IE_atom_charges,
@@ -57,7 +56,7 @@ void energy_ia (
 		float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
 		float subz = local_coords_z[atom1_id] - local_coords_z[atom2_id];
 
-		//atomic_distance = sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
+		// atomic_distance = sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 		float atomic_distance = sqrt_custom(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 
 		#if defined (PRINT_ALL)
@@ -65,12 +64,6 @@ void energy_ia (
 		printf("Contrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
 		#endif
 		
-/*
-		float partialE1;
-		float partialE2;
-		float partialE3;
-		float partialE4;
-*/
 		// But only if the distance is less than distance cutoff value and 20.48A (because of the tables)
 		//if ((distance_leo < 8.0f) && (distance_leo < 20.48f))
 		float partialE1 = 0.0f;
