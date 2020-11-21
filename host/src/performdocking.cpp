@@ -387,10 +387,7 @@ filled with clock() */
 	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	// Other kernel args are configured at every docking run
 
-	// Kernel PoseCalculation (Conform)
-	// Creating a VEO arguments object
-	struct veo_args *kernel_pc_arg_ptr = wrapper_veo_args_alloc ();
-	narg = 0;
+
 	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_rotlist_const);
 	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_coords_x_const);
 	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_coords_y_const);
@@ -411,9 +408,7 @@ filled with clock() */
 	float fgridsizey_minus1 = (float) gridsizey_minus1;
 	float fgridsizez_minus1 = (float) gridsizez_minus1;
 
-	// Creating a VEO arguments object
-	struct veo_args *kernel_ie_arg_ptr = wrapper_veo_args_alloc ();
-	narg = 0;
+
 	wrapper_veo_args_set_u64	(kernel_ie_arg_ptr, narg++, mem_dockpars_fgrids);
 	wrapper_veo_args_set_u64	(kernel_ie_arg_ptr, narg++, mem_KerConstStatic_InterE_atom_charges_const);
 	wrapper_veo_args_set_u64	(kernel_ie_arg_ptr, narg++, mem_KerConstStatic_InterE_atom_types_const);
@@ -427,10 +422,7 @@ filled with clock() */
 	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, mul_tmp2);
 	wrapper_veo_args_set_u32 	(kernel_ie_arg_ptr, narg++, mul_tmp3);
 
-	// Kernel IA
-	// Creating a VEO arguments object
-	struct veo_args *kernel_ia_arg_ptr = wrapper_veo_args_alloc ();
-	narg = 0;
+
 	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_IntraE_atom_charges_const);
 	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_IntraE_atom_types_const);
 	wrapper_veo_args_set_u64	(kernel_ia_arg_ptr, narg++, mem_KerConstStatic_intraE_contributors_const);
@@ -454,10 +446,7 @@ filled with clock() */
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
 
-	// Kernel LS
-	// Creating a VEO arguments object
-	struct veo_args *kernel_ls_arg_ptr = wrapper_veo_args_alloc ();
-	narg = 0;
+
 	wrapper_veo_args_set_u16	(kernel_ls_arg_ptr, narg++, Host_max_num_of_iters);
 	wrapper_veo_args_set_float	(kernel_ls_arg_ptr, narg++, dockpars.rho_lower_bound);
 	wrapper_veo_args_set_float	(kernel_ls_arg_ptr, narg++, dockpars.base_dmov_mul_sqrt3);
@@ -470,17 +459,6 @@ filled with clock() */
 	uint64_t kernel_ga_id;
 	uint64_t retval_ga;
 
-	uint64_t kernel_pc_id;
-	uint64_t retval_pc;
-
-	uint64_t kernel_ie_id;
-	uint64_t retval_ie;
-
-	uint64_t kernel_ia_id;
-	uint64_t retval_ia;
-
-	uint64_t kernel_ls_id;
-	uint64_t retval_ls;
 
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
 	printf("Execution run: ");
