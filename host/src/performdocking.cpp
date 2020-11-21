@@ -121,9 +121,10 @@ filled with clock() */
 	myligand_reference = *myligand_init;
 	gen_initpop_and_reflig(mypars, cpu_init_populations.data(), cpu_ref_ori_angles.data(), &myligand_reference, mygrid);
 
+	// TODO: check passing of random numbers
+	// TODO: use parameter instead of hardcoding num_genes
 	// Allocating memory in CPU for pseudorandom number generator seeds
-	const unsigned int num_of_prng_blocks = 25;
-	size_t size_prng_seeds_nelems = num_of_prng_blocks * mypars->num_of_runs;
+	size_t size_prng_seeds_nelems = mypars->num_of_runs * mypars->pop_size * 38;
 	size_t size_prng_seeds_nbytes = size_prng_seeds_nelems * sizeof(unsigned int);
 	std::vector<unsigned int> cpu_prng_seeds (size_prng_seeds_nelems);
 	
@@ -131,7 +132,7 @@ filled with clock() */
 	genseed(time(NULL));	
 
 	// Generating seeds (for each thread during GA)
-	for (unsigned int i=0; i<size_prng_seeds_nelems; i++) {
+	for (unsigned int i = 0; i < size_prng_seeds_nelems; i++) {
 		cpu_prng_seeds[i] = genseed(0u);
 	}
 
@@ -158,15 +159,15 @@ filled with clock() */
 	dockpars.gridsize_x    			= ((unsigned char)  mygrid->size_xyz[0]);
 	dockpars.gridsize_y    			= ((unsigned char)  mygrid->size_xyz[1]);
 	dockpars.gridsize_z    			= ((unsigned char)  mygrid->size_xyz[2]);
-	dockpars.g1	       			= dockpars.gridsize_x ;
-	dockpars.g2	       			= dockpars.gridsize_x * dockpars.gridsize_y;
-	dockpars.g3	       			= dockpars.gridsize_x * dockpars.gridsize_y * dockpars.gridsize_z;
+	dockpars.g1	       				= dockpars.gridsize_x ;
+	dockpars.g2	       				= dockpars.gridsize_x * dockpars.gridsize_y;
+	dockpars.g3	       				= dockpars.gridsize_x * dockpars.gridsize_y * dockpars.gridsize_z;
 	dockpars.grid_spacing  			= ((float) mygrid->spacing);
-	dockpars.rotbondlist_length 		= ((unsigned int) myligand_reference.num_of_rotcyc);
+	dockpars.rotbondlist_length 	= ((unsigned int) myligand_reference.num_of_rotcyc);
 	dockpars.coeff_elec    			= ((float) mypars->coeffs.scaled_AD4_coeff_elec);
 	dockpars.coeff_desolv  			= ((float) mypars->coeffs.AD4_coeff_desolv);
-	dockpars.num_of_energy_evals 		= (unsigned int) mypars->num_of_energy_evals;
-	dockpars.num_of_generations  		= (unsigned int) mypars->num_of_generations;
+	dockpars.num_of_energy_evals 	= (unsigned int) mypars->num_of_energy_evals;
+	dockpars.num_of_generations  	= (unsigned int) mypars->num_of_generations;
 	dockpars.pop_size      			= (unsigned int) mypars->pop_size;
 	dockpars.num_of_genes  			= (unsigned char)(myligand_reference.num_of_rotbonds + 6);
 	dockpars.tournament_rate 		= (mypars->tournament_rate)/100;
@@ -177,12 +178,12 @@ filled with clock() */
 	dockpars.lsearch_rate    		= mypars->lsearch_rate;
 	dockpars.num_of_lsentities 		= (unsigned int) (mypars->lsearch_rate/100.0*mypars->pop_size + 0.5);
 	dockpars.rho_lower_bound   		= mypars->rho_lower_bound;
-	dockpars.base_dmov_mul_sqrt3 		= mypars->base_dmov_mul_sqrt3;
-	dockpars.base_dang_mul_sqrt3 		= mypars->base_dang_mul_sqrt3;
+	dockpars.base_dmov_mul_sqrt3 	= mypars->base_dmov_mul_sqrt3;
+	dockpars.base_dang_mul_sqrt3 	= mypars->base_dang_mul_sqrt3;
 	dockpars.cons_limit        		= (unsigned int) mypars->cons_limit;
 	dockpars.max_num_of_iters  		= (unsigned int) mypars->max_num_of_iters;
-	dockpars.qasp 				= mypars->qasp;
-	dockpars.smooth 			= mypars->smooth;
+	dockpars.qasp 					= mypars->qasp;
+	dockpars.smooth 				= mypars->smooth;
 
 	// These variables hold multiplications between kernel-constants
 	// better calculate them here and then pass them to Krnl_GA
@@ -210,20 +211,23 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "size_prng_seeds_nbytes" << std::right << std::setw(31) << size_prng_seeds_nbytes << std::right << std::setw(10) << sizeKB(size_prng_seeds_nbytes) << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
-	// Krnl_GA buffers
+	// GA buffers
 	uint64_t mem_dockpars_conformations_current_Initial;
 	uint64_t mem_dockpars_conformations_current_Final;
 	uint64_t mem_dockpars_energies_current;
 	uint64_t mem_evals_performed;
 	uint64_t mem_gens_performed;
+	uint64_t mem_prng_states;
 
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Initial, size_populations_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Final, size_populations_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_energies_current, size_energies_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_evals_performed, size_evals_of_runs_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_gens_performed, size_evals_of_runs_nbytes);
+	wrapper_veo_alloc_mem (ve_process, &mem_prng_states, size_prng_seeds_nbytes);
 
 	wrapper_veo_write_mem (ve_process, mem_dockpars_conformations_current_Initial, cpu_init_populations.data(), size_populations_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_prng_states, cpu_prng_seeds.data(), size_prng_seeds_nbytes);
 
 	// Pose Conformation buffers
 	uint64_t mem_pc_rotlist_const;
@@ -328,7 +332,6 @@ filled with clock() */
 	size_t size_dspars_V_nelems = MAX_NUM_OF_ATYPES;
 	size_t size_dspars_V_nbytes = size_dspars_V_nelems * sizeof(float);
 
-
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_contributors_const, size_intraE_contributors_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_reqm_const, size_reqm_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_reqm_hbond_const, size_reqm_hbond_nbytes);
@@ -373,6 +376,7 @@ filled with clock() */
 	clock_start_docking = clock();
 
 	int narg;
+	int narg_aux;
 
 	// Kernel GA
 	// Creating a VEO arguments object
@@ -383,6 +387,7 @@ filled with clock() */
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_gens_performed);
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_prng_states);
 	wrapper_veo_args_set_i32   (kernel_ga_arg_ptr, narg++, dockpars.pop_size);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_energy_evals);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_generations);
@@ -396,10 +401,10 @@ filled with clock() */
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_lsentities);
 	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	// Other kernel args are configured at every docking run
+	narg_aux = narg;
 	// Host_RunId
 	// Host_Offset_Pop
 	// Host_Offset_Ene
-	// VEVMA_dockpars_prng_states
 
 	/*
 	 * pc
@@ -476,22 +481,11 @@ filled with clock() */
 		unsigned short ushort_run_cnt  = (unsigned ushort) run_cnt;
 		unsigned int   Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int   Host_Offset_Ene = run_cnt * dockpars.pop_size;
-		// FIXME: check arg numbers
-		wrapper_veo_args_set_u16   (kernel_ga_arg_ptr, 17, ushort_run_cnt);
-		wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, 18, Host_Offset_Pop);
-		wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, 19, Host_Offset_Ene);
+		wrapper_veo_args_set_u16   (kernel_ga_arg_ptr, narg_aux++, ushort_run_cnt);
+		wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg_aux++, Host_Offset_Pop);
+		wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg_aux++, Host_Offset_Ene);
 
-		// Kernel PC	
-		// FIXME: check arg numbers
-		wrapper_veo_args_set_u16   (kernel_ga_arg_ptr, 8, ushort_run_cnt);
-
-		// FIXME: missing passing of random numbers
-/*		
-		kernel_prng_bt_ushort_float.setArg(0, cpu_prng_seeds[num_of_prng_blocks * run_cnt]);
-		kernel_prng_bt_ushort_float.setArg(1, cpu_prng_seeds[num_of_prng_blocks * run_cnt + 1]);
-*/
-
-		// Launching kernels
+		// Launching kernel
 		kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
 		wrapper_veo_call_wait_result(veo_thread_context, kernel_ga_id, &retval_ga);
 
