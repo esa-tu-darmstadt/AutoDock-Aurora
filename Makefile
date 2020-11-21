@@ -128,7 +128,7 @@ endef
 # ------------------------------------------------------
 # Compiling host and device codes
 
-all: veodock kernel0 kernel_ga kernel_pc kernel_ie kernel_ia kernel_ls
+all: veodock kernel0 kernel_ga
 
 # Notice: kernel0 is compiled without -shared
 # otherwise PROGINFO (via "make profile")
