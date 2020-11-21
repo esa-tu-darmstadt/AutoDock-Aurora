@@ -505,37 +505,47 @@ filled with clock() */
 
 	// -----------------------------------------------------------------------------------------------------
 
+	/*
+	for (int cnt_pop=0;cnt_pop<size_populations_elems;cnt_pop++)
+		printf("total_num_pop: %u, cpu_final_populations[%u]: %f\n", size_populations_elems, cnt_pop, cpu_final_populations[cnt_pop]);
+
+	for (int cnt_pop=0;cnt_pop<size_energies_elems;cnt_pop++)
+		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_elems, cnt_pop, cpu_energies[cnt_pop]);
+	*/
+
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
 
-		arrange_result(cpu_final_populations.data() + run_cnt*mypars->pop_size*ACTUAL_GENOTYPE_LENGTH, 
-			       cpu_energies.data()          + run_cnt*mypars->pop_size, 
-			       mypars->pop_size);
+		arrange_result(
+			cpu_final_populations.data() + run_cnt * mypars->pop_size * ACTUAL_GENOTYPE_LENGTH,
+			cpu_energies.data()          + run_cnt * mypars->pop_size,
+			mypars->pop_size);
 
 		/*printf("cpu_evals_of_runs[%u]: %u\n", run_cnt, cpu_evals_of_runs[run_cnt]);*/
 
-		make_resfiles(cpu_final_populations.data() + run_cnt*mypars->pop_size*ACTUAL_GENOTYPE_LENGTH, 
-			      cpu_energies.data()          + run_cnt*mypars->pop_size, 
-			      &myligand_reference,
-			      myligand_init, 
-			      mypars, 
-   			      cpu_evals_of_runs[run_cnt], 
-			      cpu_gens_of_runs[run_cnt], /*generation_cnt, */
-			      mygrid, 
-			      cpu_floatgrids,
-			      cpu_ref_ori_angles.data() + 3*run_cnt, 
-			      argc, 
-			      argv, 
-			      0,
-			      run_cnt, 
-                              &(cpu_result_ligands [run_cnt]));
+		make_resfiles(
+			cpu_final_populations.data() + run_cnt * mypars->pop_size * ACTUAL_GENOTYPE_LENGTH,
+			cpu_energies.data()          + run_cnt * mypars->pop_size,
+			&myligand_reference,
+			myligand_init,
+			mypars,
+			cpu_evals_of_runs[run_cnt],
+			cpu_gens_of_runs[run_cnt], /*generation_cnt, */
+			mygrid,
+			cpu_floatgrids,
+			cpu_ref_ori_angles.data() + 3*run_cnt,
+			argc,
+			argv,
+			0,
+			run_cnt,
+			&(cpu_result_ligands [run_cnt]));
 	} // End of for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) 
 
 	/*
-	for (int cnt_pop=0;cnt_pop<size_populations/sizeof(float);cnt_pop++)
-		printf("total_num_pop: %u, cpu_final_populations[%u]: %f\n",(unsigned int)(size_populations/sizeof(float)),cnt_pop,cpu_final_populations[cnt_pop]);
+	for (int cnt_pop=0;cnt_pop<size_populations_elems;cnt_pop++)
+		printf("total_num_pop: %u, cpu_final_populations[%u]: %f\n", size_populations_elems, cnt_pop, cpu_final_populations[cnt_pop]);
 
-	for (int cnt_pop=0;cnt_pop<size_energies/sizeof(float);cnt_pop++)
-		printf("total_num_energies: %u, cpu_energies[%u]: %f\n",    (unsigned int)(size_energies/sizeof(float)),cnt_pop,cpu_energies[cnt_pop]);
+	for (int cnt_pop=0;cnt_pop<size_energies_elems;cnt_pop++)
+		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_elems, cnt_pop, cpu_energies[cnt_pop]);
 	*/
 
 	clock_stop_program_before_clustering = clock();
