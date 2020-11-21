@@ -196,6 +196,12 @@ uint64_t libkernel_ga (
 	// ------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
 	// ------------------------------------------------------------------
+	#if defined (PRINT_ALL_KRNL) 
+	printf("\n");
+	printf("Starting <initial calculation> ... \n");
+	printf("\n");
+	#endif
+
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 
 		// Read genotype
@@ -272,13 +278,16 @@ uint64_t libkernel_ga (
 		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
 
 		#if defined (PRINT_ALL_KRNL)
-		printf("Individual <after energy calc>: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
+		printf("Individual < after energy calc>: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
 		#endif
 	}
 
 	#if defined (PRINT_ALL_KRNL)
-	printf("Finishing IC ... \n");
+	printf("\n");
+	printf("Finishing <initial calculation>\n");
+	printf("\n");
 	#endif
+
 	// ------------------------------------------------------------------
 
 	uint eval_cnt = DockConst_pop_size; // takes into account the IC evals
