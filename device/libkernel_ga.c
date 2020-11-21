@@ -312,14 +312,17 @@ uint64_t libkernel_ga (
 		float loc_energies[MAX_POPSIZE];
 
 		ushort best_entity = 0;
-		loc_energies[best_entity] = LocalEneCurr[best_entity];
+		loc_energies[0] = LocalEneCurr[0];
 
 		for (ushort pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// copy energy to local memory
 			loc_energies[pop_cnt] = LocalEneCurr[pop_cnt];
 
 			#if defined (PRINT_ALL_KRNL)
-			if (pop_cnt==0) {printf("\n");}
+			if (pop_cnt == 1)  {
+				printf("\n");
+				printf("%3u %20.6f\n", 0, loc_energies[0]);
+			}
 			printf("%3u %20.6f\n", pop_cnt, loc_energies[pop_cnt]);
 			#endif
 
