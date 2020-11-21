@@ -675,6 +675,10 @@ uint64_t libkernel_ga (
 			}
 
 			LocalEneCurr[pop_cnt] = LocalEneNext[pop_cnt];
+
+			#if defined (PRINT_ALL_KRNL)
+			printf("Individual <updated>: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
+			#endif
 		}
 
 		// Update energy evaluations count: count LS and GG evals
