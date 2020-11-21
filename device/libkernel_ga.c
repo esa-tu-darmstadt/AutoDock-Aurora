@@ -102,7 +102,7 @@ uint64_t libkernel_ga (
 {
 	#if defined (PRINT_ALL_KRNL)
 	printf("\n");
-	printf("Starting libkernel_ga ... \n");
+	printf("Starting <LGA run> ... \n");
 	printf("\n");
 	printf("%-40s %u\n", "DockConst_pop_size: ",        	DockConst_pop_size);
 	printf("%-40s %u\n", "DockConst_num_of_energy_evals: ", DockConst_num_of_energy_evals);
@@ -660,7 +660,12 @@ uint64_t libkernel_ga (
 
 	#if defined (PRINT_ALL_KRNL)
 	printf("Host_RunId: %u, eval_cnt: %u, generation_cnt: %u\n", Host_RunId, eval_cnt, generation_cnt);
-	printf("\tFinishing libkernel_ga\n");
+	#endif
+
+	#if defined (PRINT_ALL_KRNL)
+	printf("\n");
+	printf("Finishing <LGA run>\n");
+	printf("\n");
 	#endif
 
 	return 0;
