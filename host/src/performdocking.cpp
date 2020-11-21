@@ -33,13 +33,15 @@ cl_mem mem_ref_orientation_quats_const;	// float [4*MAX_NUM_OF_RUNS];			// 4*100
 //// --------------------------------
 //// Docking
 //// --------------------------------
-int docking_with_fpga( const    Gridinfo*   mygrid,
-	              /*const*/ float*      cpu_floatgrids,
-                                Dockpars*   mypars,
-		      const     Liganddata* myligand_init,
-		      const     int*        argc,
-		                char**      argv,
-		                clock_t     clock_start_program)
+int docking_with_aurora(
+	const	Gridinfo*	mygrid,
+	/*const*/ float*	cpu_floatgrids,
+			Dockpars*	mypars,
+	const	Liganddata*	myligand_init,
+	const	int*		argc,
+			char**		argv,
+			clock_t		clock_start_program
+)
 /* The function performs the docking algorithm and generates the corresponding result files.
 parameter mygrid:
 		describes the grid
