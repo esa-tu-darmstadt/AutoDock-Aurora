@@ -124,7 +124,7 @@ filled with clock() */
 	// TODO: check passing of random numbers
 	// TODO: use parameter instead of hardcoding num_genes
 	// Allocating memory in CPU for pseudorandom number generator seeds
-	size_t size_prng_seeds_nelems = mypars->num_of_runs * mypars->pop_size * 38;
+	size_t size_prng_seeds_nelems = mypars->num_of_runs * mypars->pop_size;
 	size_t size_prng_seeds_nbytes = size_prng_seeds_nelems * sizeof(unsigned int);
 	std::vector<unsigned int> cpu_prng_seeds (size_prng_seeds_nelems);
 	

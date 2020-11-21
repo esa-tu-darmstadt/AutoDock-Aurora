@@ -165,6 +165,8 @@ uint64_t libkernel_ga (
 	float local_coords_y[MAX_NUM_OF_ATOMS];
 	float local_coords_z[MAX_NUM_OF_ATOMS];
 
+	uint prng_offset = Host_Offset_Ene; // run_cnt * dockpars.pop_siz
+
 	// --------------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
 	// --------------------------------------------------------------------------
@@ -345,18 +347,18 @@ uint64_t libkernel_ga (
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
 			// Get ushort binary_tournament selection prngs (parent index)
-			ushort bt_tmp_u0 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt]));
-			ushort bt_tmp_u1 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt]));
-			ushort bt_tmp_u2 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt + 1]));
-			ushort bt_tmp_u3 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[new_pop_cnt + 1]));
+			ushort bt_tmp_u0 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[prng_offset + new_pop_cnt]));
+			ushort bt_tmp_u1 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[prng_offset + new_pop_cnt]));
+			ushort bt_tmp_u2 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[prng_offset + new_pop_cnt]));
+			ushort bt_tmp_u3 = (ushort) (DockConst_pop_size * randf(&dockpars_prng_states[prng_offset + new_pop_cnt]));
 
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
 			// Get float binary_tournament selection prngs (tournament rate)
-			float bt_tmp_f0 = randf(&dockpars_prng_states[new_pop_cnt + 2]);
-			float bt_tmp_f1 = randf(&dockpars_prng_states[new_pop_cnt + 2]);
-			float bt_tmp_f2 = randf(&dockpars_prng_states[new_pop_cnt + 3]);
-			float bt_tmp_f3 = randf(&dockpars_prng_states[new_pop_cnt + 3]);
+			float bt_tmp_f0 = randf(&dockpars_prng_states[prng_offset + new_pop_cnt]);
+			float bt_tmp_f1 = randf(&dockpars_prng_states[prng_offset + new_pop_cnt]);
+			float bt_tmp_f2 = randf(&dockpars_prng_states[prng_offset + new_pop_cnt]);
+			float bt_tmp_f3 = randf(&dockpars_prng_states[prng_offset + new_pop_cnt]);
 
 			ushort parent1;
 			ushort parent2; 
@@ -410,8 +412,8 @@ uint64_t libkernel_ga (
 			// TODO: VECTORIZE IT
 			// get uchar genetic_generation prngs (gene index)
 			// get float genetic_generation prngs (mutation rate)
-			uchar prng_GG_C_x = (uchar) (DockConst_num_of_genes * randf(&dockpars_prng_states[new_pop_cnt + 4]));
-			uchar prng_GG_C_y = (uchar) (DockConst_num_of_genes * randf(&dockpars_prng_states[new_pop_cnt + 4]));
+			uchar prng_GG_C_x = (uchar) (DockConst_num_of_genes * randf(&dockpars_prng_states[prng_offset + new_pop_cnt]));
+			uchar prng_GG_C_y = (uchar) (DockConst_num_of_genes * randf(&dockpars_prng_states[prng_offset + new_pop_cnt]));
 
 			uchar covr_point_low;
 			uchar covr_point_high;
@@ -442,7 +444,7 @@ uint64_t libkernel_ga (
 			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 
 				// TODO: VERIFY IT
-				float prngGG = randf(&dockpars_prng_states[new_pop_cnt + 5]);
+				float prngGG = randf(&dockpars_prng_states[prng_offset + new_pop_cnt]);
 				float tmp_offspring;
 
 				// Performing crossover
@@ -462,11 +464,11 @@ uint64_t libkernel_ga (
 				// Performing mutation
 				if (DockConst_mutation_rate > prngGG) {
 					if(gene_cnt < 3) {
-						tmp_offspring = tmp_offspring + Host_two_absmaxdmov*prngGG-DockConst_abs_max_dmov;
+						tmp_offspring = tmp_offspring + Host_two_absmaxdmov * prngGG - DockConst_abs_max_dmov;
 					}
 					else {
 						float tmp;
-						tmp = tmp_offspring + Host_two_absmaxdang*prngGG-DockConst_abs_max_dang;
+						tmp = tmp_offspring + Host_two_absmaxdang * prngGG - DockConst_abs_max_dang;
 						if (gene_cnt == 4) {
 							tmp_offspring = map_angle_180(tmp);
 						}
@@ -578,7 +580,7 @@ uint64_t libkernel_ga (
 
 			// TODO: FIX INDEX FOR PRNG
 			// Choose random & different entities on every iteration
-			ushort entity_ls = (ushort)(DockConst_pop_size * randf(&dockpars_prng_states[ls_ent_cnt]));
+			ushort entity_ls = (ushort)(DockConst_pop_size * randf(&dockpars_prng_states[prng_offset]));
 
 			#if defined (PRINT_ALL_KRNL)
 			printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
@@ -595,7 +597,7 @@ uint64_t libkernel_ga (
 				LocalPopNext[entity_ls],
 				&LocalEneNext[entity_ls],
 				&ls_eval_cnt_per_iter,
-				dockpars_prng_states,
+				&dockpars_prng_states[prng_offset + entity_ls],
 
 				PC_rotlist,
 				PC_ref_coords_x,
