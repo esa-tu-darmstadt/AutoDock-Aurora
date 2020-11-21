@@ -79,7 +79,10 @@ int main(int argc, char* argv[])
 		print_ref_lig_energies_f(myligand_init,
 					 mypars.smooth,
 					 mygrid,
+/*
 					 floatgrids.data(),
+*/
+					 floatgrids,
 					 mypars.coeffs.scaled_AD4_coeff_elec,
 					 mypars.coeffs.AD4_coeff_desolv,
 					 mypars.qasp);
@@ -88,8 +91,15 @@ int main(int argc, char* argv[])
 	//------------------------------------------------------------
 	// Starting Docking
 	//------------------------------------------------------------
-	if (docking_with_aurora(&mygrid, floatgrids.data(), &mypars, &myligand_init, &argc, argv, clock_start_program) != 0)
+	if (docking_with_aurora(&mygrid,
+/*
+							floatgrids.data(),
+*/
+							floatgrids,
+							&mypars, &myligand_init, &argc, argv, clock_start_program) != 0)
 		return 1;
+
+	free(floatgrids);
 
 	/*
 	clock_stop_program = clock();
