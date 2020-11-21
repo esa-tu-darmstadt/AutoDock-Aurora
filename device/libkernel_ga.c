@@ -328,16 +328,21 @@ uint64_t libkernel_ga (
 			}
 		}
 
-		#if defined (PRINT_ALL_KRNL) 
-		printf("\n");
-		printf("Finishing <finding best individual> ... \n");
-		printf("\n");
-		#endif
-
 		#if defined (PRINT_ALL_KRNL)
 		printf("best_entity: %3u, energy: %20.6f\n", best_entity, loc_energies[best_entity]);
 		#endif
 
+		#if defined (PRINT_ALL_KRNL) 
+		printf("\n");
+		printf("Finishing <finding best individual>\n");
+		printf("\n");
+		#endif
+
+		#if defined (PRINT_ALL_KRNL) 
+		printf("\n");
+		printf("Starting <genetic generation> ... \n");
+		printf("\n");
+		#endif
 		/*
 		#pragma ivdep array (LocalPopNext)
 		#pragma ivdep array (LocalEneNext)
@@ -355,7 +360,6 @@ uint64_t libkernel_ga (
 			}
 
 			#if defined (PRINT_ALL_KRNL)
-			printf("Krnl_GA: %u\n", new_pop_cnt);
 			#endif
 
 			float local_entity_1 [ACTUAL_GENOTYPE_LENGTH];
@@ -486,8 +490,7 @@ uint64_t libkernel_ga (
 				LocalPopNext[new_pop_cnt][gene_cnt] = tmp_offspring;
 			}
 
-			#if defined (PRINT_ALL_KRNL)
-			printf("GG - tx pop: %u", new_pop_cnt); 		
+			#if defined (PRINT_ALL_KRNL)	
 			#endif	
 
 			// Calculate energy
@@ -554,9 +557,16 @@ uint64_t libkernel_ga (
 			LocalEneNext[new_pop_cnt] = energy_ia_gg + energy_ie_gg;
 
 			#if defined (PRINT_ALL_KRNL)
-			printf(", GG - rx pop: %u\n", new_pop_cnt); 		
+			printf("Individual < after energy calc>: %3u, %20.6f\n", new_pop_cnt, LocalEneNext[new_pop_cnt]);
 			#endif
 		} 
+
+		#if defined (PRINT_ALL_KRNL) 
+		printf("\n");
+		printf("Finishing <genetic generation>\n");
+		printf("\n");
+		#endif
+
 		// ------------------------------------------------------------------
 		// LS: Local Search
 		// Subject num_of_entity_for_ls pieces of offsprings to LS 
