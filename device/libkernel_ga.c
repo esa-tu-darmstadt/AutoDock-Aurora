@@ -592,7 +592,7 @@ uint64_t libkernel_ga (
 
 			// TODO: FIX INDEX FOR PRNG
 			// Choose random & different entities on every iteration
-			ushort entity_ls = (ushort)(DockConst_num_of_lsentities * randf(&dockpars_prng_states[ls_ent_cnt]));
+			ushort entity_ls = (ushort)(DockConst_pop_size * randf(&dockpars_prng_states[ls_ent_cnt]));
 
 			#if defined (PRINT_ALL_KRNL)
 			printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
