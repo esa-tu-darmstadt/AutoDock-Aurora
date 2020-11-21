@@ -36,13 +36,13 @@ void energy_ia (
 	printf("\n");
 	printf("Starting <intra-molecular calculation> ... \n");
 	printf("\n");
-	printf("%-40s %f\n", "DockConst_smooth: ", 						DockConst_smooth);
-	printf("%-40s %u\n", "DockConst_num_of_intraE_contributors: ",	DockConst_num_of_intraE_contributors);
-	printf("%-40s %f\n", "DockConst_grid_spacing: ",        		DockConst_grid_spacing);
-	printf("%-40s %u\n", "DockConst_num_of_atypes: ",				DockConst_num_of_atypes);
-	printf("%-40s %f\n", "DockConst_coeff_elec: ",					DockConst_coeff_elec);
-	printf("%-40s %f\n", "DockConst_qasp: ", 						DockConst_qasp);
-	printf("%-40s %f\n", "DockConst_coeff_desolv: ", 				DockConst_coeff_desolv);
+	printf("\t%-40s %f\n", "DockConst_smooth: ", 						DockConst_smooth);
+	printf("\t%-40s %u\n", "DockConst_num_of_intraE_contributors: ",	DockConst_num_of_intraE_contributors);
+	printf("\t%-40s %f\n", "DockConst_grid_spacing: ",        			DockConst_grid_spacing);
+	printf("\t%-40s %u\n", "DockConst_num_of_atypes: ",					DockConst_num_of_atypes);
+	printf("\t%-40s %f\n", "DockConst_coeff_elec: ",					DockConst_coeff_elec);
+	printf("\t%-40s %f\n", "DockConst_qasp: ", 							DockConst_qasp);
+	printf("\t%-40s %f\n", "DockConst_coeff_desolv: ", 					DockConst_coeff_desolv);
 	#endif
 
 	float intraE = 0.0f;

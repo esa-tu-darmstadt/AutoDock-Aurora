@@ -28,9 +28,9 @@ void calc_pc (
 	printf("\n");
 	printf("Starting <pose calculation> ... \n");
 	printf("\n");
-	printf("%-40s %u\n", "DockConst_rotbondlist_length: ",	DockConst_rotbondlist_length);
-	printf("%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);
-	printf("%-40s %u\n", "Host_RunId: ",        			Host_RunId);	
+	printf("\t%-40s %u\n", "DockConst_rotbondlist_length: ",	DockConst_rotbondlist_length);
+	printf("\t%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);
+	printf("\t%-40s %u\n", "Host_RunId: ",        			Host_RunId);	
 	#endif
 
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
