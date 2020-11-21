@@ -12,7 +12,7 @@
  * -----------------------------------------------
  * */
 typedef unsigned char uchar;
-typedef unsigned char ushort;
+typedef unsigned short ushort;
 typedef unsigned int  uint;
 
 typedef enum {False, True} boolean;
