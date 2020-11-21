@@ -205,7 +205,7 @@ uint64_t libkernel_ga (
 		}
 
 		#if defined (PRINT_ALL_KRNL)
-		printf("%3u\n", pop_cnt);
+		printf("Individual <before energy calc>: %3u\n", pop_cnt);
 		#endif
 
 		// Calculate energy
@@ -270,6 +270,10 @@ uint64_t libkernel_ga (
 			local_coords_z
 		);
 		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
+
+		#if defined (PRINT_ALL_KRNL)
+		printf("Individual <after energy calc>: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
+		#endif
 	}
 
 	#if defined (PRINT_ALL_KRNL)
