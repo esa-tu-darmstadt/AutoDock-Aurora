@@ -3,10 +3,12 @@
 #include <ftrace.h>
 
 #include "defines.h"
+/*
 #include "libkernel1.c"
 #include "libkernel2.c"
 #include "libkernel4.c"
 #include "libkernel3.c"
+*/
 
 uint64_t hello()
 {
@@ -18,6 +20,7 @@ int main() {
   printf("This is main()\n");
   hello();
 
+/*
   // Using real VE VMA addresses for artifially invoking kernel2
   
   // Defining and initializing structs
@@ -228,4 +231,5 @@ int main() {
   #if defined(ENABLE_TRACE)
   ftrace_region_end("KERNEL2");
   #endif
+*/
 }
