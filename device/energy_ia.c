@@ -32,8 +32,17 @@ void energy_ia (
 			float* 	restrict 	local_coords_z
 )
 {
-	#if defined (DEBUG_ACTIVE_KERNEL)
-	if (active == 0) {printf("	%-20s: %s\n", "Krnl_IntraE", "must be disabled");}
+	#if defined (PRINT_ALL_IA) 
+	printf("\n");
+	printf("Starting <intra-molecular calculation> ... \n");
+	printf("\n");
+	printf("%-40s %f\n", "DockConst_smooth: ", 						DockConst_smooth);
+	printf("%-40s %u\n", "DockConst_num_of_intraE_contributors: ",	DockConst_num_of_intraE_contributors);
+	printf("%-40s %f\n", "DockConst_grid_spacing: ",        		DockConst_grid_spacing);
+	printf("%-40s %u\n", "DockConst_num_of_atypes: ",				DockConst_num_of_atypes);
+	printf("%-40s %f\n", "DockConst_coeff_elec: ",					DockConst_coeff_elec);
+	printf("%-40s %f\n", "DockConst_qasp: ", 						DockConst_qasp);
+	printf("%-40s %f\n", "DockConst_coeff_desolv: ", 				DockConst_coeff_desolv);
 	#endif
 
 	float intraE = 0.0f;
@@ -61,7 +70,7 @@ void energy_ia (
 		}
 */
 
-		#if defined (DEBUG_KRNL_INTRAE)
+		#if defined (PRINT_ALL_IA)
 		printf("\n\nCalculating energy contribution of atoms %u and %u\n", atom1_id+1, atom2_id+1);
 		printf("Distance: %f\n", atomic_distance);
 		#endif
@@ -176,12 +185,10 @@ void energy_ia (
 
 	// --------------------------------------------------------------
 
-	#if defined (DEBUG_KRNL_INTRAE)
-	printf("AFTER Out INTRAE CHANNEL\n");
-	#endif
-
-	#if defined (DEBUG_ACTIVE_KERNEL)
-	printf("	%-20s: %s\n", "Krnl_IntraE", "disabled");
+	#if defined (PRINT_ALL_IA) 
+	printf("\n");
+	printf("Finishing <intra-molecular calculation>\n");
+	printf("\n");
 	#endif
 }
 // --------------------------------------------------------------------------
