@@ -66,7 +66,9 @@ void perform_ls(
 			uint				Host_mul_tmp3
 )
 {	
-	#if 0
+	#if defined (PRINT_ALL_LS) 
+	printf("\n");
+	printf("Starting <local search> ... \n");
 	printf("\n");
 	printf("LS: DockConst_max_num_of_iters: %u\n",		DockConst_max_num_of_iters);
 	printf("LS: DockConst_rho_lower_bound: %f\n",      	DockConst_rho_lower_bound);
@@ -112,7 +114,7 @@ void perform_ls(
 			iteration_cnt++;
 		}
 
-		#if defined (DEBUG_KRNL_LS)
+		#if defined (PRINT_ALL)
 		printf("LS positive?: %u, iteration_cnt: %u, rho: %f, limit rho: %f\n",
 		positive_direction, iteration_cnt, rho, DockConst_rho_lower_bound);
 		#endif
@@ -259,10 +261,6 @@ void perform_ls(
 
 	} // end of while (iteration_cnt) && (rho)
 
-	#if defined (DEBUG_KRNL_LS)
-	printf("Out of while iter LS\n");
-	#endif
-		
 	// Writing resulting number of energy evals performed in LS
 	*out_eval = LS_eval;
 
@@ -272,6 +270,11 @@ void perform_ls(
 		in_out_genotype[i] = genotype[i];
 	}
 	
+	#if defined (PRINT_ALL_IE) 
+	printf("\n");
+	printf("Finishing <local search>\n");
+	printf("\n");
+	#endif
 }
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
