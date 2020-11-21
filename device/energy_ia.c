@@ -60,20 +60,12 @@ void energy_ia (
 		//atomic_distance = sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 		float atomic_distance = sqrt_custom(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 
-/*
-		if (atomic_distance < 1.0f) {
-			#if defined (DEBUG_KRNL_INTRAE)
-			printf("\n\nToo low distance (%f) between atoms %u and %u\n", atomic_distance, atom1_id, atom2_id);
-			#endif
-			//return HIGHEST_ENERGY;	// Returning maximal value
-			atomic_distance = 1.0f;
-		}
-*/
-		
+		/*	
 		#if defined (PRINT_ALL_IA)
 		printf("\n");
 		printf("Contrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
 		#endif
+		*/
 		
 /*
 		float partialE1;
