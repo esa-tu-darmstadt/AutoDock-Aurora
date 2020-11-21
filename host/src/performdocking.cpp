@@ -377,7 +377,6 @@ filled with clock() */
 
 	// Creating a VEO arguments object
 	int narg = 0;
-	int narg_aux;
 	struct veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc ();
 
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Initial);
@@ -398,12 +397,7 @@ filled with clock() */
 	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.crossover_rate);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_lsentities);
 	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
-	// Other kernel args are configured at every docking run
-	narg_aux = narg;
-	// Host_RunId
-	// Host_Offset_Pop
-	// Host_Offset_Ene
-
+	
 	/*
 	 * pc
 	 * */
@@ -475,13 +469,13 @@ filled with clock() */
 		printf(" %u", run_cnt+1); 
 		fflush(stdout);
 
-		// Kernel GA
+		// Values changing every LGA run
 		unsigned short ushort_run_cnt  = (unsigned ushort) run_cnt;
 		unsigned int   Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int   Host_Offset_Ene = run_cnt * dockpars.pop_size;
-		wrapper_veo_args_set_u16 (kernel_ga_arg_ptr, narg_aux++, ushort_run_cnt);
-		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux++, Host_Offset_Pop);
-		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux++, Host_Offset_Ene);
+		wrapper_veo_args_set_u16 (kernel_ga_arg_ptr, narg++, ushort_run_cnt);
+		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg++, Host_Offset_Pop);
+		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg++, Host_Offset_Ene);
 
 		// Launching kernel
 		kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
