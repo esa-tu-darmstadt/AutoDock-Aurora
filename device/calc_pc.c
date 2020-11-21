@@ -51,10 +51,6 @@ void calc_pc (
 	float theta = local_genotype[4];
 	float genrotangle = local_genotype[5];
 
-	#if defined (DEBUG_ACTIVE_KERNEL)
-	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_Conform", "must be disabled");}
-	#endif
-
 	for (ushort rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = rotlist_localcache[rotation_counter];
