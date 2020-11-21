@@ -471,7 +471,7 @@ filled with clock() */
 		fflush(stdout);
 
 		// Values changing every LGA run
-		unsigned short ushort_run_cnt  = (unsigned ushort) run_cnt;
+		unsigned short ushort_run_cnt  = (unsigned short) run_cnt;
 		unsigned int   Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int   Host_Offset_Ene = run_cnt * dockpars.pop_size;
 
