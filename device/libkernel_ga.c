@@ -100,11 +100,9 @@ uint64_t libkernel_ga (
 			uint	    Host_Offset_Ene
 )
 {
-	#ifdef PRINT_ALL_KRNL
-  	printf("Starting libkernel_ga ... \n");
-  	#endif
-
-	#if defined (DEBUG_KRNL_GA)
+	#if defined (PRINT_ALL_KRNL)
+	printf("\n");
+	printf("Starting libkernel_ga ... \n");
 	printf("\n");
 	printf("%-40s %u\n", "DockConst_pop_size: ",        	DockConst_pop_size);
 	printf("%-40s %u\n", "DockConst_num_of_energy_evals: ", DockConst_num_of_energy_evals);
@@ -268,6 +266,10 @@ uint64_t libkernel_ga (
 		);
 		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
 	}
+
+	#if defined (PRINT_ALL_KRNL)
+	printf("Finishing IC ... \n");
+	#endif
 	// ------------------------------------------------------------------
 
 	uint eval_cnt = DockConst_pop_size; // takes into account the IC evals
@@ -289,7 +291,7 @@ uint64_t libkernel_ga (
 			// copy energy to local memory
 			loc_energies[pop_cnt] = LocalEneCurr[pop_cnt];
 
-			#if defined (DEBUG_KRNL_GA)
+			#if defined (PRINT_ALL_KRNL)
 			if (pop_cnt==0) {printf("\n");}
 			printf("%3u %20.6f\n", pop_cnt, loc_energies[pop_cnt]);
 			#endif
@@ -299,7 +301,7 @@ uint64_t libkernel_ga (
 			}
 		}
 
-		#if defined (DEBUG_KRNL_GA)
+		#if defined (PRINT_ALL_KRNL)
 		printf("best_entity: %3u, energy: %20.6f\n", best_entity, loc_energies[best_entity]);
 		#endif
 
@@ -319,7 +321,7 @@ uint64_t libkernel_ga (
 				LocalEneNext[0] = loc_energies[best_entity];
 			}
 
-			#if defined (DEBUG_KRNL_GA)
+			#if defined (PRINT_ALL_KRNL)
 			printf("Krnl_GA: %u\n", new_pop_cnt);
 			#endif
 
@@ -451,7 +453,7 @@ uint64_t libkernel_ga (
 				LocalPopNext[new_pop_cnt][gene_cnt] = tmp_offspring;
 			}
 
-			#if defined (DEBUG_KRNL_GG)
+			#if defined (PRINT_ALL_KRNL)
 			printf("GG - tx pop: %u", new_pop_cnt); 		
 			#endif	
 
@@ -518,7 +520,7 @@ uint64_t libkernel_ga (
 			);
 			LocalEneNext[new_pop_cnt] = energy_ia_gg + energy_ie_gg;
 
-			#if defined (DEBUG_KRNL_GG)
+			#if defined (PRINT_ALL_KRNL)
 			printf(", GG - rx pop: %u\n", new_pop_cnt); 		
 			#endif
 		} 
@@ -597,7 +599,7 @@ uint64_t libkernel_ga (
 			// Accumulating number of evals
 			ls_eval_cnt += ls_eval_cnt_per_iter;
 
-			#if defined (DEBUG_KRNL_LS)
+			#if defined (PRINT_ALL_KRNL)
 			printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
 			#endif
 		} // End of for-loop ls_ent_cnt
@@ -618,7 +620,7 @@ uint64_t libkernel_ga (
 		// Update generation count
 		generation_cnt++;
 
-		#if defined (DEBUG_KRNL_GA)
+		#if defined (PRINT_ALL_KRNL)
 		printf("eval_cnt: %u, generation_cnt: %u\n", eval_cnt, generation_cnt);
 		#endif
 	} // End while eval_cnt & generation_cnt
@@ -638,13 +640,10 @@ uint64_t libkernel_ga (
 	GlobEvals_performed[Host_RunId] = eval_cnt;
 	GlobGens_performed [Host_RunId] = generation_cnt;
 
-	#if defined (DEBUG_KRNL_GA)
+	#if defined (PRINT_ALL_KRNL)
 	printf("Host_RunId: %u, eval_cnt: %u, generation_cnt: %u\n", Host_RunId, eval_cnt, generation_cnt);
+	printf("\tFinishing libkernel_ga\n");
 	#endif
-
-  	#ifdef PRINT_ALL_KRNL
-  	printf("\tFinishing libkernel_ga\n");
-  	#endif
 
 	return 0;
 }
