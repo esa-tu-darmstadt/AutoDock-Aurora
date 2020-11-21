@@ -506,11 +506,11 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
 
 	/*
-	for (int cnt_pop=0;cnt_pop<size_populations_elems;cnt_pop++)
-		printf("total_num_pop: %u, cpu_final_populations[%u]: %f\n", size_populations_elems, cnt_pop, cpu_final_populations[cnt_pop]);
+	for (int cnt_pop = 0; cnt_pop < size_populations_nelems; cnt_pop++)
+		printf("total_num_pop: %u, cpu_final_populations[%u]: %f\n", size_populations_nelems, cnt_pop, cpu_final_populations[cnt_pop]);
 
-	for (int cnt_pop=0;cnt_pop<size_energies_elems;cnt_pop++)
-		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_elems, cnt_pop, cpu_energies[cnt_pop]);
+	for (int cnt_pop = 0; cnt_pop < size_energies_nelems; cnt_pop++)
+		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_nelems, cnt_pop, cpu_energies[cnt_pop]);
 	*/
 
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
@@ -541,11 +541,11 @@ filled with clock() */
 	} // End of for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) 
 
 	/*
-	for (int cnt_pop=0;cnt_pop<size_populations_elems;cnt_pop++)
-		printf("total_num_pop: %u, cpu_final_populations[%u]: %f\n", size_populations_elems, cnt_pop, cpu_final_populations[cnt_pop]);
+	for (int cnt_pop = 0; cnt_pop < size_populations_nelems; cnt_pop++)
+		printf("total_num_pop: %u, cpu_final_populations[%u]: %f\n", size_populations_nelems, cnt_pop, cpu_final_populations[cnt_pop]);
 
-	for (int cnt_pop=0;cnt_pop<size_energies_elems;cnt_pop++)
-		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_elems, cnt_pop, cpu_energies[cnt_pop]);
+	for (int cnt_pop = 0; cnt_pop < size_energies_nelems; cnt_pop++)
+		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_nelems, cnt_pop, cpu_energies[cnt_pop]);
 	*/
 
 	clock_stop_program_before_clustering = clock();
