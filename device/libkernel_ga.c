@@ -197,11 +197,16 @@ uint64_t libkernel_ga (
 	// Initial Calculation (IC) of scores
 	// ------------------------------------------------------------------
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+
 		// Read genotype
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
 			float tmp_gene = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
+
+		#if defined (PRINT_ALL_KRNL)
+		printf("%3u\n", pop_cnt);
+		#endif
 
 		// Calculate energy
 		float energy_ia_ic;
