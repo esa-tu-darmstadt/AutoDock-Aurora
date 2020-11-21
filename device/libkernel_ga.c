@@ -146,9 +146,9 @@ uint64_t libkernel_ga (
 	/*
 	 * ga
 	 */
-	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial + Host_Offset_Pop);
-	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal + Host_Offset_Pop);
-	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent + Host_Offset_Ene);
+	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial/* + Host_Offset_Pop*/);
+	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal/* + Host_Offset_Pop*/);
+	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent/* + Host_Offset_Ene*/);
 		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
 		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
 		  uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
@@ -206,7 +206,7 @@ uint64_t libkernel_ga (
 
 		// Read genotype
 		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-			float tmp_gene = GlobPopCurrInitial[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
+			float tmp_gene = GlobPopCurrInitial[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
 
@@ -700,10 +700,10 @@ uint64_t libkernel_ga (
 	// ------------------------------------------------------------------
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-			GlobPopCurrFinal[pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
+			GlobPopCurrFinal[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
 		}
 
-		GlobEneCurr[pop_cnt] = LocalEneCurr[pop_cnt];
+		GlobEneCurr[Host_Offset_Ene + pop_cnt] = LocalEneCurr[pop_cnt];
 	}
 
 	// Write final evals & generation counts to FPGA-board DDRs
