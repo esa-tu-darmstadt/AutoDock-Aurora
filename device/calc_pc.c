@@ -2,9 +2,7 @@
 #include "math.h"
 
 // --------------------------------------------------------------------------
-// Conform changes the conformation of the ligand according to 
-// the genotype fed by any producer logic/kernel (IC, GG, LSs).
-// Originally from: processligand.c
+// Calculation of the pose of the ligand according to the input genotype.
 // --------------------------------------------------------------------------
 void calc_pc (
 	const	int*	restrict	PC_rotlist,
@@ -29,8 +27,8 @@ void calc_pc (
 	printf("Starting <pose calculation> ... \n");
 	printf("\n");
 	printf("\t%-40s %u\n", "DockConst_rotbondlist_length: ",	DockConst_rotbondlist_length);
-	printf("\t%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);
-	printf("\t%-40s %u\n", "Host_RunId: ",        			Host_RunId);	
+	printf("\t%-40s %u\n", "DockConst_num_of_genes: ",        	DockConst_num_of_genes);
+	printf("\t%-40s %u\n", "Host_RunId: ",        				Host_RunId);
 	#endif
 
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
