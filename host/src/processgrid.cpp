@@ -95,6 +95,7 @@ int get_gridinfo(const char* fldfilename, Gridinfo* mygrid)
 	return 0;
 }
 
+/*
 int get_gridvalues_f(const Gridinfo* mygrid, float* fgrids)
 //The function reads the grid point values from the .map files
 //that correspond to the receptor given by the first parameter.
@@ -133,6 +134,72 @@ int get_gridvalues_f(const Gridinfo* mygrid, float* fgrids)
 		strcat(tempstr, mygrid->grid_types[t]);
 		strcat(tempstr, ".map");
 		fp = fopen(tempstr, "r");
+		if (fp == NULL)
+		{
+			printf("Error: can't open %s!\n", tempstr);
+			return 1;
+		}
+
+		//seeking to first data
+		do    fscanf(fp, "%s", tempstr);
+		while (strcmp(tempstr, "CENTER") != 0);
+		fscanf(fp, "%s", tempstr);
+		fscanf(fp, "%s", tempstr);
+		fscanf(fp, "%s", tempstr);
+
+		//reading values
+		for (z=0; z < mygrid->size_xyz[2]; z++)
+			for (y=0; y < mygrid->size_xyz[1]; y++)
+				for (x=0; x < mygrid->size_xyz[0]; x++)
+				{
+					fscanf(fp, "%f", mypoi);
+					mypoi++;
+				}
+	}
+
+	return 0;
+}
+*/
+int get_gridvalues_f(const Gridinfo* mygrid, float** fgrids)
+//The function reads the grid point values from the .map files
+//that correspond to the receptor given by the first parameter.
+//It allocates the proper amount of memory and stores the data there,
+//which can be accessed with the fgrids pointer.
+//If there are any errors, it returns 1, otherwise
+//the return value is 0.
+{
+	int t, x, y, z;
+	FILE* fp;
+	char tempstr [128];
+	float* mypoi;
+
+	*fgrids = (float*) malloc((sizeof(float))*(mygrid->num_of_atypes+2)*
+						  (mygrid->size_xyz[0])*
+					          (mygrid->size_xyz[1])*
+						  (mygrid->size_xyz[2]));
+	if (*fgrids == NULL)
+	{
+		printf("Error: not enough memory!\n");
+		return 1;
+	}
+
+	mypoi = *fgrids;
+
+	for (t=0; t < mygrid->num_of_atypes+2; t++)
+	{
+		//opening corresponding .map file
+		//-------------------------------------
+		// Added the complete path of associated grid files.
+		strcpy(tempstr,mygrid->grid_file_path);
+		strcat(tempstr, "/");
+		strcat(tempstr, mygrid->receptor_name);
+
+		//strcpy(tempstr, mygrid->receptor_name);
+		//-------------------------------------
+		strcat(tempstr, ".");
+		strcat(tempstr, mygrid->grid_types[t]);
+		strcat(tempstr, ".map");
+		fp = fopen(tempstr, "rb"); // fp = fopen(tempstr, "r");
 		if (fp == NULL)
 		{
 			printf("Error: can't open %s!\n", tempstr);
