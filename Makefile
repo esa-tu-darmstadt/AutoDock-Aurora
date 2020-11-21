@@ -140,7 +140,7 @@ kernel0: $(KRNL0_SRC)
 	@echo $(newline)
 
 kernel_ga: $(KRNL_GA_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
+	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -I$(KRNL_DIR) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
 export VE_PROGINF := DETAIL
