@@ -6,16 +6,15 @@
 
 #include "math.h"
 
-//IC:  initial calculation of energy of populations
-//GG:  genetic generation 
-//LS:  local search
-//OFF: turn off 
-
 /*
- * -----------------------------------------------
- * Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
- * -----------------------------------------------
- * */
+IC:  initial calculation of energy of populations
+GG:  genetic generation
+LS:  local search
+*/
+
+// --------------------------------------------------------------------------
+// Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
+// --------------------------------------------------------------------------
 uint64_t libkernel_ga (
 	const 	uint64_t	VEVMA_PopulationCurrentInitial,
 			uint64_t  	VEVMA_PopulationCurrentFinal,
@@ -35,9 +34,7 @@ uint64_t libkernel_ga (
 			float       DockConst_crossover_rate,
 			uint        DockConst_num_of_lsentities,
 			uchar       DockConst_num_of_genes,
-	/*
-	 * pc
-	 * */
+	// pc
 	const	uint64_t	VEVMA_pc_rotlist,
 	const	uint64_t	VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
 	const	uint64_t	VEVMA_pc_ref_coords_y,
@@ -46,10 +43,7 @@ uint64_t libkernel_ga (
 	const	uint64_t	VEVMA_pc_rotbonds_unit_vectors,
 	const	uint64_t	VEVMA_pc_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
-
-	/*
-	 * ia
-	 * */
+	// ia
 	const 	uint64_t	VEVMA_ia_ie_atom_charges,
 	const	uint64_t	VEVMA_ia_ie_atom_types,
 	const	uint64_t	VEVMA_ia_intraE_contributors,
@@ -68,10 +62,7 @@ uint64_t libkernel_ga (
 			float		DockConst_coeff_elec,
 			float		DockConst_qasp,
 			float		DockConst_coeff_desolv,
-
-	/*
-	 * ie
-	 * */
+	// ie
 	const	uint64_t	VEVMA_Fgrids,
 			uchar		DockConst_g1,
 			uint		DockConst_g2,
@@ -82,19 +73,13 @@ uint64_t libkernel_ga (
 			float		DockConst_gridsize_z_minus1,
 			uint		Host_mul_tmp2,
 			uint		Host_mul_tmp3,
-
-	/*
-	 * ls
-	 * */
+	// ls
 			ushort		DockConst_max_num_of_iters,
 			float		DockConst_rho_lower_bound,
 			float		DockConst_base_dmov_mul_sqrt3,
 			float		DockConst_base_dang_mul_sqrt3,
 			uchar		DockConst_cons_limit,
-
-	/*
-	 * Values changing every LGA run
-	 */
+	// Values changing every LGA run
 			ushort      Host_RunId,
 			uint 	    Host_Offset_Pop,
 			uint	    Host_Offset_Ene
@@ -141,21 +126,15 @@ uint64_t libkernel_ga (
 	printf("%-40s %u\n", "Host_mul_tmp3: ",					Host_mul_tmp3);
 	#endif
 
-	// ------------------------------------------------------------------
-
-	/*
-	 * ga
-	 */
-	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial/* + Host_Offset_Pop*/);
-	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal/* + Host_Offset_Pop*/);
-	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent/* + Host_Offset_Ene*/);
+	// --------------------------------------------------------------------------
+	// ga
+	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial);
+	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal);
+	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent);
 		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
 		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
 		  uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
-
-	/*
-	 * pc
-	 */
+	// pc
 	const	int*	PC_rotlist = (int*)(VEVMA_pc_rotlist);
 	const	float*	PC_ref_coords_x = (float*)(VEVMA_pc_ref_coords_x);
 	const	float*	PC_ref_coords_y = (float*)(VEVMA_pc_ref_coords_y);
@@ -163,10 +142,7 @@ uint64_t libkernel_ga (
 	const	float*	PC_rotbonds_moving_vectors = (float*)(VEVMA_pc_rotbonds_moving_vectors);
 	const	float*	PC_rotbonds_unit_vectors = (float*)(VEVMA_pc_rotbonds_unit_vectors);
 	const	float*	PC_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
-
-	/*
-	 * ia
-	 * */
+	// ia
 	const	float*	IA_IE_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
 	const	char*	IA_IE_atom_types = (char*)(VEVMA_ia_ie_atom_types);
 	const	char*	IA_intraE_contributors = (char*)(VEVMA_ia_intraE_contributors);
@@ -178,14 +154,10 @@ uint64_t libkernel_ga (
 	const	float*	IA_VWpars_BD = (float*)(VEVMA_ia_VWpars_BD);
 	const	float*	IA_dspars_S = (float*)(VEVMA_ia_dspars_S);
 	const	float*	IA_dspars_V = (float*)(VEVMA_ia_dspars_V);
-
-	/*
-	 * ie
-	 * */
+	// ie
 	const	float*	IE_Fgrids = (float*)(VEVMA_Fgrids);
 
-	// ------------------------------------------------------------------
-
+	// --------------------------------------------------------------------------
 	float LocalPopCurr[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
 	float LocalEneCurr[MAX_POPSIZE];
 
@@ -193,9 +165,9 @@ uint64_t libkernel_ga (
 	float local_coords_y[MAX_NUM_OF_ATOMS];
 	float local_coords_z[MAX_NUM_OF_ATOMS];
 
-	// ------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
-	// ------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	#if defined (PRINT_ALL_KRNL) 
 	printf("\n");
 	printf("Starting <initial calculation> ... \n");
@@ -205,8 +177,8 @@ uint64_t libkernel_ga (
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 
 		// Read genotype
-		for (uchar gene_cnt=0; gene_cnt<DockConst_num_of_genes; gene_cnt++) {
-			float tmp_gene = GlobPopCurrInitial[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt];
+		for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+			float tmp_gene = GlobPopCurrInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
 
@@ -288,10 +260,8 @@ uint64_t libkernel_ga (
 	printf("\n");
 	#endif
 
-	// ------------------------------------------------------------------
-
+	// --------------------------------------------------------------------------
 	uint eval_cnt = DockConst_pop_size; // takes into account the IC evals
-
 	uint generation_cnt = 0;
 
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
@@ -299,10 +269,9 @@ uint64_t libkernel_ga (
 		float LocalPopNext[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
 		float LocalEneNext[MAX_POPSIZE];
 
-		// ------------------------------------------------------------------
+		// --------------------------------------------------------------------------
 		// Genetic Generation (GG)
-		// ------------------------------------------------------------------
-
+		// --------------------------------------------------------------------------
 		#if defined (PRINT_ALL_KRNL) 
 		printf("\n");
 		printf("Starting <finding best individual> ... \n");
@@ -346,6 +315,7 @@ uint64_t libkernel_ga (
 		printf("Starting <genetic generation> ... \n");
 		printf("\n");
 		#endif
+
 		/*
 		#pragma ivdep array (LocalPopNext)
 		#pragma ivdep array (LocalEneNext)
@@ -393,22 +363,38 @@ uint64_t libkernel_ga (
 
 			// First parent
 			if (loc_energies[bt_tmp_u0] < loc_energies[bt_tmp_u1]) {
-				if (bt_tmp_f0 < DockConst_tournament_rate) {parent1 = bt_tmp_u0;}
-				else				           {parent1 = bt_tmp_u1;}
+				if (bt_tmp_f0 < DockConst_tournament_rate) {
+					parent1 = bt_tmp_u0;
+				}
+				else {
+					parent1 = bt_tmp_u1;
+				}
 			}
 			else {
-				if (bt_tmp_f1 < DockConst_tournament_rate) {parent1 = bt_tmp_u1;}
-				else				           {parent1 = bt_tmp_u0;}
+				if (bt_tmp_f1 < DockConst_tournament_rate) {
+					parent1 = bt_tmp_u1;
+				}
+				else {
+					parent1 = bt_tmp_u0;
+				}
 			}
 
 			// The better will be the second parent
 			if (loc_energies[bt_tmp_u2] < loc_energies[bt_tmp_u3]) {
-				if (bt_tmp_f2 < DockConst_tournament_rate) {parent2 = bt_tmp_u2;}
-				else		          	           {parent2 = bt_tmp_u3;}
+				if (bt_tmp_f2 < DockConst_tournament_rate) {
+					parent2 = bt_tmp_u2;
+				}
+				else {
+					parent2 = bt_tmp_u3;
+				}
 			}
 			else {
-				if (bt_tmp_f3 < DockConst_tournament_rate) {parent2 = bt_tmp_u3;}
-				else			                   {parent2 = bt_tmp_u2;}
+				if (bt_tmp_f3 < DockConst_tournament_rate) {
+					parent2 = bt_tmp_u3;
+				}
+				else {
+					parent2 = bt_tmp_u2;
+				}
 			}
 
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
@@ -417,9 +403,9 @@ uint64_t libkernel_ga (
 				local_entity_2[gene_cnt] = LocalPopCurr[parent2][gene_cnt];
 			}
 
-			// ---------------------------------------------------
+			// --------------------------------------------------------------------------
 			// Mating parents
-			// ---------------------------------------------------	
+			// --------------------------------------------------------------------------
 
 			// TODO: VECTORIZE IT
 			// get uchar genetic_generation prngs (gene index)
@@ -570,10 +556,10 @@ uint64_t libkernel_ga (
 		printf("\n");
 		#endif
 
-		// ------------------------------------------------------------------
+		// --------------------------------------------------------------------------
 		// LS: Local Search
 		// Subject num_of_entity_for_ls pieces of offsprings to LS 
-		// ------------------------------------------------------------------
+		// --------------------------------------------------------------------------
 
 		#if defined (PRINT_ALL_KRNL) 
 		printf("\n");
@@ -695,9 +681,9 @@ uint64_t libkernel_ga (
 		#endif
 	} // End while eval_cnt & generation_cnt
 
-	// ------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	// Write final pop & energies back to FPGA-board DDRs
-	// ------------------------------------------------------------------
+	// --------------------------------------------------------------------------
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		printf("\n");
 		printf("pop_cnt: %u\n", pop_cnt);
