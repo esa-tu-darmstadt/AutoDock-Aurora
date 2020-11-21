@@ -69,12 +69,12 @@ void energy_ia (
 			atomic_distance = 1.0f;
 		}
 */
-		/*
+		
 		#if defined (PRINT_ALL_IA)
-		printf("\n\nCalculating energy contribution of atoms %u and %u\n", atom1_id+1, atom2_id+1);
-		printf("Distance: %f\n", atomic_distance);
+		printf("\n");
+		printf("Contrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
 		#endif
-		*/
+		
 /*
 		float partialE1;
 		float partialE2;
