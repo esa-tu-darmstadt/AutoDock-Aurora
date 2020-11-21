@@ -572,6 +572,12 @@ uint64_t libkernel_ga (
 		// Subject num_of_entity_for_ls pieces of offsprings to LS 
 		// ------------------------------------------------------------------
 
+		#if defined (PRINT_ALL_KRNL) 
+		printf("\n");
+		printf("Starting <local search> ... \n");
+		printf("\n");
+		#endif
+
 		uint ls_eval_cnt = 0;
 
 		/*
@@ -585,6 +591,10 @@ uint64_t libkernel_ga (
 			// Choose random & different entities on every iteration
 			ushort entity_ls = (ushort)(DockConst_num_of_lsentities * randf(&dockpars_prng_states[ls_ent_cnt]));
 
+			#if defined (PRINT_ALL_KRNL)
+			printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
+			#endif
+
 			perform_ls(
 				DockConst_max_num_of_iters,
 				DockConst_rho_lower_bound,
@@ -594,7 +604,7 @@ uint64_t libkernel_ga (
 				DockConst_cons_limit,
 
 				LocalPopNext[entity_ls],
-				LocalEneNext,
+				&LocalEneNext[entity_ls],
 				&ls_eval_cnt_per_iter,
 				dockpars_prng_states,
 
@@ -643,9 +653,19 @@ uint64_t libkernel_ga (
 			ls_eval_cnt += ls_eval_cnt_per_iter;
 
 			#if defined (PRINT_ALL_KRNL)
+			printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
+			#endif
+
+			#if defined (PRINT_ALL_KRNL)
 			printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
 			#endif
 		} // End of for-loop ls_ent_cnt
+
+		#if defined (PRINT_ALL_KRNL) 
+		printf("\n");
+		printf("Finishing <local search>\n");
+		printf("\n");
+		#endif
 		// ------------------------------------------------------------------
 
 		// Update current pops & energies
