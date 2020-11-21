@@ -24,18 +24,14 @@ void calc_pc (
 			float*	restrict	local_coords_z
 )
 {
-	#if defined (DEBUG_KRNL_Conform) 
+	#if defined (PRINT_ALL_PC) 
 	printf("\n");
-	printf("%-40s %u\n", "DockConst->rotbondlist_length: ",	DockConst_rotbondlist_length);
-	printf("%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);	
+	printf("Starting <pose calculation> ... \n");
+	printf("\n");
+	printf("%-40s %u\n", "DockConst_rotbondlist_length: ",	DockConst_rotbondlist_length);
+	printf("%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);
+	printf("%-40s %u\n", "Host_RunId: ",        			Host_RunId);	
 	#endif
-
-	// Check best practices guide
-	// Table 11. Effects of numbanks and bankwidth on the Bank Geometry ...
-	// Only first three indexes of the lower array are used
-	// however size of lower array was declared as 4, 
-	// just to keep sizes equal to power of 2
-	// __local float  __attribute__((numbanks(8), bankwidth(16))) local_coords[MAX_NUM_OF_ATOMS][4];
 
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
@@ -202,9 +198,11 @@ void calc_pc (
 
 	} // End rotation_counter for-loop
 
-#if defined (DEBUG_ACTIVE_KERNEL)
-printf("	%-20s: %s\n", "Krnl_Conform", "disabled");
-#endif
+	#if defined (PRINT_ALL_PC) 
+	printf("\n");
+	printf("Finishing <pose calculation>\n");
+	printf("\n");
+	#endif
 
 }
 // --------------------------------------------------------------------------
