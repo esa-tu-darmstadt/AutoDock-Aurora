@@ -227,7 +227,9 @@ filled with clock() */
 
 	// Krnl_Conform buffers
 	uint64_t mem_KerConstStatic_rotlist_const;
-	uint64_t mem_KerConstStatic_ref_coords_const;
+	uint64_t mem_KerConstStatic_ref_coords_x_const;	// TODO: fusion x,y,z into a single one
+	uint64_t mem_KerConstStatic_ref_coords_y_const;
+	uint64_t mem_KerConstStatic_ref_coords_z_const;
 	uint64_t mem_KerConstStatic_rotbonds_moving_vectors_const;
 	uint64_t mem_KerConstStatic_rotbonds_unit_vectors_const;
 	uint64_t mem_KerConstStatic_ref_orientation_quats_const;
@@ -236,7 +238,7 @@ filled with clock() */
 	size_t size_rotlist_nbytes = size_rotlist_nelems * sizeof(int);
 
 	size_t size_ref_coords_nelems = MAX_NUM_OF_ATOMS;
-	size_t size_ref_coords_nbytes = size_ref_coords_nelems * 3 * sizeof(float);
+	size_t size_ref_coords_nbytes = size_ref_coords_nelems * sizeof(float);
 
 	size_t size_rotbonds_moving_vectors_nelems = MAX_NUM_OF_ROTBONDS;
 	size_t size_rotbonds_moving_vectors_nbytes = size_rotbonds_moving_vectors_nelems * 3 * sizeof(float);
@@ -248,13 +250,17 @@ filled with clock() */
 	size_t size_ref_orientation_quats_nbytes = size_ref_orientation_quats_nelems * 4 * sizeof(float);
 
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_rotlist_const, size_rotlist_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_ref_coords_const, size_ref_coords_nbytes);
+	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_ref_coords_x_const, size_ref_coords_nbytes);
+	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_ref_coords_y_const, size_ref_coords_nbytes);
+	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_ref_coords_z_const, size_ref_coords_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_rotbonds_moving_vectors_const, size_rotbonds_moving_vectors_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_rotbonds_unit_vectors_const, size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_KerConstStatic_ref_orientation_quats_const, size_ref_orientation_quats_nbytes);
 
 	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_rotlist_const, &KerConstStatic.rotlist_const[0], size_rotlist_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_ref_coords_const, &KerConstStatic.ref_coords_const[0], size_ref_coords_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_ref_coords_x_const, &KerConstStatic.ref_coords_x_const[0], size_ref_coords_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_ref_coords_y_const, &KerConstStatic.ref_coords_y_const[0], size_ref_coords_nbytes);
+	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_ref_coords_z_const, &KerConstStatic.ref_coords_z_const[0], size_ref_coords_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_rotbonds_moving_vectors_const, &KerConstStatic.rotbonds_moving_vectors_const[0], size_rotbonds_moving_vectors_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_rotbonds_unit_vectors_const, &KerConstStatic.rotbonds_unit_vectors_const[0], size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_KerConstStatic_ref_orientation_quats_const, &KerConstStatic.ref_orientation_quats_const[0], size_ref_orientation_quats_nbytes);
@@ -386,7 +392,9 @@ filled with clock() */
 	struct veo_args *kernel_pc_arg_ptr = wrapper_veo_args_alloc ();
 	narg = 0;
 	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_rotlist_const);
-	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_coords_const);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_coords_x_const);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_coords_y_const);
+	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_ref_coords_z_const);
 	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_rotbonds_moving_vectors_const);
 	wrapper_veo_args_set_u64	(kernel_pc_arg_ptr, narg++, mem_KerConstStatic_rotbonds_unit_vectors_const);
 	wrapper_veo_args_set_u32 	(kernel_pc_arg_ptr, narg++, dockpars.rotbondlist_length);
