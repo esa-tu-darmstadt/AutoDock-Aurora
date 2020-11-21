@@ -60,12 +60,10 @@ void energy_ia (
 		//atomic_distance = sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 		float atomic_distance = sqrt_custom(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 
-		/*	
-		#if defined (PRINT_ALL_IA)
+		#if defined (PRINT_ALL)
 		printf("\n");
 		printf("Contrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
 		#endif
-		*/
 		
 /*
 		float partialE1;

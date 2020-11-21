@@ -29,12 +29,23 @@ void energy_ie (
 			float*	restrict	local_coords_z
 )
 {
+	#if defined (PRINT_ALL_IE) 
+	printf("\n");
+	printf("Starting <inter-molecular calculation> ... \n");
+	printf("\n");
+	printf("\t%-40s %u\n", "DockConst_g1: ", 				DockConst_g1);
+	printf("\t%-40s %u\n", "DockConst_g2: ",				DockConst_g2);
+	printf("\t%-40s %u\n", "DockConst_g3: ",        		DockConst_g3);
+	printf("\t%-40s %u\n", "DockConst_num_of_atoms: ",      DockConst_num_of_atoms);
+	printf("\t%-40s %f\n", "DockConst_gridsize_x_minus1: ",	DockConst_gridsize_x_minus1);
+	printf("\t%-40s %f\n", "DockConst_gridsize_y_minus1: ", DockConst_gridsize_y_minus1);
+	printf("\t%-40s %f\n", "DockConst_gridsize_z_minus1: ", DockConst_gridsize_z_minus1);
+	printf("\t%-40s %u\n", "Host_mul_tmp2: ",				Host_mul_tmp2);
+	printf("\t%-40s %u\n", "Host_mul_tmp3: ",				Host_mul_tmp3);
+	#endif
+
 	const float* IE_Fgrids_2 = &IE_Fgrids[Host_mul_tmp2];
 	const float* IE_Fgrids_3 = &IE_Fgrids[Host_mul_tmp3];
-
-	#if defined (DEBUG_ACTIVE_KERNEL)
-	if (active == 0x00) {printf("	%-20s: %s\n", "Krnl_InterE", "must be disabled");}
-	#endif
 
 	float interE = 0.0f;
 
@@ -90,7 +101,7 @@ void energy_ie (
 			weights [0][1][1] = (1-dx)*dy*dz;
 			weights [1][1][1] = dx*dy*dz;
 
-			#if defined (DEBUG_KRNL_INTERE)
+			#if defined (PRINT_ALL)
 			printf("\n\nPartial results for atom with id %i:\n", atom1_id);
 			printf("x_low = %d, x_high = %d, x_frac = %f\n", x_low, x_high, dx);
 			printf("y_low = %d, y_high = %d, y_frac = %f\n", y_low, y_high, dy);
@@ -135,7 +146,7 @@ void energy_ie (
 			cube [0][1][1] = IE_Fgrids[cube_011 + mul_tmp];
 			cube [1][1][1] = IE_Fgrids[cube_111 + mul_tmp];
 		
-			#if defined (DEBUG_KRNL_INTERE)
+			#if defined (PRINT_ALL)
 			printf("Interpolation of van der Waals map:\n");
 			printf("cube(0,0,0) = %f\n", cube [0][0][0]);
 			printf("cube(1,0,0) = %f\n", cube [1][0][0]);
@@ -157,7 +168,7 @@ void energy_ie (
 				    cube[0][1][1] * weights[0][1][1] +
 				    cube[1][1][1] * weights[1][1][1];
 
-			#if defined (DEBUG_KRNL_INTERE)
+			#if defined (PRINT_ALL)
 			printf("interpolated value = %f\n\n", TRILININTERPOL(cube, weights));
 			#endif
 
@@ -171,7 +182,7 @@ void energy_ie (
                         cube [0][1][1] = IE_Fgrids_2[cube_011] /*GlobFgrids [Host_mul_tmp2 + cube_011]*/;
                         cube [1][1][1] = IE_Fgrids_2[cube_111] /*GlobFgrids [Host_mul_tmp2 + cube_111]*/;
 
-			#if defined (DEBUG_KRNL_INTERE)
+			#if defined (PRINT_ALL)
 			printf("Interpolation of electrostatic map:\n");
 			printf("cube(0,0,0) = %f\n", cube [0][0][0]);
 			printf("cube(1,0,0) = %f\n", cube [1][0][0]);
@@ -193,7 +204,7 @@ void energy_ie (
 				    	 cube[0][1][1] * weights[0][1][1] +
 				    	 cube[1][1][1] * weights[1][1][1]);
 		
-			#if defined (DEBUG_KRNL_INTERE)
+			#if defined (PRINT_ALL)
 			printf("interpolated value = %f, multiplied by q = %f\n\n", TRILININTERPOL(cube, weights), q*TRILININTERPOL(cube, weights));
 			#endif
 
@@ -207,7 +218,7 @@ void energy_ie (
                         cube [0][1][1] = IE_Fgrids_3[cube_011] /*GlobFgrids [Host_mul_tmp3 + cube_011]*/;
                         cube [1][1][1] = IE_Fgrids_3[cube_111] /*GlobFgrids [Host_mul_tmp3 + cube_111]*/;
 
-			#if defined (DEBUG_KRNL_INTERE)
+			#if defined (PRINT_ALL)
 			printf("Interpolation of desolvation map:\n");
 			printf("cube(0,0,0) = %f\n", cube [0][0][0]);
 			printf("cube(1,0,0) = %f\n", cube [1][0][0]);
@@ -229,7 +240,7 @@ void energy_ie (
 				    	       cube[0][1][1] * weights[0][1][1] +
 				    	       cube[1][1][1] * weights[1][1][1]);
 
-			#if defined (DEBUG_KRNL_INTERE)
+			#if defined (PRINT_ALL)
 			printf("interpolated value = %f, multiplied by abs(q) = %f\n\n", TRILININTERPOL(cube, weights), fabs(q) * trilin_interpol(cube, weights));
 			printf("Current value of intermolecular energy = %f\n\n\n", interE);
 			#endif
@@ -245,12 +256,10 @@ void energy_ie (
 
 	// --------------------------------------------------------------
 
-	#if defined (DEBUG_KRNL_INTERE)
-	printf("AFTER Out INTERE CHANNEL\n");
-	#endif
- 	
-	#if defined (DEBUG_ACTIVE_KERNEL)
-	printf("	%-20s: %s\n", "Krnl_InterE", "disabled");
+	#if defined (PRINT_ALL_IE) 
+	printf("\n");
+	printf("Finishing <inter-molecular calculation>\n");
+	printf("\n");
 	#endif
 }
 // --------------------------------------------------------------------------
