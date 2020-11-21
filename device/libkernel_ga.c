@@ -302,8 +302,17 @@ uint64_t libkernel_ga (
 		// ------------------------------------------------------------------
 		// Genetic Generation (GG)
 		// ------------------------------------------------------------------
+
+		#if defined (PRINT_ALL_KRNL) 
+		printf("\n");
+		printf("Starting <finding best individual> ... \n");
+		printf("\n");
+		#endif
+
 		float loc_energies[MAX_POPSIZE];
+
 		ushort best_entity = 0;
+		loc_energies[best_entity] = LocalEneCurr[best_entity];
 
 		for (ushort pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// copy energy to local memory
@@ -318,6 +327,12 @@ uint64_t libkernel_ga (
 				best_entity = pop_cnt;
 			}
 		}
+
+		#if defined (PRINT_ALL_KRNL) 
+		printf("\n");
+		printf("Finishing <finding best individual> ... \n");
+		printf("\n");
+		#endif
 
 		#if defined (PRINT_ALL_KRNL)
 		printf("best_entity: %3u, energy: %20.6f\n", best_entity, loc_energies[best_entity]);
