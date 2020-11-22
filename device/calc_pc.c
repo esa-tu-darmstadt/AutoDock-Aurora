@@ -138,10 +138,10 @@ void calc_pc (
 										// two rotations should be performed 
 										// (multiplying the quaternions)
 			{
-				const float  ref_ori_quats_const_q = PC_ref_orientation_quats[Host_RunId];
-				const float  ref_ori_quats_const_x = PC_ref_orientation_quats[Host_RunId];
-				const float  ref_ori_quats_const_y = PC_ref_orientation_quats[Host_RunId];
-				const float  ref_ori_quats_const_z = PC_ref_orientation_quats[Host_RunId];
+				const float  ref_ori_quats_const_q = PC_ref_orientation_quats[4*Host_RunId];
+				const float  ref_ori_quats_const_x = PC_ref_orientation_quats[4*Host_RunId+1];
+				const float  ref_ori_quats_const_y = PC_ref_orientation_quats[4*Host_RunId+2];
+				const float  ref_ori_quats_const_z = PC_ref_orientation_quats[4*Host_RunId+3];
 
 				// Calculating quatrot_left*ref_orientation_quats_const, 
 				// which means that reference orientation rotation is the first
