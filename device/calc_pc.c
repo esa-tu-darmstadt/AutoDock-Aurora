@@ -102,13 +102,13 @@ void calc_pc (
 			{
 				uint rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
 
-				rotation_unitvec[0] = PC_rotbonds_unit_vectors[rotbond_id];
-				rotation_unitvec[1] = PC_rotbonds_unit_vectors[rotbond_id];
-				rotation_unitvec[2] = PC_rotbonds_unit_vectors[rotbond_id];
+				rotation_unitvec[0] = PC_rotbonds_unit_vectors[3*rotbond_id];
+				rotation_unitvec[1] = PC_rotbonds_unit_vectors[3*rotbond_id+1];
+				rotation_unitvec[2] = PC_rotbonds_unit_vectors[3*rotbond_id+2];
 				
-				rotation_movingvec[0] = PC_rotbonds_moving_vectors[rotbond_id];
-				rotation_movingvec[1] = PC_rotbonds_moving_vectors[rotbond_id];
-				rotation_movingvec[2] = PC_rotbonds_moving_vectors[rotbond_id];
+				rotation_movingvec[0] = PC_rotbonds_moving_vectors[3*rotbond_id];
+				rotation_movingvec[1] = PC_rotbonds_moving_vectors[3*rotbond_id+1];
+				rotation_movingvec[2] = PC_rotbonds_moving_vectors[3*rotbond_id+2];
 
 				rotation_angle = local_genotype[6+rotbond_id];
 
