@@ -154,7 +154,7 @@ void calc_pc (
 				// Taking the first element of ref_orientation_quats_const member
 				float ref_4q[4] = {  ref_ori_quats_const_q, -ref_ori_quats_const_x, -ref_ori_quats_const_y, -ref_ori_quats_const_z };
 				float ref_4x[4] = {  ref_ori_quats_const_x,  ref_ori_quats_const_q, -ref_ori_quats_const_z,  ref_ori_quats_const_y };
-				float ref_4y[4] = { -ref_ori_quats_const_y,  ref_ori_quats_const_z,  ref_ori_quats_const_q,  ref_ori_quats_const_x };
+				float ref_4y[4] = {  ref_ori_quats_const_y,  ref_ori_quats_const_z,  ref_ori_quats_const_q,  ref_ori_quats_const_x };
 				float ref_4z[4] = {  ref_ori_quats_const_z, -ref_ori_quats_const_y,  ref_ori_quats_const_x,  ref_ori_quats_const_q };
 
 				quatrot_left_q = esa_dot4(quatrot_temp, ref_4q);
