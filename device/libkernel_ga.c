@@ -79,10 +79,13 @@ uint64_t libkernel_ga (
 )
 {
 
+	#pragma omp parallel for
 	for (unsigned int run_cnt = 0; run_cnt < Host_num_of_runs; run_cnt++) {
+
+/*
 		printf(" %u", run_cnt+1); 
 		fflush(stdout);
-
+*/
 		// Values changing every LGA run
 		unsigned int uint_run_cnt  = run_cnt;
 		unsigned int Host_Offset_Pop = run_cnt * DockConst_pop_size* ACTUAL_GENOTYPE_LENGTH;
