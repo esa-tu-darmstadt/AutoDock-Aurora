@@ -492,7 +492,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "dockpars.rotbondlist_length" << std::right << std::setw(31) << dockpars.rotbondlist_length << "\n";
 
 	// IA
-	std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
+//	std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
 
 	std::cout << std::endl;
 	std::cout << "\n---------------------------------------------------------------------------------\n";
