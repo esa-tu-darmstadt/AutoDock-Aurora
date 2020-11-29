@@ -119,6 +119,8 @@ void energy_ia (
 		float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
 		float inverse_smoothed_distance_pow_12 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_6;
 
+		float term_partialE3 = atomic_distance * (-8.5525f + (86.9525f / (1.0f + 7.7839f * exp(-0.3154f * atomic_distance))));
+
 		// Calculating energy contributions
 		// Cuttoff1: internuclear-distance at 8A only for vdw and hbond.
 		if (atomic_distance < 8.0f) 
@@ -139,15 +141,7 @@ void energy_ia (
 		if (atomic_distance < 20.48f)
 		{
 			// Calculating electrostatic term
-			partialE3 += (  
-							(DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id]) 
-							/
-							(
-								atomic_distance*(
-									-8.5525f + (86.9525f / (1.0f + 7.7839f*exp(-0.3154f*atomic_distance)))
-								)
-							)       
-						);
+			partialE3 += (DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id]) /  term_partialE3;
 
 			// Calculating desolvation term
 			partialE4 += (
