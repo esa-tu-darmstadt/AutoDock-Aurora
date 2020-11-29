@@ -116,7 +116,7 @@ void get_commandpars(const int* argc,
 	mypars->num_of_energy_evals = 2500000;
 	mypars->num_of_generations  = 27000;
 	mypars->abs_max_dmov        = 6.0/(*spacing); 	// +/-6A
-	mypars->abs_max_dang        = 90; 		// +/- 90°
+	mypars->abs_max_dang        = 90; 		// +/- 90ï¿½
 	mypars->mutation_rate 	    = 2; 		// 2%
 	mypars->crossover_rate 	    = 80;		// 80%
 	mypars->lsearch_rate 	    = 6;		// 6%
@@ -126,7 +126,7 @@ void get_commandpars(const int* argc,
 	mypars->tournament_rate     = 60;		// 60%
 	mypars->rho_lower_bound     = 0.01;		// 0.01
 	mypars->base_dmov_mul_sqrt3 = 2.0/(*spacing)*sqrt(3.0);	// 2 A
-	mypars->base_dang_mul_sqrt3 = 75.0*sqrt(3.0);		// 75°
+	mypars->base_dang_mul_sqrt3 = 75.0*sqrt(3.0);		// 75ï¿½
 	mypars->cons_limit 	    = 4;			// 4
 	mypars->max_num_of_iters    = 300;
 	mypars->pop_size            = 150;
@@ -144,7 +144,7 @@ void get_commandpars(const int* argc,
 	mypars->gen_best            = 0;
 	strcpy(mypars->resname, "docking");
 	mypars->qasp 		    = 0.01097f;
-	mypars->rmsd_tolerance      = 2.0;		//2 Angström
+	mypars->rmsd_tolerance      = 2.0;		//2 Angstrï¿½m
 	// ------------------------------------------
 
 	//overwriting values which were defined as a command line argument
@@ -177,7 +177,7 @@ void get_commandpars(const int* argc,
 		}
 
 		//Argument: maximal delta movement during mutation. Must be an integer between 1 and 16.
-		//N means that the maximal delta movement will be +/- 2^(N-10)*grid spacing angström.
+		//N means that the maximal delta movement will be +/- 2^(N-10)*grid spacing angstrï¿½m.
 		if (strcmp("-dmov", argv[i]) == 0)
 		{
 			arg_recognized = 1;
@@ -236,7 +236,7 @@ void get_commandpars(const int* argc,
 			arg_recognized = 1;
 			sscanf(argv [i+1], "%f", &tempfloat);
 
-			if ((tempfloat >= 0.0) && (tempfloat < 100.0))
+			if ((tempfloat >= 0.0) && (tempfloat <= 100.0))
 				mypars->lsearch_rate = tempfloat;
 			else
 				printf("Warning: value of -lrat argument ignored. Value must be a float between 0 and 100.\n");
@@ -304,7 +304,7 @@ void get_commandpars(const int* argc,
 				printf("Warning: value of -lsmov argument ignored. Value must be a float between 0 and %lf.\n", 64*(*spacing));
 		}
 
-		//Argument: local search delta angle. Must be a float between 0 and 103°.
+		//Argument: local search delta angle. Must be a float between 0 and 103ï¿½.
 		//Means the spread of unifily distributed delta angle of local search.
 		if (strcmp("-lsang", argv [i]) == 0)
 		{
