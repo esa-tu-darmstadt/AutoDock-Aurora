@@ -177,7 +177,7 @@ uint64_t libkernel_ga (
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 
 		// Read genotype
-		for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 			float tmp_gene = GlobPopCurrInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
@@ -283,7 +283,7 @@ uint64_t libkernel_ga (
 		ushort best_entity = 0;
 		loc_energies[0] = LocalEneCurr[0];
 
-		for (ushort pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
+		for (uint pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// copy energy to local memory
 			loc_energies[pop_cnt] = LocalEneCurr[pop_cnt];
 
@@ -326,7 +326,7 @@ uint64_t libkernel_ga (
 			// Elitism: copying the best entity to new population
 			// ---------------------------------------------------
 			if (new_pop_cnt == 1) {
-				for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+				for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 					LocalPopNext[0][gene_cnt] = LocalPopCurr[best_entity][gene_cnt];
 				} 		
 				LocalEneNext[0] = loc_energies[best_entity];
@@ -398,7 +398,7 @@ uint64_t libkernel_ga (
 			}
 
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
-			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				local_entity_1[gene_cnt] = LocalPopCurr[parent1][gene_cnt];
 				local_entity_2[gene_cnt] = LocalPopCurr[parent2][gene_cnt];
 			}
@@ -439,7 +439,7 @@ uint64_t libkernel_ga (
 			}
 
 			// Crossover and mutation
-			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 
 				// TODO: VERIFY IT
 				float prngGG = randf(&dockpars_prng_states[prng_offset + new_pop_cnt]);
@@ -572,7 +572,7 @@ uint64_t libkernel_ga (
 		/*
 		#pragma ivdep
 		*/
-		for (ushort ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
+		for (uint ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
 
 			uint ls_eval_cnt_per_iter;
 
@@ -659,7 +659,7 @@ uint64_t libkernel_ga (
 
 		// Update current pops & energies
 		for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-			for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				LocalPopCurr[pop_cnt][gene_cnt] = LocalPopNext[pop_cnt][gene_cnt];
 			}
 
@@ -687,7 +687,7 @@ uint64_t libkernel_ga (
 	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		//printf("\n");
 		//printf("pop_cnt: %u\n", pop_cnt);
-		for (uchar gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 			GlobPopCurrFinal[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
 
 			//printf("Final geno: %3u, %20.6f\n", gene_cnt, LocalPopCurr[pop_cnt][gene_cnt]);
