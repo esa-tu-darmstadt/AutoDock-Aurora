@@ -475,8 +475,8 @@ filled with clock() */
 		unsigned int Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int Host_Offset_Ene = run_cnt * dockpars.pop_size;
 
-		printf("\n");
 /*
+		printf("\n");
 		printf("narg_aux: %u\n", narg_aux);
         printf("uint_run_cnt: %u\n", uint_run_cnt);
 		printf("Host_Offset_Pop: %u\n", Host_Offset_Pop);
