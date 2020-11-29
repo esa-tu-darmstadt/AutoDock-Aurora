@@ -122,6 +122,12 @@ void lga (
 	printf("%-40s %f\n", "DockConst_gridsize_z_minus1: ", 	DockConst_gridsize_z_minus1);
 	printf("%-40s %u\n", "Host_mul_tmp2: ",					Host_mul_tmp2);
 	printf("%-40s %u\n", "Host_mul_tmp3: ",					Host_mul_tmp3);
+	printf("\n");
+	printf("%-40s %u\n", "DockConst_max_num_of_iters: ", 	DockConst_max_num_of_iters);
+	printf("%-40s %f\n", "DockConst_rho_lower_bound: ", 	DockConst_rho_lower_bound);
+	printf("%-40s %f\n", "DockConst_base_dmov_mul_sqrt3: ", DockConst_base_dmov_mul_sqrt3);
+	printf("%-40s %f\n", "DockConst_base_dang_mul_sqrt3: ", DockConst_base_dang_mul_sqrt3);
+	printf("%-40s %u\n", "DockConst_cons_limit: ",			DockConst_cons_limit);
 	#endif
 
 	// --------------------------------------------------------------------------
