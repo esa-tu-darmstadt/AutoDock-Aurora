@@ -524,10 +524,12 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "mul_tmp3" << std::right << std::setw(31) << mul_tmp3 << "\n";
 
 	// LS
-	//std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
-	//std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";					
-
-
+	std::cout << std::left << std::setw(40) << "Host_max_num_of_iters" << std::right << std::setw(31) << Host_max_num_of_iters << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.rho_lower_bound" << std::right << std::setw(31) << dockpars.rho_lower_bound << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.base_dmov_mul_sqrt3" << std::right << std::setw(31) << dockpars.base_dmov_mul_sqrt3 << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.base_dang_mul_sqrt3" << std::right << std::setw(31) << dockpars.base_dang_mul_sqrt3 << "\n";
+	std::cout << std::left << std::setw(40) << "Host_cons_limit" << std::right << std::setw(31) << Host_cons_limit << "\n";
+	std::cout << std::left << std::setw(40) << "mypars->num_of_runs" << std::right << std::setw(31) << mypars->num_of_runs << "\n";
 	std::cout << std::endl;
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 
