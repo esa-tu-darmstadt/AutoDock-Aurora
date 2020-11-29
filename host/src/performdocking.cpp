@@ -38,6 +38,7 @@ int docking_with_aurora(
 	/*const*/ float*	cpu_floatgrids,
 			Dockpars*	mypars,
 	const	Liganddata*	myligand_init,
+	const 	Liganddata* myxrayligand,
 	const	int*		argc,
 			char**		argv,
 			clock_t		clock_start_program
@@ -55,6 +56,9 @@ parameter mypars:
 parameter myligand_init:
 		describes the ligands
 		filled with get_liganddata()
+parameter myxrayligand:
+		describes the xray ligand
+		filled with get_xrayliganddata()
 parameters argc and argv:
 		are the corresponding command line arguments parameter clock_start_program:
 		contains the state of the clock tick counter at the beginning of the program
@@ -505,6 +509,7 @@ filled with clock() */
 			cpu_energies.data()          + run_cnt * mypars->pop_size,
 			&myligand_reference,
 			myligand_init,
+			myxrayligand,
 			mypars,
 			cpu_evals_of_runs[run_cnt],
 			cpu_gens_of_runs[run_cnt], /*generation_cnt, */

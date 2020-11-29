@@ -61,14 +61,14 @@ void write_basic_info(FILE* fp, const Liganddata* ligand_ref, const Dockpars* my
 	fprintf(fp, "Tournament selection probability limit:    %lf%%\n", (double) mypars->tournament_rate);
 	fprintf(fp, "Rate of mutation:                          %lf%%\n", (double) mypars->mutation_rate);
 	fprintf(fp, "Maximal allowed delta movement:            +/- %lfA\n", (double) mypars->abs_max_dmov*mygrid->spacing);
-	fprintf(fp, "Maximal allowed delta angle:               +/- %lf°\n\n", (double) mypars->abs_max_dang);
+	fprintf(fp, "Maximal allowed delta angle:               +/- %lfï¿½\n\n", (double) mypars->abs_max_dang);
 
 	fprintf(fp, "Rate of local search:                      %lf%%\n", mypars->lsearch_rate);
 
 	fprintf(fp, "Maximal number of local search iterations: %ld\n", mypars->max_num_of_iters);
 	fprintf(fp, "Rho lower bound:                           %lf\n", (double) mypars->rho_lower_bound);
 	fprintf(fp, "Spread of local search delta movement:     %lfA\n", (double) mypars->base_dmov_mul_sqrt3*mygrid->spacing/sqrt(3.0));
-	fprintf(fp, "Spread of local search delta angle:        %lf°\n", (double) mypars->base_dang_mul_sqrt3/sqrt(3.0));
+	fprintf(fp, "Spread of local search delta angle:        %lfï¿½\n", (double) mypars->base_dang_mul_sqrt3/sqrt(3.0));
 	fprintf(fp, "Limit of consecutive successes/failures:   %ld\n\n", mypars->cons_limit);
 
 	fprintf(fp, "Unbound model:                             ");
@@ -157,14 +157,14 @@ void write_basic_info_dlg(FILE* fp, const Liganddata* ligand_ref, const Dockpars
 	fprintf(fp, "Tournament selection probability limit:    %lf%%\n", (double) mypars->tournament_rate);
 	fprintf(fp, "Rate of mutation:                          %lf%%\n", (double) mypars->mutation_rate);
 	fprintf(fp, "Maximal allowed delta movement:            +/- %lfA\n", (double) mypars->abs_max_dmov*mygrid->spacing);
-	fprintf(fp, "Maximal allowed delta angle:               +/- %lf°\n\n", (double) mypars->abs_max_dang);
+	fprintf(fp, "Maximal allowed delta angle:               +/- %lfï¿½\n\n", (double) mypars->abs_max_dang);
 
 	fprintf(fp, "Rate of local search:                      %lf%%\n", mypars->lsearch_rate);
 
 	fprintf(fp, "Maximal number of local search iterations: %ld\n", mypars->max_num_of_iters);
 	fprintf(fp, "Rho lower bound:                           %lf\n", (double) mypars->rho_lower_bound);
 	fprintf(fp, "Spread of local search delta movement:     %lfA\n", (double) mypars->base_dmov_mul_sqrt3*mygrid->spacing/sqrt(3.0));
-	fprintf(fp, "Spread of local search delta angle:        %lf°\n", (double) mypars->base_dang_mul_sqrt3/sqrt(3.0));
+	fprintf(fp, "Spread of local search delta angle:        %lfï¿½\n", (double) mypars->base_dang_mul_sqrt3/sqrt(3.0));
 	fprintf(fp, "Limit of consecutive successes/failures:   %ld\n\n", mypars->cons_limit);
 
 		fprintf(fp, "Handle symmetry during clustering:         ");
@@ -223,6 +223,7 @@ void make_resfiles(float* final_population,
 		   float* energies, 
 		   const Liganddata* ligand_ref,
 		   const Liganddata* ligand_from_pdb, 
+		   const Liganddata* ligand_xray,
 		   const Dockpars* mypars, 
 		   int evals_performed, 
 		   int generations_used, 
@@ -321,7 +322,13 @@ void make_resfiles(float* final_population,
 			accurate_intraE[i] = calc_intraE_f(&temp_docked, 8, mypars->smooth, 0, mypars->coeffs.scaled_AD4_coeff_elec, mypars->coeffs.AD4_coeff_desolv, mypars->qasp, debug);
 
 		move_ligand(&temp_docked, mygrid->origo_real_xyz);				//moving it according to grid location
-		entity_rmsds [i] = calc_rmsd(ligand_from_pdb, &temp_docked, mypars->handle_symmetry);	//calculating rmds compared to original pdb file
+		if (mypars->given_xrayligandfile == true) {
+			entity_rmsds [i] = calc_rmsd(ligand_xray, &temp_docked, mypars->handle_symmetry);	//calculating rmds compared to original xray file
+		}
+		else {
+			entity_rmsds [i] = calc_rmsd(ligand_from_pdb, &temp_docked, mypars->handle_symmetry);	//calculating rmds compared to original pdb file
+		}
+
 
 		//copying best result to output parameter
 		if (i == 0)		//assuming this is the best one (final_population is arranged), however,
@@ -356,9 +363,9 @@ void make_resfiles(float* final_population,
 		fprintf(fp, "     STATE OF FINAL POPULATION     \n");
 		fprintf(fp, "===================================\n\n");
 
-		fprintf(fp, " Entity |      dx [A]      |      dy [A]      |      dz [A]      |     phi [°]      |    theta [°]     | alpha_genrot [°] |");
+		fprintf(fp, " Entity |      dx [A]      |      dy [A]      |      dz [A]      |     phi [ï¿½]      |    theta [ï¿½]     | alpha_genrot [ï¿½] |");
 		for (i=0; i<ligand_from_pdb->num_of_rotbonds; i++)
-			fprintf(fp, " alpha_rotb%2d [°] |", i);
+			fprintf(fp, " alpha_rotb%2d [ï¿½] |", i);
 		fprintf(fp, " intramolecular energy | intermolecular energy | total energy calculated by CPU / calculated by FPGA / difference | RMSD [A] | \n");
 
 		fprintf(fp, "--------+------------------+------------------+------------------+------------------+------------------+------------------+");

@@ -20,6 +20,7 @@ int docking_with_aurora(
 	/*const*/ float*	cpu_floatgrids,
 			Dockpars*	mypars,
 	const	Liganddata*	myligand_init,
+	const 	Liganddata* myxrayligand,
 	const	int*		argc,
 			char**		argv,
 			clock_t		clock_start_program
