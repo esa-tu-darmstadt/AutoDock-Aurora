@@ -3,12 +3,8 @@
 #include <ftrace.h>
 
 #include "defines.h"
-/*
-#include "libkernel1.c"
-#include "libkernel2.c"
-#include "libkernel4.c"
-#include "libkernel3.c"
-*/
+#include "libkernel_ga.c"
+
 
 uint64_t hello()
 {
@@ -76,160 +72,80 @@ int main() {
     K_conform.ref_orientation_quats_const[m] = (float) 0.1f;
   }
 
-  uint32_t NUM_MAX_ITERS = 2;
-
-  #if defined (ENABLE_TRACE)
-  ftrace_region_begin("OUTSIDE_LOOP_KERNEL1");
-  #endif
-  libkernel1( 
-              23, // dockpars.num_of_atoms   
-              6, // dockpars.num_of_atypes
-              88, // dockpars.num_of_intraE_contributors
-              81, // dockpars.gridsize_x
-              81, // dockpars.gridsize_y
-              81, // dockpars.gridsize_z
-              6561, // g2
-              531441, // g3
-              0.37500, // dockpars.grid_spacing 
-              105621835753504, // mem_dockpars_fgrids
-              128, // dockpars.rotbondlist_length
-              46.68814, // dockpars.coeff_elec 
-              0.13220, // dockpars.coeff_desolv
-              105621852759632, // mem_dockpars_conformations_current
-              105621856599648, // mem_dockpars_energies_current
-              105621860559696, // mem_dockpars_evals_of_new_entities
-              150, // dockpars.pop_size
-              0.01097, // dockpars.qasp 
-              0.50000, // dockpars.smooth
-              &K_interintra, //0x7ffe4b655370, // (char*)(&KerConst_interintra)  
-              &K_intracontrib, //0x7ffe4b691e20, // (char*)(&KerConst_intracontrib)
-              &K_intra, //0x7ffe4b655870, // (char*)(&KerConst_intra)   
-              &K_rotlist, //0x7ffe4b65ade0, // (char*)(&KerConst_rotlist) 
-              &K_conform, //0x7ffe4b656060, // (char*)(&KerConst_conform)a
-              15000 // blocksPerGridForEachEntity
-            );
-  #if defined(ENABLE_TRACE)
-  ftrace_region_end("OUTSIDE_LOOP_KERNEL1");
-  #endif
-
-  #if defined (ENABLE_TRACE)
-  ftrace_region_begin("OUTSIDE_LOOP_KERNEL2");
-  #endif
-  libkernel2(
-              150, // dockpars.pop_size 
-              105621860559696, // mem_dockpars_evals_of_new_entities
-              105621860619712, // mem_gpu_evals_of_runs
-              100 // blocksPerGridForEachRun
-            );
-  #if defined(ENABLE_TRACE)
-  ftrace_region_end("OUTSIDE_LOOP_KERNEL2");
-  #endif
-
-  #if defined (ENABLE_TRACE)
-  ftrace_region_begin("KERNEL4");
-  #endif
-  for (uint32_t i=0; i<NUM_MAX_ITERS; i++) {
-    libkernel4(
-                23, // dockpars.num_of_atoms
-                6, // dockpars.num_of_atypes
-                88, // dockpars.num_of_intraE_contributors 
-                81, // dockpars.gridsize_x
-                81, // dockpars.gridsize_y
-                81, // dockpars.gridsize_z
-                6561, // g2
-                531441, // g3 
-                0.37500, // dockpars.grid_spacing
-                105621835753504, // mem_dockpars_fgrids
-                128, // dockpars.rotbondlist_length
-                46.68814, // dockpars.coeff_elec
-                0.13220, // dockpars.coeff_desolv
-                105621852759632, // mem_dockpars_conformations_current
-                105621856599648, // mem_dockpars_energies_current
-                105621856659664, // mem_dockpars_conformations_next
-                105621860499680, // mem_dockpars_energies_next
-                105621860559696, // mem_dockpars_evals_of_new_entities
-                105621860620128, // mem_dockpars_prng_states 
-                150, // dockpars.pop_size
-                8, // dockpars.num_of_genes
-                0.60000, // dockpars.tournament_rate
-                0.80000, // dockpars.crossover_rate
-                0.02000, // dockpars.mutation_rate 
-                16.00000, // dockpars.abs_max_dmov
-                90.00000, // dockpars.abs_max_dang
-                0.01097, // dockpars.qasp   
-                0.50000, // dockpars.smooth 
-                &K_interintra, //0x7ffe4b655370, // (char*)(&KerConst_interintra)  
-                &K_intracontrib, //0x7ffe4b691e20, // (char*)(&KerConst_intracontrib)
-                &K_intra, //0x7ffe4b655870, // (char*)(&KerConst_intra)   
-                &K_rotlist, //0x7ffe4b65ade0, // (char*)(&KerConst_rotlist) 
-                &K_conform, //0x7ffe4b656060, // (char*)(&KerConst_conform)a
-                15000 // blocksPerGridForEachEntity
-    );
-  }
-  #if defined(ENABLE_TRACE)
-  ftrace_region_end("KERNEL4");
-  #endif
-
-
-  #if defined (ENABLE_TRACE)
-  ftrace_region_begin("KERNEL3");
-  #endif
-  for (uint32_t i=0; i<NUM_MAX_ITERS; i++) {
-    libkernel3(
-                23, // dockpars.num_of_atoms
-                6, // dockpars.num_of_atypes
-                88, // dockpars.num_of_intraE_contributors
-                81, // dockpars.gridsize_x
-                81, // dockpars.gridsize_y
-                81, // dockpars.gridsize_z
-                6561, // g2
-                531441, // g3
-                0.37500, // dockpars.grid_spacing
-                105621835753504, // mem_dockpars_fgrids
-                128, // dockpars.rotbondlist_length
-                46.68814, // dockpars.coeff_elec
-                0.13220, // dockpars.coeff_desolv
-                105621856659664, // mem_dockpars_conformations_next
-                105621860499680, // mem_dockpars_energies_next
-                105621860559696, // mem_dockpars_evals_of_new_entities
-                105621860620128, // mem_dockpars_prng_states
-                150, // dockpars.pop_size
-                8, // dockpars.num_of_genes
-                100.00000, // dockpars.lsearch_rate
-                150, // dockpars.num_of_lsentities 
-                0.01000, // dockpars.rho_lower_bound
-                9.23760, // dockpars.base_dmov_mul_sqrt3
-                129.90381, // dockpars.base_dang_mul_sqrt3
-                4, // dockpars.cons_limit
-                300, // dockpars.max_num_of_iters
-                0.01097, // dockpars.qasp
-                0.50000, // dockpars.smooth
-                &K_interintra, //0x7ffe4b655370, // (char*)(&KerConst_interintra)  
-                &K_intracontrib, //0x7ffe4b691e20, // (char*)(&KerConst_intracontrib)
-                &K_intra, //0x7ffe4b655870, // (char*)(&KerConst_intra)   
-                &K_rotlist, //0x7ffe4b65ade0, // (char*)(&KerConst_rotlist) 
-                &K_conform, //0x7ffe4b656060, // (char*)(&KerConst_conform)a     
-                15000 // blocksPerGridForEachLSEntity 
-    );
-  }
-  #if defined(ENABLE_TRACE)
-  ftrace_region_end("KERNEL3");
-  #endif
-
-
-  #if defined (ENABLE_TRACE)
-  ftrace_region_begin("KERNEL2");
-  #endif
-  for (uint32_t i=0; i<NUM_MAX_ITERS; i++) {
-    libkernel2(
-                150, // dockpars.pop_size 
-                105621860559696, // mem_dockpars_evals_of_new_entities
-                105621860619712, // mem_gpu_evals_of_runs
-                100 // blocksPerGridForEachRun
-              );
-  }
-  #if defined(ENABLE_TRACE)
-  ftrace_region_end("KERNEL2");
-  #endif
 */
+
+
+  #if defined (ENABLE_TRACE)
+  ftrace_region_begin("OUTSIDE_LOOP_KERNEL_GA");
+  #endif
+  libkernel_ga(
+              105621851762448, // mem_dockpars_conformations_current_Initial
+              105621851785264, // mem_dockpars_conformations_current_Final
+              105621851808080, // mem_dockpars_energies_current
+              105621851808688, // mem_evals_performed
+              105621851808720, // mem_gens_performed
+              105621851808752, // mem_prng_states
+              150, // dockpars.pop_size
+              2048000, // dockpars.num_of_energy_evals
+              99999, // dockpars.num_of_generations
+              0.6, // dockpars.tournament_rate
+              0.02, // dockpars.mutation_rate
+              16, // dockpars.abs_max_dmov
+              90, // dockpars.abs_max_dang
+              32, // two_absmaxdmov
+              180, // two_absmaxdang
+              0.8, // dockpars.crossover_rate
+              150, // dockpars.num_of_lsentities
+              8, // dockpars.num_of_genes
+
+              105621851809360, // mem_pc_rotlist_const
+              105621851825760, // mem_pc_ref_coords_x_const
+              105621851826800, // mem_pc_ref_coords_y_const
+              105621851827840, // mem_pc_ref_coords_z_const
+              105621851828880, // mem_pc_rotbonds_moving_vectors_const
+              105621851829280, // mem_pc_rotbonds_unit_vectors_const
+              105621851829680, // mem_pc_ref_orientation_quats_const
+              31, // dockpars.rotbondlist_length
+
+              105621868837424, // mem_ia_ie_atom_charges_const
+              105621868838464, // mem_ia_ie_atom_types_const
+              105621868838736, // mem_ia_contributors_const
+              105621868936288, // mem_ia_reqm_const
+              105621868936384, // mem_ia_reqm_hbond_const
+              105621868936480, // mem_ia_atom1_types_reqm_const
+              105621868936576, // mem_ia_atom2_types_reqm_const
+              105621868936672, // mem_ia_VWpars_AC_const
+              105621868937472, // mem_ia_VWpars_BD_const
+              105621868938272, // mem_ia_dspars_S_const
+              105621868938336, // mem_ia_dspars_V_const
+              0.5, // dockpars.smooth
+              88, // dockpars.num_of_intraE_contributors
+              0.375, // dockpars.grid_spacing
+              6, // dockpars.num_of_atypes
+              46.6881, // dockpars.coeff_elec
+              0.01097, // dockpars.qasp
+              0.1322, // dockpars.coeff_desolv
+
+              105621851831296, // mem_dockpars_fgrids
+              81, // dockpars.g1
+              6561, // dockpars.g2
+              531441, // dockpars.g3
+              23, // dockpars.num_of_atoms
+              80, // fgridsizex_minus1
+              80, // fgridsizey_minus1
+              80, // fgridsizez_minus1
+              3188646, // mul_tmp2
+              3720087, // mul_tmp3
+
+              300, // Host_max_num_of_iters
+              0.01, // dockpars.rho_lower_bound
+              9.2376, // dockpars.base_dmov_mul_sqrt3
+              129.904, // dockpars.base_dang_mul_sqrt3
+              4, // Host_cons_limit
+              1 // mypars->num_of_runs
+            );
+  #if defined(ENABLE_TRACE)
+  ftrace_region_end("OUTSIDE_LOOP_KERNEL_GA");
+  #endif
+
 }
