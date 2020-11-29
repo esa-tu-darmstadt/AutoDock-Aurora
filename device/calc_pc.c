@@ -31,12 +31,12 @@ void calc_pc (
 	#endif
 
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
-	for (ushort c = 0; c < DockConst_rotbondlist_length; c++) {
+	for (uint c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = PC_rotlist [c];
 	}
 
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
-	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		if (i < 3) {
 			local_genotype [i] = genotype[i];
 		} else {
@@ -48,7 +48,7 @@ void calc_pc (
 	float theta = local_genotype[4];
 	float genrotangle = local_genotype[5];
 
-	for (ushort rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
+	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = rotlist_localcache[rotation_counter];
 
