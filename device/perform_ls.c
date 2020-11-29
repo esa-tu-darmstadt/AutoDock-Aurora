@@ -80,9 +80,9 @@ void perform_ls(
 	}
 	
 	float rho = 1.0f;
-	ushort iteration_cnt = 0;
-	uchar  cons_succ     = 0;
-	uchar  cons_fail     = 0;
+	uint iteration_cnt = 0;
+	uint  cons_succ     = 0;
+	uint  cons_fail     = 0;
 	uint   LS_eval       = 0;
 	boolean positive_direction = True;
 
