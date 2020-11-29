@@ -13,7 +13,7 @@ void calc_pc (
 	const	float*	restrict	PC_ref_orientation_quats,
 			uint				DockConst_rotbondlist_length,
 			uchar				DockConst_num_of_genes,
-			ushort				Host_RunId,
+			uint				Host_RunId,
 
 	const	float*	restrict	genotype,
 			float*	restrict 	local_coords_x,

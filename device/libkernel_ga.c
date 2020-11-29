@@ -78,7 +78,7 @@ uint64_t libkernel_ga (
 			float		DockConst_base_dang_mul_sqrt3,
 			uchar		DockConst_cons_limit,
 	// Values changing every LGA run
-			ushort      Host_RunId,
+			uint		Host_RunId,
 			uint 	    Host_Offset_Pop,
 			uint	    Host_Offset_Ene
 )

@@ -23,7 +23,7 @@ void perform_ls(
 	const	float*	restrict	PC_rotbonds_unit_vectors,
 	const	float*	restrict	PC_ref_orientation_quats,
 			uint				DockConst_rotbondlist_length,
-			ushort				Host_RunId,
+			uint				Host_RunId,
 	// ia
 	const	float*	restrict	IA_IE_atom_charges,
 	const	char*	restrict	IA_IE_atom_types,

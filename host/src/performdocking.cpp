@@ -471,17 +471,17 @@ filled with clock() */
 		fflush(stdout);
 
 		// Values changing every LGA run
-		unsigned short ushort_run_cnt  = (unsigned short) run_cnt;
-		unsigned int   Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
-		unsigned int   Host_Offset_Ene = run_cnt * dockpars.pop_size;
+		unsigned int uint_run_cnt  = run_cnt;
+		unsigned int Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
+		unsigned int Host_Offset_Ene = run_cnt * dockpars.pop_size;
 
 		printf("\n");
 		printf("narg_aux: %u\n", narg_aux);
-        printf("ushort_run_cnt: %u\n", ushort_run_cnt);
+        printf("uint_run_cnt: %u\n", uint_run_cnt);
 		printf("Host_Offset_Pop: %u\n", Host_Offset_Pop);
 		printf("Host_Offset_Ene: %u\n", Host_Offset_Ene);
 
-		wrapper_veo_args_set_u16 (kernel_ga_arg_ptr, narg_aux, ushort_run_cnt);
+		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux, uint_run_cnt);
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+1, Host_Offset_Pop);
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+2, Host_Offset_Ene);
 
