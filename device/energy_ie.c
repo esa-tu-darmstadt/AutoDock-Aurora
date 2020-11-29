@@ -50,7 +50,7 @@ void energy_ie (
 	// For each ligand atom
 	for (uint atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++)
 	{
-		char atom1_typeid = IA_IE_atom_types[atom1_id];
+		uint atom1_typeid = IA_IE_atom_types[atom1_id];
 
 		float x = local_coords_x[atom1_id];
 		float y = local_coords_y[atom1_id];
