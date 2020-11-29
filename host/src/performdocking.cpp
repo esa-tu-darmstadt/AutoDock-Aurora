@@ -468,7 +468,20 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "mem_evals_performed" << std::right << std::setw(31) << mem_evals_performed << "\n";
 	std::cout << std::left << std::setw(40) << "mem_gens_performed" << std::right << std::setw(31) << mem_gens_performed << "\n";
 	std::cout << std::left << std::setw(40) << "mem_prng_states" << std::right << std::setw(31) << mem_prng_states << "\n";
-
+	std::cout << std::left << std::setw(40) << "dockpars.pop_size" << std::right << std::setw(31) << dockpars.pop_size << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_energy_evals" << std::right << std::setw(31) << dockpars.num_of_energy_evals << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_generations" << std::right << std::setw(31) << dockpars.num_of_generations << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.tournament_rate" << std::right << std::setw(31) << dockpars.tournament_rate << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.mutation_rate" << std::right << std::setw(31) << dockpars.mutation_rate << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.abs_max_dmov" << std::right << std::setw(31) << dockpars.abs_max_dmov << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.abs_max_dang" << std::right << std::setw(31) << dockpars.abs_max_dang << "\n";
+	std::cout << std::left << std::setw(40) << "two_absmaxdmov" << std::right << std::setw(31) << two_absmaxdmov << "\n";
+	std::cout << std::left << std::setw(40) << "two_absmaxdang" << std::right << std::setw(31) << two_absmaxdang << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.crossover_rate" << std::right << std::setw(31) << dockpars.crossover_rate << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_lsentities" << std::right << std::setw(31) << dockpars.num_of_lsentities << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_genes" << std::right << std::setw(31) << dockpars.num_of_genes << "\n";
+	//std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
+	std::cout << std::endl;
 
 	// -----------------------------------------------------------------------------------------------------
 	// Launching kernel
