@@ -15,7 +15,7 @@
 typedef struct
 {
 	unsigned char  	num_of_atoms;
-	unsigned char   num_of_atypes;
+	unsigned int	num_of_atypes;
 	unsigned int    num_of_intraE_contributors;
 	unsigned char   gridsize_x;
 	unsigned char   gridsize_y;

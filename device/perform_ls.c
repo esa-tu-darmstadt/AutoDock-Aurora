@@ -39,7 +39,7 @@ void perform_ls(
 			float				DockConst_smooth,
 			uint				DockConst_num_of_intraE_contributors,
 			float				DockConst_grid_spacing,
-			uchar				DockConst_num_of_atypes,
+			uint				DockConst_num_of_atypes,
 			float				DockConst_coeff_elec,
 			float				DockConst_qasp,
 			float				DockConst_coeff_desolv,

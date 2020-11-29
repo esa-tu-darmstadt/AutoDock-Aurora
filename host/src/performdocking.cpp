@@ -154,7 +154,7 @@ filled with clock() */
 	// Preparing parameter struct
 	Dockparameters dockpars;
 	dockpars.num_of_atoms  			= ((unsigned char)  myligand_reference.num_of_atoms);
-	dockpars.num_of_atypes 			= ((unsigned char)  myligand_reference.num_of_atypes);
+	dockpars.num_of_atypes 			= ((unsigned int)   myligand_reference.num_of_atypes);
 	dockpars.num_of_intraE_contributors 	= ((unsigned int)   myligand_reference.num_of_intraE_contributors);
 	dockpars.gridsize_x    			= ((unsigned char)  mygrid->size_xyz[0]);
 	dockpars.gridsize_y    			= ((unsigned char)  mygrid->size_xyz[1]);
@@ -427,7 +427,7 @@ filled with clock() */
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.smooth);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.num_of_intraE_contributors);
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.grid_spacing);
-	wrapper_veo_args_set_u8     (kernel_ga_arg_ptr, narg++, dockpars.num_of_atypes);
+	wrapper_veo_args_set_u32	(kernel_ga_arg_ptr, narg++, dockpars.num_of_atypes);
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.coeff_elec);
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.qasp);
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.coeff_desolv);

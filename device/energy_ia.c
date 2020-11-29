@@ -19,7 +19,7 @@ void energy_ia (
 	 		float				DockConst_smooth,
 			uint				DockConst_num_of_intraE_contributors,
 			float				DockConst_grid_spacing,
-			uchar				DockConst_num_of_atypes,
+			uint				DockConst_num_of_atypes,
 			float				DockConst_coeff_elec,
 			float				DockConst_qasp,
 			float				DockConst_coeff_desolv,
@@ -124,9 +124,9 @@ void energy_ia (
 		if (atomic_distance < 8.0f) 
 		{
 			// Calculating van der Waals / hydrogen bond term
-			partialE1 += IA_VWpars_AC[atom1_typeid*DockConst_num_of_atypes+atom2_typeid]*inverse_smoothed_distance_pow_12;
+			partialE1 += IA_VWpars_AC[atom1_typeid * DockConst_num_of_atypes + atom2_typeid] * inverse_smoothed_distance_pow_12;
 
-			float tmp_pE2 = IA_VWpars_BD[atom1_typeid*DockConst_num_of_atypes+atom2_typeid];
+			float tmp_pE2 = IA_VWpars_BD[atom1_typeid * DockConst_num_of_atypes + atom2_typeid];
 
 			if (IA_intraE_contributors[3*contributor_counter + 2] == 1)	// H-bond
 				partialE2 -= tmp_pE2 * inverse_smoothed_distance_pow_10;
