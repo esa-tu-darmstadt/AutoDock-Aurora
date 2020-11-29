@@ -26,8 +26,8 @@ void perform_ls(
 			uint				Host_RunId,
 	// ia
 	const	float*	restrict	IA_IE_atom_charges,
-	const	char*	restrict	IA_IE_atom_types,
-	const	char*	restrict	IA_intraE_contributors,
+	const	int*	restrict	IA_IE_atom_types,
+	const	int*	restrict	IA_intraE_contributors,
 	const	float*	restrict	IA_reqm,
 	const	float*	restrict	IA_reqm_hbond,
 	const	uint*	restrict	IA_atom1_types_reqm,
