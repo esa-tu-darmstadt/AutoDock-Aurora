@@ -118,7 +118,6 @@ void perform_ls(
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
-			// TODO: FIX INDEXES
 			float tmp_prng = randf(dockpars_prng_states);
 
 			// tmp1 is genotype_deviate
@@ -156,7 +155,6 @@ void perform_ls(
 			entity_possible_new_genotype[i] = tmp3;
 		}
 
-		// TODO: CALC ENERGY
 		float energy_ia_ls;
 		float energy_ie_ls;
 		calc_pc(
