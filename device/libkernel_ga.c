@@ -13,7 +13,7 @@ LS:  local search
 // --------------------------------------------------------------------------
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
 // --------------------------------------------------------------------------
-uint64_t libkernel_ga (
+void lga (
 	const 	uint64_t	VEVMA_PopulationCurrentInitial,
 			uint64_t  	VEVMA_PopulationCurrentFinal,
 			uint64_t  	VEVMA_EnergyCurrent,
@@ -710,8 +710,6 @@ uint64_t libkernel_ga (
 	printf("Finishing <LGA run>\n");
 	printf("\n");
 	#endif
-
-	return 0;
 }
 
 // --------------------------------------------------------------------------

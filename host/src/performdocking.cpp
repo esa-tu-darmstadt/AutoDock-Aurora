@@ -145,8 +145,10 @@ filled with clock() */
 	// Allocating memory in CPU for generation counters
 	std::vector<int> cpu_gens_of_runs (size_evals_of_runs_nelems, 0);
 
+	// -----------------------------------------------------------------------------------------------------
 	// Preparing the constant data fields for the accelerator (calcenergy.cpp)
 	// -----------------------------------------------------------------------------------------------------
+
 	kernelconstant_static  KerConstStatic;
 	if (prepare_conststatic_fields_for_fpga(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic) == 1)
 		return 1;
@@ -445,7 +447,11 @@ filled with clock() */
 	wrapper_veo_args_set_float	(kernel_ga_arg_ptr, narg++, dockpars.base_dang_mul_sqrt3);
 	wrapper_veo_args_set_u8	    (kernel_ga_arg_ptr, narg++, Host_cons_limit);
 
-	const int narg_aux = narg;
+	// Values changing every LGA run
+	wrapper_veo_args_set_u32	(kernel_ga_arg_ptr, narg++, mypars->num_of_runs);
+
+	// -----------------------------------------------------------------------------------------------------
+	// Launching kernel
 	// -----------------------------------------------------------------------------------------------------
 
 	uint64_t kernel_ga_id;
@@ -456,45 +462,25 @@ filled with clock() */
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
 	printf("Execution run: ");
 
-	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
-		printf(" %u", run_cnt+1); 
-		fflush(stdout);
+	kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
+	wrapper_veo_call_wait_result(veo_thread_context, kernel_ga_id, &retval_ga);
 
-		// Values changing every LGA run
-		unsigned int uint_run_cnt  = run_cnt;
-		unsigned int Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
-		unsigned int Host_Offset_Ene = run_cnt * dockpars.pop_size;
-
-		/*
-		printf("\n");
-		printf("narg_aux: %u\n", narg_aux);
-        printf("uint_run_cnt: %u\n", uint_run_cnt);
-		printf("Host_Offset_Pop: %u\n", Host_Offset_Pop);
-		printf("Host_Offset_Ene: %u\n", Host_Offset_Ene);
-		*/
-
-		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux, uint_run_cnt);
-		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+1, Host_Offset_Pop);
-		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+2, Host_Offset_Ene);
-
-		// Launching kernel
-		kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
-		wrapper_veo_call_wait_result(veo_thread_context, kernel_ga_id, &retval_ga);
-
-		clock_stop_docking = clock();
-	} // End of for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++)
+	clock_stop_docking = clock();
 
 	printf("\n");
 	fflush(stdout);
 
 	// -----------------------------------------------------------------------------------------------------
-	// Reading results
+	// Reading results from device
+	// -----------------------------------------------------------------------------------------------------
 
 	wrapper_veo_read_mem (ve_process, cpu_final_populations.data(), mem_dockpars_conformations_current_Final, size_populations_nbytes);
 	wrapper_veo_read_mem (ve_process, cpu_energies.data(), mem_dockpars_energies_current, size_energies_nbytes);
 	wrapper_veo_read_mem (ve_process, cpu_evals_of_runs.data(), mem_evals_performed, size_evals_of_runs_nbytes);
 	wrapper_veo_read_mem (ve_process, cpu_gens_of_runs.data(), mem_gens_performed, size_evals_of_runs_nbytes);
 
+	// -----------------------------------------------------------------------------------------------------
+	// Processing results
 	// -----------------------------------------------------------------------------------------------------
 
 	/*
