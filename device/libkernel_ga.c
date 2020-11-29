@@ -174,7 +174,7 @@ uint64_t libkernel_ga (
 	printf("\n");
 	#endif
 
-	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 
 		// Read genotype
 		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
@@ -320,7 +320,7 @@ uint64_t libkernel_ga (
 		#pragma ivdep array (LocalPopNext)
 		#pragma ivdep array (LocalEneNext)
 		*/
-		for (ushort new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
+		for (uint new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
 
 			// ---------------------------------------------------
 			// Elitism: copying the best entity to new population
@@ -658,7 +658,7 @@ uint64_t libkernel_ga (
 		// ------------------------------------------------------------------
 
 		// Update current pops & energies
-		for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 				LocalPopCurr[pop_cnt][gene_cnt] = LocalPopNext[pop_cnt][gene_cnt];
 			}
@@ -684,7 +684,7 @@ uint64_t libkernel_ga (
 	// --------------------------------------------------------------------------
 	// Write final pop & energies back to FPGA-board DDRs
 	// --------------------------------------------------------------------------
-	for (ushort pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		//printf("\n");
 		//printf("pop_cnt: %u\n", pop_cnt);
 		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
