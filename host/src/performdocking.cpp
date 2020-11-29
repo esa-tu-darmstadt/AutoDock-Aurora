@@ -480,8 +480,22 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "dockpars.crossover_rate" << std::right << std::setw(31) << dockpars.crossover_rate << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.num_of_lsentities" << std::right << std::setw(31) << dockpars.num_of_lsentities << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.num_of_genes" << std::right << std::setw(31) << int { dockpars.num_of_genes } << "\n";
-	//std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
+
+	// PC
+	std::cout << std::left << std::setw(40) << "mem_pc_rotlist_const" << std::right << std::setw(31) << mem_pc_rotlist_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_pc_ref_coords_x_const" << std::right << std::setw(31) << mem_pc_ref_coords_x_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_pc_ref_coords_y_const" << std::right << std::setw(31) << mem_pc_ref_coords_y_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_pc_ref_coords_z_const" << std::right << std::setw(31) << mem_pc_ref_coords_z_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_pc_rotbonds_moving_vectors_const" << std::right << std::setw(31) << mem_pc_rotbonds_moving_vectors_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_pc_rotbonds_unit_vectors_const" << std::right << std::setw(31) << mem_pc_rotbonds_unit_vectors_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_pc_ref_orientation_quats_const" << std::right << std::setw(31) << mem_pc_ref_orientation_quats_const << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.rotbondlist_length" << std::right << std::setw(31) << dockpars.rotbondlist_length << "\n";
+
+	// IA
+	std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
+
 	std::cout << std::endl;
+	std::cout << "\n---------------------------------------------------------------------------------\n";
 
 	// -----------------------------------------------------------------------------------------------------
 	// Launching kernel
