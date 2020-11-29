@@ -107,6 +107,10 @@ float esa_dot4(float a[4], float b[4]) {
  * -----------------------------------------------
  * */
 
+int esa_ceil (float fp) {
+  return ((-1) * floor(-1*fp));
+}
+
 /* 
  * -----------------------------------------------
  * Intramolecular
