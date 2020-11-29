@@ -480,6 +480,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "dockpars.crossover_rate" << std::right << std::setw(31) << dockpars.crossover_rate << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.num_of_lsentities" << std::right << std::setw(31) << dockpars.num_of_lsentities << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.num_of_genes" << std::right << std::setw(31) << int { dockpars.num_of_genes } << "\n";
+	std::cout << std::endl;
 
 	// PC
 	std::cout << std::left << std::setw(40) << "mem_pc_rotlist_const" << std::right << std::setw(31) << mem_pc_rotlist_const << "\n";
@@ -490,6 +491,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "mem_pc_rotbonds_unit_vectors_const" << std::right << std::setw(31) << mem_pc_rotbonds_unit_vectors_const << "\n";
 	std::cout << std::left << std::setw(40) << "mem_pc_ref_orientation_quats_const" << std::right << std::setw(31) << mem_pc_ref_orientation_quats_const << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.rotbondlist_length" << std::right << std::setw(31) << dockpars.rotbondlist_length << "\n";
+	std::cout << std::endl;
 
 	// IA
 	std::cout << std::left << std::setw(40) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(31) << mem_ia_ie_atom_charges_const << "\n";
@@ -510,6 +512,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "dockpars.coeff_elec" << std::right << std::setw(31) << dockpars.coeff_elec << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.qasp" << std::right << std::setw(31) << dockpars.qasp << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.coeff_desolv" << std::right << std::setw(31) << dockpars.coeff_desolv << "\n";
+	std::cout << std::endl;	
 
 	// IE
 	std::cout << std::left << std::setw(40) << "mem_dockpars_fgrids" << std::right << std::setw(31) << mem_dockpars_fgrids << "\n";
@@ -522,6 +525,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "fgridsizez_minus1" << std::right << std::setw(31) << fgridsizez_minus1 << "\n";
 	std::cout << std::left << std::setw(40) << "mul_tmp2" << std::right << std::setw(31) << mul_tmp2 << "\n";
 	std::cout << std::left << std::setw(40) << "mul_tmp3" << std::right << std::setw(31) << mul_tmp3 << "\n";
+	std::cout << std::endl;	
 
 	// LS
 	std::cout << std::left << std::setw(40) << "Host_max_num_of_iters" << std::right << std::setw(31) << Host_max_num_of_iters << "\n";
@@ -530,8 +534,8 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "dockpars.base_dang_mul_sqrt3" << std::right << std::setw(31) << dockpars.base_dang_mul_sqrt3 << "\n";
 	std::cout << std::left << std::setw(40) << "Host_cons_limit" << std::right << std::setw(31) << int { Host_cons_limit } << "\n";
 	std::cout << std::left << std::setw(40) << "mypars->num_of_runs" << std::right << std::setw(31) << mypars->num_of_runs << "\n";
-	std::cout << std::endl;
 	std::cout << "\n---------------------------------------------------------------------------------\n";
+	std::cout << std::endl;
 
 	// -----------------------------------------------------------------------------------------------------
 	// Launching kernel
