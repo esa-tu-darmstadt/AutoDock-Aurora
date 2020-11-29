@@ -91,7 +91,75 @@ uint64_t libkernel_ga (
 		unsigned int Host_Offset_Pop = run_cnt * DockConst_pop_size* ACTUAL_GENOTYPE_LENGTH;
 		unsigned int Host_Offset_Ene = run_cnt * DockConst_pop_size;
 
-        
+        lga(
+			VEVMA_PopulationCurrentInitial,
+			VEVMA_PopulationCurrentFinal,
+			VEVMA_EnergyCurrent,
+			VEVMA_Evals_performed,
+			VEVMA_Gens_performed,
+			VEVMA_dockpars_prng_states,
+			DockConst_pop_size,
+			DockConst_num_of_energy_evals,
+			DockConst_num_of_generations,
+			DockConst_tournament_rate,
+			DockConst_mutation_rate,
+			DockConst_abs_max_dmov,
+			DockConst_abs_max_dang,
+			Host_two_absmaxdmov,
+			Host_two_absmaxdang,
+			DockConst_crossover_rate,
+			DockConst_num_of_lsentities,
+			DockConst_num_of_genes,
+			// pc
+			VEVMA_pc_rotlist,
+			VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
+			VEVMA_pc_ref_coords_y,
+			VEVMA_pc_ref_coords_z,
+			VEVMA_pc_rotbonds_moving_vectors,
+			VEVMA_pc_rotbonds_unit_vectors,
+			VEVMA_pc_ref_orientation_quats,
+			DockConst_rotbondlist_length,
+			// ia
+			VEVMA_ia_ie_atom_charges,
+			VEVMA_ia_ie_atom_types,
+			VEVMA_ia_intraE_contributors,
+			VEVMA_ia_reqm,
+			VEVMA_ia_reqm_hbond,
+			VEVMA_ia_atom1_types_reqm,
+			VEVMA_ia_atom2_types_reqm,
+			VEVMA_ia_VWpars_AC,
+			VEVMA_ia_VWpars_BD,
+			VEVMA_ia_dspars_S,
+			VEVMA_ia_dspars_V,
+			DockConst_smooth,
+			DockConst_num_of_intraE_contributors,
+			DockConst_grid_spacing,
+			DockConst_num_of_atypes,
+			DockConst_coeff_elec,
+			DockConst_qasp,
+			DockConst_coeff_desolv,
+			// ie
+			VEVMA_Fgrids,
+			DockConst_g1,
+			DockConst_g2,
+			DockConst_g3,
+			DockConst_num_of_atoms,
+			DockConst_gridsize_x_minus1,
+			DockConst_gridsize_y_minus1,
+			DockConst_gridsize_z_minus1,
+			Host_mul_tmp2,
+			Host_mul_tmp3,
+			// ls
+			DockConst_max_num_of_iters,
+			DockConst_rho_lower_bound,
+			DockConst_base_dmov_mul_sqrt3,
+			DockConst_base_dang_mul_sqrt3,
+			DockConst_cons_limit,
+			// Values changing every LGA run
+			uint_run_cnt,
+			Host_Offset_Pop,
+			Host_Offset_Ene
+		);
 		
 	} // End of for loop
 
