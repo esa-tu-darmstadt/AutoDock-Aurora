@@ -48,6 +48,13 @@ void calc_pc (
 	float theta = local_genotype[4];
 	float genrotangle = local_genotype[5];
 
+	float sin_theta = sin(theta);
+	float cos_theta = cos(theta);
+	float genrot_unitvec[3];
+	genrot_unitvec[0] = sin_theta*cos(phi);
+	genrot_unitvec[1] = sin_theta*sin(phi);
+	genrot_unitvec[2] = cos_theta;
+
 	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = rotlist_localcache[rotation_counter];
@@ -79,14 +86,6 @@ void calc_pc (
 
 			if ((rotation_list_element & RLIST_GENROT_MASK) != 0)	// If general rotation
 			{
-				float  sin_theta, cos_theta;
-				float genrot_unitvec[3];
-				sin_theta = sin(theta);
-				cos_theta = cos(theta);
-				genrot_unitvec[0] = sin_theta*cos(phi);
-				genrot_unitvec[1] = sin_theta*sin(phi);
-				genrot_unitvec[2] = cos_theta;
-
 				rotation_unitvec[0] = genrot_unitvec[0];
 				rotation_unitvec[1] = genrot_unitvec[1];
 				rotation_unitvec[2] = genrot_unitvec[2];
