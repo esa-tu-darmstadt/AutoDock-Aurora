@@ -6,6 +6,8 @@
 
 #include "defines.h"
 
+#include "math.h"
+
 /* 
  * -----------------------------------------------
  * Overall

@@ -4,8 +4,6 @@
 #include "calc_pc.c"
 #include "perform_ls.c"
 
-#include "math.h"
-
 /*
 IC:  initial calculation of energy of populations
 GG:  genetic generation
