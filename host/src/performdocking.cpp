@@ -303,10 +303,10 @@ filled with clock() */
 	size_t size_IntraE_atom_charges_nbytes = size_IntraE_atom_charges_nelems * sizeof(float);
 
 	size_t size_IntraE_atom_types_nelems = MAX_NUM_OF_ATOMS;
-	size_t size_IntraE_atom_types_nbytes = size_IntraE_atom_types_nelems * sizeof(char);
+	size_t size_IntraE_atom_types_nbytes = size_IntraE_atom_types_nelems * sizeof(int);
 
 	size_t size_intraE_contributors_nelems = MAX_INTRAE_CONTRIBUTORS;
-	size_t size_intraE_contributors_nbytes = size_intraE_contributors_nelems * 3 * sizeof(char);
+	size_t size_intraE_contributors_nbytes = size_intraE_contributors_nelems * 3 * sizeof(int);
 
 	size_t size_reqm_nelems = ATYPE_NUM;
 	size_t size_reqm_nbytes = size_reqm_nelems * sizeof(float);

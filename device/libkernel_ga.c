@@ -142,8 +142,8 @@ uint64_t libkernel_ga (
 	const	float*	PC_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
 	// ia
 	const	float*	IA_IE_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
-	const	char*	IA_IE_atom_types = (char*)(VEVMA_ia_ie_atom_types);
-	const	char*	IA_intraE_contributors = (char*)(VEVMA_ia_intraE_contributors);
+	const	int*	IA_IE_atom_types = (char*)(VEVMA_ia_ie_atom_types);
+	const	int*	IA_intraE_contributors = (char*)(VEVMA_ia_intraE_contributors);
 	const	float*	IA_reqm = (float*)(VEVMA_ia_reqm);
 	const	float*	IA_reqm_hbond = (float*)(VEVMA_ia_reqm_hbond);
 	const	uint*	IA_atom1_types_reqm = (uint*)(VEVMA_ia_atom1_types_reqm);

@@ -50,8 +50,8 @@ typedef struct
 typedef struct
 {
 	float			atom_charges_const	    	 [MAX_NUM_OF_ATOMS];
-    char  			atom_types_const  	     	 [MAX_NUM_OF_ATOMS];
-	char			intraE_contributors_const    [3*MAX_INTRAE_CONTRIBUTORS];
+    int  			atom_types_const  	     	 [MAX_NUM_OF_ATOMS];
+	int				intraE_contributors_const    [3*MAX_INTRAE_CONTRIBUTORS];
     float 			reqm_const 		     		 [ATYPE_NUM];
     float 			reqm_hbond_const 	     	 [ATYPE_NUM];
     unsigned int 	atom1_types_reqm_const 	     [ATYPE_NUM];

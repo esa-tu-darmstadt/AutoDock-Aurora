@@ -10,7 +10,7 @@
 void energy_ie (
 	const	float*	restrict	IE_Fgrids,
 	const	float*	restrict	IA_IE_atom_charges,
-	const	char*	restrict	IA_IE_atom_types,
+	const	int*	restrict	IA_IE_atom_types,
 			uchar				DockConst_g1,
 			uint				DockConst_g2,
 			uint				DockConst_g3,
