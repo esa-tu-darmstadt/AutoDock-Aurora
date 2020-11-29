@@ -196,10 +196,9 @@ filled with clock() */
 	const unsigned int mul_tmp3 = (dockpars.num_of_atypes + 1) * dockpars.g3;
 
 	// -----------------------------------------------------------------------------------------------------
-    // These commands will allocate memory on the FPGA. 
-
-	// FIXME: should be commented out for the final version ?
 	// Printing sizes
+	// -----------------------------------------------------------------------------------------------------
+
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << std::left << std::setw(40) << "Memory sizes" << std::right << std::setw(31) << "Bytes" << std::right << std::setw(10) << "KB" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
@@ -211,7 +210,10 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "size_prng_seeds_nbytes" << std::right << std::setw(31) << size_prng_seeds_nbytes << std::right << std::setw(10) << sizeKB(size_prng_seeds_nbytes) << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
-	// GA buffers
+	// -----------------------------------------------------------------------------------------------------
+	// Defining kernel buffers
+	// -----------------------------------------------------------------------------------------------------
+
 	uint64_t mem_dockpars_conformations_current_Initial;
 	uint64_t mem_dockpars_conformations_current_Final;
 	uint64_t mem_dockpars_energies_current;
@@ -229,7 +231,7 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_dockpars_conformations_current_Initial, cpu_init_populations.data(), size_populations_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_prng_states, cpu_prng_seeds.data(), size_prng_seeds_nbytes);
 
-	// Pose Conformation buffers
+	// Pose Calculation buffers
 	uint64_t mem_pc_rotlist_const;
 	uint64_t mem_pc_ref_coords_x_const;	// TODO: fusion x,y,z into a single one
 	uint64_t mem_pc_ref_coords_y_const;
@@ -269,7 +271,7 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_pc_rotbonds_unit_vectors_const, &KerConstStatic.rotbonds_unit_vectors_const[0], size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_pc_ref_orientation_quats_const, &KerConstStatic.ref_orientation_quats_const[0], size_ref_orientation_quats_nbytes);
 
-	// Krnl_InterE buffers
+	// IE buffers
 	uint64_t mem_dockpars_fgrids;
 	uint64_t mem_ia_ie_atom_charges_const;
 	uint64_t mem_ia_ie_atom_types_const;
@@ -288,7 +290,7 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_ia_ie_atom_charges_const, &KerConstStatic.atom_charges_const[0], size_InterE_atom_charges_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_ia_ie_atom_types_const, &KerConstStatic.atom_types_const[0], size_InterE_atom_types_nbytes);
 
-	// Krnl_IntraE buffers
+	// IA buffers
 	uint64_t mem_ia_contributors_const;
 	uint64_t mem_ia_reqm_const;
 	uint64_t mem_ia_reqm_hbond_const;
@@ -353,10 +355,12 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_ia_dspars_V_const, &KerConstStatic.dspars_V_const[0], size_dspars_V_nbytes);
 
 	// -----------------------------------------------------------------------------------------------------
+	// Defining kernel arguments
+	// -----------------------------------------------------------------------------------------------------
 
-	/*
-	 * ie
-	 * */
+	// Defining extra variables
+
+	// IE
 	unsigned char gridsizex_minus1 = dockpars.gridsize_x - 1;
 	unsigned char gridsizey_minus1 = dockpars.gridsize_y - 1;
 	unsigned char gridsizez_minus1 = dockpars.gridsize_z - 1;
@@ -364,21 +368,15 @@ filled with clock() */
 	float fgridsizey_minus1 = (float) gridsizey_minus1;
 	float fgridsizez_minus1 = (float) gridsizez_minus1;
 
-
-	/*
-	 * ls
-	 * */
+	// LS
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
-
-	// -----------------------------------------------------------------------------------------------------
-
-	clock_start_docking = clock();
 
 	// Creating a VEO arguments object
 	int narg = 0;
 	struct veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc ();
 
+	// GA
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Initial);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Final);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
@@ -398,9 +396,7 @@ filled with clock() */
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_lsentities);
 	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	
-	/*
-	 * pc
-	 * */
+	// PC
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_rotlist_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_coords_x_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_coords_y_const);
@@ -410,9 +406,7 @@ filled with clock() */
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_orientation_quats_const);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
 
-	/*
-	 * ia
-	 * */
+	// IA
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_charges_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_types_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_contributors_const);
@@ -432,9 +426,7 @@ filled with clock() */
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.qasp);
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.coeff_desolv);
 
-	/*
-	 * ie
-	 * */
+	// IE
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_dockpars_fgrids);
 	wrapper_veo_args_set_u8     (kernel_ga_arg_ptr, narg++, dockpars.g1);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.g2);
@@ -446,10 +438,7 @@ filled with clock() */
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, mul_tmp2);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, mul_tmp3);
 
-
-	/*
-	 * ls
-	 * */
+	// LS
 	wrapper_veo_args_set_u16	(kernel_ga_arg_ptr, narg++, Host_max_num_of_iters);
 	wrapper_veo_args_set_float	(kernel_ga_arg_ptr, narg++, dockpars.rho_lower_bound);
 	wrapper_veo_args_set_float	(kernel_ga_arg_ptr, narg++, dockpars.base_dmov_mul_sqrt3);
@@ -462,6 +451,7 @@ filled with clock() */
 	uint64_t kernel_ga_id;
 	uint64_t retval_ga;
 
+	clock_start_docking = clock();
 
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
 	printf("Execution run: ");
@@ -475,13 +465,14 @@ filled with clock() */
 		unsigned int Host_Offset_Pop = run_cnt * dockpars.pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int Host_Offset_Ene = run_cnt * dockpars.pop_size;
 
-/*
+		/*
 		printf("\n");
 		printf("narg_aux: %u\n", narg_aux);
         printf("uint_run_cnt: %u\n", uint_run_cnt);
 		printf("Host_Offset_Pop: %u\n", Host_Offset_Pop);
 		printf("Host_Offset_Ene: %u\n", Host_Offset_Ene);
-*/
+		*/
+
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux, uint_run_cnt);
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+1, Host_Offset_Pop);
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+2, Host_Offset_Ene);
