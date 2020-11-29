@@ -48,8 +48,8 @@ void energy_ia (
 	// For each intramolecular atom contributor pair
 	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++) {
 
-		char atom1_id = IA_intraE_contributors[3*contributor_counter];
-		char atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
+		uint atom1_id = IA_intraE_contributors[3*contributor_counter];
+		uint atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 
 		float subx = local_coords_x[atom1_id] - local_coords_x[atom2_id];
 		float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
@@ -71,8 +71,8 @@ void energy_ia (
 		float partialE4 = 0.0f;
 
  		// Getting types ids
-		char atom1_typeid = IA_IE_atom_types[atom1_id];
-		char atom2_typeid = IA_IE_atom_types[atom2_id];
+		uint atom1_typeid = IA_IE_atom_types[atom1_id];
+		uint atom2_typeid = IA_IE_atom_types[atom2_id];
 
 		// Getting optimum pair distance (opt_distance) from reqm and reqm_hbond
 		// reqm: equilibrium internuclear separation 
