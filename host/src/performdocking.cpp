@@ -492,7 +492,29 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "dockpars.rotbondlist_length" << std::right << std::setw(31) << dockpars.rotbondlist_length << "\n";
 
 	// IA
-//	std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(31) << mem_ia_ie_atom_charges_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_ie_atom_types_const" << std::right << std::setw(31) << mem_ia_ie_atom_types_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_contributors_const" << std::right << std::setw(31) << mem_ia_contributors_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_reqm_const" << std::right << std::setw(31) << mem_ia_reqm_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_reqm_hbond_const" << std::right << std::setw(31) << mem_ia_reqm_hbond_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_atom1_types_reqm_const" << std::right << std::setw(31) << mem_ia_atom1_types_reqm_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_atom2_types_reqm_const" << std::right << std::setw(31) << mem_ia_atom2_types_reqm_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_VWpars_AC_const" << std::right << std::setw(31) << mem_ia_VWpars_AC_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_VWpars_BD_const" << std::right << std::setw(31) << mem_ia_VWpars_BD_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_dspars_S_const" << std::right << std::setw(31) << mem_ia_dspars_S_const << "\n";
+	std::cout << std::left << std::setw(40) << "mem_ia_dspars_V_const" << std::right << std::setw(31) << mem_ia_dspars_V_const << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.smooth" << std::right << std::setw(31) << dockpars.smooth << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_intraE_contributors" << std::right << std::setw(31) << dockpars.num_of_intraE_contributors << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.grid_spacing" << std::right << std::setw(31) << dockpars.grid_spacing << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_atypes" << std::right << std::setw(31) << dockpars.num_of_atypes << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.coeff_elec" << std::right << std::setw(31) << dockpars.coeff_elec << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.qasp" << std::right << std::setw(31) << dockpars.qasp << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.coeff_desolv" << std::right << std::setw(31) << dockpars.coeff_desolv << "\n";
+
+	// IE
+	//std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
+	//std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
+
 
 	std::cout << std::endl;
 	std::cout << "\n---------------------------------------------------------------------------------\n";
