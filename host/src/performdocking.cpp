@@ -476,11 +476,12 @@ filled with clock() */
 		unsigned int Host_Offset_Ene = run_cnt * dockpars.pop_size;
 
 		printf("\n");
+/*
 		printf("narg_aux: %u\n", narg_aux);
         printf("uint_run_cnt: %u\n", uint_run_cnt);
 		printf("Host_Offset_Pop: %u\n", Host_Offset_Pop);
 		printf("Host_Offset_Ene: %u\n", Host_Offset_Ene);
-
+*/
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux, uint_run_cnt);
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+1, Host_Offset_Pop);
 		wrapper_veo_args_set_u32 (kernel_ga_arg_ptr, narg_aux+2, Host_Offset_Ene);
