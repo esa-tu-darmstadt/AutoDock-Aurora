@@ -75,7 +75,7 @@ void perform_ls(
 	// Reading incoming genotype and energy
 	float current_energy = *in_out_energy;
 	float genotype[ACTUAL_GENOTYPE_LENGTH];
-	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		genotype[i] = in_out_genotype[i];
 	}
 	
@@ -117,7 +117,7 @@ void perform_ls(
 
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
-		for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+		for (uint i = 0; i < DockConst_num_of_genes; i++) {
 			// TODO: FIX INDEXES
 			float tmp_prng = randf(dockpars_prng_states);
 
@@ -225,7 +225,7 @@ void perform_ls(
 		if (candidate_energy < current_energy) {
 			// Updating offspring_genotype & genotype_bias
 
-			for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+			for (uint i = 0; i < DockConst_num_of_genes; i++) {
 				genotype_bias[i] = (positive_direction == True) ? deviate_plus_bias[i] : deviate_minus_bias[i];
 				genotype[i] = entity_possible_new_genotype[i];
 			}
@@ -238,7 +238,7 @@ void perform_ls(
 		else {
 			// Updating (halving) genotype_bias
 
-			for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+			for (uint i = 0; i < DockConst_num_of_genes; i++) {
 				genotype_bias[i] = (iteration_cnt == 1)? 0.0f: (0.5f*genotype_bias[i]);
 			}
 
@@ -256,7 +256,7 @@ void perform_ls(
 
 	// Writing resulting genotype and energy
 	*in_out_energy = current_energy;
-	for (uchar i = 0; i < DockConst_num_of_genes; i++) {
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		in_out_genotype[i] = genotype[i];
 	}
 	
