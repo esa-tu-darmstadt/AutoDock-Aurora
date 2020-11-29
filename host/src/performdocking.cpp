@@ -513,10 +513,10 @@ filled with clock() */
 
 	// IE
 	std::cout << std::left << std::setw(40) << "mem_dockpars_fgrids" << std::right << std::setw(31) << mem_dockpars_fgrids << "\n";
-	std::cout << std::left << std::setw(40) << "dockpars.g1" << std::right << std::setw(31) << dockpars.g1 << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.g1" << std::right << std::setw(31) << int { dockpars.g1 } << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.g2" << std::right << std::setw(31) << dockpars.g2 << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.g3" << std::right << std::setw(31) << dockpars.g3 << "\n";
-	std::cout << std::left << std::setw(40) << "dockpars.num_of_atoms" << std::right << std::setw(31) << dockpars.num_of_atoms << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_atoms" << std::right << std::setw(31) << int { dockpars.num_of_atoms } << "\n";
 	std::cout << std::left << std::setw(40) << "fgridsizex_minus1" << std::right << std::setw(31) << fgridsizex_minus1 << "\n";
 	std::cout << std::left << std::setw(40) << "fgridsizey_minus1" << std::right << std::setw(31) << fgridsizey_minus1 << "\n";
 	std::cout << std::left << std::setw(40) << "fgridsizez_minus1" << std::right << std::setw(31) << fgridsizez_minus1 << "\n";
