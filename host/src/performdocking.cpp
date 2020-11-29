@@ -454,6 +454,22 @@ filled with clock() */
 	// Values changing every LGA run
 	wrapper_veo_args_set_u32	(kernel_ga_arg_ptr, narg++, mypars->num_of_runs);
 
+
+	// -----------------------------------------------------------------------------------------------------
+	// Displaying kernel argument values
+	// -----------------------------------------------------------------------------------------------------
+
+	std::cout << "\n---------------------------------------------------------------------------------\n";
+	std::cout << "Kernel LGA" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n";
+	std::cout << std::left << std::setw(40) << "mem_dockpars_conformations_current_Initial" << std::right << std::setw(31) << mem_dockpars_conformations_current_Initial << "\n";
+	std::cout << std::left << std::setw(40) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(31) << mem_dockpars_conformations_current_Final << "\n";
+	std::cout << std::left << std::setw(40) << "mem_dockpars_energies_current" << std::right << std::setw(31) << mem_dockpars_energies_current << "\n";
+	std::cout << std::left << std::setw(40) << "mem_evals_performed" << std::right << std::setw(31) << mem_evals_performed << "\n";
+	std::cout << std::left << std::setw(40) << "mem_gens_performed" << std::right << std::setw(31) << mem_gens_performed << "\n";
+	std::cout << std::left << std::setw(40) << "mem_prng_states" << std::right << std::setw(31) << mem_prng_states << "\n";
+
+
 	// -----------------------------------------------------------------------------------------------------
 	// Launching kernel
 	// -----------------------------------------------------------------------------------------------------
