@@ -1,8 +1,5 @@
 #include "auxiliary.c"
-#include "energy_ia.c"
-#include "energy_ie.c"
-#include "calc_pc.c"
-#include "perform_ls.c"
+#include "lga.c"
 
 /*
 IC:  initial calculation of energy of populations
