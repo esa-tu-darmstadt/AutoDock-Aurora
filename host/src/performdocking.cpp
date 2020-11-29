@@ -479,7 +479,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(40) << "two_absmaxdang" << std::right << std::setw(31) << two_absmaxdang << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.crossover_rate" << std::right << std::setw(31) << dockpars.crossover_rate << "\n";
 	std::cout << std::left << std::setw(40) << "dockpars.num_of_lsentities" << std::right << std::setw(31) << dockpars.num_of_lsentities << "\n";
-	std::cout << std::left << std::setw(40) << "dockpars.num_of_genes" << std::right << std::setw(31) << dockpars.num_of_genes << "\n";
+	std::cout << std::left << std::setw(40) << "dockpars.num_of_genes" << std::right << std::setw(31) << int { dockpars.num_of_genes } << "\n";
 	//std::cout << std::left << std::setw(40) << "" << std::right << std::setw(31) <<  << "\n";
 	std::cout << std::endl;
 
