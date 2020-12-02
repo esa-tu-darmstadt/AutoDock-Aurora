@@ -469,7 +469,7 @@ filled with clock() */
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotbonds_unit_vectors_const[0]), size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_orientation_quats_const[0]), size_ref_orientation_quats_nbytes);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
-	
+
 	// IA
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_charges_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_types_const);
@@ -549,9 +549,10 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_moving_vectors_const" << std::right << std::setw(SPACE_M) << mem_pc_rotbonds_moving_vectors_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_unit_vectors_const" << std::right << std::setw(SPACE_M) << mem_pc_rotbonds_unit_vectors_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_orientation_quats_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_orientation_quats_const << "\n";
+*/
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
 	std::cout << std::endl;
-*/
+
 	// IA
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_charges_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_types_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_types_const << "\n";

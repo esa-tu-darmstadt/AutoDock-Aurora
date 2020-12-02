@@ -39,13 +39,13 @@ uint64_t libkernel_ga (
 	const	uint64_t	VEVMA_pc_rotbonds_unit_vectors,
 	const	uint64_t	VEVMA_pc_ref_orientation_quats,
 */
-	const	int* 		VEVMA_pc_rotlist,
-	const	float*		VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
-	const	float*		VEVMA_pc_ref_coords_y,
-	const	float*		VEVMA_pc_ref_coords_z,
-	const	float*		VEVMA_pc_rotbonds_moving_vectors,
-	const	float*		VEVMA_pc_rotbonds_unit_vectors,
-	const	float*		VEVMA_pc_ref_orientation_quats,
+	const	int* 		PC_rotlist,
+	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
+	const	float*		PC_ref_coords_y,
+	const	float*		PC_ref_coords_z,
+	const	float*		PC_rotbonds_moving_vectors,
+	const	float*		PC_rotbonds_unit_vectors,
+	const	float*		PC_ref_orientation_quats,
 
 			uint		DockConst_rotbondlist_length,
 	// ia
@@ -121,6 +121,7 @@ uint64_t libkernel_ga (
 			DockConst_num_of_lsentities,
 			DockConst_num_of_genes,
 			// pc
+/*
 			VEVMA_pc_rotlist,
 			VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
 			VEVMA_pc_ref_coords_y,
@@ -128,6 +129,14 @@ uint64_t libkernel_ga (
 			VEVMA_pc_rotbonds_moving_vectors,
 			VEVMA_pc_rotbonds_unit_vectors,
 			VEVMA_pc_ref_orientation_quats,
+*/
+			PC_rotlist,
+			PC_ref_coords_x,// TODO: merge them into a single one?
+			PC_ref_coords_y,
+			PC_ref_coords_z,
+			PC_rotbonds_moving_vectors,
+			PC_rotbonds_unit_vectors,
+			PC_ref_orientation_quats,
 			DockConst_rotbondlist_length,
 			// ia
 			VEVMA_ia_ie_atom_charges,
