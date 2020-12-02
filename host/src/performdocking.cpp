@@ -364,7 +364,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_prng_seeds_nbytes" << std::right << std::setw(SPACE_M) << size_prng_seeds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_prng_seeds_nbytes) << std::endl;
 
 	// Pose Calculation
-	std::endl;
+	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_rotlist_nbytes" << std::right << std::setw(SPACE_M) << size_rotlist_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotlist_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_ref_coords_nbytes" << std::right << std::setw(SPACE_M) << size_ref_coords_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_ref_coords_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_rotbonds_moving_vectors_nbytes" << std::right << std::setw(SPACE_M) << size_rotbonds_moving_vectors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotbonds_moving_vectors_nbytes) << std::endl;
@@ -372,7 +372,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_ref_orientation_quats_nbytes" << std::right << std::setw(SPACE_M) << size_ref_orientation_quats_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_ref_orientation_quats_nbytes) << std::endl;
 
 	// IA
-	std::endl;
+	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_charges_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_charges_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_InterE_atom_charges_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_types_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_types_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_InterE_atom_types_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_intraE_contributors_nbytes" << std::right << std::setw(SPACE_M) << size_intraE_contributors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_intraE_contributors_nbytes) << std::endl;
@@ -386,11 +386,11 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_dspars_V_nbytes" << std::right << std::setw(SPACE_M) << size_dspars_V_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_dspars_V_nbytes) << std::endl;
 
 	// IE
-	std::endl;
+	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
 
 	// Total amount memory
-	std::endl;
+	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) <<  << std::right << std::setw(SPACE_S) << sizeKB() << std::endl;
 
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
