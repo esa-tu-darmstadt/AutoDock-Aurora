@@ -272,8 +272,10 @@ filled with clock() */
 
 	// IE buffers
 	uint64_t mem_dockpars_fgrids;
+/*
 	uint64_t mem_ia_ie_atom_charges_const;
 	uint64_t mem_ia_ie_atom_types_const;
+*/
 
 	size_t size_InterE_atom_charges_nelems = MAX_NUM_OF_ATOMS;
 	size_t size_InterE_atom_charges_nbytes = size_InterE_atom_charges_nelems * sizeof(float);
@@ -282,14 +284,18 @@ filled with clock() */
 	size_t size_InterE_atom_types_nbytes = size_InterE_atom_types_nelems * sizeof(char);
 
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_fgrids, size_floatgrids_nbytes);
+/*
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_ie_atom_charges_const, size_InterE_atom_charges_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_ie_atom_types_const, size_InterE_atom_types_nbytes);
-
+*/
 	wrapper_veo_write_mem (ve_process, mem_dockpars_fgrids, cpu_floatgrids, size_floatgrids_nbytes);
+/*
 	wrapper_veo_write_mem (ve_process, mem_ia_ie_atom_charges_const, &KerConstStatic.atom_charges_const[0], size_InterE_atom_charges_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_ia_ie_atom_types_const, &KerConstStatic.atom_types_const[0], size_InterE_atom_types_nbytes);
+*/
 
 	// IA buffers
+/*
 	uint64_t mem_ia_contributors_const;
 	uint64_t mem_ia_reqm_const;
 	uint64_t mem_ia_reqm_hbond_const;
@@ -299,7 +305,7 @@ filled with clock() */
 	uint64_t mem_ia_VWpars_BD_const;
 	uint64_t mem_ia_dspars_S_const;
 	uint64_t mem_ia_dspars_V_const;
-
+*/
 	size_t size_IntraE_atom_charges_nelems = MAX_NUM_OF_ATOMS;
 	size_t size_IntraE_atom_charges_nbytes = size_IntraE_atom_charges_nelems * sizeof(float);
 
@@ -332,7 +338,7 @@ filled with clock() */
 
 	size_t size_dspars_V_nelems = MAX_NUM_OF_ATYPES;
 	size_t size_dspars_V_nbytes = size_dspars_V_nelems * sizeof(float);
-
+/*
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_contributors_const, size_intraE_contributors_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_reqm_const, size_reqm_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_ia_reqm_hbond_const, size_reqm_hbond_nbytes);
@@ -352,6 +358,7 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_ia_VWpars_BD_const, &KerConstStatic.VWpars_BD_const[0], size_VWpars_BD_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_ia_dspars_S_const, &KerConstStatic.dspars_S_const[0], size_dspars_S_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_ia_dspars_V_const, &KerConstStatic.dspars_V_const[0], size_dspars_V_nbytes);
+*/
 
 	// -----------------------------------------------------------------------------------------------------
 	// Printing sizes
@@ -471,6 +478,7 @@ filled with clock() */
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
 
 	// IA
+/*
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_charges_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_types_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_contributors_const);
@@ -482,6 +490,19 @@ filled with clock() */
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_VWpars_BD_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_dspars_S_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_dspars_V_const);
+*/
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_charges_const[0]), size_InterE_atom_charges_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_types_const[0]), size_InterE_atom_types_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.intraE_contributors_const[0]), size_intraE_contributors_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.reqm_const[0]), size_reqm_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.reqm_hbond_const[0]), size_reqm_hbond_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom1_types_reqm_const[0]), size_atom1_types_reqm_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom2_types_reqm_const[0]), size_atom2_types_reqm_nbytes);	
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.VWpars_AC_const[0]), size_VWpars_AC_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.VWpars_BD_const[0]), size_VWpars_BD_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.dspars_S_const[0]), size_dspars_S_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.dspars_V_const[0]), size_dspars_V_nbytes);
+
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.smooth);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.num_of_intraE_contributors);
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.grid_spacing);
@@ -554,6 +575,7 @@ filled with clock() */
 	std::cout << std::endl;
 
 	// IA
+/*
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_charges_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_types_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_types_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_contributors_const" << std::right << std::setw(SPACE_M) << mem_ia_contributors_const << "\n";
@@ -565,6 +587,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_VWpars_BD_const" << std::right << std::setw(SPACE_M) << mem_ia_VWpars_BD_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_S_const" << std::right << std::setw(SPACE_M) << mem_ia_dspars_S_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_V_const" << std::right << std::setw(SPACE_M) << mem_ia_dspars_V_const << "\n";
+*/
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.smooth" << std::right << std::setw(SPACE_M) << dockpars.smooth << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_intraE_contributors" << std::right << std::setw(SPACE_M) << dockpars.num_of_intraE_contributors << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.grid_spacing" << std::right << std::setw(SPACE_M) << dockpars.grid_spacing << "\n";

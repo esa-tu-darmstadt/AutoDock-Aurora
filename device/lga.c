@@ -51,6 +51,7 @@ void lga (
 	const	float*		PC_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
 	// ia
+/*
 	const 	uint64_t	VEVMA_ia_ie_atom_charges,
 	const	uint64_t	VEVMA_ia_ie_atom_types,
 	const	uint64_t	VEVMA_ia_intraE_contributors,
@@ -62,6 +63,19 @@ void lga (
 	const	uint64_t	VEVMA_ia_VWpars_BD,
 	const	uint64_t	VEVMA_ia_dspars_S,
 	const	uint64_t	VEVMA_ia_dspars_V,
+*/
+	const 	float*		IA_IE_atom_charges,
+	const	int*		IA_IE_atom_types,
+	const	int*		IA_intraE_contributors,
+	const	float*		IA_reqm,
+	const	float*		IA_reqm_hbond,
+	const	uint*		IA_atom1_types_reqm,
+	const	uint*		IA_atom2_types_reqm,
+	const	float*		IA_VWpars_AC,
+	const	float*		IA_VWpars_BD,
+	const	float*		IA_dspars_S,
+	const	float*		IA_dspars_V,
+
 			float		DockConst_smooth,
 			uint		DockConst_num_of_intraE_contributors,
 			float		DockConst_grid_spacing,
@@ -158,6 +172,7 @@ void lga (
 	const	float*	PC_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
 */
 	// ia
+/*
 	const	float*	IA_IE_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
 	const	int*	IA_IE_atom_types = (int*)(VEVMA_ia_ie_atom_types);
 	const	int*	IA_intraE_contributors = (int*)(VEVMA_ia_intraE_contributors);
@@ -169,6 +184,7 @@ void lga (
 	const	float*	IA_VWpars_BD = (float*)(VEVMA_ia_VWpars_BD);
 	const	float*	IA_dspars_S = (float*)(VEVMA_ia_dspars_S);
 	const	float*	IA_dspars_V = (float*)(VEVMA_ia_dspars_V);
+*/
 	// ie
 	const	float*	IE_Fgrids = (float*)(VEVMA_Fgrids);
 

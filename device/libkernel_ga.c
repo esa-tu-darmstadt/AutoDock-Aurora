@@ -49,6 +49,7 @@ uint64_t libkernel_ga (
 
 			uint		DockConst_rotbondlist_length,
 	// ia
+/*
 	const 	uint64_t	VEVMA_ia_ie_atom_charges,
 	const	uint64_t	VEVMA_ia_ie_atom_types,
 	const	uint64_t	VEVMA_ia_intraE_contributors,
@@ -60,6 +61,19 @@ uint64_t libkernel_ga (
 	const	uint64_t	VEVMA_ia_VWpars_BD,
 	const	uint64_t	VEVMA_ia_dspars_S,
 	const	uint64_t	VEVMA_ia_dspars_V,
+*/
+	const 	float*		IA_IE_atom_charges,
+	const	int*		IA_IE_atom_types,
+	const	int*		IA_intraE_contributors,
+	const	float*		IA_reqm,
+	const	float*		IA_reqm_hbond,
+	const	uint*		IA_atom1_types_reqm,
+	const	uint*		IA_atom2_types_reqm,
+	const	float*		IA_VWpars_AC,
+	const	float*		IA_VWpars_BD,
+	const	float*		IA_dspars_S,
+	const	float*		IA_dspars_V,
+
 			float		DockConst_smooth,
 			uint		DockConst_num_of_intraE_contributors,
 			float		DockConst_grid_spacing,
@@ -120,6 +134,7 @@ uint64_t libkernel_ga (
 			DockConst_crossover_rate,
 			DockConst_num_of_lsentities,
 			DockConst_num_of_genes,
+
 			// pc
 /*
 			VEVMA_pc_rotlist,
@@ -138,7 +153,9 @@ uint64_t libkernel_ga (
 			PC_rotbonds_unit_vectors,
 			PC_ref_orientation_quats,
 			DockConst_rotbondlist_length,
+
 			// ia
+/*
 			VEVMA_ia_ie_atom_charges,
 			VEVMA_ia_ie_atom_types,
 			VEVMA_ia_intraE_contributors,
@@ -150,6 +167,19 @@ uint64_t libkernel_ga (
 			VEVMA_ia_VWpars_BD,
 			VEVMA_ia_dspars_S,
 			VEVMA_ia_dspars_V,
+*/
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			IA_intraE_contributors,
+			IA_reqm,
+			IA_reqm_hbond,
+			IA_atom1_types_reqm,
+			IA_atom2_types_reqm,
+			IA_VWpars_AC,
+			IA_VWpars_BD,
+			IA_dspars_S,
+			IA_dspars_V,
+
 			DockConst_smooth,
 			DockConst_num_of_intraE_contributors,
 			DockConst_grid_spacing,
