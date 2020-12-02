@@ -33,6 +33,7 @@ void lga (
 			uint        DockConst_num_of_lsentities,
 			uchar       DockConst_num_of_genes,
 	// pc
+/*
 	const	uint64_t	VEVMA_pc_rotlist,
 	const	uint64_t	VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
 	const	uint64_t	VEVMA_pc_ref_coords_y,
@@ -40,6 +41,14 @@ void lga (
 	const	uint64_t	VEVMA_pc_rotbonds_moving_vectors,
 	const	uint64_t	VEVMA_pc_rotbonds_unit_vectors,
 	const	uint64_t	VEVMA_pc_ref_orientation_quats,
+*/
+	const	int* 		VEVMA_pc_rotlist,
+	const	float*		VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
+	const	float*		VEVMA_pc_ref_coords_y,
+	const	float*		VEVMA_pc_ref_coords_z,
+	const	float*		VEVMA_pc_rotbonds_moving_vectors,
+	const	float*		VEVMA_pc_rotbonds_unit_vectors,
+	const	float*		VEVMA_pc_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
 	// ia
 	const 	uint64_t	VEVMA_ia_ie_atom_charges,
