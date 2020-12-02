@@ -137,8 +137,8 @@ int esa_ceil (float fp) {
 
 // sqrt7 
 //https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
-float sqrt_custom(const float x) 
-{ 	//uint i = as_uint(x);	
+float esa_sqrt(const float x){
+	//uint i = as_uint(x);
 	unsigned int i = *(unsigned int*) &x;    	
 	i  += 127 << 23;		// adjust bias   	
 	i >>= 1; 				// approximation of square root 	
