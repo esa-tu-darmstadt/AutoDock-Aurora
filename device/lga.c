@@ -42,13 +42,13 @@ void lga (
 	const	uint64_t	VEVMA_pc_rotbonds_unit_vectors,
 	const	uint64_t	VEVMA_pc_ref_orientation_quats,
 */
-	const	int* 		VEVMA_pc_rotlist,
-	const	float*		VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
-	const	float*		VEVMA_pc_ref_coords_y,
-	const	float*		VEVMA_pc_ref_coords_z,
-	const	float*		VEVMA_pc_rotbonds_moving_vectors,
-	const	float*		VEVMA_pc_rotbonds_unit_vectors,
-	const	float*		VEVMA_pc_ref_orientation_quats,
+	const	int* 		PC_rotlist,
+	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
+	const	float*		PC_ref_coords_y,
+	const	float*		PC_ref_coords_z,
+	const	float*		PC_rotbonds_moving_vectors,
+	const	float*		PC_rotbonds_unit_vectors,
+	const	float*		PC_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
 	// ia
 	const 	uint64_t	VEVMA_ia_ie_atom_charges,
@@ -148,6 +148,7 @@ void lga (
 		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
 		  uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
 	// pc
+/*
 	const	int*	PC_rotlist = (int*)(VEVMA_pc_rotlist);
 	const	float*	PC_ref_coords_x = (float*)(VEVMA_pc_ref_coords_x);
 	const	float*	PC_ref_coords_y = (float*)(VEVMA_pc_ref_coords_y);
@@ -155,6 +156,7 @@ void lga (
 	const	float*	PC_rotbonds_moving_vectors = (float*)(VEVMA_pc_rotbonds_moving_vectors);
 	const	float*	PC_rotbonds_unit_vectors = (float*)(VEVMA_pc_rotbonds_unit_vectors);
 	const	float*	PC_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
+*/
 	// ia
 	const	float*	IA_IE_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
 	const	int*	IA_IE_atom_types = (int*)(VEVMA_ia_ie_atom_types);
