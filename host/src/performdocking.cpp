@@ -228,6 +228,7 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_prng_states, cpu_prng_seeds.data(), size_prng_seeds_nbytes);
 
 	// Pose Calculation buffers
+/*
 	uint64_t mem_pc_rotlist_const;
 	uint64_t mem_pc_ref_coords_x_const;	// TODO: fusion x,y,z into a single one
 	uint64_t mem_pc_ref_coords_y_const;
@@ -235,7 +236,7 @@ filled with clock() */
 	uint64_t mem_pc_rotbonds_moving_vectors_const;
 	uint64_t mem_pc_rotbonds_unit_vectors_const;
 	uint64_t mem_pc_ref_orientation_quats_const;
-
+*/
 	size_t size_rotlist_nelems = MAX_NUM_OF_ROTATIONS;
 	size_t size_rotlist_nbytes = size_rotlist_nelems * sizeof(int);
 
@@ -540,6 +541,7 @@ filled with clock() */
 	std::cout << std::endl;
 
 	// PC
+/*	
 	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotlist_const" << std::right << std::setw(SPACE_M) << mem_pc_rotlist_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_x_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_x_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_y_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_y_const << "\n";
@@ -549,7 +551,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_orientation_quats_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_orientation_quats_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
 	std::cout << std::endl;
-
+*/
 	// IA
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_charges_const << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_types_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_types_const << "\n";
