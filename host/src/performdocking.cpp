@@ -251,6 +251,7 @@ filled with clock() */
 	size_t size_ref_orientation_quats_nelems = MAX_NUM_OF_RUNS;
 	size_t size_ref_orientation_quats_nbytes = size_ref_orientation_quats_nelems * 4 * sizeof(float);
 
+/*
 	wrapper_veo_alloc_mem (ve_process, &mem_pc_rotlist_const, size_rotlist_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_pc_ref_coords_x_const, size_ref_coords_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_pc_ref_coords_y_const, size_ref_coords_nbytes);
@@ -266,6 +267,7 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_pc_rotbonds_moving_vectors_const, &KerConstStatic.rotbonds_moving_vectors_const[0], size_rotbonds_moving_vectors_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_pc_rotbonds_unit_vectors_const, &KerConstStatic.rotbonds_unit_vectors_const[0], size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_pc_ref_orientation_quats_const, &KerConstStatic.ref_orientation_quats_const[0], size_ref_orientation_quats_nbytes);
+*/
 
 	// IE buffers
 	uint64_t mem_dockpars_fgrids;
@@ -449,6 +451,7 @@ filled with clock() */
 	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	
 	// PC
+/*
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_rotlist_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_coords_x_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_coords_y_const);
@@ -457,6 +460,14 @@ filled with clock() */
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_rotbonds_unit_vectors_const);
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_orientation_quats_const);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
+*/
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotlist_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_x_const[0]), size_ref_coords_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_y_const[0]), size_ref_coords_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_z_const[0]), size_ref_coords_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotbonds_moving_vectors_const[0]), size_rotbonds_moving_vectors_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotbonds_unit_vectors_const[0]), size_rotbonds_unit_vectors_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_orientation_quats_const[0]), size_ref_orientation_quats_nbytes);
 
 	// IA
 	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_charges_const);
