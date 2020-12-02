@@ -211,14 +211,14 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
 
 	std::cout << "\n---------------------------------------------------------------------------------\n";
-	std::cout << std::left << std::setw(SPACE_L) << "Memory sizes" << std::right << std::setw(31) << "Bytes" << std::right << std::setw(10) << "KB" << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "Memory sizes" << std::right << std::setw(SPACE_M) << "Bytes" << std::right << std::setw(SPACE_S) << "KB" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
 
-	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(31) << size_floatgrids_nbytes << std::right << std::setw(10) << sizeKB(size_floatgrids_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_populations_nbytes" << std::right << std::setw(31) << size_populations_nbytes << std::right << std::setw(10) << sizeKB(size_populations_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_energies_nbytes" << std::right << std::setw(31) << size_energies_nbytes << std::right << std::setw(10) << sizeKB(size_energies_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_evals_of_runs_nbytes" << std::right << std::setw(31) << size_evals_of_runs_nbytes << std::right << std::setw(10) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_prng_seeds_nbytes" << std::right << std::setw(31) << size_prng_seeds_nbytes << std::right << std::setw(10) << sizeKB(size_prng_seeds_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_populations_nbytes" << std::right << std::setw(SPACE_M) << size_populations_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_populations_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_energies_nbytes" << std::right << std::setw(SPACE_M) << size_energies_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_energies_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_evals_of_runs_nbytes" << std::right << std::setw(SPACE_M) << size_evals_of_runs_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_prng_seeds_nbytes" << std::right << std::setw(SPACE_M) << size_prng_seeds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_prng_seeds_nbytes) << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
 	// -----------------------------------------------------------------------------------------------------
@@ -467,78 +467,78 @@ filled with clock() */
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << "Kernel LGA" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Initial" << std::right << std::setw(31) << mem_dockpars_conformations_current_Initial << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(31) << mem_dockpars_conformations_current_Final << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(31) << mem_dockpars_energies_current << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(31) << mem_evals_performed << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(31) << mem_gens_performed << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_prng_states" << std::right << std::setw(31) << mem_prng_states << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.pop_size" << std::right << std::setw(31) << dockpars.pop_size << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_energy_evals" << std::right << std::setw(31) << dockpars.num_of_energy_evals << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_generations" << std::right << std::setw(31) << dockpars.num_of_generations << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.tournament_rate" << std::right << std::setw(31) << dockpars.tournament_rate << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.mutation_rate" << std::right << std::setw(31) << dockpars.mutation_rate << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dmov" << std::right << std::setw(31) << dockpars.abs_max_dmov << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dang" << std::right << std::setw(31) << dockpars.abs_max_dang << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdmov" << std::right << std::setw(31) << two_absmaxdmov << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdang" << std::right << std::setw(31) << two_absmaxdang << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.crossover_rate" << std::right << std::setw(31) << dockpars.crossover_rate << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_lsentities" << std::right << std::setw(31) << dockpars.num_of_lsentities << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_genes" << std::right << std::setw(31) << int { dockpars.num_of_genes } << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Initial" << std::right << std::setw(SPACE_M) << mem_dockpars_conformations_current_Initial << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(SPACE_M) << mem_dockpars_conformations_current_Final << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << mem_dockpars_energies_current << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << mem_evals_performed << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(SPACE_M) << mem_gens_performed << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_prng_states" << std::right << std::setw(SPACE_M) << mem_prng_states << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.pop_size" << std::right << std::setw(SPACE_M) << dockpars.pop_size << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_energy_evals" << std::right << std::setw(SPACE_M) << dockpars.num_of_energy_evals << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_generations" << std::right << std::setw(SPACE_M) << dockpars.num_of_generations << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.tournament_rate" << std::right << std::setw(SPACE_M) << dockpars.tournament_rate << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.mutation_rate" << std::right << std::setw(SPACE_M) << dockpars.mutation_rate << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dmov" << std::right << std::setw(SPACE_M) << dockpars.abs_max_dmov << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dang" << std::right << std::setw(SPACE_M) << dockpars.abs_max_dang << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdmov" << std::right << std::setw(SPACE_M) << two_absmaxdmov << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdang" << std::right << std::setw(SPACE_M) << two_absmaxdang << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.crossover_rate" << std::right << std::setw(SPACE_M) << dockpars.crossover_rate << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_lsentities" << std::right << std::setw(SPACE_M) << dockpars.num_of_lsentities << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_genes" << std::right << std::setw(SPACE_M) << int { dockpars.num_of_genes } << "\n";
 	std::cout << std::endl;
 
 	// PC
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotlist_const" << std::right << std::setw(31) << mem_pc_rotlist_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_x_const" << std::right << std::setw(31) << mem_pc_ref_coords_x_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_y_const" << std::right << std::setw(31) << mem_pc_ref_coords_y_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_z_const" << std::right << std::setw(31) << mem_pc_ref_coords_z_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_moving_vectors_const" << std::right << std::setw(31) << mem_pc_rotbonds_moving_vectors_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_unit_vectors_const" << std::right << std::setw(31) << mem_pc_rotbonds_unit_vectors_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_orientation_quats_const" << std::right << std::setw(31) << mem_pc_ref_orientation_quats_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(31) << dockpars.rotbondlist_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotlist_const" << std::right << std::setw(SPACE_M) << mem_pc_rotlist_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_x_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_x_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_y_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_y_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_z_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_z_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_moving_vectors_const" << std::right << std::setw(SPACE_M) << mem_pc_rotbonds_moving_vectors_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_unit_vectors_const" << std::right << std::setw(SPACE_M) << mem_pc_rotbonds_unit_vectors_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_orientation_quats_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_orientation_quats_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
 	std::cout << std::endl;
 
 	// IA
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(31) << mem_ia_ie_atom_charges_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_types_const" << std::right << std::setw(31) << mem_ia_ie_atom_types_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_contributors_const" << std::right << std::setw(31) << mem_ia_contributors_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_reqm_const" << std::right << std::setw(31) << mem_ia_reqm_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_reqm_hbond_const" << std::right << std::setw(31) << mem_ia_reqm_hbond_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_atom1_types_reqm_const" << std::right << std::setw(31) << mem_ia_atom1_types_reqm_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_atom2_types_reqm_const" << std::right << std::setw(31) << mem_ia_atom2_types_reqm_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_VWpars_AC_const" << std::right << std::setw(31) << mem_ia_VWpars_AC_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_VWpars_BD_const" << std::right << std::setw(31) << mem_ia_VWpars_BD_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_S_const" << std::right << std::setw(31) << mem_ia_dspars_S_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_V_const" << std::right << std::setw(31) << mem_ia_dspars_V_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.smooth" << std::right << std::setw(31) << dockpars.smooth << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_intraE_contributors" << std::right << std::setw(31) << dockpars.num_of_intraE_contributors << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.grid_spacing" << std::right << std::setw(31) << dockpars.grid_spacing << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atypes" << std::right << std::setw(31) << dockpars.num_of_atypes << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_elec" << std::right << std::setw(31) << dockpars.coeff_elec << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.qasp" << std::right << std::setw(31) << dockpars.qasp << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_desolv" << std::right << std::setw(31) << dockpars.coeff_desolv << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_charges_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_types_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_types_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_contributors_const" << std::right << std::setw(SPACE_M) << mem_ia_contributors_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_reqm_const" << std::right << std::setw(SPACE_M) << mem_ia_reqm_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_reqm_hbond_const" << std::right << std::setw(SPACE_M) << mem_ia_reqm_hbond_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_atom1_types_reqm_const" << std::right << std::setw(SPACE_M) << mem_ia_atom1_types_reqm_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_atom2_types_reqm_const" << std::right << std::setw(SPACE_M) << mem_ia_atom2_types_reqm_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_VWpars_AC_const" << std::right << std::setw(SPACE_M) << mem_ia_VWpars_AC_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_VWpars_BD_const" << std::right << std::setw(SPACE_M) << mem_ia_VWpars_BD_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_S_const" << std::right << std::setw(SPACE_M) << mem_ia_dspars_S_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_V_const" << std::right << std::setw(SPACE_M) << mem_ia_dspars_V_const << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.smooth" << std::right << std::setw(SPACE_M) << dockpars.smooth << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_intraE_contributors" << std::right << std::setw(SPACE_M) << dockpars.num_of_intraE_contributors << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.grid_spacing" << std::right << std::setw(SPACE_M) << dockpars.grid_spacing << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atypes" << std::right << std::setw(SPACE_M) << dockpars.num_of_atypes << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_elec" << std::right << std::setw(SPACE_M) << dockpars.coeff_elec << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.qasp" << std::right << std::setw(SPACE_M) << dockpars.qasp << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_desolv" << std::right << std::setw(SPACE_M) << dockpars.coeff_desolv << "\n";
 	std::cout << std::endl;	
 
 	// IE
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_fgrids" << std::right << std::setw(31) << mem_dockpars_fgrids << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g1" << std::right << std::setw(31) << int { dockpars.g1 } << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g2" << std::right << std::setw(31) << dockpars.g2 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g3" << std::right << std::setw(31) << dockpars.g3 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atoms" << std::right << std::setw(31) << int { dockpars.num_of_atoms } << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "fgridsizex_minus1" << std::right << std::setw(31) << fgridsizex_minus1 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "fgridsizey_minus1" << std::right << std::setw(31) << fgridsizey_minus1 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "fgridsizez_minus1" << std::right << std::setw(31) << fgridsizez_minus1 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mul_tmp2" << std::right << std::setw(31) << mul_tmp2 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mul_tmp3" << std::right << std::setw(31) << mul_tmp3 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_fgrids" << std::right << std::setw(SPACE_M) << mem_dockpars_fgrids << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g1" << std::right << std::setw(SPACE_M) << int { dockpars.g1 } << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g2" << std::right << std::setw(SPACE_M) << dockpars.g2 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g3" << std::right << std::setw(SPACE_M) << dockpars.g3 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atoms" << std::right << std::setw(SPACE_M) << int { dockpars.num_of_atoms } << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "fgridsizex_minus1" << std::right << std::setw(SPACE_M) << fgridsizex_minus1 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "fgridsizey_minus1" << std::right << std::setw(SPACE_M) << fgridsizey_minus1 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "fgridsizez_minus1" << std::right << std::setw(SPACE_M) << fgridsizez_minus1 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mul_tmp2" << std::right << std::setw(SPACE_M) << mul_tmp2 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mul_tmp3" << std::right << std::setw(SPACE_M) << mul_tmp3 << "\n";
 	std::cout << std::endl;	
 
 	// LS
-	std::cout << std::left << std::setw(SPACE_L) << "Host_max_num_of_iters" << std::right << std::setw(31) << Host_max_num_of_iters << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rho_lower_bound" << std::right << std::setw(31) << dockpars.rho_lower_bound << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dmov_mul_sqrt3" << std::right << std::setw(31) << dockpars.base_dmov_mul_sqrt3 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dang_mul_sqrt3" << std::right << std::setw(31) << dockpars.base_dang_mul_sqrt3 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "Host_cons_limit" << std::right << std::setw(31) << int { Host_cons_limit } << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mypars->num_of_runs" << std::right << std::setw(31) << mypars->num_of_runs << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "Host_max_num_of_iters" << std::right << std::setw(SPACE_M) << Host_max_num_of_iters << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rho_lower_bound" << std::right << std::setw(SPACE_M) << dockpars.rho_lower_bound << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dmov_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dmov_mul_sqrt3 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dang_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dang_mul_sqrt3 << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "Host_cons_limit" << std::right << std::setw(SPACE_M) << int { Host_cons_limit } << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mypars->num_of_runs" << std::right << std::setw(SPACE_M) << mypars->num_of_runs << "\n";
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << std::endl;
 
