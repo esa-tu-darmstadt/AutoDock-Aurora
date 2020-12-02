@@ -55,7 +55,7 @@ void energy_ia (
 		float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
 		float subz = local_coords_z[atom1_id] - local_coords_z[atom2_id];
 
-		// atomic_distance = sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
+		// Using built-int sqrt() is some seconds slower
 		float atomic_distance = esa_sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 
 		#if defined (PRINT_ALL)
