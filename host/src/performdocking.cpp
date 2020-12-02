@@ -362,6 +362,8 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_energies_nbytes" << std::right << std::setw(SPACE_M) << size_energies_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_energies_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_evals_of_runs_nbytes" << std::right << std::setw(SPACE_M) << size_evals_of_runs_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_prng_seeds_nbytes" << std::right << std::setw(SPACE_M) << size_prng_seeds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_prng_seeds_nbytes) << std::endl;
+	size_t size_ga = size_populations_nbytes + size_populations_nbytes + size_energies_nbytes +
+	                 size_evals_of_runs_nbytes + size_evals_of_runs_nbytes + size_prng_seeds_nbytes;
 
 	// Pose Calculation
 	std::cout << std::endl;
@@ -370,6 +372,8 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_rotbonds_moving_vectors_nbytes" << std::right << std::setw(SPACE_M) << size_rotbonds_moving_vectors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotbonds_moving_vectors_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_rotbonds_unit_vectors_nbytes" << std::right << std::setw(SPACE_M) << size_rotbonds_unit_vectors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotbonds_unit_vectors_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_ref_orientation_quats_nbytes" << std::right << std::setw(SPACE_M) << size_ref_orientation_quats_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_ref_orientation_quats_nbytes) << std::endl;
+	size_t size_pc = size_rotlist_nbytes + size_ref_coords_nbytes + size_ref_coords_nbytes + size_ref_coords_nbytes +
+	                 size_rotbonds_moving_vectors_nbytes + size_rotbonds_unit_vectors_nbytes + size_ref_orientation_quats_nbytes;
 
 	// IA
 	std::cout << std::endl;
@@ -384,14 +388,21 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_VWpars_BD_nbytes" << std::right << std::setw(SPACE_M) << size_VWpars_BD_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_VWpars_BD_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_dspars_S_nbytes" << std::right << std::setw(SPACE_M) << size_dspars_S_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_dspars_S_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_dspars_V_nbytes" << std::right << std::setw(SPACE_M) << size_dspars_V_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_dspars_V_nbytes) << std::endl;
+	size_t size_ia = size_InterE_atom_charges_nbytes + size_InterE_atom_types_nbytes +
+					 size_intraE_contributors_nbytes + size_reqm_nbytes + size_reqm_hbond_nbytes +
+					 size_atom1_types_reqm_nbytes + size_atom2_types_reqm_nbytes +
+					 size_VWpars_AC_nbytes + size_VWpars_BD_nbytes +
+					 size_dspars_S_nbytes + size_dspars_V_nbytes;
 
 	// IE
 	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
+	size_t size_ie = size_floatgrids_nbytes;
 
 	// Total amount memory
 	std::cout << std::endl;
-	//std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) <<  << std::right << std::setw(SPACE_S) << sizeKB() << std::endl;
+	size_t size_total_mem = size_ga + size_pc + size_ia + size_ie;
+	std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) << size_total_mem << std::right << std::setw(SPACE_S) << sizeKB(size_total_mem) << std::endl;
 
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
