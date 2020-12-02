@@ -391,7 +391,7 @@ filled with clock() */
 
 	// Total amount memory
 	std::cout << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) <<  << std::right << std::setw(SPACE_S) << sizeKB() << std::endl;
+	//std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) <<  << std::right << std::setw(SPACE_S) << sizeKB() << std::endl;
 
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
