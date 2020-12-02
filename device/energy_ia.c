@@ -34,13 +34,13 @@ void energy_ia (
 	printf("\n");
 	printf("Starting <intra-molecular calculation> ... \n");
 	printf("\n");
-	printf("\t%-40s %f\n", "DockConst_smooth: ", 						DockConst_smooth);
+	printf("\t%-40s %f\n", "DockConst_smooth: ",	DockConst_smooth);
 	printf("\t%-40s %u\n", "DockConst_num_of_intraE_contributors: ",	DockConst_num_of_intraE_contributors);
-	printf("\t%-40s %f\n", "DockConst_grid_spacing: ",        			DockConst_grid_spacing);
-	printf("\t%-40s %u\n", "DockConst_num_of_atypes: ",					DockConst_num_of_atypes);
-	printf("\t%-40s %f\n", "DockConst_coeff_elec: ",					DockConst_coeff_elec);
-	printf("\t%-40s %f\n", "DockConst_qasp: ", 							DockConst_qasp);
-	printf("\t%-40s %f\n", "DockConst_coeff_desolv: ", 					DockConst_coeff_desolv);
+	printf("\t%-40s %f\n", "DockConst_grid_spacing: ",	DockConst_grid_spacing);
+	printf("\t%-40s %u\n", "DockConst_num_of_atypes: ",	DockConst_num_of_atypes);
+	printf("\t%-40s %f\n", "DockConst_coeff_elec: ",	DockConst_coeff_elec);
+	printf("\t%-40s %f\n", "DockConst_qasp: ",	DockConst_qasp);
+	printf("\t%-40s %f\n", "DockConst_coeff_desolv: ",	DockConst_coeff_desolv);
 	#endif
 
 	float intraE = 0.0f;
@@ -82,7 +82,7 @@ void energy_ia (
 		float opt_distance;
 
 		uint atom1_type_vdw_hb = IA_atom1_types_reqm[atom1_typeid];
-     	uint atom2_type_vdw_hb = IA_atom2_types_reqm [atom2_typeid];
+		uint atom2_type_vdw_hb = IA_atom2_types_reqm [atom2_typeid];
 
 		if (IA_intraE_contributors[3*contributor_counter + 2] == 1)	// H-bond
 		{
