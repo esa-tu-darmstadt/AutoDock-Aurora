@@ -373,7 +373,7 @@ filled with clock() */
 	// IE
 	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_charges_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_charges_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_InterE_atom_charges_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_types_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_types_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatsize_InterE_atom_types_nbytesgrids_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_types_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_types_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_InterE_atom_types_nbytes) << std::endl;
 
 	// IA
 	std::cout << std::left << std::setw(SPACE_L) << "size_intraE_contributors_nbytes" << std::right << std::setw(SPACE_M) << size_intraE_contributors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_intraE_contributors_nbytes) << std::endl;
