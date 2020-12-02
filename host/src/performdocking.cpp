@@ -207,21 +207,6 @@ filled with clock() */
 	const unsigned int mul_tmp3 = (dockpars.num_of_atypes + 1) * dockpars.g3;
 
 	// -----------------------------------------------------------------------------------------------------
-	// Printing sizes
-	// -----------------------------------------------------------------------------------------------------
-
-	std::cout << "\n---------------------------------------------------------------------------------\n";
-	std::cout << std::left << std::setw(SPACE_L) << "Memory sizes" << std::right << std::setw(SPACE_M) << "Bytes" << std::right << std::setw(SPACE_S) << "KB" << std::endl;
-	std::cout << "---------------------------------------------------------------------------------\n";
-
-	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_populations_nbytes" << std::right << std::setw(SPACE_M) << size_populations_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_populations_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_energies_nbytes" << std::right << std::setw(SPACE_M) << size_energies_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_energies_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_evals_of_runs_nbytes" << std::right << std::setw(SPACE_M) << size_evals_of_runs_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
-	std::cout << std::left << std::setw(SPACE_L) << "size_prng_seeds_nbytes" << std::right << std::setw(SPACE_M) << size_prng_seeds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_prng_seeds_nbytes) << std::endl;
-	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
-
-	// -----------------------------------------------------------------------------------------------------
 	// Defining kernel buffers
 	// -----------------------------------------------------------------------------------------------------
 
@@ -364,6 +349,43 @@ filled with clock() */
 	wrapper_veo_write_mem (ve_process, mem_ia_VWpars_BD_const, &KerConstStatic.VWpars_BD_const[0], size_VWpars_BD_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_ia_dspars_S_const, &KerConstStatic.dspars_S_const[0], size_dspars_S_nbytes);
 	wrapper_veo_write_mem (ve_process, mem_ia_dspars_V_const, &KerConstStatic.dspars_V_const[0], size_dspars_V_nbytes);
+
+	// -----------------------------------------------------------------------------------------------------
+	// Printing sizes
+	// -----------------------------------------------------------------------------------------------------
+
+	std::cout << "\n---------------------------------------------------------------------------------\n";
+	std::cout << std::left << std::setw(SPACE_L) << "Memory sizes" << std::right << std::setw(SPACE_M) << "Bytes" << std::right << std::setw(SPACE_S) << "KB" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n";
+
+	std::cout << std::left << std::setw(SPACE_L) << "size_populations_nbytes" << std::right << std::setw(SPACE_M) << size_populations_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_populations_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_energies_nbytes" << std::right << std::setw(SPACE_M) << size_energies_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_energies_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_evals_of_runs_nbytes" << std::right << std::setw(SPACE_M) << size_evals_of_runs_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_prng_seeds_nbytes" << std::right << std::setw(SPACE_M) << size_prng_seeds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_prng_seeds_nbytes) << std::endl;
+
+	// Pose Calculation
+	std::cout << std::left << std::setw(SPACE_L) << "size_rotlist_nbytes" << std::right << std::setw(SPACE_M) << size_rotlist_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotlist_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_ref_coords_nbytes" << std::right << std::setw(SPACE_M) << size_ref_coords_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_ref_coords_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_rotbonds_moving_vectors_nbytes" << std::right << std::setw(SPACE_M) << size_rotbonds_moving_vectors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotbonds_moving_vectors_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_rotbonds_unit_vectors_nbytes" << std::right << std::setw(SPACE_M) << size_rotbonds_unit_vectors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotbonds_unit_vectors_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_ref_orientation_quats_nbytes" << std::right << std::setw(SPACE_M) << size_ref_orientation_quats_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_ref_orientation_quats_nbytes) << std::endl;
+
+	// IE
+	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_charges_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_charges_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_InterE_atom_charges_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_types_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_types_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatsize_InterE_atom_types_nbytesgrids_nbytes) << std::endl;
+
+	// IA
+	std::cout << std::left << std::setw(SPACE_L) << "size_intraE_contributors_nbytes" << std::right << std::setw(SPACE_M) << size_intraE_contributors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_intraE_contributors_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_reqm_nbytes" << std::right << std::setw(SPACE_M) << size_reqm_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_reqm_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_reqm_hbond_nbytes" << std::right << std::setw(SPACE_M) << size_reqm_hbond_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_reqm_hbond_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_atom1_types_reqm_nbytes" << std::right << std::setw(SPACE_M) << size_atom1_types_reqm_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_atom1_types_reqm_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_atom2_types_reqm_nbytes" << std::right << std::setw(SPACE_M) << size_atom2_types_reqm_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_atom2_types_reqm_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_VWpars_AC_nbytes" << std::right << std::setw(SPACE_M) << size_VWpars_AC_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_VWpars_AC_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_VWpars_BD_nbytes" << std::right << std::setw(SPACE_M) << size_VWpars_BD_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_VWpars_BD_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_dspars_S_nbytes" << std::right << std::setw(SPACE_M) << size_dspars_S_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_dspars_S_nbytes) << std::endl;
+	std::cout << std::left << std::setw(SPACE_L) << "size_dspars_V_nbytes" << std::right << std::setw(SPACE_M) << size_dspars_V_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_dspars_V_nbytes) << std::endl;
+	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
 	// -----------------------------------------------------------------------------------------------------
 	// Defining kernel arguments
