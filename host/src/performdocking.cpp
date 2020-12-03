@@ -209,42 +209,19 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
 	// Defining kernel buffers
 	// -----------------------------------------------------------------------------------------------------
-/*
-	uint64_t mem_dockpars_conformations_current_Initial;
-*/
+
+	// LGA
 	uint64_t mem_dockpars_conformations_current_Final;
 	uint64_t mem_dockpars_energies_current;
 	uint64_t mem_evals_performed;
 	uint64_t mem_gens_performed;
-/*
-	uint64_t mem_prng_states;
-*/
-/*
-	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Initial, size_populations_nbytes);
-*/
+
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Final, size_populations_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_energies_current, size_energies_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_evals_performed, size_evals_of_runs_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_gens_performed, size_evals_of_runs_nbytes);
-/*
-	wrapper_veo_alloc_mem (ve_process, &mem_prng_states, size_prng_seeds_nbytes);
-*/
-/*
-	wrapper_veo_write_mem (ve_process, mem_dockpars_conformations_current_Initial, cpu_init_populations.data(), size_populations_nbytes);
-*/
-/*
-	wrapper_veo_write_mem (ve_process, mem_prng_states, cpu_prng_seeds.data(), size_prng_seeds_nbytes);
-*/
+
 	// Pose Calculation buffers
-/*
-	uint64_t mem_pc_rotlist_const;
-	uint64_t mem_pc_ref_coords_x_const;	// TODO: fusion x,y,z into a single one
-	uint64_t mem_pc_ref_coords_y_const;
-	uint64_t mem_pc_ref_coords_z_const;
-	uint64_t mem_pc_rotbonds_moving_vectors_const;
-	uint64_t mem_pc_rotbonds_unit_vectors_const;
-	uint64_t mem_pc_ref_orientation_quats_const;
-*/
 	size_t size_rotlist_nelems = MAX_NUM_OF_ROTATIONS;
 	size_t size_rotlist_nbytes = size_rotlist_nelems * sizeof(int);
 
@@ -260,30 +237,8 @@ filled with clock() */
 	size_t size_ref_orientation_quats_nelems = MAX_NUM_OF_RUNS;
 	size_t size_ref_orientation_quats_nbytes = size_ref_orientation_quats_nelems * 4 * sizeof(float);
 
-/*
-	wrapper_veo_alloc_mem (ve_process, &mem_pc_rotlist_const, size_rotlist_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_pc_ref_coords_x_const, size_ref_coords_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_pc_ref_coords_y_const, size_ref_coords_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_pc_ref_coords_z_const, size_ref_coords_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_pc_rotbonds_moving_vectors_const, size_rotbonds_moving_vectors_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_pc_rotbonds_unit_vectors_const, size_rotbonds_unit_vectors_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_pc_ref_orientation_quats_const, size_ref_orientation_quats_nbytes);
-
-	wrapper_veo_write_mem (ve_process, mem_pc_rotlist_const, &KerConstStatic.rotlist_const[0], size_rotlist_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_pc_ref_coords_x_const, &KerConstStatic.ref_coords_x_const[0], size_ref_coords_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_pc_ref_coords_y_const, &KerConstStatic.ref_coords_y_const[0], size_ref_coords_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_pc_ref_coords_z_const, &KerConstStatic.ref_coords_z_const[0], size_ref_coords_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_pc_rotbonds_moving_vectors_const, &KerConstStatic.rotbonds_moving_vectors_const[0], size_rotbonds_moving_vectors_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_pc_rotbonds_unit_vectors_const, &KerConstStatic.rotbonds_unit_vectors_const[0], size_rotbonds_unit_vectors_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_pc_ref_orientation_quats_const, &KerConstStatic.ref_orientation_quats_const[0], size_ref_orientation_quats_nbytes);
-*/
-
 	// IE buffers
 	uint64_t mem_dockpars_fgrids;
-/*
-	uint64_t mem_ia_ie_atom_charges_const;
-	uint64_t mem_ia_ie_atom_types_const;
-*/
 
 	size_t size_InterE_atom_charges_nelems = MAX_NUM_OF_ATOMS;
 	size_t size_InterE_atom_charges_nbytes = size_InterE_atom_charges_nelems * sizeof(float);
@@ -292,28 +247,9 @@ filled with clock() */
 	size_t size_InterE_atom_types_nbytes = size_InterE_atom_types_nelems * sizeof(char);
 
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_fgrids, size_floatgrids_nbytes);
-/*
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_ie_atom_charges_const, size_InterE_atom_charges_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_ie_atom_types_const, size_InterE_atom_types_nbytes);
-*/
 	wrapper_veo_write_mem (ve_process, mem_dockpars_fgrids, cpu_floatgrids, size_floatgrids_nbytes);
-/*
-	wrapper_veo_write_mem (ve_process, mem_ia_ie_atom_charges_const, &KerConstStatic.atom_charges_const[0], size_InterE_atom_charges_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_ie_atom_types_const, &KerConstStatic.atom_types_const[0], size_InterE_atom_types_nbytes);
-*/
 
 	// IA buffers
-/*
-	uint64_t mem_ia_contributors_const;
-	uint64_t mem_ia_reqm_const;
-	uint64_t mem_ia_reqm_hbond_const;
-	uint64_t mem_ia_atom1_types_reqm_const;
-	uint64_t mem_ia_atom2_types_reqm_const;
-	uint64_t mem_ia_VWpars_AC_const;
-	uint64_t mem_ia_VWpars_BD_const;
-	uint64_t mem_ia_dspars_S_const;
-	uint64_t mem_ia_dspars_V_const;
-*/
 	size_t size_IntraE_atom_charges_nelems = MAX_NUM_OF_ATOMS;
 	size_t size_IntraE_atom_charges_nbytes = size_IntraE_atom_charges_nelems * sizeof(float);
 
@@ -346,27 +282,6 @@ filled with clock() */
 
 	size_t size_dspars_V_nelems = MAX_NUM_OF_ATYPES;
 	size_t size_dspars_V_nbytes = size_dspars_V_nelems * sizeof(float);
-/*
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_contributors_const, size_intraE_contributors_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_reqm_const, size_reqm_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_reqm_hbond_const, size_reqm_hbond_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_atom1_types_reqm_const, size_atom1_types_reqm_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_atom2_types_reqm_const, size_atom2_types_reqm_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_VWpars_AC_const, size_VWpars_AC_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_VWpars_BD_const, size_VWpars_BD_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_dspars_S_const, size_dspars_S_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_ia_dspars_V_const, size_dspars_V_nbytes);
-
-	wrapper_veo_write_mem (ve_process, mem_ia_contributors_const, &KerConstStatic.intraE_contributors_const[0], size_intraE_contributors_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_reqm_const, &KerConstStatic.reqm_const, size_reqm_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_reqm_hbond_const, &KerConstStatic.reqm_hbond_const, size_reqm_hbond_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_atom1_types_reqm_const, &KerConstStatic.atom1_types_reqm_const, size_atom1_types_reqm_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_atom2_types_reqm_const, &KerConstStatic.atom2_types_reqm_const, size_atom2_types_reqm_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_VWpars_AC_const, &KerConstStatic.VWpars_AC_const[0], size_VWpars_AC_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_VWpars_BD_const, &KerConstStatic.VWpars_BD_const[0], size_VWpars_BD_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_dspars_S_const, &KerConstStatic.dspars_S_const[0], size_dspars_S_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_ia_dspars_V_const, &KerConstStatic.dspars_V_const[0], size_dspars_V_nbytes);
-*/
 
 	// -----------------------------------------------------------------------------------------------------
 	// Printing sizes
@@ -447,19 +362,12 @@ filled with clock() */
 	struct veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc ();
 
 	// GA
-/*
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Initial);
-*/
 	wrapper_veo_args_set_stack (kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(cpu_init_populations.data()), size_populations_nbytes);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Final);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_gens_performed);
-/*
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_prng_states);
-*/
 	wrapper_veo_args_set_stack (kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(cpu_prng_seeds.data()), size_prng_seeds_nbytes);
-
 	wrapper_veo_args_set_i32   (kernel_ga_arg_ptr, narg++, dockpars.pop_size);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_energy_evals);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_generations);
@@ -474,15 +382,6 @@ filled with clock() */
 	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	
 	// PC
-/*
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_rotlist_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_coords_x_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_coords_y_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_coords_z_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_rotbonds_moving_vectors_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_rotbonds_unit_vectors_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_pc_ref_orientation_quats_const);
-*/
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotlist_const[0]), size_rotlist_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_x_const[0]), size_ref_coords_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_y_const[0]), size_ref_coords_nbytes);
@@ -493,19 +392,6 @@ filled with clock() */
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
 
 	// IA
-/*
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_charges_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_ie_atom_types_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_contributors_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_reqm_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_reqm_hbond_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_atom1_types_reqm_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_atom2_types_reqm_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_VWpars_AC_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_VWpars_BD_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_dspars_S_const);
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_ia_dspars_V_const);
-*/
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_charges_const[0]), size_InterE_atom_charges_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_types_const[0]), size_InterE_atom_types_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.intraE_contributors_const[0]), size_intraE_contributors_nbytes);
@@ -517,7 +403,6 @@ filled with clock() */
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.VWpars_BD_const[0]), size_VWpars_BD_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.dspars_S_const[0]), size_dspars_S_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.dspars_V_const[0]), size_dspars_V_nbytes);
-
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.smooth);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.num_of_intraE_contributors);
 	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.grid_spacing);
@@ -556,16 +441,11 @@ filled with clock() */
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << "Kernel LGA" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
-/*
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Initial" << std::right << std::setw(SPACE_M) << mem_dockpars_conformations_current_Initial << "\n";
-*/
+
 	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(SPACE_M) << mem_dockpars_conformations_current_Final << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << mem_dockpars_energies_current << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << mem_evals_performed << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(SPACE_M) << mem_gens_performed << "\n";
-/*
-	std::cout << std::left << std::setw(SPACE_L) << "mem_prng_states" << std::right << std::setw(SPACE_M) << mem_prng_states << "\n";
-*/
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.pop_size" << std::right << std::setw(SPACE_M) << dockpars.pop_size << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_energy_evals" << std::right << std::setw(SPACE_M) << dockpars.num_of_energy_evals << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_generations" << std::right << std::setw(SPACE_M) << dockpars.num_of_generations << "\n";
@@ -581,32 +461,10 @@ filled with clock() */
 	std::cout << std::endl;
 
 	// PC
-/*	
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotlist_const" << std::right << std::setw(SPACE_M) << mem_pc_rotlist_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_x_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_x_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_y_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_y_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_coords_z_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_coords_z_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_moving_vectors_const" << std::right << std::setw(SPACE_M) << mem_pc_rotbonds_moving_vectors_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_rotbonds_unit_vectors_const" << std::right << std::setw(SPACE_M) << mem_pc_rotbonds_unit_vectors_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_pc_ref_orientation_quats_const" << std::right << std::setw(SPACE_M) << mem_pc_ref_orientation_quats_const << "\n";
-*/
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
 	std::cout << std::endl;
 
 	// IA
-/*
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_charges_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_charges_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_ie_atom_types_const" << std::right << std::setw(SPACE_M) << mem_ia_ie_atom_types_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_contributors_const" << std::right << std::setw(SPACE_M) << mem_ia_contributors_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_reqm_const" << std::right << std::setw(SPACE_M) << mem_ia_reqm_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_reqm_hbond_const" << std::right << std::setw(SPACE_M) << mem_ia_reqm_hbond_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_atom1_types_reqm_const" << std::right << std::setw(SPACE_M) << mem_ia_atom1_types_reqm_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_atom2_types_reqm_const" << std::right << std::setw(SPACE_M) << mem_ia_atom2_types_reqm_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_VWpars_AC_const" << std::right << std::setw(SPACE_M) << mem_ia_VWpars_AC_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_VWpars_BD_const" << std::right << std::setw(SPACE_M) << mem_ia_VWpars_BD_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_S_const" << std::right << std::setw(SPACE_M) << mem_ia_dspars_S_const << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_ia_dspars_V_const" << std::right << std::setw(SPACE_M) << mem_ia_dspars_V_const << "\n";
-*/
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.smooth" << std::right << std::setw(SPACE_M) << dockpars.smooth << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_intraE_contributors" << std::right << std::setw(SPACE_M) << dockpars.num_of_intraE_contributors << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.grid_spacing" << std::right << std::setw(SPACE_M) << dockpars.grid_spacing << "\n";
