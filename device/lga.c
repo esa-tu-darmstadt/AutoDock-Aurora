@@ -14,17 +14,11 @@ LS:  local search
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
 // --------------------------------------------------------------------------
 void lga (
-/*
-	const 	uint64_t	VEVMA_PopulationCurrentInitial,
-*/
 	const 	float*		PopulationCurrentInitial,
 			uint64_t  	VEVMA_PopulationCurrentFinal,
 			uint64_t  	VEVMA_EnergyCurrent,
 			uint64_t	VEVMA_Evals_performed,
             uint64_t	VEVMA_Gens_performed,
-/*
-			uint64_t    VEVMA_dockpars_prng_states,
-*/
 			uint*		dockpars_prng_states,
 			uint		DockConst_pop_size,
 		    uint        DockConst_num_of_energy_evals,
@@ -39,15 +33,6 @@ void lga (
 			uint        DockConst_num_of_lsentities,
 			uchar       DockConst_num_of_genes,
 	// pc
-/*
-	const	uint64_t	VEVMA_pc_rotlist,
-	const	uint64_t	VEVMA_pc_ref_coords_x,// TODO: merge them into a single one?
-	const	uint64_t	VEVMA_pc_ref_coords_y,
-	const	uint64_t	VEVMA_pc_ref_coords_z,
-	const	uint64_t	VEVMA_pc_rotbonds_moving_vectors,
-	const	uint64_t	VEVMA_pc_rotbonds_unit_vectors,
-	const	uint64_t	VEVMA_pc_ref_orientation_quats,
-*/
 	const	int* 		PC_rotlist,
 	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
 	const	float*		PC_ref_coords_y,
@@ -57,19 +42,6 @@ void lga (
 	const	float*		PC_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
 	// ia
-/*
-	const 	uint64_t	VEVMA_ia_ie_atom_charges,
-	const	uint64_t	VEVMA_ia_ie_atom_types,
-	const	uint64_t	VEVMA_ia_intraE_contributors,
-	const	uint64_t	VEVMA_ia_reqm,
-	const	uint64_t	VEVMA_ia_reqm_hbond,
-	const	uint64_t	VEVMA_ia_atom1_types_reqm,
-	const	uint64_t	VEVMA_ia_atom2_types_reqm,
-	const	uint64_t	VEVMA_ia_VWpars_AC,
-	const	uint64_t	VEVMA_ia_VWpars_BD,
-	const	uint64_t	VEVMA_ia_dspars_S,
-	const	uint64_t	VEVMA_ia_dspars_V,
-*/
 	const 	float*		IA_IE_atom_charges,
 	const	int*		IA_IE_atom_types,
 	const	int*		IA_intraE_contributors,
@@ -81,7 +53,6 @@ void lga (
 	const	float*		IA_VWpars_BD,
 	const	float*		IA_dspars_S,
 	const	float*		IA_dspars_V,
-
 			float		DockConst_smooth,
 			uint		DockConst_num_of_intraE_contributors,
 			float		DockConst_grid_spacing,
@@ -161,41 +132,14 @@ void lga (
 
 	// --------------------------------------------------------------------------
 	// ga
-/*
-	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial);
-*/
 	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal);
 	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent);
 		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
 		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
-/*
-		  uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
-*/
-
 	// pc
-/*
-	const	int*	PC_rotlist = (int*)(VEVMA_pc_rotlist);
-	const	float*	PC_ref_coords_x = (float*)(VEVMA_pc_ref_coords_x);
-	const	float*	PC_ref_coords_y = (float*)(VEVMA_pc_ref_coords_y);
-	const	float*	PC_ref_coords_z = (float*)(VEVMA_pc_ref_coords_z);
-	const	float*	PC_rotbonds_moving_vectors = (float*)(VEVMA_pc_rotbonds_moving_vectors);
-	const	float*	PC_rotbonds_unit_vectors = (float*)(VEVMA_pc_rotbonds_unit_vectors);
-	const	float*	PC_ref_orientation_quats = (float*)(VEVMA_pc_ref_orientation_quats);
-*/
+
 	// ia
-/*
-	const	float*	IA_IE_atom_charges = (float*)(VEVMA_ia_ie_atom_charges);
-	const	int*	IA_IE_atom_types = (int*)(VEVMA_ia_ie_atom_types);
-	const	int*	IA_intraE_contributors = (int*)(VEVMA_ia_intraE_contributors);
-	const	float*	IA_reqm = (float*)(VEVMA_ia_reqm);
-	const	float*	IA_reqm_hbond = (float*)(VEVMA_ia_reqm_hbond);
-	const	uint*	IA_atom1_types_reqm = (uint*)(VEVMA_ia_atom1_types_reqm);
-	const	uint*	IA_atom2_types_reqm = (uint*)(VEVMA_ia_atom2_types_reqm);
-	const	float*	IA_VWpars_AC = (float*)(VEVMA_ia_VWpars_AC);
-	const	float*	IA_VWpars_BD = (float*)(VEVMA_ia_VWpars_BD);
-	const	float*	IA_dspars_S = (float*)(VEVMA_ia_dspars_S);
-	const	float*	IA_dspars_V = (float*)(VEVMA_ia_dspars_V);
-*/
+
 	// ie
 	const	float*	IE_Fgrids = (float*)(VEVMA_Fgrids);
 
@@ -222,7 +166,7 @@ void lga (
 
 		// Read genotype
 		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-			float tmp_gene = /*GlobPopCurrInitial*/PopulationCurrentInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
+			float tmp_gene = PopulationCurrentInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
 
