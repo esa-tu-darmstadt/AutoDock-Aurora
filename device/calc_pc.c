@@ -30,10 +30,12 @@ void calc_pc (
 	printf("\t%-40s %u\n", "Host_RunId: ",        				Host_RunId);
 	#endif
 
+/*
 	int rotlist_localcache [MAX_NUM_OF_ROTATIONS];
 	for (uint c = 0; c < DockConst_rotbondlist_length; c++) {
 		rotlist_localcache [c] = PC_rotlist [c];
 	}
+*/
 
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
@@ -57,7 +59,7 @@ void calc_pc (
 
 	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
-		int rotation_list_element = rotlist_localcache[rotation_counter];
+		int rotation_list_element = /*rotlist_localcache*/ PC_rotlist[rotation_counter];
 
 		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0)	// If not dummy rotation
 		{
