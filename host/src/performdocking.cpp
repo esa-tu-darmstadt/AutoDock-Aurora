@@ -209,8 +209,9 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
 	// Defining kernel buffers
 	// -----------------------------------------------------------------------------------------------------
-
+/*
 	uint64_t mem_dockpars_conformations_current_Initial;
+*/
 	uint64_t mem_dockpars_conformations_current_Final;
 	uint64_t mem_dockpars_energies_current;
 	uint64_t mem_evals_performed;
@@ -218,7 +219,9 @@ filled with clock() */
 /*
 	uint64_t mem_prng_states;
 */
+/*
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Initial, size_populations_nbytes);
+*/
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Final, size_populations_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_energies_current, size_energies_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_evals_performed, size_evals_of_runs_nbytes);
@@ -226,7 +229,9 @@ filled with clock() */
 /*
 	wrapper_veo_alloc_mem (ve_process, &mem_prng_states, size_prng_seeds_nbytes);
 */
+/*
 	wrapper_veo_write_mem (ve_process, mem_dockpars_conformations_current_Initial, cpu_init_populations.data(), size_populations_nbytes);
+*/
 /*
 	wrapper_veo_write_mem (ve_process, mem_prng_states, cpu_prng_seeds.data(), size_prng_seeds_nbytes);
 */
@@ -442,7 +447,10 @@ filled with clock() */
 	struct veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc ();
 
 	// GA
+/*
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Initial);
+*/
+	wrapper_veo_args_set_stack (kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(cpu_init_populations.data()), size_populations_nbytes);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Final);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed);
@@ -548,7 +556,9 @@ filled with clock() */
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << "Kernel LGA" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
+/*
 	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Initial" << std::right << std::setw(SPACE_M) << mem_dockpars_conformations_current_Initial << "\n";
+*/
 	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(SPACE_M) << mem_dockpars_conformations_current_Final << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << mem_dockpars_energies_current << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << mem_evals_performed << "\n";

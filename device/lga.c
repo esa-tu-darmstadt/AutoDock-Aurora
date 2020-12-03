@@ -14,7 +14,10 @@ LS:  local search
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
 // --------------------------------------------------------------------------
 void lga (
+/*
 	const 	uint64_t	VEVMA_PopulationCurrentInitial,
+*/
+	const 	float*		PopulationCurrentInitial,
 			uint64_t  	VEVMA_PopulationCurrentFinal,
 			uint64_t  	VEVMA_EnergyCurrent,
 			uint64_t	VEVMA_Evals_performed,
@@ -158,7 +161,9 @@ void lga (
 
 	// --------------------------------------------------------------------------
 	// ga
+/*
 	const float* GlobPopCurrInitial = (float*)(VEVMA_PopulationCurrentInitial);
+*/
 	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal);
 	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent);
 		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
@@ -217,7 +222,7 @@ void lga (
 
 		// Read genotype
 		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-			float tmp_gene = GlobPopCurrInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
+			float tmp_gene = /*GlobPopCurrInitial*/PopulationCurrentInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
 		}
 

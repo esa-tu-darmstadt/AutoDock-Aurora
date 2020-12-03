@@ -11,7 +11,10 @@ LS:  local search
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
 // --------------------------------------------------------------------------
 uint64_t libkernel_ga (
+/*
 	const 	uint64_t	VEVMA_PopulationCurrentInitial,
+*/
+	const 	float*		PopulationCurrentInitial,
 			uint64_t  	VEVMA_PopulationCurrentFinal,
 			uint64_t  	VEVMA_EnergyCurrent,
 			uint64_t	VEVMA_Evals_performed,
@@ -119,7 +122,10 @@ uint64_t libkernel_ga (
 		unsigned int Host_Offset_Ene = run_cnt * DockConst_pop_size;
 
         lga(
+/*
 			VEVMA_PopulationCurrentInitial,
+*/
+			PopulationCurrentInitial,
 			VEVMA_PopulationCurrentFinal,
 			VEVMA_EnergyCurrent,
 			VEVMA_Evals_performed,
