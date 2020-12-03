@@ -28,15 +28,27 @@ typedef enum {False, True} boolean;
 float map_angle_180 (float angle)
 {
 	float x = angle;
+/*
 	while (x < 0.0f)   { x += 180.0f; }
 	while (x > 180.0f) { x -= 180.0f; }
+	return x;
+*/
+	x = fmod(x, 180.0f);
+	if (x < 0.0f)
+		x += 180.0f;
 	return x;
 }
 
 float map_angle_360 (float angle) {
 	float x = angle;
+/*
 	while (x < 0.0f)	{ x += 360.0f; }
 	while (x > 360.0f)	{ x -= 360.0f; }
+	return x;
+*/
+	x = fmod(x, 360.0f);
+	if (x < 0.0f)
+		x += 360.0f;
 	return x;
 }
 
