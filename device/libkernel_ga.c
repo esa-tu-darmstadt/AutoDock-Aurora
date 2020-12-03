@@ -16,7 +16,10 @@ uint64_t libkernel_ga (
 			uint64_t  	VEVMA_EnergyCurrent,
 			uint64_t	VEVMA_Evals_performed,
             uint64_t	VEVMA_Gens_performed,
+/*
 			uint64_t    VEVMA_dockpars_prng_states,
+*/
+			uint*    	dockpars_prng_states,
 			uint		DockConst_pop_size,
 		    uint        DockConst_num_of_energy_evals,
 			uint        DockConst_num_of_generations,
@@ -121,7 +124,10 @@ uint64_t libkernel_ga (
 			VEVMA_EnergyCurrent,
 			VEVMA_Evals_performed,
 			VEVMA_Gens_performed,
+/*
 			VEVMA_dockpars_prng_states,
+*/
+			dockpars_prng_states,
 			DockConst_pop_size,
 			DockConst_num_of_energy_evals,
 			DockConst_num_of_generations,

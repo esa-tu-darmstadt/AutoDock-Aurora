@@ -215,18 +215,21 @@ filled with clock() */
 	uint64_t mem_dockpars_energies_current;
 	uint64_t mem_evals_performed;
 	uint64_t mem_gens_performed;
+/*
 	uint64_t mem_prng_states;
-
+*/
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Initial, size_populations_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Final, size_populations_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_energies_current, size_energies_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_evals_performed, size_evals_of_runs_nbytes);
 	wrapper_veo_alloc_mem (ve_process, &mem_gens_performed, size_evals_of_runs_nbytes);
+/*
 	wrapper_veo_alloc_mem (ve_process, &mem_prng_states, size_prng_seeds_nbytes);
-
+*/
 	wrapper_veo_write_mem (ve_process, mem_dockpars_conformations_current_Initial, cpu_init_populations.data(), size_populations_nbytes);
+/*
 	wrapper_veo_write_mem (ve_process, mem_prng_states, cpu_prng_seeds.data(), size_prng_seeds_nbytes);
-
+*/
 	// Pose Calculation buffers
 /*
 	uint64_t mem_pc_rotlist_const;
@@ -444,7 +447,11 @@ filled with clock() */
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed);
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_gens_performed);
+/*
 	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_prng_states);
+*/
+	wrapper_veo_args_set_stack (kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(cpu_prng_seeds.data()), size_prng_seeds_nbytes);
+
 	wrapper_veo_args_set_i32   (kernel_ga_arg_ptr, narg++, dockpars.pop_size);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_energy_evals);
 	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_generations);
@@ -546,7 +553,9 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << mem_dockpars_energies_current << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << mem_evals_performed << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(SPACE_M) << mem_gens_performed << "\n";
+/*
 	std::cout << std::left << std::setw(SPACE_L) << "mem_prng_states" << std::right << std::setw(SPACE_M) << mem_prng_states << "\n";
+*/
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.pop_size" << std::right << std::setw(SPACE_M) << dockpars.pop_size << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_energy_evals" << std::right << std::setw(SPACE_M) << dockpars.num_of_energy_evals << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_generations" << std::right << std::setw(SPACE_M) << dockpars.num_of_generations << "\n";

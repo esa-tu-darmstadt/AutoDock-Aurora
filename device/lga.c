@@ -19,7 +19,10 @@ void lga (
 			uint64_t  	VEVMA_EnergyCurrent,
 			uint64_t	VEVMA_Evals_performed,
             uint64_t	VEVMA_Gens_performed,
+/*
 			uint64_t    VEVMA_dockpars_prng_states,
+*/
+			uint*		dockpars_prng_states,
 			uint		DockConst_pop_size,
 		    uint        DockConst_num_of_energy_evals,
 			uint        DockConst_num_of_generations,
@@ -160,7 +163,10 @@ void lga (
 	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent);
 		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
 		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
+/*
 		  uint* dockpars_prng_states = (uint*) VEVMA_dockpars_prng_states;
+*/
+
 	// pc
 /*
 	const	int*	PC_rotlist = (int*)(VEVMA_pc_rotlist);
