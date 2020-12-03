@@ -143,7 +143,7 @@ int main() {
               &KerConstStatic.ref_coords_y_const[0],
               &KerConstStatic.ref_coords_z_const[0],
               &KerConstStatic.rotbonds_moving_vectors_const[0],
-              &KerConstStatic.rotbonds_unit_vectors_const[0,
+              &KerConstStatic.rotbonds_unit_vectors_const[0],
               &KerConstStatic.ref_orientation_quats_const[0],
               31, // dockpars.rotbondlist_length
 
