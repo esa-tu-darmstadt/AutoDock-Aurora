@@ -47,6 +47,10 @@ void energy_ie (
 
 	float interE = 0.0f;
 
+	#if defined (ENABLE_TRACE)
+	ftrace_region_begin("IE_MAIN_LOOP");
+	#endif
+
 	// For each ligand atom
 	for (uint atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++)
 	{
@@ -246,6 +250,10 @@ void energy_ie (
 
 		interE += partialE1 + partialE2 + partialE3;
 	} // End of atom1_id for-loop
+
+	#if defined (ENABLE_TRACE)
+	ftrace_region_end("IE_MAIN_LOOP");
+	#endif
 
 	// --------------------------------------------------------------
 	// Send intermolecular energy to chanel
