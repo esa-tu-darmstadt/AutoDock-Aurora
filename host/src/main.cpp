@@ -14,12 +14,11 @@ int main(int argc, char* argv[])
 	Gridinfo mygrid;
 	Liganddata myligand_init;
 	Dockpars mypars;
+	float* 	floatgrids;
+	FILE*	fp;
+	char 	report_file_name [256];
 
 	clock_t clock_start_program;
-	/*
-	clock_t clock_stop_program;
-	*/
-
 	clock_start_program = clock();
 
 	// ------------------------
@@ -47,8 +46,6 @@ int main(int argc, char* argv[])
 
 	//allocating CPU memory for floatgrids
 	size_t size_fgrid_nelems = (mygrid.num_of_atypes+2) * mygrid.size_xyz[0] * mygrid.size_xyz[1] * mygrid.size_xyz[2];
-
-	float* floatgrids;
 
 	// Filling the atom types filed of myligand according to the grid types
 	if (init_liganddata(mypars.ligandfile, &myligand_init, &mygrid) != 0)
@@ -100,18 +97,20 @@ int main(int argc, char* argv[])
 
 	free(floatgrids);
 
-	/*
-	clock_stop_program = clock();
-	printf("Program run time: %.3f sec\n", ELAPSEDSECS(clock_stop_program, clock_start_program));
-	*/
-
 	// ------------------------
 	// Time measurement
 	gettimeofday(&time_end,NULL);
 	num_sec     = time_end.tv_sec  - time_start.tv_sec;
 	num_usec    = time_end.tv_usec - time_start.tv_usec;
 	elapsed_sec = num_sec + (num_usec/1000000);
-	printf("Full program-execution time %.3f secs\n",elapsed_sec);
+	printf("Program run time %.3f sec\n\n",elapsed_sec);
+
+	// Append time information to .dlg file
+	strcpy(report_file_name, mypars.resname);
+	strcat(report_file_name, ".dlg");
+	fp = fopen(report_file_name, "a");
+	fprintf(fp, "\n\n\nProgram run time %.3f sec\n", elapsed_sec);
+	fclose(fp);
 	// ------------------------
 
 	return 0;
