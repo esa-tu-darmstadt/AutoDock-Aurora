@@ -468,6 +468,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 {
 	int atom_id, rotb_id, parallel_rot_id, rotlist_id;
 	char number_of_req_rotations[MAX_NUM_OF_ATOMS];
+	char number_of_req_rotations_copy[MAX_NUM_OF_ATOMS];
 	char atom_id_of_numrots[MAX_NUM_OF_ATOMS];
 	char atom_wasnt_rotated_yet[MAX_NUM_OF_ATOMS];
 	int new_rotlist_element;
@@ -499,6 +500,10 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		myligand->num_of_rotations_required += number_of_req_rotations[atom_id];
 	}
 
+	for (atom_id=0; atom_id<myligand->num_of_atoms; atom_id++)
+	{
+		number_of_req_rotations_copy[atom_id] = number_of_req_rotations[atom_id];
+	}
 
 	rotlist_id=0;
 	make_reqrot_ordering(number_of_req_rotations, atom_id_of_numrots, myligand->num_of_atoms);
@@ -572,7 +577,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 	printf("# atoms: %u\n", myligand->num_of_atoms);
 	for (unsigned int j = 0; j < myligand->num_of_atoms; j++) {
-		printf("atom_id: %u, rot_required: %u\n", j, number_of_req_rotations[j]);
+		printf("atom_id: %u, rot_required: %u\n", j, number_of_req_rotations_copy[j]);
 	}
 
 	return 0;
