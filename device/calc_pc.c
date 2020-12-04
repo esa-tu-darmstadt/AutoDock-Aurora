@@ -35,15 +35,6 @@ void calc_pc (
 	#endif
 
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
-/*
-	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		if (i < 3) {
-			local_genotype [i] = genotype[i];
-		} else {
-			local_genotype [i] = genotype[i] * DEG_TO_RAD;
-		}
-	}
-*/
 
 	for (uint i = 3; i < DockConst_num_of_genes; i++) {
 		local_genotype [i] = genotype[i] * DEG_TO_RAD;
@@ -102,11 +93,7 @@ void calc_pc (
 				rotation_unitvec[0] = genrot_unitvec[0];
 				rotation_unitvec[1] = genrot_unitvec[1];
 				rotation_unitvec[2] = genrot_unitvec[2];
-/*
-				rotation_movingvec[0] = local_genotype[0];
-				rotation_movingvec[1] = local_genotype[1];
-				rotation_movingvec[2] = local_genotype[2];
-*/
+
 				rotation_movingvec[0] = genotype[0];
 				rotation_movingvec[1] = genotype[1];
 				rotation_movingvec[2] = genotype[2];
