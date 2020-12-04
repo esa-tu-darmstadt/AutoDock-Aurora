@@ -49,6 +49,7 @@
 #define RAND_C 		12345u
 //WARNING: it is supposed that unsigned int is 32 bit long
 #define MAX_UINT 	4294967296.0f
+#define MAX_ONE_FACTOR	(0.999999f / MAX_UINT)
 
 // Macro for capturing grid values
 // Original

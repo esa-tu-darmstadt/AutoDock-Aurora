@@ -98,7 +98,10 @@ float randf(unsigned int* input) {
 #if defined (REPRO)
   randf = 0.55f;
 #else
+/*
 	randf = (rand(input) / MAX_UINT) *0.999999f;
+*/
+	randf = rand(input) * MAX_ONE_FACTOR;
 #endif
 
   return randf;
