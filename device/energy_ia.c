@@ -45,6 +45,10 @@ void energy_ia (
 
 	float intraE = 0.0f;
 
+	#if defined (ENABLE_TRACE)
+	ftrace_region_begin("IA_MAIN_LOOP");
+	#endif
+
 	// For each intramolecular atom contributor pair
 	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++) {
 
@@ -154,6 +158,10 @@ void energy_ia (
 		intraE += partialE1 + partialE2 + partialE3 + partialE4;
 	
 	} // End of contributor_counter for-loop
+
+	#if defined (ENABLE_TRACE)
+	ftrace_region_end("IA_MAIN_LOOP");
+	#endif
 
 	// --------------------------------------------------------------
 	// Send intramolecular energy to channel
