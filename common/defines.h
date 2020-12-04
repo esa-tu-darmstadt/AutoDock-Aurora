@@ -51,16 +51,6 @@
 #define MAX_UINT 	4294967296.0f
 #define MAX_ONE_FACTOR	(0.999999f / MAX_UINT)
 
-// Macro for capturing grid values
-// Original
-#define GETGRIDVALUE(mempoi,gridsize_x,gridsize_y,gridsize_z,t,z,y,x)   *(mempoi + gridsize_x*(y + gridsize_y*(z + gridsize_z*t)) + x)
-
-// Optimization 1
-//#define GETGRIDVALUE_OPT(mempoi,gridsize_x,gridsize_y,mul_tmp,z,y,x)   *(mempoi + gridsize_x*(y + gridsize_y*(z + mul_tmp)) + x)
-
-// Optimization 2
-// It is done in the kernel code
-
 // Macro for trilinear interpolation
 #define TRILININTERPOL(cube, weights) (cube[0][0][0]*weights[0][0][0] +cube[1][0][0]*weights[1][0][0] +	\
 				       cube[0][1][0]*weights[0][1][0] +cube[1][1][0]*weights[1][1][0] + \
