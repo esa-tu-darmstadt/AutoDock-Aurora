@@ -176,13 +176,13 @@ void energy_ie (
 
 			// Energy contribution of the electrostatic grid
 			cube [0][0][0] = IE_Fgrids_2[cube_000];
-                        cube [1][0][0] = IE_Fgrids_2[cube_100];
-                        cube [0][1][0] = IE_Fgrids_2[cube_010];
-                        cube [1][1][0] = IE_Fgrids_2[cube_110];
-                        cube [0][0][1] = IE_Fgrids_2[cube_001];
-                        cube [1][0][1] = IE_Fgrids_2[cube_101];
-                        cube [0][1][1] = IE_Fgrids_2[cube_011];
-                        cube [1][1][1] = IE_Fgrids_2[cube_111];
+			cube [1][0][0] = IE_Fgrids_2[cube_100];
+			cube [0][1][0] = IE_Fgrids_2[cube_010];
+			cube [1][1][0] = IE_Fgrids_2[cube_110];
+			cube [0][0][1] = IE_Fgrids_2[cube_001];
+			cube [1][0][1] = IE_Fgrids_2[cube_101];
+			cube [0][1][1] = IE_Fgrids_2[cube_011];
+			cube [1][1][1] = IE_Fgrids_2[cube_111];
 
 			#if defined (PRINT_ALL)
 			printf("Interpolation of electrostatic map:\n");
@@ -212,13 +212,13 @@ void energy_ie (
 
 			// Energy contribution of the desolvation grid
 			cube [0][0][0] = IE_Fgrids_3[cube_000];
-                        cube [1][0][0] = IE_Fgrids_3[cube_100];
-                        cube [0][1][0] = IE_Fgrids_3[cube_010];
-                        cube [1][1][0] = IE_Fgrids_3[cube_110];
-                        cube [0][0][1] = IE_Fgrids_3[cube_001];
-                        cube [1][0][1] = IE_Fgrids_3[cube_101];
-                        cube [0][1][1] = IE_Fgrids_3[cube_011];
-                        cube [1][1][1] = IE_Fgrids_3[cube_111];
+			cube [1][0][0] = IE_Fgrids_3[cube_100];
+			cube [0][1][0] = IE_Fgrids_3[cube_010];
+			cube [1][1][0] = IE_Fgrids_3[cube_110];
+			cube [0][0][1] = IE_Fgrids_3[cube_001];
+			cube [1][0][1] = IE_Fgrids_3[cube_101];
+			cube [0][1][1] = IE_Fgrids_3[cube_011];
+			cube [1][1][1] = IE_Fgrids_3[cube_111];
 
 			#if defined (PRINT_ALL)
 			printf("Interpolation of desolvation map:\n");
