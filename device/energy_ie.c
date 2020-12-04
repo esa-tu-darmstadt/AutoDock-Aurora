@@ -160,15 +160,7 @@ void energy_ie (
 			printf("cube(1,1,1) = %f\n", cube [1][1][1]);
 			#endif
 
-			/*partialE1 = TRILININTERPOL(cube, weights);*/
-			partialE1 = cube[0][0][0] * weights[0][0][0] +
-				    cube[1][0][0] * weights[1][0][0] +
-				    cube[0][1][0] * weights[0][1][0] +
-				    cube[1][1][0] * weights[1][1][0] + 
-				    cube[0][0][1] * weights[0][0][1] +
-				    cube[1][0][1] * weights[1][0][1] + 
-				    cube[0][1][1] * weights[0][1][1] +
-				    cube[1][1][1] * weights[1][1][1];
+			partialE1 = TRILININTERPOL(cube, weights);
 
 			#if defined (PRINT_ALL)
 			printf("interpolated value = %f\n\n", TRILININTERPOL(cube, weights));
@@ -196,15 +188,7 @@ void energy_ie (
 			printf("cube(1,1,1) = %f\n", cube [1][1][1]);
 			#endif
 
-			/*partialE2 = q * TRILININTERPOL(cube, weights);*/
-			partialE2 = q * (cube[0][0][0] * weights[0][0][0] +
-				    	 cube[1][0][0] * weights[1][0][0] +
-				    	 cube[0][1][0] * weights[0][1][0] +
-				    	 cube[1][1][0] * weights[1][1][0] + 
-				    	 cube[0][0][1] * weights[0][0][1] +
-				    	 cube[1][0][1] * weights[1][0][1] + 
-				    	 cube[0][1][1] * weights[0][1][1] +
-				    	 cube[1][1][1] * weights[1][1][1]);
+			partialE2 = q * TRILININTERPOL(cube, weights);
 		
 			#if defined (PRINT_ALL)
 			printf("interpolated value = %f, multiplied by q = %f\n\n", TRILININTERPOL(cube, weights), q*TRILININTERPOL(cube, weights));
@@ -232,15 +216,7 @@ void energy_ie (
 			printf("cube(1,1,1) = %f\n", cube [1][1][1]);
 			#endif
 
-			/*partialE3 = fabs(q) * TRILININTERPOL(cube, weights);*/
-			partialE3 = fabs(q) * (cube[0][0][0] * weights[0][0][0] +
-				    	       cube[1][0][0] * weights[1][0][0] +
-				    	       cube[0][1][0] * weights[0][1][0] +
-				    	       cube[1][1][0] * weights[1][1][0] + 
-				    	       cube[0][0][1] * weights[0][0][1] +
-				    	       cube[1][0][1] * weights[1][0][1] + 
-				    	       cube[0][1][1] * weights[0][1][1] +
-				    	       cube[1][1][1] * weights[1][1][1]);
+			partialE3 = fabs(q) * TRILININTERPOL(cube, weights);
 
 			#if defined (PRINT_ALL)
 			printf("interpolated value = %f, multiplied by abs(q) = %f\n\n", TRILININTERPOL(cube, weights), fabs(q) * trilin_interpol(cube, weights));
