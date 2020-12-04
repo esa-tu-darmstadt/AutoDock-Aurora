@@ -8,6 +8,11 @@
 
 #include "math.h"
 
+#if defined (ENABLE_TRACE)
+#include <ftrace.h>
+#endif
+
+
 /* 
  * -----------------------------------------------
  * Overall

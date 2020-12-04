@@ -30,6 +30,10 @@ void calc_pc (
 	printf("\t%-40s %u\n", "Host_RunId: ",        				Host_RunId);
 	#endif
 
+	#if defined (ENABLE_TRACE)
+	ftrace_region_begin("PC_GENOTYPES_LOOP");
+	#endif
+
 	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		if (i < 3) {
@@ -38,6 +42,10 @@ void calc_pc (
 			local_genotype [i] = genotype[i] * DEG_TO_RAD;
 		}
 	}
+
+	#if defined (ENABLE_TRACE)
+	ftrace_region_end("PC_GENOTYPES_LOOP");
+	#endif
 
 	float phi = local_genotype[3];
 	float theta = local_genotype[4];
@@ -49,6 +57,10 @@ void calc_pc (
 	genrot_unitvec[0] = sin_theta*cos(phi);
 	genrot_unitvec[1] = sin_theta*sin(phi);
 	genrot_unitvec[2] = cos_theta;
+
+	#if defined (ENABLE_TRACE)
+	ftrace_region_begin("PC_MAIN_LOOP");
+	#endif
 
 	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
@@ -184,6 +196,10 @@ void calc_pc (
 		//mem_fence(CLK_LOCAL_MEM_FENCE);
 
 	} // End rotation_counter for-loop
+
+	#if defined (ENABLE_TRACE)
+	ftrace_region_end("PC_MAIN_LOOP");
+	#endif
 
 	#if defined (PRINT_ALL_PC) 
 	printf("\n");
