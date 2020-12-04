@@ -320,9 +320,6 @@ void lga (
 				LocalEneNext[0] = loc_energies[best_entity];
 			}
 
-			#if defined (PRINT_ALL_KRNL)
-			#endif
-
 			float local_entity_1 [ACTUAL_GENOTYPE_LENGTH];
 			float local_entity_2 [ACTUAL_GENOTYPE_LENGTH]; 
 		
@@ -466,9 +463,6 @@ void lga (
 
 				LocalPopNext[new_pop_cnt][gene_cnt] = tmp_offspring;
 			}
-
-			#if defined (PRINT_ALL_KRNL)	
-			#endif	
 
 			// Calculate energy
 			float energy_ia_gg;
