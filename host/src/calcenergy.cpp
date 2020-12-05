@@ -591,9 +591,17 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		num_times_atom_in_rotlist[atom_cnt] = 0;
 	}
 
+	// Auxiliary arrays
+	int rots_used_in_rotlist_one[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_rotlist_two[MAX_NUM_OF_ROTATIONS];
+
+	for (unsigned int rot_cnt = 0; rot_cnt < MAX_NUM_OF_ROTATIONS; rot_cnt++) {
+		rots_used_in_rotlist_one[rot_cnt] = 5000;
+		rots_used_in_rotlist_two[rot_cnt] = 5000;
+	}
+
 	// First rotations
 	int rotlist_one[MAX_NUM_OF_ROTATIONS];
-	int rots_used_in_rotlist_one[MAX_NUM_OF_ROTATIONS];
 	int rot_one_cnt = 0;
 
 	printf("\n");
@@ -602,7 +610,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 		if ((num_times_atom_in_rotlist[atom_id] == 0)  && (number_of_req_rotations_copy[atom_id] >= 1)) {
 			// Store ids from the original "rotlist" that are used in "rotlist_one"
-			rots_used_in_rotlist_one[rot_one_cnt] = rot_cnt;
+			rots_used_in_rotlist_one[rot_cnt] = rot_cnt;
 
 			// First rotation of this atom is stored in "rotlist_one"
 			rotlist_one[rot_one_cnt] = rotlist[rot_cnt];
@@ -625,26 +633,29 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 */
 	// Second rotations (for only those atoms that experiment such)
 	int rotlist_two[MAX_NUM_OF_ROTATIONS];
-	int rots_used_in_rotlist_two[MAX_NUM_OF_ROTATIONS];
 	int rot_two_cnt = 0;
 
 	printf("\n");
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
-		if ((num_times_atom_in_rotlist[atom_id] == 0) && (number_of_req_rotations_copy[atom_id] >= 2)) {
-			// Store ids from the original "rotlist" that are used in "rotlist_two"
-			rots_used_in_rotlist_two[rot_two_cnt] = rot_cnt;
+		if (rots_used_in_rotlist_one[rot_cnt] != rot_cnt) {
 
-			// Second rotation of this atom is stored in "rotlist_two"
-			rotlist_two[rot_two_cnt] = rotlist[rot_cnt];
-			rot_two_cnt++;
+			if ((num_times_atom_in_rotlist[atom_id] == 1) && (number_of_req_rotations_copy[atom_id] >= 2)) {
+				// Store ids from the original "rotlist" that are used in "rotlist_two"
+				rots_used_in_rotlist_two[rot_cnt] = rot_cnt;
 
-			// An eventual third rotation of this atom,
-			// will be stored in "rotlist_three"
-			num_times_atom_in_rotlist[atom_id]++;
+				// Second rotation of this atom is stored in "rotlist_two"
+				rotlist_two[rot_two_cnt] = rotlist[rot_cnt];
+				rot_two_cnt++;
 
-			printf("Added to rotlist_two: rot_cnt: %u, atom_id: %u, \n", rot_cnt, atom_id);
+				// An eventual third rotation of this atom,
+				// will be stored in "rotlist_three"
+				num_times_atom_in_rotlist[atom_id]++;
+
+				printf("Added to rotlist_two: rot_cnt: %u, atom_id: %u, \n", rot_cnt, atom_id);
+			}
+
 		}
 	}
 
