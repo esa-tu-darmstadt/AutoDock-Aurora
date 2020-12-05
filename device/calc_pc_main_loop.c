@@ -16,8 +16,11 @@ void calc_pc_main_loop (
 			float*	restrict	local_coords_y,
 			float*	restrict	local_coords_z,
 
+            float*  restrict    genrot_unitvec,
             float*  restrict    local_genotype
 ) {
+
+    float genrotangle = local_genotype[5];
 
 	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
