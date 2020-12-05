@@ -34,6 +34,13 @@ void lga (
 			uchar       DockConst_num_of_genes,
 	// pc
 	const	int* 		PC_rotlist,
+	const	int* 		PC_subrotlist_1,
+	const	int* 		PC_subrotlist_2,
+	const	int* 		PC_subrotlist_3,
+	const	int* 		PC_subrotlist_4,
+	const	int* 		PC_subrotlist_5,
+	const	int* 		PC_subrotlist_6,
+	const	int* 		PC_subrotlist_7,
 	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
 	const	float*		PC_ref_coords_y,
 	const	float*		PC_ref_coords_z,
@@ -179,6 +186,13 @@ void lga (
 		float energy_ie_ic;
 		calc_pc(
 			PC_rotlist,
+			PC_subrotlist_1,
+			PC_subrotlist_2,
+			PC_subrotlist_3,
+			PC_subrotlist_4,
+			PC_subrotlist_5,
+			PC_subrotlist_6,
+			PC_subrotlist_7,
 			PC_ref_coords_x,
 			PC_ref_coords_y,
 			PC_ref_coords_z,
@@ -469,6 +483,13 @@ void lga (
 			float energy_ie_gg;
 			calc_pc(
 				PC_rotlist,
+				PC_subrotlist_1,
+				PC_subrotlist_2,
+				PC_subrotlist_3,
+				PC_subrotlist_4,
+				PC_subrotlist_5,
+				PC_subrotlist_6,
+				PC_subrotlist_7,
 				PC_ref_coords_x,
 				PC_ref_coords_y,
 				PC_ref_coords_z,
@@ -580,6 +601,13 @@ void lga (
 				&dockpars_prng_states[prng_offset + entity_ls],
 
 				PC_rotlist,
+				PC_subrotlist_1,
+				PC_subrotlist_2,
+				PC_subrotlist_3,
+				PC_subrotlist_4,
+				PC_subrotlist_5,
+				PC_subrotlist_6,
+				PC_subrotlist_7,
 				PC_ref_coords_x,
 				PC_ref_coords_y,
 				PC_ref_coords_z,

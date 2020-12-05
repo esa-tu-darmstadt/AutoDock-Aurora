@@ -383,6 +383,13 @@ filled with clock() */
 	
 	// PC
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotlist_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_1_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_2_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_3_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_4_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_5_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_6_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_7_const[0]), size_rotlist_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_x_const[0]), size_ref_coords_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_y_const[0]), size_ref_coords_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_z_const[0]), size_ref_coords_nbytes);

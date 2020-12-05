@@ -5,6 +5,13 @@
 // --------------------------------------------------------------------------
 void calc_pc (
 	const	int*	restrict	PC_rotlist,
+	const	int* 	restrict	PC_subrotlist_1,
+	const	int* 	restrict	PC_subrotlist_2,
+	const	int* 	restrict	PC_subrotlist_3,
+	const	int* 	restrict	PC_subrotlist_4,
+	const	int* 	restrict	PC_subrotlist_5,
+	const	int* 	restrict	PC_subrotlist_6,
+	const	int* 	restrict	PC_subrotlist_7,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
 	const	float*	restrict	PC_ref_coords_z,

@@ -16,6 +16,13 @@ void perform_ls(
 			uint*				dockpars_prng_states,
 	// pc
 	const	int*	restrict	PC_rotlist,
+	const	int* 	restrict	PC_subrotlist_1,
+	const	int* 	restrict	PC_subrotlist_2,
+	const	int* 	restrict	PC_subrotlist_3,
+	const	int* 	restrict	PC_subrotlist_4,
+	const	int* 	restrict	PC_subrotlist_5,
+	const	int* 	restrict	PC_subrotlist_6,
+	const	int* 	restrict	PC_subrotlist_7,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
 	const	float*	restrict	PC_ref_coords_z,
@@ -159,6 +166,13 @@ void perform_ls(
 		float energy_ie_ls;
 		calc_pc(
 			PC_rotlist,
+			PC_subrotlist_1,
+			PC_subrotlist_2,
+			PC_subrotlist_3,
+			PC_subrotlist_4,
+			PC_subrotlist_5,
+			PC_subrotlist_6,
+			PC_subrotlist_7,
 			PC_ref_coords_x,
 			PC_ref_coords_y,
 			PC_ref_coords_z,
