@@ -596,6 +596,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int rots_used_in_rotlist_one[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_rotlist_two[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_rotlist_three[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_rotlist_four[MAX_NUM_OF_ROTATIONS];
 
 	// Assigning and initial value of MAX_NUM_OF_ROTATIONS,
 	// which of course will never be taken by a rot id
@@ -603,6 +604,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		rots_used_in_rotlist_one[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 		rots_used_in_rotlist_two[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 		rots_used_in_rotlist_three[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_rotlist_four[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -702,6 +704,38 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 				num_times_atom_in_rotlist[atom_id]++;
 
 				printf("rotlist_three: [three rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_three_cnt, rot_cnt, atom_id);
+			}
+
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+	// Fourth rotations (for only those atoms that experiment such)
+	// ---------------------------------------------------------------------------
+	int rotlist_four[MAX_NUM_OF_ROTATIONS];
+	int rot_four_cnt = 0;
+
+	printf("\n");
+	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
+		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
+
+		// Making sure rot id to be added to "rotlist_four"
+		// was not already added to neither
+		// "rotlist_one" nor "rotlist_two" nor "rotlist_three"
+		if ((rots_used_in_rotlist_one[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_two[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_three[rot_cnt] != rot_cnt)) {
+
+			if ((num_times_atom_in_rotlist[atom_id] == 3) && (number_of_req_rotations_copy[atom_id] >= 4)) {
+				// Storing ids from the original "rotlist" that are used in "rotlist_four"
+				rots_used_in_rotlist_four[rot_cnt] = rot_cnt;
+
+				// Fourth rotation of this atom is stored in "rotlist_four"
+				rotlist_four[rot_four_cnt] = rotlist[rot_cnt];
+				rot_four_cnt++;
+
+				// An eventual fifth rotation of this atom will be stored in "rotlist_five"
+				num_times_atom_in_rotlist[atom_id]++;
+
+				printf("rotlist_four: [four rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_four_cnt, rot_cnt, atom_id);
 			}
 
 		}
