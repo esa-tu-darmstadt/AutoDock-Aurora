@@ -476,6 +476,13 @@ filled with clock() */
 
 	// PC
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_1_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_1_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_2_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_2_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_3_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_3_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_4_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_4_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_5_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_5_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_6_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_6_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_7_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_7_length << "\n";
 	std::cout << std::endl;
 
 	// IA

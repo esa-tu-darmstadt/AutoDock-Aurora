@@ -167,6 +167,13 @@ int main() {
               &KerConstStatic.rotbonds_unit_vectors_const[0],
               &KerConstStatic.ref_orientation_quats_const[0],
               31, // dockpars.rotbondlist_length
+              31, // subrotlist_1_length
+              31, // subrotlist_2_length
+              31, // subrotlist_3_length
+              31, // subrotlist_4_length
+              31, // subrotlist_5_length
+              31, // subrotlist_6_length
+              31, // subrotlist_7_length
 
               &KerConstStatic.atom_charges_const[0],
               &KerConstStatic.atom_types_const[0],
