@@ -606,8 +606,8 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 			// An eventual second rotation of this atom,
 			// will be stored in "rotlist_two"
-			if (number_of_req_rotations_copy[atom_cnt] > 0) {
-				number_of_req_rotations_copy[atom_cnt]--;
+			if (number_of_req_rotations_copy[atom_id] > 0) {
+				number_of_req_rotations_copy[atom_id]--;
 				num_times_atom_in_rotlist[atom_id]++;
 			}
 			
