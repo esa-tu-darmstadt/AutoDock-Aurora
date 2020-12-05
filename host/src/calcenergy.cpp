@@ -611,6 +611,8 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 			// will be stored in "rotlist_two"
 			//number_of_req_rotations_copy[atom_id]--;
 			num_times_atom_in_rotlist[atom_id]++;
+
+			printf("Added to rotlist_one: rot_cnt: %u, atom_id: %u, \n", rot_cnt, atom_id);
 		}
 	}
 
