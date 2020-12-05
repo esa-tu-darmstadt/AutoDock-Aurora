@@ -1,4 +1,5 @@
 #include "auxiliary.c"
+#include "calc_pc_main_loop.c"
 
 // --------------------------------------------------------------------------
 // Calculation of the pose of the ligand according to the input genotype.
