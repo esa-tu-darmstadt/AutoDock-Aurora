@@ -624,7 +624,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 			// An eventual second rotation of this atom will be stored in "rotlist_two"
 			num_times_atom_in_rotlist[atom_id]++;
 
-			printf("rotlist_one: [orig] rot id: %u, atom id: %u\n", rot_cnt, atom_id);
+			printf("rotlist_one: [one rot-id]: %u, [orig rot-id]: %u, atom-id: %u\n", rot_one_cnt, rot_cnt, atom_id);
 		}
 	}
 
@@ -660,7 +660,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 				// An eventual third rotation of this atom will be stored in "rotlist_three"
 				num_times_atom_in_rotlist[atom_id]++;
 
-				printf("rotlist_two: [orig] rot id: %u, atom id: %u\n", rot_cnt, atom_id);
+				printf("rotlist_two: [two rot-id]: %u, [orig rot-id]: %u, atom-id: %u\n", rot_two_cnt, rot_cnt, atom_id);
 			}
 
 		}
