@@ -621,6 +621,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int rot_two_cnt = 0;
 
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
+		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
 		if (num_times_atom_in_rotlist[atom_id] == 1) {
 			// Second rotation of this atom is stored in "rotlist_two"
