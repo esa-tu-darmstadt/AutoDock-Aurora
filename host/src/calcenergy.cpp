@@ -606,5 +606,27 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		printf("rot_one_cnt: %u, atom_id: %u\n", rot_cnt, (rotlist_one[rot_cnt] & RLIST_ATOMID_MASK));
 	}
 
+	// Builing second rotation list
+	int rotlist_two[MAX_NUM_OF_ROTATIONS];
+	int rot_two_cnt = 0;
+	for (unsigned int atom_cnt = 0; atom_cnt < myligand->num_of_atoms; atom_cnt++) {
+		if (number_of_req_rotations_copy[atom_cnt] == 2) {
+
+			for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
+				if (atom_cnt == (rotlist[rot_cnt] & RLIST_ATOMID_MASK)) {
+					rotlist_two[rot_two_cnt] = rotlist[rot_cnt];
+					rot_two_cnt++;
+				}
+			}
+		}
+	}
+
+	printf("\n");
+	printf("# atoms in rotlist_two: %u\n", rot_two_cnt);
+	for (unsigned int rot_cnt = 0; rot_cnt < rot_two_cnt; rot_cnt++) {
+		printf("rot_two_cnt: %u, atom_id: %u\n", rot_cnt, (rotlist_two[rot_cnt] & RLIST_ATOMID_MASK));
+	}
+
+
 	return 0;
 }
