@@ -686,7 +686,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
-		// Making sure rot id to be added to "rotlist_three"q
+		// Making sure rot id to be added to "rotlist_three"
 		// was not already added to neither "rotlist_one" nor "rotlist_two"
 		if ((rots_used_in_rotlist_one[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_two[rot_cnt] != rot_cnt)) {
 
