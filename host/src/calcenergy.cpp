@@ -596,6 +596,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int rots_used_in_subrotlist_3[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_subrotlist_4[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_subrotlist_5[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_subrotlist_6[MAX_NUM_OF_ROTATIONS];
 
 	// Assigning and initial value of MAX_NUM_OF_ROTATIONS,
 	// which of course will never be taken by a rot id
@@ -605,6 +606,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		rots_used_in_subrotlist_3[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 		rots_used_in_subrotlist_4[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 		rots_used_in_subrotlist_5[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_subrotlist_6[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -752,6 +754,41 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 				rot_five_cnt++;
 
 				// An eventual 6th rotation of this atom will be stored in "rotlist_six"
+				num_times_atom_in_subrotlist[atom_id]++;
+			}
+
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+	// Sixth rotations (for only those atoms that experiment such)
+	// ---------------------------------------------------------------------------
+	int subrotlist_6[MAX_NUM_OF_ROTATIONS];
+	int rot_6_cnt = 0;
+
+	printf("\nsubrotlist_6:\n");
+	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
+		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
+
+		// Making sure rot id to be added to "subrotlist_6"
+		// was not already added to neither
+		// "subrotlist_1" nor "subrotlist_2" nor "subrotlist_3" nor "subrotlist_4" nor "subrotlist_5"
+		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt) &&
+		    (rots_used_in_subrotlist_3[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_4[rot_cnt] != rot_cnt) &&
+			(rots_used_in_subrotlist_5[rot_cnt] != rot_cnt)
+			) {
+
+			if ((num_times_atom_in_subrotlist[atom_id] == 5) && (number_of_req_rotations_copy[atom_id] >= 6)) {
+				printf("[subrot_6 rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_6_cnt, rot_cnt, atom_id);
+
+				// Storing ids from the original "rotlist" that are used in "subrotlist_6"
+				rots_used_in_subrotlist_6[rot_cnt] = rot_cnt;
+
+				// Sixth rotation of this atom is stored in "subrotlist_6"
+				subrotlist_6[rot_6_cnt] = rotlist[rot_cnt];
+				rot_6_cnt++;
+
+				// An eventual 7th rotation of this atom will be stored in "subrotlist_7"
 				num_times_atom_in_subrotlist[atom_id]++;
 			}
 
