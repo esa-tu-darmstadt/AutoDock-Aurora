@@ -264,6 +264,13 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	int subrotlist_5[MAX_NUM_OF_ROTATIONS];
 	int subrotlist_6[MAX_NUM_OF_ROTATIONS];
 	int subrotlist_7[MAX_NUM_OF_ROTATIONS];
+	unsigned int subrotlist_1_length;
+	unsigned int subrotlist_2_length;
+	unsigned int subrotlist_3_length;
+	unsigned int subrotlist_4_length;
+	unsigned int subrotlist_5_length;
+	unsigned int subrotlist_6_length;
+	unsigned int subrotlist_7_length;
 
 	//charges and type id-s
 	floatpoi = atom_charges;
@@ -365,7 +372,11 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	}
 
 	//generate rotation list
-	if (gen_rotlist(myligand_reference, rotlist, subrotlist_1, subrotlist_2, subrotlist_3, subrotlist_4, subrotlist_5, subrotlist_6, subrotlist_7) != 0)
+	if (gen_rotlist(
+			myligand_reference, rotlist, 
+			subrotlist_1, subrotlist_2, subrotlist_3, subrotlist_4, subrotlist_5, subrotlist_6, subrotlist_7,
+			&subrotlist_1_length, &subrotlist_2_length, &subrotlist_3_length, &subrotlist_4_length, &subrotlist_5_length, &subrotlist_6_length, &subrotlist_7_length
+					) != 0)
 	{
 		printf("Error: number of required rotations is too high!\n");
 		return 1;
@@ -407,6 +418,13 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 		KerConstStatic->subrotlist_6_const[m] = subrotlist_6[m];
 		KerConstStatic->subrotlist_7_const[m] = subrotlist_7[m];
 	}
+	KerConstStatic->subrotlist_1_length = subrotlist_1_length;
+	KerConstStatic->subrotlist_2_length = subrotlist_2_length;
+	KerConstStatic->subrotlist_3_length = subrotlist_3_length;
+	KerConstStatic->subrotlist_4_length = subrotlist_4_length;
+	KerConstStatic->subrotlist_5_length = subrotlist_5_length;
+	KerConstStatic->subrotlist_6_length = subrotlist_6_length;
+	KerConstStatic->subrotlist_7_length = subrotlist_7_length;
 
 	//coordinates of reference ligand
 	for (i=0; i < myligand_reference->num_of_atoms; i++) {
@@ -477,15 +495,22 @@ void make_reqrot_ordering(char number_of_req_rotations[MAX_NUM_OF_ATOMS],
 
 
 int gen_rotlist(
-	Liganddata*	myligand,
-	int	rotlist[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_1[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_2[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_3[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_4[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_5[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_6[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_7[MAX_NUM_OF_ROTATIONS]
+	Liganddata*		myligand,
+	int				rotlist[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_1[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_2[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_3[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_4[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_5[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_6[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_7[MAX_NUM_OF_ROTATIONS],
+	unsigned int*	subrotlist_1_length,
+	unsigned int*	subrotlist_2_length,
+	unsigned int*	subrotlist_3_length,
+	unsigned int*	subrotlist_4_length,
+	unsigned int*	subrotlist_5_length,
+	unsigned int*	subrotlist_6_length,
+	unsigned int*	subrotlist_7_length
 )
 //The function generates the rotation list which will be stored in the constant memory field rotlist_const by
 //prepare_const_fields_for_fpga(). The structure of this array is described at that function.
@@ -659,6 +684,7 @@ int gen_rotlist(
 			num_times_atom_in_subrotlist[atom_id]++;
 		}
 	}
+	*subrotlist_1_length = rot_one_cnt;
 
 	// ---------------------------------------------------------------------------
 	// Second rotations (for only those atoms that experiment such)
@@ -689,6 +715,7 @@ int gen_rotlist(
 
 		}
 	}
+	*subrotlist_2_length = rot_two_cnt;
 
 	// ---------------------------------------------------------------------------
 	// Third rotations (for only those atoms that experiment such)
@@ -720,6 +747,7 @@ int gen_rotlist(
 
 		}
 	}
+	*subrotlist_3_length = rot_three_cnt;
 
 	// ---------------------------------------------------------------------------
 	// Fourth rotations (for only those atoms that experiment such)
@@ -752,6 +780,7 @@ int gen_rotlist(
 
 		}
 	}
+	*subrotlist_4_length = rot_four_cnt;
 
 	// ---------------------------------------------------------------------------
 	// Fifth rotations (for only those atoms that experiment such)
@@ -785,6 +814,7 @@ int gen_rotlist(
 
 		}
 	}
+	*subrotlist_5_length = rot_five_cnt;
 
 	// ---------------------------------------------------------------------------
 	// Sixth rotations (for only those atoms that experiment such)
@@ -820,6 +850,7 @@ int gen_rotlist(
 
 		}
 	}
+	*subrotlist_6_length = rot_6_cnt;
 
 	// ---------------------------------------------------------------------------
 	// Seventh rotations (for only those atoms that experiment such)
@@ -855,6 +886,7 @@ int gen_rotlist(
 
 		}
 	}
+	*subrotlist_7_length = rot_7_cnt;
 
 
 	return 0;

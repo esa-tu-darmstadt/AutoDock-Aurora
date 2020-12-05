@@ -20,6 +20,13 @@ void calc_pc (
 	const	float*	restrict	PC_rotbonds_unit_vectors,
 	const	float*	restrict	PC_ref_orientation_quats,
 			uint				DockConst_rotbondlist_length,
+			uint				subrotlist_1_length,
+			uint				subrotlist_2_length,
+			uint				subrotlist_3_length,
+			uint				subrotlist_4_length,
+			uint				subrotlist_5_length,
+			uint				subrotlist_6_length,
+			uint				subrotlist_7_length,			
 			uchar				DockConst_num_of_genes,
 			uint				Host_RunId,
 

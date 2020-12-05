@@ -68,6 +68,13 @@ typedef struct
 	int       		subrotlist_5_const [MAX_NUM_OF_ROTATIONS];
 	int       		subrotlist_6_const [MAX_NUM_OF_ROTATIONS];
 	int       		subrotlist_7_const [MAX_NUM_OF_ROTATIONS];
+	unsigned int	subrotlist_1_length;
+	unsigned int	subrotlist_2_length;
+	unsigned int	subrotlist_3_length;
+	unsigned int	subrotlist_4_length;
+	unsigned int	subrotlist_5_length;
+	unsigned int	subrotlist_6_length;
+	unsigned int	subrotlist_7_length;
     float 			ref_coords_x_const			 [MAX_NUM_OF_ATOMS];
 	float 			ref_coords_y_const			 [MAX_NUM_OF_ATOMS];
 	float 			ref_coords_z_const			 [MAX_NUM_OF_ATOMS];
@@ -91,14 +98,21 @@ void make_reqrot_ordering(
 
 int gen_rotlist(
 	Liganddata*	myligand,
-	int	rotlist[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_1[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_2[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_3[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_4[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_5[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_6[MAX_NUM_OF_ROTATIONS],
-	int	subrotlist_7[MAX_NUM_OF_ROTATIONS]
+	int				rotlist[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_1[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_2[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_3[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_4[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_5[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_6[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_7[MAX_NUM_OF_ROTATIONS],
+	unsigned int*	subrotlist_1_length,
+	unsigned int*	subrotlist_2_length,
+	unsigned int*	subrotlist_3_length,
+	unsigned int*	subrotlist_4_length,
+	unsigned int*	subrotlist_5_length,
+	unsigned int*	subrotlist_6_length,
+	unsigned int*	subrotlist_7_length
 );
 
 #endif /* CALCENERGY_H_ */

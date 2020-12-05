@@ -397,6 +397,13 @@ filled with clock() */
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotbonds_unit_vectors_const[0]), size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_orientation_quats_const[0]), size_ref_orientation_quats_nbytes);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_1_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_2_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_3_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_4_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_5_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_6_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_7_length);
 
 	// IA
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_charges_const[0]), size_InterE_atom_charges_nbytes);
