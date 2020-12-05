@@ -632,7 +632,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
-		if ((num_times_atom_in_rotlist[atom_id] == 1) && (number_of_req_rotations_copy[atom_id] >= 2)) {
+		if ((num_times_atom_in_rotlist[atom_id] == 0) && (number_of_req_rotations_copy[atom_id] >= 2)) {
 			// Store ids from the original "rotlist" that are used in "rotlist_two"
 			rots_used_in_rotlist_two[rot_two_cnt] = rot_cnt;
 
