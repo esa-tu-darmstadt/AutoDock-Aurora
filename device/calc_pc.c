@@ -74,6 +74,7 @@ void calc_pc (
 	ftrace_region_begin("PC_MAIN_LOOP");
 	#endif
 
+/*
 	calc_pc_main_loop (
     	PC_rotlist,
     	PC_ref_coords_x,
@@ -91,6 +92,133 @@ void calc_pc (
 		genrot_unitvec,
         local_genotype
 	);
+*/
+
+	calc_pc_main_loop (
+    	PC_subrotlist_1,
+    	PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+        subrotlist_1_length,
+        Host_RunId,
+    	genotype,
+    	local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+        local_genotype
+	);
+
+	calc_pc_main_loop (
+    	PC_subrotlist_2,
+    	PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+        subrotlist_2_length,
+        Host_RunId,
+    	genotype,
+    	local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+        local_genotype
+	);
+
+	calc_pc_main_loop (
+    	PC_subrotlist_3,
+    	PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+        subrotlist_3_length,
+        Host_RunId,
+    	genotype,
+    	local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+        local_genotype
+	);
+
+	calc_pc_main_loop (
+    	PC_subrotlist_4,
+    	PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+        subrotlist_4_length,
+        Host_RunId,
+    	genotype,
+    	local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+        local_genotype
+	);
+
+	calc_pc_main_loop (
+    	PC_subrotlist_5,
+    	PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+        subrotlist_5_length,
+        Host_RunId,
+    	genotype,
+    	local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+        local_genotype
+	);
+
+	calc_pc_main_loop (
+    	PC_subrotlist_6,
+    	PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+        subrotlist_6_length,
+        Host_RunId,
+    	genotype,
+    	local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+        local_genotype
+	);
+
+	calc_pc_main_loop (
+    	PC_subrotlist_7,
+    	PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+        subrotlist_7_length,
+        Host_RunId,
+    	genotype,
+    	local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+        local_genotype
+	);		
 
 	#if defined (ENABLE_TRACE)
 	ftrace_region_end("PC_MAIN_LOOP");
