@@ -593,13 +593,17 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 	// First rotations
 	int rotlist_one[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_rotlist_one[MAX_NUM_OF_ROTATIONS];
 	int rot_one_cnt = 0;
 
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
-		// First rotation of this atom is stored in "rotlist_one"
-		if ((num_times_atom_in_rotlist[atom_id] == 0)  && (number_of_req_rotations_copy[atom_id] >= 1)){
+		if ((num_times_atom_in_rotlist[atom_id] == 0)  && (number_of_req_rotations_copy[atom_id] >= 1)) {
+			// Store ids from the original "rotlist" that are used in "rotlist_one"
+			rots_used_in_rotlist_one[rot_one_cnt] = rot_cnt;
+
+			// First rotation of this atom is stored in "rotlist_one"
 			rotlist_one[rot_one_cnt] = rotlist[rot_cnt];
 			rot_one_cnt++;
 
@@ -613,7 +617,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	printf("\n");
 	printf("# atoms in rotlist_one: %u\n", rot_one_cnt);
 	for (unsigned int rot_cnt = 0; rot_cnt < rot_one_cnt; rot_cnt++) {
-		printf("rot_one_cnt: %u, atom_id: %u\n", rot_cnt, (rotlist_one[rot_cnt] & RLIST_ATOMID_MASK));
+		printf("rot_one_cnt: %u, atom_id: %u, original rot_id: %u\n", rot_cnt, (rotlist_one[rot_cnt] & RLIST_ATOMID_MASK), rots_used_in_rotlist_one[rot_cnt]);
 	}
 
 	// Second rotations (for only those atoms that experiment such)
