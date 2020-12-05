@@ -592,21 +592,21 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	}
 
 	// ---------------------------------------------------------------------------
-	// Arrays storing rot ids already used in "rotlist_one" or "rotlist_two"
-	int rots_used_in_rotlist_one[MAX_NUM_OF_ROTATIONS];
-	int rots_used_in_rotlist_two[MAX_NUM_OF_ROTATIONS];
-	int rots_used_in_rotlist_three[MAX_NUM_OF_ROTATIONS];
-	int rots_used_in_rotlist_four[MAX_NUM_OF_ROTATIONS];
-	int rots_used_in_rotlist_five[MAX_NUM_OF_ROTATIONS];
+	// Arrays storing rot ids already used in "rotlist_one" or "rotlist_two" or etc
+	int rots_used_in_subrotlist_1[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_subrotlist_2[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_subrotlist_3[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_subrotlist_4[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_subrotlist_5[MAX_NUM_OF_ROTATIONS];
 
 	// Assigning and initial value of MAX_NUM_OF_ROTATIONS,
 	// which of course will never be taken by a rot id
 	for (unsigned int rot_cnt = 0; rot_cnt < MAX_NUM_OF_ROTATIONS; rot_cnt++) {
-		rots_used_in_rotlist_one[rot_cnt] = MAX_NUM_OF_ROTATIONS;
-		rots_used_in_rotlist_two[rot_cnt] = MAX_NUM_OF_ROTATIONS;
-		rots_used_in_rotlist_three[rot_cnt] = MAX_NUM_OF_ROTATIONS;
-		rots_used_in_rotlist_four[rot_cnt] = MAX_NUM_OF_ROTATIONS;
-		rots_used_in_rotlist_five[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_subrotlist_1[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_subrotlist_2[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_subrotlist_3[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_subrotlist_4[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_subrotlist_5[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -621,7 +621,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 		if ((num_times_atom_in_rotlist[atom_id] == 0)  && (number_of_req_rotations_copy[atom_id] >= 1)) {
 			// Storing ids from the original "rotlist" that are used in "rotlist_one"
-			rots_used_in_rotlist_one[rot_cnt] = rot_cnt;
+			rots_used_in_subrotlist_1[rot_cnt] = rot_cnt;
 
 			// First rotation of this atom is stored in "rotlist_one"
 			rotlist_one[rot_one_cnt] = rotlist[rot_cnt];
@@ -645,11 +645,11 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
 		// Making sure rot id to be added to "rotlist_two" was not already added to "rotlist_one"
-		if (rots_used_in_rotlist_one[rot_cnt] != rot_cnt) {
+		if (rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) {
 
 			if ((num_times_atom_in_rotlist[atom_id] == 1) && (number_of_req_rotations_copy[atom_id] >= 2)) {
 				// Storing ids from the original "rotlist" that are used in "rotlist_two"
-				rots_used_in_rotlist_two[rot_cnt] = rot_cnt;
+				rots_used_in_subrotlist_2[rot_cnt] = rot_cnt;
 
 				// Second rotation of this atom is stored in "rotlist_two"
 				rotlist_two[rot_two_cnt] = rotlist[rot_cnt];
@@ -676,11 +676,11 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 		// Making sure rot id to be added to "rotlist_three"
 		// was not already added to neither "rotlist_one" nor "rotlist_two"
-		if ((rots_used_in_rotlist_one[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_two[rot_cnt] != rot_cnt)) {
+		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt)) {
 
 			if ((num_times_atom_in_rotlist[atom_id] == 2) && (number_of_req_rotations_copy[atom_id] >= 3)) {
 				// Storing ids from the original "rotlist" that are used in "rotlist_three"
-				rots_used_in_rotlist_three[rot_cnt] = rot_cnt;
+				rots_used_in_subrotlist_3[rot_cnt] = rot_cnt;
 
 				// Third rotation of this atom is stored in "rotlist_three"
 				rotlist_three[rot_three_cnt] = rotlist[rot_cnt];
@@ -708,11 +708,11 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		// Making sure rot id to be added to "rotlist_four"
 		// was not already added to neither
 		// "rotlist_one" nor "rotlist_two" nor "rotlist_three"
-		if ((rots_used_in_rotlist_one[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_two[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_three[rot_cnt] != rot_cnt)) {
+		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_3[rot_cnt] != rot_cnt)) {
 
 			if ((num_times_atom_in_rotlist[atom_id] == 3) && (number_of_req_rotations_copy[atom_id] >= 4)) {
 				// Storing ids from the original "rotlist" that are used in "rotlist_four"
-				rots_used_in_rotlist_four[rot_cnt] = rot_cnt;
+				rots_used_in_subrotlist_4[rot_cnt] = rot_cnt;
 
 				// Fourth rotation of this atom is stored in "rotlist_four"
 				rotlist_four[rot_four_cnt] = rotlist[rot_cnt];
@@ -740,12 +740,12 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		// Making sure rot id to be added to "rotlist_five"
 		// was not already added to neither
 		// "rotlist_one" nor "rotlist_two" nor "rotlist_three" nor "rotlist_four"
-		if ((rots_used_in_rotlist_one[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_two[rot_cnt] != rot_cnt) && 
-		    (rots_used_in_rotlist_three[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_four[rot_cnt] != rot_cnt)) {
+		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt) && 
+		    (rots_used_in_subrotlist_3[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_4[rot_cnt] != rot_cnt)) {
 
 			if ((num_times_atom_in_rotlist[atom_id] == 4) && (number_of_req_rotations_copy[atom_id] >= 5)) {
 				// Storing ids from the original "rotlist" that are used in "rotlist_five"
-				rots_used_in_rotlist_five[rot_cnt] = rot_cnt;
+				rots_used_in_subrotlist_5[rot_cnt] = rot_cnt;
 
 				// Fifth rotation of this atom is stored in "rotlist_five"
 				rotlist_five[rot_five_cnt] = rotlist[rot_cnt];
