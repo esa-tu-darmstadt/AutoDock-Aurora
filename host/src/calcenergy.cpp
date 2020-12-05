@@ -572,15 +572,13 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// Building rotation lists
 	// ---------------------------------------------------------------------------
 
-	printf("\n");
-	printf("# rotlist elements: %u\n", rotlist_id);
+	printf("\n# rotlist elements: %u\n", rotlist_id);
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		unsigned int atom_id = rotlist[rot_cnt] & RLIST_ATOMID_MASK;
 		printf("rot-id: %u \tatom-id: %u\n", rot_cnt, atom_id);
 	}
 
-	printf("\n");
-	printf("# atoms: %u\n", myligand->num_of_atoms);
+	printf("\n# atoms: %u\n", myligand->num_of_atoms);
 	for (unsigned int atom_cnt = 0; atom_cnt < myligand->num_of_atoms; atom_cnt++) {
 		printf("atom-id: %u \tnum-rot-req: %u\n", atom_cnt, number_of_req_rotations_copy[atom_cnt]);
 	}
@@ -615,7 +613,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int subrotlist_1[MAX_NUM_OF_ROTATIONS];
 	int rot_one_cnt = 0;
 
-	printf("subrotlist_1:\n");
+	printf("\nsubrotlist_1:\n");
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
@@ -640,7 +638,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int subrotlist_2[MAX_NUM_OF_ROTATIONS];
 	int rot_two_cnt = 0;
 
-	printf("subrotlist_2:\n");
+	printf("\nsubrotlist_2:\n");
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
@@ -670,7 +668,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int subrotlist_3[MAX_NUM_OF_ROTATIONS];
 	int rot_three_cnt = 0;
 
-	printf("subrotlist_3:\n");
+	printf("\nsubrotlist_3:\n");
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
@@ -701,7 +699,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int subrotlist_4[MAX_NUM_OF_ROTATIONS];
 	int rot_four_cnt = 0;
 
-	printf("subrotlist_4:\n");
+	printf("\nsubrotlist_4:\n");
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
@@ -733,7 +731,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	int subrotlist_5[MAX_NUM_OF_ROTATIONS];
 	int rot_five_cnt = 0;
 
-	printf("subrotlist_5:\n");
+	printf("\nsubrotlist_5:\n");
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
