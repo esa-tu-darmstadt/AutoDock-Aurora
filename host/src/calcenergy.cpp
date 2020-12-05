@@ -592,7 +592,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	}
 
 	// ---------------------------------------------------------------------------
-	// Arrays storing rot ids already used in "rotlist_one" or "rotlist_two" or etc
+	// Arrays storing rot ids already used in "subrotlist_1" or "rotlist_two" or etc
 	int rots_used_in_subrotlist_1[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_subrotlist_2[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_subrotlist_3[MAX_NUM_OF_ROTATIONS];
@@ -612,7 +612,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// First rotations
 	// ---------------------------------------------------------------------------
-	int rotlist_one[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_1[MAX_NUM_OF_ROTATIONS];
 	int rot_one_cnt = 0;
 
 	printf("\n");
@@ -620,17 +620,17 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
 		if ((num_times_atom_in_subrotlist[atom_id] == 0)  && (number_of_req_rotations_copy[atom_id] >= 1)) {
-			// Storing ids from the original "rotlist" that are used in "rotlist_one"
+			// Storing ids from the original "rotlist" that are used in "subrotlist_1"
 			rots_used_in_subrotlist_1[rot_cnt] = rot_cnt;
 
-			// First rotation of this atom is stored in "rotlist_one"
-			rotlist_one[rot_one_cnt] = rotlist[rot_cnt];
+			// First rotation of this atom is stored in "subrotlist_1"
+			subrotlist_1[rot_one_cnt] = rotlist[rot_cnt];
 			rot_one_cnt++;
 
 			// An eventual second rotation of this atom will be stored in "rotlist_two"
 			num_times_atom_in_subrotlist[atom_id]++;
 
-			printf("rotlist_one: [one rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_one_cnt, rot_cnt, atom_id);
+			printf("subrotlist_1: [one rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_one_cnt, rot_cnt, atom_id);
 		}
 	}
 
@@ -644,7 +644,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
-		// Making sure rot id to be added to "rotlist_two" was not already added to "rotlist_one"
+		// Making sure rot id to be added to "rotlist_two" was not already added to "subrotlist_1"
 		if (rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) {
 
 			if ((num_times_atom_in_subrotlist[atom_id] == 1) && (number_of_req_rotations_copy[atom_id] >= 2)) {
@@ -675,7 +675,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
 		// Making sure rot id to be added to "rotlist_three"
-		// was not already added to neither "rotlist_one" nor "rotlist_two"
+		// was not already added to neither "subrotlist_1" nor "rotlist_two"
 		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt)) {
 
 			if ((num_times_atom_in_subrotlist[atom_id] == 2) && (number_of_req_rotations_copy[atom_id] >= 3)) {
@@ -707,7 +707,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 		// Making sure rot id to be added to "rotlist_four"
 		// was not already added to neither
-		// "rotlist_one" nor "rotlist_two" nor "rotlist_three"
+		// "subrotlist_1" nor "rotlist_two" nor "rotlist_three"
 		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_3[rot_cnt] != rot_cnt)) {
 
 			if ((num_times_atom_in_subrotlist[atom_id] == 3) && (number_of_req_rotations_copy[atom_id] >= 4)) {
@@ -739,7 +739,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 
 		// Making sure rot id to be added to "rotlist_five"
 		// was not already added to neither
-		// "rotlist_one" nor "rotlist_two" nor "rotlist_three" nor "rotlist_four"
+		// "subrotlist_1" nor "rotlist_two" nor "rotlist_three" nor "rotlist_four"
 		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt) && 
 		    (rots_used_in_subrotlist_3[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_4[rot_cnt] != rot_cnt)) {
 
