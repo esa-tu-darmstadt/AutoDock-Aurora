@@ -630,7 +630,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 			// An eventual second rotation of this atom will be stored in "subrotlist_2"
 			num_times_atom_in_subrotlist[atom_id]++;
 
-			printf("subrotlist_1: [one rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_one_cnt, rot_cnt, atom_id);
+			printf("subrotlist_1: [subrot_1 rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_one_cnt, rot_cnt, atom_id);
 		}
 	}
 
@@ -658,7 +658,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 				// An eventual third rotation of this atom will be stored in "subrotlist_3"
 				num_times_atom_in_subrotlist[atom_id]++;
 
-				printf("subrotlist_2: [two rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_two_cnt, rot_cnt, atom_id);
+				printf("subrotlist_2: [subrot_2 rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_two_cnt, rot_cnt, atom_id);
 			}
 
 		}
@@ -689,7 +689,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 				// An eventual fourth rotation of this atom will be stored in "subrotlist_4"
 				num_times_atom_in_subrotlist[atom_id]++;
 
-				printf("subrotlist_3: [three rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_three_cnt, rot_cnt, atom_id);
+				printf("subrotlist_3: [subrot_3 rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_three_cnt, rot_cnt, atom_id);
 			}
 
 		}
@@ -721,7 +721,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 				// An eventual fifth rotation of this atom will be stored in "subrotlist_5"
 				num_times_atom_in_subrotlist[atom_id]++;
 
-				printf("subrotlist_4: [four rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_four_cnt, rot_cnt, atom_id);
+				printf("subrotlist_4: [subrot_4 rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_four_cnt, rot_cnt, atom_id);
 			}
 
 		}
@@ -754,7 +754,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 				// An eventual 6th rotation of this atom will be stored in "rotlist_six"
 				num_times_atom_in_subrotlist[atom_id]++;
 
-				printf("subrotlist_5: [five rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_five_cnt, rot_cnt, atom_id);
+				printf("subrotlist_5: [subrot_5 rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_five_cnt, rot_cnt, atom_id);
 			}
 
 		}
