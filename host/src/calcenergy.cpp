@@ -595,12 +595,14 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// Arrays storing rot ids already used in "rotlist_one" or "rotlist_two"
 	int rots_used_in_rotlist_one[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_rotlist_two[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_rotlist_three[MAX_NUM_OF_ROTATIONS];
 
 	// Assigning and initial value of MAX_NUM_OF_ROTATIONS,
 	// which of course will never be taken by a rot id
 	for (unsigned int rot_cnt = 0; rot_cnt < MAX_NUM_OF_ROTATIONS; rot_cnt++) {
 		rots_used_in_rotlist_one[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 		rots_used_in_rotlist_two[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_rotlist_three[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -677,6 +679,33 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// Third rotations (for only those atoms that experiment such)
 	// ---------------------------------------------------------------------------
+	int rotlist_three[MAX_NUM_OF_ROTATIONS];
+	int rot_three_cnt = 0;
+
+	printf("\n");
+	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
+		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
+
+		// Making sure rot id to be added to "rotlist_three"q
+		// was not already added to neither "rotlist_one" nor "rotlist_two"
+		if ((rots_used_in_rotlist_one[rot_cnt] != rot_cnt) && (rots_used_in_rotlist_two[rot_cnt] != rot_cnt)) {
+
+			if ((num_times_atom_in_rotlist[atom_id] == 2) && (number_of_req_rotations_copy[atom_id] >= 3)) {
+				// Storing ids from the original "rotlist" that are used in "rotlist_three"
+				rots_used_in_rotlist_three[rot_cnt] = rot_cnt;
+
+				// Third rotation of this atom is stored in "rotlist_three"
+				rotlist_three[rot_three_cnt] = rotlist[rot_cnt];
+				rot_three_cnt++;
+
+				// An eventual fourth rotation of this atom will be stored in "rotlist_four"
+				num_times_atom_in_rotlist[atom_id]++;
+
+				printf("rotlist_three: [three rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_three_cnt, rot_cnt, atom_id);
+			}
+
+		}
+	}
 
 	return 0;
 }
