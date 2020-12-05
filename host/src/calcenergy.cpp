@@ -256,7 +256,14 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 	float VWpars_BD[MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES];
 	float dspars_S[MAX_NUM_OF_ATYPES];
 	float dspars_V[MAX_NUM_OF_ATYPES];
-	int   rotlist[MAX_NUM_OF_ROTATIONS];
+	int rotlist[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_1[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_2[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_3[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_4[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_5[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_6[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_7[MAX_NUM_OF_ROTATIONS];
 
 	//charges and type id-s
 	floatpoi = atom_charges;
@@ -307,9 +314,9 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 			}
 		}
 
-        // -------------------------------------------
-        // Smoothed pairwise potentials
-        // -------------------------------------------
+    // -------------------------------------------
+    // Smoothed pairwise potentials
+    // -------------------------------------------
 	// reqm, reqm_hbond: equilibrium internuclear separation for vdW and hbond
 	for (i= 0; i<ATYPE_NUM/*myligand_reference->num_of_atypes*/; i++) {
 		reqm[i]       = myligand_reference->reqm[i];
@@ -358,7 +365,7 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 	}
 
 	//generate rotation list
-	if (gen_rotlist(myligand_reference, rotlist) != 0)
+	if (gen_rotlist(myligand_reference, rotlist, subrotlist_1, subrotlist_2, subrotlist_3, subrotlist_4, subrotlist_5, subrotlist_6, subrotlist_7) != 0)
 	{
 		printf("Error: number of required rotations is too high!\n");
 		return 1;
@@ -388,9 +395,18 @@ int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
 
 	for (m=0;m<MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES;m++){ KerConstStatic->VWpars_AC_const[m] = VWpars_AC[m]; }
 	for (m=0;m<MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES;m++){ KerConstStatic->VWpars_BD_const[m] = VWpars_BD[m]; }
-	for (m=0;m<MAX_NUM_OF_ATYPES;m++)		{ KerConstStatic->dspars_S_const[m] = dspars_S[m]; }
-	for (m=0;m<MAX_NUM_OF_ATYPES;m++)		{ KerConstStatic->dspars_V_const[m] = dspars_V[m]; }
-	for (m=0;m<MAX_NUM_OF_ROTATIONS;m++)	{ KerConstStatic->rotlist_const[m] = rotlist[m]; }
+	for (m=0;m<MAX_NUM_OF_ATYPES;m++) { KerConstStatic->dspars_S_const[m] = dspars_S[m]; }
+	for (m=0;m<MAX_NUM_OF_ATYPES;m++) { KerConstStatic->dspars_V_const[m] = dspars_V[m]; }
+	for (m=0; m<MAX_NUM_OF_ROTATIONS; m++) {
+		KerConstStatic->rotlist_const[m] = rotlist[m];
+		KerConstStatic->subrotlist_1_const[m] = subrotlist_1[m];
+		KerConstStatic->subrotlist_2_const[m] = subrotlist_2[m];
+		KerConstStatic->subrotlist_3_const[m] = subrotlist_3[m];
+		KerConstStatic->subrotlist_4_const[m] = subrotlist_4[m];
+		KerConstStatic->subrotlist_5_const[m] = subrotlist_5[m];
+		KerConstStatic->subrotlist_6_const[m] = subrotlist_6[m];
+		KerConstStatic->subrotlist_7_const[m] = subrotlist_7[m];
+	}
 
 	//coordinates of reference ligand
 	for (i=0; i < myligand_reference->num_of_atoms; i++) {
@@ -456,13 +472,21 @@ void make_reqrot_ordering(char number_of_req_rotations[MAX_NUM_OF_ATOMS],
 	for (i=0; i<num_of_atoms; i++)
 		printf("Rotation of %d (required rots remaining: %d)\n", atom_id_of_numrots[i], number_of_req_rotations[i]);
 	printf("\n\n");*/
-
-
 }
 
 
 
-int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
+int gen_rotlist(
+	Liganddata*	myligand,
+	int	rotlist[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_1[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_2[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_3[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_4[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_5[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_6[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_7[MAX_NUM_OF_ROTATIONS]
+)
 //The function generates the rotation list which will be stored in the constant memory field rotlist_const by
 //prepare_const_fields_for_fpga(). The structure of this array is described at that function.
 {
@@ -480,7 +504,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	myligand->num_of_rotcyc = 0;
 	myligand->num_of_rotations_required = 0;
 
-	// On the FPGA: kernels are single threaded
+	// On the SX-Aurora machine: kernels are single threaded
 	const int num_of_threads_per_block = 1;
 
 	for (atom_id=0; atom_id<num_of_threads_per_block; atom_id++)	//handling special case when num_of_atoms<num_of_threads_per_block
@@ -614,7 +638,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// First rotations
 	// ---------------------------------------------------------------------------
-	int subrotlist_1[MAX_NUM_OF_ROTATIONS];
+	//int subrotlist_1[MAX_NUM_OF_ROTATIONS];
 	int rot_one_cnt = 0;
 
 	printf("\nsubrotlist_1:\n");
@@ -639,7 +663,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// Second rotations (for only those atoms that experiment such)
 	// ---------------------------------------------------------------------------
-	int subrotlist_2[MAX_NUM_OF_ROTATIONS];
+	//int subrotlist_2[MAX_NUM_OF_ROTATIONS];
 	int rot_two_cnt = 0;
 
 	printf("\nsubrotlist_2:\n");
@@ -669,7 +693,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// Third rotations (for only those atoms that experiment such)
 	// ---------------------------------------------------------------------------
-	int subrotlist_3[MAX_NUM_OF_ROTATIONS];
+	//int subrotlist_3[MAX_NUM_OF_ROTATIONS];
 	int rot_three_cnt = 0;
 
 	printf("\nsubrotlist_3:\n");
@@ -700,7 +724,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// Fourth rotations (for only those atoms that experiment such)
 	// ---------------------------------------------------------------------------
-	int subrotlist_4[MAX_NUM_OF_ROTATIONS];
+	//int subrotlist_4[MAX_NUM_OF_ROTATIONS];
 	int rot_four_cnt = 0;
 
 	printf("\nsubrotlist_4:\n");
@@ -732,7 +756,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// Fifth rotations (for only those atoms that experiment such)
 	// ---------------------------------------------------------------------------
-	int subrotlist_5[MAX_NUM_OF_ROTATIONS];
+	//int subrotlist_5[MAX_NUM_OF_ROTATIONS];
 	int rot_five_cnt = 0;
 
 	printf("\nsubrotlist_5:\n");
@@ -765,7 +789,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// Sixth rotations (for only those atoms that experiment such)
 	// ---------------------------------------------------------------------------
-	int subrotlist_6[MAX_NUM_OF_ROTATIONS];
+	//int subrotlist_6[MAX_NUM_OF_ROTATIONS];
 	int rot_6_cnt = 0;
 
 	printf("\nsubrotlist_6:\n");
@@ -800,7 +824,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	// ---------------------------------------------------------------------------
 	// Seventh rotations (for only those atoms that experiment such)
 	// ---------------------------------------------------------------------------
-	int subrotlist_7[MAX_NUM_OF_ROTATIONS];
+	//int subrotlist_7[MAX_NUM_OF_ROTATIONS];
 	int rot_7_cnt = 0;
 
 	printf("\nsubrotlist_7:\n");

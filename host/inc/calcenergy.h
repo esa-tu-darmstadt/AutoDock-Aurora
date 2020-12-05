@@ -61,6 +61,13 @@ typedef struct
     float     		dspars_S_const               [MAX_NUM_OF_ATYPES];
     float     		dspars_V_const               [MAX_NUM_OF_ATYPES];
     int       		rotlist_const                [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_1_const [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_2_const [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_3_const [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_4_const [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_5_const [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_6_const [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_7_const [MAX_NUM_OF_ROTATIONS];
     float 			ref_coords_x_const			 [MAX_NUM_OF_ATOMS];
 	float 			ref_coords_y_const			 [MAX_NUM_OF_ATOMS];
 	float 			ref_coords_z_const			 [MAX_NUM_OF_ATOMS];
@@ -69,17 +76,30 @@ typedef struct
 	float 			ref_orientation_quats_const  [4*MAX_NUM_OF_RUNS];
 } kernelconstant_static;
 
-int prepare_conststatic_fields_for_fpga(Liganddata* 	       myligand_reference,
-				 	Dockpars*   	       mypars,
-				 	float*      	       cpu_ref_ori_angles,
-				 	kernelconstant_static* KerConstStatic);
+int prepare_conststatic_fields_for_fpga(
+	Liganddata*	myligand_reference,
+	Dockpars*	mypars,
+	float*	cpu_ref_ori_angles,
+	kernelconstant_static*	KerConstStatic
+);
 
-void make_reqrot_ordering(char number_of_req_rotations[MAX_NUM_OF_ATOMS],
-			  char atom_id_of_numrots[MAX_NUM_OF_ATOMS],
-		          int  num_of_atoms);
+void make_reqrot_ordering(
+	char number_of_req_rotations[MAX_NUM_OF_ATOMS],
+	char atom_id_of_numrots[MAX_NUM_OF_ATOMS],
+	int num_of_atoms
+);
 
-int gen_rotlist(Liganddata* myligand,
-		int         rotlist[MAX_NUM_OF_ROTATIONS]);
+int gen_rotlist(
+	Liganddata*	myligand,
+	int	rotlist[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_1[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_2[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_3[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_4[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_5[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_6[MAX_NUM_OF_ROTATIONS],
+	int	subrotlist_7[MAX_NUM_OF_ROTATIONS]
+);
 
 #endif /* CALCENERGY_H_ */
 
