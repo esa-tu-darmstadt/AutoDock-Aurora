@@ -76,7 +76,7 @@ typedef struct
 	float 			ref_orientation_quats_const  [4*MAX_NUM_OF_RUNS];
 } kernelconstant_static;
 
-int prepare_conststatic_fields_for_fpga(
+int prepare_conststatic_fields_for_aurora(
 	Liganddata*	myligand_reference,
 	Dockpars*	mypars,
 	float*	cpu_ref_ori_angles,

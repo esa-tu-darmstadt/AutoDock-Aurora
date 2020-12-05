@@ -159,7 +159,7 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
 
 	kernelconstant_static  KerConstStatic;
-	if (prepare_conststatic_fields_for_fpga(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic) == 1)
+	if (prepare_conststatic_fields_for_aurora(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic) == 1)
 		return 1;
 
 	// Preparing parameter struct
