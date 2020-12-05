@@ -599,7 +599,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
 		// First rotation of this atom is stored in "rotlist_one"
-		if ((num_times_atom_in_rotlist[atom_id] == 0)  && (number_of_req_rotations_copy[atom_id] == 1)){
+		if ((num_times_atom_in_rotlist[atom_id] == 0)  && (number_of_req_rotations_copy[atom_id] >= 1)){
 			rotlist_one[rot_one_cnt] = rotlist[rot_cnt];
 			rot_one_cnt++;
 
@@ -623,7 +623,7 @@ int gen_rotlist(Liganddata* myligand, int rotlist[MAX_NUM_OF_ROTATIONS])
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
 
-		if ((num_times_atom_in_rotlist[atom_id] == 1) && (number_of_req_rotations_copy[atom_id] == 2)) {
+		if ((num_times_atom_in_rotlist[atom_id] == 1) && (number_of_req_rotations_copy[atom_id] >= 2)) {
 			// Second rotation of this atom is stored in "rotlist_two"
 			rotlist_two[rot_two_cnt] = rotlist[rot_cnt];
 			rot_two_cnt++;
