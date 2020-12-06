@@ -42,9 +42,9 @@ void write_basic_info(FILE* fp, const Liganddata* ligand_ref, const Dockpars* my
 	int i;
 
 
-	fprintf(fp, "***********************************\n");
-	fprintf(fp, "**   OCLADOCK-FPGA REPORT FILE   **\n");
-	fprintf(fp, "***********************************\n\n\n");
+	fprintf(fp, "***************************************\n");
+	fprintf(fp, "**   AUTODOCK-AURORA-2 REPORT FILE   **\n");
+	fprintf(fp, "***************************************\n\n\n");
 
 	//Writing out docking parameters
 
@@ -135,9 +135,9 @@ void write_basic_info_dlg(FILE* fp, const Liganddata* ligand_ref, const Dockpars
 	int i;
 
 
-	fprintf(fp, "**********************************************************\n");
-	fprintf(fp, "**    OCLADOCK-FPGA AUTODOCKTOOLS-COMPATIBLE DLG FILE   **\n");
-	fprintf(fp, "**********************************************************\n\n\n");
+	fprintf(fp, "**************************************************************\n");
+	fprintf(fp, "**    AUTODOCK-AURORA-2 AUTODOCKTOOLS-COMPATIBLE DLG FILE   **\n");
+	fprintf(fp, "**************************************************************\n\n\n");
 
 	//Writing out docking parameters
 

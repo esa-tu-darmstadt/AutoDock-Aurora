@@ -516,7 +516,6 @@ int get_VWpars(Liganddata* myligand, const double AD4_coeff_vdW, const double AD
 			//identifying atom types
 			for (i=0; i<ATYPE_NUM; i++)
 /*
-				// OCLADock
 				if (stricmp(atom_names [i], myligand->atom_types [atom_typeid1]) == 0)
 				//if (_stricmp(atom_names[i], myligand->atom_types[atom_typeid1]) == 0)
 					VWid_atype1 = i;
@@ -528,7 +527,6 @@ int get_VWpars(Liganddata* myligand, const double AD4_coeff_vdW, const double AD
 
 			for (i=0; i<ATYPE_NUM; i++)
 /*
-				// OCLADock
 				if (stricmp(atom_names[i], myligand->atom_types[atom_typeid2]) == 0)
 				//if (_stricmp(atom_names[i], myligand->atom_types[atom_typeid2]) == 0)
 					VWid_atype2 = i;
@@ -1656,132 +1654,7 @@ void calc_interE_peratom_f(const Gridinfo* mygrid,
 	//return interE;
 }
 
-// OCLADock original host "calc_intraE_f" function
-#if 0
-float calc_intraE_f(const Liganddata* myligand,
-		    float dcutoff,
-		    char ignore_desolv,
-		    const float scaled_AD4_coeff_elec,
-		    const float AD4_coeff_desolv,
-		    const float qasp, int debug)
-//The function calculates the intramolecular energy of the ligand given by the first parameter,
-//and returns it as a double. The second parameter is the distance cutoff, if the third isn't 0,
-//desolvation energy won't be included by the energy value, the fourth indicates if messages
-//about partial results are required (if debug=1)
-{
-
-	int atom_id1, atom_id2;
-	int type_id1, type_id2;
-	float dist;
-	int distance_id;
-	float vdW1, vdW2;
-	float s1, s2, v1, v2;
-
-	float vW, el, desolv;
-
-	//The following tables will contain the 1/r^6, 1/r^10, 1/r^12, W_el/(r*eps(r)) and W_des*exp(-r^2/(2sigma^2)) functions for
-	//distances 0.01:0.01:20.48 A
-	static char first_call = 1;
-	static float r_6_table [2048];
-	static float r_10_table [2048];
-	static float r_12_table [2048];
-	static float r_epsr_table [2048];
-	static float desolv_table [2048];
-
-	//The following arrays will contain the q1*q2 and qasp*abs(q) values for the ligand which is the input parameter when this
-	//function is called first time (it is supposed that the energy must always be calculated for this ligand only, that is, there
-	//is only one ligand during the run of the program...)
-	static float q1q2 [256][256];
-	static float qasp_mul_absq [256];
-
-	//when first call, calculating tables
-	if (first_call == 1)
-	{
-		calc_distdep_tables_f(r_6_table, r_10_table, r_12_table, r_epsr_table, desolv_table, scaled_AD4_coeff_elec, AD4_coeff_desolv);
-		calc_q_tables_f(myligand, qasp, q1q2, qasp_mul_absq);
-		first_call = 0;
-	}
-
-	vW = 0;
-	el = 0;
-	desolv = 0;
-
-	if (debug == 1)
-		printf("\n\n\nINTRAMOLECULAR ENERGY CALCULATION\n\n");
-
-	for (atom_id1=0; atom_id1<myligand->num_of_atoms-1; atom_id1++)	//for each atom pair
-		for (atom_id2=atom_id1+1; atom_id2<myligand->num_of_atoms; atom_id2++)
-		{
-			if (myligand->intraE_contributors [atom_id1][atom_id2] == 1)	//if they have to be included in intramolecular energy calculation
-			{															//the energy contribution has to be calculated
-				dist = distance(&(myligand->atom_idxyzq [atom_id1][1]), &(myligand->atom_idxyzq [atom_id2][1]));
-
-				if (dist <= 1)
-				{
-					if (debug == 1)
-						printf("\n\nToo low distance (%lf) between atoms %d and %d\n", dist, atom_id1, atom_id2);
-
-					//return HIGHEST_ENERGY;	//returning maximal value
-					dist = 1;
-				}
-
-				if (debug == 1)
-				{
-					printf("\n\nCalculating energy contribution of atoms %d and %d\n", atom_id1+1, atom_id2+1);
-					printf("Distance: %lf\n", dist);
-				}
-
-				if ((dist < dcutoff) && (dist < 20.48))	//but only if the distance is less than distance cutoff value and 20.48A (because of the tables)
-				{
-					type_id1 = myligand->atom_idxyzq [atom_id1][0];
-					type_id2 = myligand->atom_idxyzq [atom_id2][0];
-
-					distance_id = (int) floor((100*dist) + 0.5) - 1;	// +0.5: rounding, -1: r_xx_table [0] corresponds to r=0.01
-					if (distance_id < 0)
-						distance_id = 0;
-
-					if (is_H_bond(myligand->atom_types [type_id1], myligand->atom_types [type_id2]) != 0)	//H-bond
-					{
-						vdW1 = myligand->VWpars_C [type_id1][type_id2]*r_12_table [distance_id];
-						vdW2 = myligand->VWpars_D [type_id1][type_id2]*r_10_table [distance_id];
-						if (debug == 1)
-							printf("H-bond interaction = ");
-					}
-					else	//normal van der Waals
-					{
-						vdW1 = myligand->VWpars_A [type_id1][type_id2]*r_12_table [distance_id];
-						vdW2 = myligand->VWpars_B [type_id1][type_id2]*r_6_table [distance_id];
-						if (debug == 1)
-							printf("van der Waals interaction = ");
-					}
-
-					s1 = (myligand->solpar [type_id1] + qasp_mul_absq [atom_id1]);
-					s2 = (myligand->solpar [type_id2] + qasp_mul_absq [atom_id2]);
-					v1 = myligand->volume [type_id1];
-					v2 = myligand->volume [type_id2];
-
-					if (debug == 1)
-						printf(" %lf, electrostatic = %lf, desolv = %lf\n", (vdW1 - vdW2), q1q2[atom_id1][atom_id2] * r_epsr_table [distance_id],
-							   (s1*v2 + s2*v1) * desolv_table [distance_id]);
-
-					vW += vdW1 - vdW2;
-					el += q1q2[atom_id1][atom_id2] * r_epsr_table [distance_id];
-					desolv += (s1*v2 + s2*v1) * desolv_table [distance_id];
-				}
-			}
-		}
-
-	if (debug == 1)
-		printf("\nFinal energies: van der Waals = %lf, electrostatic = %lf, desolvation = %lf, total = %lf\n\n", vW, el, desolv, vW + el + desolv);
-
-	if (ignore_desolv == 0)
-		return (vW + el + desolv);
-	else
-		return (vW + el);
-}
-#endif
-
-// OCLADock host "calc_intraE_f" function
+// Host "calc_intraE_f" function
 // corrected after smoothing was added
 float calc_intraE_f(const Liganddata* myligand,
 		          float       dcutoff,
