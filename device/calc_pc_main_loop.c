@@ -19,11 +19,10 @@ void calc_pc_main_loop (
             float*  restrict    genrot_unitvec,
             float*  restrict    local_genotype
 ) {
-
     float genrotangle = local_genotype[5];
-
+    
     #pragma _NEC ivdep
-	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
+    for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = PC_rotlist[rotation_counter];
 
@@ -153,8 +152,6 @@ void calc_pc_main_loop (
 			local_coords_y[atom_id] = atom_to_rotate[1] + rotation_movingvec[1];
 			local_coords_z[atom_id] = atom_to_rotate[2] + rotation_movingvec[2];
 		} // End if-statement not dummy rotation
-
-		//mem_fence(CLK_LOCAL_MEM_FENCE);
 
 	} // End rotation_counter for-loop
 
