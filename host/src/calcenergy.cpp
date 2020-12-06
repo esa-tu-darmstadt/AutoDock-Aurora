@@ -264,6 +264,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	int subrotlist_5[MAX_NUM_OF_ROTATIONS];
 	int subrotlist_6[MAX_NUM_OF_ROTATIONS];
 	int subrotlist_7[MAX_NUM_OF_ROTATIONS];
+	int subrotlist_8[MAX_NUM_OF_ROTATIONS];
 	unsigned int subrotlist_1_length;
 	unsigned int subrotlist_2_length;
 	unsigned int subrotlist_3_length;
@@ -271,6 +272,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	unsigned int subrotlist_5_length;
 	unsigned int subrotlist_6_length;
 	unsigned int subrotlist_7_length;
+	unsigned int subrotlist_8_length;
 
 	//charges and type id-s
 	floatpoi = atom_charges;
@@ -374,8 +376,9 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	//generate rotation list
 	if (gen_rotlist(
 			myligand_reference, rotlist, 
-			subrotlist_1, subrotlist_2, subrotlist_3, subrotlist_4, subrotlist_5, subrotlist_6, subrotlist_7,
-			&subrotlist_1_length, &subrotlist_2_length, &subrotlist_3_length, &subrotlist_4_length, &subrotlist_5_length, &subrotlist_6_length, &subrotlist_7_length
+			subrotlist_1, subrotlist_2, subrotlist_3, subrotlist_4, subrotlist_5, subrotlist_6, subrotlist_7, subrotlist_8,
+			&subrotlist_1_length, &subrotlist_2_length, &subrotlist_3_length, &subrotlist_4_length, 
+			&subrotlist_5_length, &subrotlist_6_length, &subrotlist_7_length, &subrotlist_8_length
 					) != 0)
 	{
 		printf("Error: number of required rotations is too high!\n");
@@ -417,6 +420,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 		KerConstStatic->subrotlist_5_const[m] = subrotlist_5[m];
 		KerConstStatic->subrotlist_6_const[m] = subrotlist_6[m];
 		KerConstStatic->subrotlist_7_const[m] = subrotlist_7[m];
+		KerConstStatic->subrotlist_8_const[m] = subrotlist_8[m];
 	}
 	KerConstStatic->subrotlist_1_length = subrotlist_1_length;
 	KerConstStatic->subrotlist_2_length = subrotlist_2_length;
@@ -425,6 +429,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	KerConstStatic->subrotlist_5_length = subrotlist_5_length;
 	KerConstStatic->subrotlist_6_length = subrotlist_6_length;
 	KerConstStatic->subrotlist_7_length = subrotlist_7_length;
+	KerConstStatic->subrotlist_8_length = subrotlist_8_length;
 
 	//coordinates of reference ligand
 	for (i=0; i < myligand_reference->num_of_atoms; i++) {
@@ -504,13 +509,15 @@ int gen_rotlist(
 	int				subrotlist_5[MAX_NUM_OF_ROTATIONS],
 	int				subrotlist_6[MAX_NUM_OF_ROTATIONS],
 	int				subrotlist_7[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_8[MAX_NUM_OF_ROTATIONS],
 	unsigned int*	subrotlist_1_length,
 	unsigned int*	subrotlist_2_length,
 	unsigned int*	subrotlist_3_length,
 	unsigned int*	subrotlist_4_length,
 	unsigned int*	subrotlist_5_length,
 	unsigned int*	subrotlist_6_length,
-	unsigned int*	subrotlist_7_length
+	unsigned int*	subrotlist_7_length,
+	unsigned int*	subrotlist_8_length
 )
 //The function generates the rotation list which will be stored in the constant memory field rotlist_const by
 //prepare_const_fields_for_fpga(). The structure of this array is described at that function.
@@ -647,6 +654,7 @@ int gen_rotlist(
 	int rots_used_in_subrotlist_5[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_subrotlist_6[MAX_NUM_OF_ROTATIONS];
 	int rots_used_in_subrotlist_7[MAX_NUM_OF_ROTATIONS];
+	int rots_used_in_subrotlist_8[MAX_NUM_OF_ROTATIONS];	
 
 	// Assigning and initial value of MAX_NUM_OF_ROTATIONS,
 	// which of course will never be taken by a rot id
@@ -658,6 +666,7 @@ int gen_rotlist(
 		rots_used_in_subrotlist_5[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 		rots_used_in_subrotlist_6[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 		rots_used_in_subrotlist_7[rot_cnt] = MAX_NUM_OF_ROTATIONS;
+		rots_used_in_subrotlist_8[rot_cnt] = MAX_NUM_OF_ROTATIONS;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -894,6 +903,44 @@ int gen_rotlist(
 	}
 	*subrotlist_7_length = rot_7_cnt;
 	printf("\tsubrotlist_7 length: %u\n", *subrotlist_7_length);
+
+	// ---------------------------------------------------------------------------
+	// 8th rotations (for only those atoms that experiment such)
+	// ---------------------------------------------------------------------------
+	//int subrotlist_8[MAX_NUM_OF_ROTATIONS];
+	int rot_8_cnt = 0;
+
+	printf("\nsubrotlist_8:\n");
+	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
+		int atom_id = (rotlist[rot_cnt] & RLIST_ATOMID_MASK);
+
+		// Making sure rot id to be added to "subrotlist_8"
+		// was not already added to neither
+		// "subrotlist_1" nor "subrotlist_2" nor "subrotlist_3" nor "subrotlist_4" nor "subrotlist_5" nor "subrotlist_6" nor "subrotlist_7"
+		if ((rots_used_in_subrotlist_1[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_2[rot_cnt] != rot_cnt) &&
+		    (rots_used_in_subrotlist_3[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_4[rot_cnt] != rot_cnt) &&
+			(rots_used_in_subrotlist_5[rot_cnt] != rot_cnt) && (rots_used_in_subrotlist_6[rot_cnt] != rot_cnt) &&
+			(rots_used_in_subrotlist_7[rot_cnt] != rot_cnt)
+			) {
+
+			if ((num_times_atom_in_subrotlist[atom_id] == 7) && (number_of_req_rotations_copy[atom_id] >= 8)) {
+				printf("[subrot_8 rot-id]: %u \t[orig rot-id]: %u \tatom-id: %u\n", rot_8_cnt, rot_cnt, atom_id);
+
+				// Storing ids from the original "rotlist" that are used in "subrotlist_8"
+				rots_used_in_subrotlist_8[rot_cnt] = rot_cnt;
+
+				// 8th rotation of this atom is stored in "subrotlist_8"
+				subrotlist_8[rot_8_cnt] = rotlist[rot_cnt];
+				rot_8_cnt++;
+
+				// An eventual 8th rotation of this atom will be stored in "subrotlist_8"
+				num_times_atom_in_subrotlist[atom_id]++;
+			}
+
+		}
+	}
+	*subrotlist_8_length = rot_8_cnt;
+	printf("\tsubrotlist_8 length: %u\n", *subrotlist_8_length);
 
 
 	return 0;
