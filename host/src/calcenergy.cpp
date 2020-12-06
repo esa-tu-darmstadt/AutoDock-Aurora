@@ -685,6 +685,7 @@ int gen_rotlist(
 		}
 	}
 	*subrotlist_1_length = rot_one_cnt;
+	printf("\tsubrotlist_1 length: %u\n", *subrotlist_1_length);
 
 	// ---------------------------------------------------------------------------
 	// Second rotations (for only those atoms that experiment such)
@@ -716,6 +717,7 @@ int gen_rotlist(
 		}
 	}
 	*subrotlist_2_length = rot_two_cnt;
+	printf("\tsubrotlist_2 length: %u\n", *subrotlist_2_length);
 
 	// ---------------------------------------------------------------------------
 	// Third rotations (for only those atoms that experiment such)
@@ -748,6 +750,7 @@ int gen_rotlist(
 		}
 	}
 	*subrotlist_3_length = rot_three_cnt;
+	printf("\tsubrotlist_3 length: %u\n", *subrotlist_3_length);
 
 	// ---------------------------------------------------------------------------
 	// Fourth rotations (for only those atoms that experiment such)
@@ -781,6 +784,7 @@ int gen_rotlist(
 		}
 	}
 	*subrotlist_4_length = rot_four_cnt;
+	printf("\tsubrotlist_4 length: %u\n", *subrotlist_4_length);
 
 	// ---------------------------------------------------------------------------
 	// Fifth rotations (for only those atoms that experiment such)
@@ -815,6 +819,7 @@ int gen_rotlist(
 		}
 	}
 	*subrotlist_5_length = rot_five_cnt;
+	printf("\tsubrotlist_5 length: %u\n", *subrotlist_5_length);
 
 	// ---------------------------------------------------------------------------
 	// Sixth rotations (for only those atoms that experiment such)
@@ -851,6 +856,7 @@ int gen_rotlist(
 		}
 	}
 	*subrotlist_6_length = rot_6_cnt;
+	printf("\tsubrotlist_6 length: %u\n", *subrotlist_6_length);
 
 	// ---------------------------------------------------------------------------
 	// Seventh rotations (for only those atoms that experiment such)
@@ -887,6 +893,7 @@ int gen_rotlist(
 		}
 	}
 	*subrotlist_7_length = rot_7_cnt;
+	printf("\tsubrotlist_7 length: %u\n", *subrotlist_7_length);
 
 
 	return 0;
