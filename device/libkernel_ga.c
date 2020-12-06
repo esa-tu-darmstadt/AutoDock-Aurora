@@ -40,6 +40,7 @@ uint64_t libkernel_ga (
 	const	int* 		PC_subrotlist_7,
 	const	int* 		PC_subrotlist_8,
 	const	int* 		PC_subrotlist_9,
+	const	int* 		PC_subrotlist_10,
 	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
 	const	float*		PC_ref_coords_y,
 	const	float*		PC_ref_coords_z,
@@ -56,6 +57,7 @@ uint64_t libkernel_ga (
 			uint		subrotlist_7_length,
 			uint		subrotlist_8_length,
 			uint		subrotlist_9_length,
+			uint		subrotlist_10_length,
 	// ia
 	const 	float*		IA_IE_atom_charges,
 	const	int*		IA_IE_atom_types,
@@ -139,6 +141,7 @@ uint64_t libkernel_ga (
 			PC_subrotlist_7,
 			PC_subrotlist_8,
 			PC_subrotlist_9,
+			PC_subrotlist_10,
 			PC_ref_coords_x,// TODO: merge them into a single one?
 			PC_ref_coords_y,
 			PC_ref_coords_z,
@@ -155,6 +158,7 @@ uint64_t libkernel_ga (
 			subrotlist_7_length,
 			subrotlist_8_length,
 			subrotlist_9_length,
+			subrotlist_10_length,
 			// ia
 			IA_IE_atom_charges,
 			IA_IE_atom_types,
