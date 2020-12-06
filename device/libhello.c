@@ -36,6 +36,7 @@ typedef struct
     int       		subrotlist_8_const [MAX_NUM_OF_ROTATIONS];
     int       		subrotlist_9_const [MAX_NUM_OF_ROTATIONS];
     int       		subrotlist_10_const [MAX_NUM_OF_ROTATIONS];
+    int       		subrotlist_11_const [MAX_NUM_OF_ROTATIONS];
     float 			  ref_coords_x_const			 [MAX_NUM_OF_ATOMS];
 	  float 			  ref_coords_y_const			 [MAX_NUM_OF_ATOMS];
 	  float 			  ref_coords_z_const			 [MAX_NUM_OF_ATOMS];
@@ -92,6 +93,7 @@ int main() {
     KerConstStatic.subrotlist_8_const[m] = (int) 5;
     KerConstStatic.subrotlist_9_const[m] = (int) 5;
     KerConstStatic.subrotlist_10_const[m] = (int) 5;
+    KerConstStatic.subrotlist_11_const[m] = (int) 5;
   }
 
   for (m = 0; m < MAX_NUM_OF_ATOMS; m++) { 
@@ -169,6 +171,7 @@ int main() {
               &KerConstStatic.subrotlist_8_const[0],
               &KerConstStatic.subrotlist_9_const[0],
               &KerConstStatic.subrotlist_10_const[0],
+              &KerConstStatic.subrotlist_11_const[0],
               &KerConstStatic.ref_coords_x_const[0],
               &KerConstStatic.ref_coords_y_const[0],
               &KerConstStatic.ref_coords_z_const[0],
@@ -186,6 +189,7 @@ int main() {
               0, // subrotlist_8_length
               0, // subrotlist_9_length
               0, // subrotlist_10_length
+              0, // subrotlist_11_length
 
               &KerConstStatic.atom_charges_const[0],
               &KerConstStatic.atom_types_const[0],

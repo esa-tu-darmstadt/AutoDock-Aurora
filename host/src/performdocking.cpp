@@ -393,6 +393,7 @@ filled with clock() */
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_8_const[0]), size_rotlist_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_9_const[0]), size_rotlist_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_10_const[0]), size_rotlist_nbytes);
+	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_11_const[0]), size_rotlist_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_x_const[0]), size_ref_coords_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_y_const[0]), size_ref_coords_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_z_const[0]), size_ref_coords_nbytes);
@@ -410,6 +411,7 @@ filled with clock() */
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_8_length);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_9_length);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_10_length);
+	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_11_length);
 
 	// IA
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_charges_const[0]), size_InterE_atom_charges_nbytes);
@@ -492,6 +494,7 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_8_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_8_length << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_9_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_9_length << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_10_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_10_length << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_11_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_11_length << "\n";
 	std::cout << std::endl;
 
 	// IA

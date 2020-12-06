@@ -71,6 +71,7 @@ typedef struct
 	int       		subrotlist_8_const [MAX_NUM_OF_ROTATIONS];
 	int       		subrotlist_9_const [MAX_NUM_OF_ROTATIONS];
 	int       		subrotlist_10_const [MAX_NUM_OF_ROTATIONS];
+	int       		subrotlist_11_const [MAX_NUM_OF_ROTATIONS];
 	unsigned int	subrotlist_1_length;
 	unsigned int	subrotlist_2_length;
 	unsigned int	subrotlist_3_length;
@@ -81,6 +82,7 @@ typedef struct
 	unsigned int	subrotlist_8_length;
 	unsigned int	subrotlist_9_length;
 	unsigned int	subrotlist_10_length;
+	unsigned int	subrotlist_11_length;
     float 			ref_coords_x_const			 [MAX_NUM_OF_ATOMS];
 	float 			ref_coords_y_const			 [MAX_NUM_OF_ATOMS];
 	float 			ref_coords_z_const			 [MAX_NUM_OF_ATOMS];
@@ -115,6 +117,7 @@ int gen_rotlist(
 	int				subrotlist_8[MAX_NUM_OF_ROTATIONS],
 	int				subrotlist_9[MAX_NUM_OF_ROTATIONS],
 	int				subrotlist_10[MAX_NUM_OF_ROTATIONS],
+	int				subrotlist_11[MAX_NUM_OF_ROTATIONS],
 	unsigned int*	subrotlist_1_length,
 	unsigned int*	subrotlist_2_length,
 	unsigned int*	subrotlist_3_length,
@@ -124,7 +127,8 @@ int gen_rotlist(
 	unsigned int*	subrotlist_7_length,
 	unsigned int*	subrotlist_8_length,
 	unsigned int*	subrotlist_9_length,
-	unsigned int*	subrotlist_10_length
+	unsigned int*	subrotlist_10_length,
+	unsigned int*	subrotlist_11_length
 );
 
 #endif /* CALCENERGY_H_ */
