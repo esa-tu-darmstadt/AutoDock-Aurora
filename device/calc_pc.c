@@ -61,7 +61,6 @@ void calc_pc (
 
 	float phi = local_genotype[3];
 	float theta = local_genotype[4];
-	float genrotangle = local_genotype[5];
 
 	float sin_theta = sin(theta);
 	float cos_theta = cos(theta);
