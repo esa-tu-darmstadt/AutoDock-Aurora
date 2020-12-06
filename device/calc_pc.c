@@ -14,6 +14,7 @@ void calc_pc (
 	const	int* 	restrict	PC_subrotlist_6,
 	const	int* 	restrict	PC_subrotlist_7,
 	const	int* 	restrict	PC_subrotlist_8,
+	const	int* 	restrict	PC_subrotlist_9,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
 	const	float*	restrict	PC_ref_coords_z,
@@ -29,6 +30,7 @@ void calc_pc (
 			uint				subrotlist_6_length,
 			uint				subrotlist_7_length,
 			uint				subrotlist_8_length,
+			uint				subrotlist_9_length,
 			uchar				DockConst_num_of_genes,
 			uint				Host_RunId,
 
@@ -236,6 +238,24 @@ void calc_pc (
 		PC_rotbonds_unit_vectors,
 		PC_ref_orientation_quats,
 		subrotlist_8_length,
+		Host_RunId,
+		genotype,
+		local_coords_x,
+		local_coords_y,
+		local_coords_z,
+		genrot_unitvec,
+		local_genotype
+	);
+
+	calc_pc_main_loop (
+		PC_subrotlist_9,
+		PC_ref_coords_x,
+		PC_ref_coords_y,
+		PC_ref_coords_z,
+		PC_rotbonds_moving_vectors,
+		PC_rotbonds_unit_vectors,
+		PC_ref_orientation_quats,
+		subrotlist_9_length,
 		Host_RunId,
 		genotype,
 		local_coords_x,
