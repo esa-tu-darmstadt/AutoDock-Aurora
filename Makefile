@@ -71,7 +71,8 @@ KERNEL_DEBUG_MSG=-Wall -Wcomment -Werror -Wunknown-pragma
 KERNEL_DEBUG_UNUSED=-Wunused-variable -Wunused-parameter -Wunused-but-set-parameter -Wunused-but-set-variable -Wunused-value
 
 KERNEL_DEBUG_BASIC=$(KERNEL_DEBUG_MSG) $(KERNEL_DEBUG_UNUSED) -finline-functions -mvector-low-precise-divide-function
-KERNEL_DEBUG_COMPLETE=$(KERNEL_DEBUG_BASIC) $(KERNEL_DIAGNOSTIC)
+KERNEL_DEBUG_INFO_AND_NOOPT=-g -O0
+KERNEL_DEBUG_COMPLETE=$(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT) $(KERNEL_DIAGNOSTIC)
 KERNEL_DEBUG_TRACE=$(KERNEL_TRACE) $(KERNEL_DEBUG_TRACEBACK) $(KERNEL_DIAGNOSTIC) 
 
 ifeq ($(CONFIG),FDEBUG)
@@ -89,7 +90,7 @@ else ifeq ($(CONFIG),RELEASE)
 # to work with "make profile"
 else ifeq ($(CONFIG),PROFILE)
 	OPT_HOST =-O3
-	OPT_KRNL =$(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_TRACE)  -lm
+	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) $(KERNEL_DEBUG_TRACE)  -lm
 else 
 	OPT_HOST =-O3
 	OPT_KRNL =-lm
