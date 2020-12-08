@@ -94,6 +94,12 @@ void perform_ls(
 	float local_coords_y[MAX_NUM_OF_ATOMS];
 	float local_coords_z[MAX_NUM_OF_ATOMS];
 
+	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
+		local_coords_x[i] = 0.0f;
+		local_coords_y[i] = 0.0f;
+		local_coords_z[i] = 0.0f;
+	}
+
 	// Reading incoming genotype and energy
 	float current_energy = *in_out_energy;
 	float genotype[ACTUAL_GENOTYPE_LENGTH];
