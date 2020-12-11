@@ -135,7 +135,11 @@ void energy_ia (
 			float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
 			float inverse_smoothed_distance_pow_12 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_6;
 
+<<<<<<< HEAD
 			float term_partialE3 = atomic_distance * (-8.5525f + (86.9525f / (1.0f + 7.7839f * expf(-0.3154f * atomic_distance))));
+=======
+			float term_partialE3 = atomic_distance * (-8.5525f + (86.9525f / (1.0f + 7.7839f * exp(-0.3154f * atomic_distance))));
+>>>>>>> Modified several device routines to run on vectors of individuals instead
 			float term_inv_partialE3 = (1.0f / term_partialE3);
 
 			// Calculating energy contributions
