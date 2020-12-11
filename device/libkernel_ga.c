@@ -78,6 +78,7 @@ uint64_t libkernel_ga (
             uint		Host_num_of_runs
 )
 {
+	randf_vec_init();
 
 	#pragma omp parallel for
 	for (unsigned int run_cnt = 0; run_cnt < Host_num_of_runs; run_cnt++) {
@@ -163,6 +164,7 @@ uint64_t libkernel_ga (
 		
 	} // End of for loop
 
+	randf_vec_fini();
 	return 0;
 }
 

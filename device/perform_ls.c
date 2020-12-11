@@ -160,14 +160,16 @@ void perform_ls(
 		float genotype_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float deviate_plus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float deviate_minus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
-		float rand_vec[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];  // = randf_vec...
+		float randv[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+
+		randf_vec(randv, ACTUAL_GENOTYPE * MAX_POPSIZE);
 		
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
 			for (uint j = 0; j < pop_size; j++) {
 				if (ls_is_active[j]) {
-					float tmp_prng = rand_vec[j];
+					float tmp_prng = randv[j];
 
 					// tmp1 is genotype_deviate
 					float tmp1 = rho[j] * (2.0f * tmp_prng - 1.0f);
