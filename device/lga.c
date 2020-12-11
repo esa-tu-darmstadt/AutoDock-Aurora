@@ -15,36 +15,25 @@ LS:  local search
 // --------------------------------------------------------------------------
 void lga (
 	const 	float*		PopulationCurrentInitial,
-			uint64_t  	VEVMA_PopulationCurrentFinal,
-			uint64_t  	VEVMA_EnergyCurrent,
-			uint64_t	VEVMA_Evals_performed,
-            uint64_t	VEVMA_Gens_performed,
-			uint*		dockpars_prng_states,
-			uint		DockConst_pop_size,
-		    uint        DockConst_num_of_energy_evals,
-			uint        DockConst_num_of_generations,
-		    float       DockConst_tournament_rate,
-			float       DockConst_mutation_rate,
-		    float       DockConst_abs_max_dmov,
-			float       DockConst_abs_max_dang,
-		    float       Host_two_absmaxdmov,
-			float       Host_two_absmaxdang,
-			float       DockConst_crossover_rate,
-			uint        DockConst_num_of_lsentities,
-			uchar       DockConst_num_of_genes,
+		uint64_t  	VEVMA_PopulationCurrentFinal,
+		uint64_t  	VEVMA_EnergyCurrent,
+		uint64_t	VEVMA_Evals_performed,
+		uint64_t	VEVMA_Gens_performed,
+		uint*		dockpars_prng_states,
+		uint		DockConst_pop_size,
+		uint            DockConst_num_of_energy_evals,
+		uint            DockConst_num_of_generations,
+		float           DockConst_tournament_rate,
+		float           DockConst_mutation_rate,
+		float           DockConst_abs_max_dmov,
+		float           DockConst_abs_max_dang,
+		float           Host_two_absmaxdmov,
+		float           Host_two_absmaxdang,
+		float           DockConst_crossover_rate,
+		uint            DockConst_num_of_lsentities,
+		uchar           DockConst_num_of_genes,
 	// pc
 	const	int* 		PC_rotlist,
-	const	int* 		PC_subrotlist_1,
-	const	int* 		PC_subrotlist_2,
-	const	int* 		PC_subrotlist_3,
-	const	int* 		PC_subrotlist_4,
-	const	int* 		PC_subrotlist_5,
-	const	int* 		PC_subrotlist_6,
-	const	int* 		PC_subrotlist_7,
-	const	int* 		PC_subrotlist_8,
-	const	int* 		PC_subrotlist_9,
-	const	int* 		PC_subrotlist_10,
-	const	int* 		PC_subrotlist_11,
 	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
 	const	float*		PC_ref_coords_y,
 	const	float*		PC_ref_coords_z,
@@ -52,17 +41,6 @@ void lga (
 	const	float*		PC_rotbonds_unit_vectors,
 	const	float*		PC_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
-			uint		subrotlist_1_length,
-			uint		subrotlist_2_length,
-			uint		subrotlist_3_length,
-			uint		subrotlist_4_length,
-			uint		subrotlist_5_length,
-			uint		subrotlist_6_length,
-			uint		subrotlist_7_length,
-			uint		subrotlist_8_length,
-			uint		subrotlist_9_length,
-			uint		subrotlist_10_length,
-			uint		subrotlist_11_length,
 	// ia
 	const 	float*		IA_IE_atom_charges,
 	const	int*		IA_IE_atom_types,
@@ -105,7 +83,7 @@ void lga (
 			uint	    Host_Offset_Ene
 )
 {
-	#if defined (PRINT_ALL_KRNL)
+#if defined (PRINT_ALL_KRNL)
 	printf("\n");
 	printf("Starting <LGA run> ... \n");
 	printf("\n");
@@ -150,14 +128,14 @@ void lga (
 	printf("%-40s %f\n", "DockConst_base_dmov_mul_sqrt3: ", DockConst_base_dmov_mul_sqrt3);
 	printf("%-40s %f\n", "DockConst_base_dang_mul_sqrt3: ", DockConst_base_dang_mul_sqrt3);
 	printf("%-40s %u\n", "DockConst_cons_limit: ",			DockConst_cons_limit);
-	#endif
+#endif
 
 	// --------------------------------------------------------------------------
 	// ga
-	      float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal);
-	      float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent);
-		  uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
-		  uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
+	float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal);
+	float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent);
+	uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
+	uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
 	// pc
 
 	// ia
@@ -166,17 +144,19 @@ void lga (
 	const	float*	IE_Fgrids = (float*)(VEVMA_Fgrids);
 
 	// --------------------------------------------------------------------------
-	float LocalPopCurr[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
+	float LocalPopCurr[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 	float LocalEneCurr[MAX_POPSIZE];
 
-	float local_coords_x[MAX_NUM_OF_ATOMS];
-	float local_coords_y[MAX_NUM_OF_ATOMS];
-	float local_coords_z[MAX_NUM_OF_ATOMS];
+	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 
 	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-		local_coords_x[i] = 0.0f;
-		local_coords_y[i] = 0.0f;
-		local_coords_z[i] = 0.0f;
+		for (int j = 0; j < MAX_POPSIZE; j++) {
+			local_coords_x[i][j] = 0.0f;
+			local_coords_y[i][j] = 0.0f;
+			local_coords_z[i][j] = 0.0f;
+		}
 	}
 
 	uint prng_offset = Host_Offset_Ene; // run_cnt * dockpars.pop_siz
@@ -190,107 +170,93 @@ void lga (
 	printf("\n");
 	#endif
 
-	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-
-		// Read genotype
-		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+        // Read genotypes
+        for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			float tmp_gene = PopulationCurrentInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
-			LocalPopCurr[pop_cnt][gene_cnt] = tmp_gene;
+			LocalPopCurr[gene_cnt][pop_cnt] = tmp_gene;
 		}
+        }
 
-		#if defined (PRINT_ALL_KRNL)
-		printf("Individual <before energy calc>: %3u\n", pop_cnt);
-		#endif
+        // Calculate energy
+        float energy_ia_ic[MAX_POPSIZE];
+        float energy_ie_ic[MAX_POPSIZE];
+        
 
-		// Calculate energy
-		float energy_ia_ic;
-		float energy_ie_ic;
-		calc_pc(
-			PC_rotlist,
-			PC_subrotlist_1,
-			PC_subrotlist_2,
-			PC_subrotlist_3,
-			PC_subrotlist_4,
-			PC_subrotlist_5,
-			PC_subrotlist_6,
-			PC_subrotlist_7,
-			PC_subrotlist_8,
-			PC_subrotlist_9,
-			PC_subrotlist_10,
-			PC_subrotlist_11,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			DockConst_rotbondlist_length,
-			subrotlist_1_length,
-			subrotlist_2_length,
-			subrotlist_3_length,
-			subrotlist_4_length,
-			subrotlist_5_length,
-			subrotlist_6_length,
-			subrotlist_7_length,
-			subrotlist_8_length,
-			subrotlist_9_length,
-			subrotlist_10_length,
-			subrotlist_11_length,
-			DockConst_num_of_genes,
-			Host_RunId,
-			LocalPopCurr[pop_cnt],
-			local_coords_x,
-			local_coords_y,
-			local_coords_z
-		);
-		energy_ia(
-			IA_IE_atom_charges,
-			IA_IE_atom_types,
-			IA_intraE_contributors,
-			IA_reqm,
-			IA_reqm_hbond,
-			IA_atom1_types_reqm,
-			IA_atom2_types_reqm,
-			IA_VWpars_AC,
-			IA_VWpars_BD,
-			IA_dspars_S,
-			IA_dspars_V,
-			DockConst_smooth,
-			DockConst_num_of_intraE_contributors,
-			DockConst_grid_spacing,
-			DockConst_num_of_atypes,
-			DockConst_coeff_elec,
-			DockConst_qasp,
-			DockConst_coeff_desolv,
-			&energy_ia_ic,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z
-		);
-		energy_ie(
-			IE_Fgrids,
-			IA_IE_atom_charges,
-			IA_IE_atom_types,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
-			DockConst_num_of_atoms,
-			DockConst_gridsize_x_minus1,
-			DockConst_gridsize_y_minus1,
-			DockConst_gridsize_z_minus1,
-			Host_mul_tmp2,
-			Host_mul_tmp3,
-			&energy_ie_ic,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z
-		);
-		LocalEneCurr[pop_cnt] = energy_ia_ic + energy_ie_ic;
+#if defined (PRINT_ALL_KRNL)
+        printf("<before energy calc>\n");
+#endif
 
-		#if defined (PRINT_ALL_KRNL)
+        calc_pc(
+                PC_rotlist,
+                PC_ref_coords_x,
+                PC_ref_coords_y,
+                PC_ref_coords_z,
+                PC_rotbonds_moving_vectors,
+                PC_rotbonds_unit_vectors,
+                PC_ref_orientation_quats,
+                DockConst_rotbondlist_length,
+                DockConst_num_of_genes,
+                Host_RunId,
+
+                DockConst_pop_size,
+                LocalPopCurr,
+                local_coords_x,
+                local_coords_y,
+                local_coords_z
+		);
+        energy_ia(
+		IA_IE_atom_charges,
+		IA_IE_atom_types,
+		IA_intraE_contributors,
+		IA_reqm,
+		IA_reqm_hbond,
+		IA_atom1_types_reqm,
+		IA_atom2_types_reqm,
+		IA_VWpars_AC,
+		IA_VWpars_BD,
+		IA_dspars_S,
+		IA_dspars_V,
+		DockConst_smooth,
+		DockConst_num_of_intraE_contributors,
+		DockConst_grid_spacing,
+		DockConst_num_of_atypes,
+		DockConst_coeff_elec,
+		DockConst_qasp,
+		DockConst_coeff_desolv,
+		DockConst_pop_size,
+		energy_ia_ic,
+		local_coords_x,
+		local_coords_y,
+		local_coords_z
+		);
+        energy_ie(
+		IE_Fgrids,
+		IA_IE_atom_charges,
+		IA_IE_atom_types,
+		DockConst_g1,
+		DockConst_g2,
+		DockConst_g3,
+		DockConst_num_of_atoms,
+		DockConst_gridsize_x_minus1,
+		DockConst_gridsize_y_minus1,
+		DockConst_gridsize_z_minus1,
+		Host_mul_tmp2,
+		Host_mul_tmp3,
+		DockConst_pop_size,
+		energy_ie_ic,
+		local_coords_x,
+		local_coords_y,
+		local_coords_z
+		);
+	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+		LocalEneCurr[pop_cnt] = energy_ia_ic[pop_cnt] + energy_ie_ic[pop_cnt];
+        }
+	#if defined (PRINT_ALL_KRNL)
+	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		printf("Individual < after energy calc>: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
-		#endif
-	}
+        }
+	#endif
 
 	#if defined (PRINT_ALL_KRNL)
 	printf("\n");
@@ -304,7 +270,7 @@ void lga (
 
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
 
-		float LocalPopNext[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
+		float LocalPopNext[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float LocalEneNext[MAX_POPSIZE];
 
 		// --------------------------------------------------------------------------
@@ -365,7 +331,7 @@ void lga (
 			// ---------------------------------------------------
 			if (new_pop_cnt == 1) {
 				for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-					LocalPopNext[0][gene_cnt] = LocalPopCurr[best_entity][gene_cnt];
+					LocalPopNext[gene_cnt][0] = LocalPopCurr[gene_cnt][best_entity];
 				} 		
 				LocalEneNext[0] = loc_energies[best_entity];
 			}
@@ -434,8 +400,8 @@ void lga (
 
 			// local_entity_1 and local_entity_2 are population-parent1, population-parent2
 			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-				local_entity_1[gene_cnt] = LocalPopCurr[parent1][gene_cnt];
-				local_entity_2[gene_cnt] = LocalPopCurr[parent2][gene_cnt];
+				local_entity_1[gene_cnt] = LocalPopCurr[gene_cnt][parent1];
+				local_entity_2[gene_cnt] = LocalPopCurr[gene_cnt][parent2];
 			}
 
 			// --------------------------------------------------------------------------
@@ -511,239 +477,207 @@ void lga (
 					}
 				}
 
-				LocalPopNext[new_pop_cnt][gene_cnt] = tmp_offspring;
+				LocalPopNext[gene_cnt][new_pop_cnt] = tmp_offspring;
 			}
 
-			// Calculate energy
-			float energy_ia_gg;
-			float energy_ie_gg;
-			calc_pc(
-				PC_rotlist,
-				PC_subrotlist_1,
-				PC_subrotlist_2,
-				PC_subrotlist_3,
-				PC_subrotlist_4,
-				PC_subrotlist_5,
-				PC_subrotlist_6,
-				PC_subrotlist_7,
-				PC_subrotlist_8,
-				PC_subrotlist_9,
-				PC_subrotlist_10,
-				PC_subrotlist_11,
-				PC_ref_coords_x,
-				PC_ref_coords_y,
-				PC_ref_coords_z,
-				PC_rotbonds_moving_vectors,
-				PC_rotbonds_unit_vectors,
-				PC_ref_orientation_quats,
-				DockConst_rotbondlist_length,
-				subrotlist_1_length,
-				subrotlist_2_length,
-				subrotlist_3_length,
-				subrotlist_4_length,
-				subrotlist_5_length,
-				subrotlist_6_length,
-				subrotlist_7_length,
-				subrotlist_8_length,
-				subrotlist_9_length,
-				subrotlist_10_length,
-				subrotlist_11_length,
-				DockConst_num_of_genes,
-				Host_RunId,
-				LocalPopNext[new_pop_cnt],
-				local_coords_x,
-				local_coords_y,
-				local_coords_z
-			);
-			energy_ia(
-				IA_IE_atom_charges,
-				IA_IE_atom_types,
-				IA_intraE_contributors,
-				IA_reqm,
-				IA_reqm_hbond,
-				IA_atom1_types_reqm,
-				IA_atom2_types_reqm,
-				IA_VWpars_AC,
-				IA_VWpars_BD,
-				IA_dspars_S,
-				IA_dspars_V,
-				DockConst_smooth,
-				DockConst_num_of_intraE_contributors,
-				DockConst_grid_spacing,
-				DockConst_num_of_atypes,
-				DockConst_coeff_elec,
-				DockConst_qasp,
-				DockConst_coeff_desolv,
-				&energy_ia_gg,
-				local_coords_x,
-				local_coords_y,
-				local_coords_z
-			);
-			energy_ie(
-				IE_Fgrids,
-				IA_IE_atom_charges,
-				IA_IE_atom_types,
-				DockConst_g1,
-				DockConst_g2,
-				DockConst_g3,
-				DockConst_num_of_atoms,
-				DockConst_gridsize_x_minus1,
-				DockConst_gridsize_y_minus1,
-				DockConst_gridsize_z_minus1,
-				Host_mul_tmp2,
-				Host_mul_tmp3,
-				&energy_ie_gg,
-				local_coords_x,
-				local_coords_y,
-				local_coords_z
-			);
-			LocalEneNext[new_pop_cnt] = energy_ia_gg + energy_ie_gg;
+                } // End loop over new_pop_cnt
 
-			#if defined (PRINT_ALL_KRNL)
-			printf("Individual < after energy calc>: %3u, %20.6f\n", new_pop_cnt, LocalEneNext[new_pop_cnt]);
-			#endif
-		} 
+                // Calculate energy
+                float energy_ia_gg[MAX_POPSIZE];
+                float energy_ie_gg[MAX_POPSIZE];
+                calc_pc(
+                        PC_rotlist,
+                        PC_ref_coords_x,
+                        PC_ref_coords_y,
+                        PC_ref_coords_z,
+                        PC_rotbonds_moving_vectors,
+                        PC_rotbonds_unit_vectors,
+                        PC_ref_orientation_quats,
+                        DockConst_rotbondlist_length,
+                        DockConst_num_of_genes,
+                        Host_RunId,
+                        DockConst_pop_size,
+                        LocalPopNext[new_pop_cnt],     // Attention! in the original new_pop_cnt starts at 1, here it starts at 0!
+                        local_coords_x,
+                        local_coords_y,
+                        local_coords_z
+			);
+                energy_ia(
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			IA_intraE_contributors,
+			IA_reqm,
+			IA_reqm_hbond,
+			IA_atom1_types_reqm,
+			IA_atom2_types_reqm,
+			IA_VWpars_AC,
+			IA_VWpars_BD,
+			IA_dspars_S,
+			IA_dspars_V,
+			DockConst_smooth,
+			DockConst_num_of_intraE_contributors,
+			DockConst_grid_spacing,
+			DockConst_num_of_atypes,
+			DockConst_coeff_elec,
+			DockConst_qasp,
+			DockConst_coeff_desolv,
+			DockConst_pop_size,     // Attention! in the original new_pop_cnt starts at 1, here it starts at 0!
+			energy_ia_gg,
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+			);
+                energy_ie(
+			IE_Fgrids,
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			DockConst_g1,
+			DockConst_g2,
+			DockConst_g3,
+			DockConst_num_of_atoms,
+			DockConst_gridsize_x_minus1,
+			DockConst_gridsize_y_minus1,
+			DockConst_gridsize_z_minus1,
+			Host_mul_tmp2,
+			Host_mul_tmp3,
+			DockConst_pop_size,     // Attention! in the original new_pop_cnt starts at 1, here it starts at 0!
+			energy_ie_gg,
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+			);
+                for (uint new_pop_cnt = 0; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
+			LocalEneNext[new_pop_cnt] = energy_ia_gg[new_pop_cnt] + energy_ie_gg[new_pop_cnt];
+                }
 
-		#if defined (PRINT_ALL_KRNL) 
+#if defined (PRINT_ALL_KRNL)
+		printf("Individual < after energy calc>: %3u, %20.6f\n", new_pop_cnt, LocalEneNext[new_pop_cnt]);
+#endif
+                
+#if defined (PRINT_ALL_KRNL) 
 		printf("\n");
 		printf("Finishing <genetic generation>\n");
 		printf("\n");
-		#endif
+#endif
 
 		// --------------------------------------------------------------------------
 		// LS: Local Search
 		// Subject num_of_entity_for_ls pieces of offsprings to LS 
 		// --------------------------------------------------------------------------
 
-		#if defined (PRINT_ALL_KRNL) 
+#if defined (PRINT_ALL_KRNL) 
 		printf("\n");
 		printf("Starting <local search> ... \n");
 		printf("\n");
-		#endif
+#endif
 
 		uint ls_eval_cnt = 0;
 
-		/*
-		#pragma ivdep
-		*/
-		for (uint ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
+                /*
+                  #pragma ivdep
+                */
 
-			uint ls_eval_cnt_per_iter;
+                // commented out because local search is performed for ALL individuals, not only for
+                // a small random subset
+        
+                //for (uint ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
+                //
+                //  uint ls_eval_cnt_per_iter;
+                //
+                //  // TODO: FIX INDEX FOR PRNG
+                //  // Choose random & different entities on every iteration
+                //  ushort entity_ls = (ushort)(DockConst_pop_size * randf(&dockpars_prng_states[prng_offset]));
 
-			// TODO: FIX INDEX FOR PRNG
-			// Choose random & different entities on every iteration
-			ushort entity_ls = (ushort)(DockConst_pop_size * randf(&dockpars_prng_states[prng_offset]));
+#if defined (PRINT_ALL_KRNL)
+                //printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
+#endif
 
-			#if defined (PRINT_ALL_KRNL)
-			printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
-			#endif
+        
+		perform_ls(
+			DockConst_max_num_of_iters,
+			DockConst_rho_lower_bound,
+			DockConst_base_dmov_mul_sqrt3,
+			DockConst_num_of_genes,
+			DockConst_base_dang_mul_sqrt3,
+			DockConst_cons_limit,
 
-			perform_ls(
-				DockConst_max_num_of_iters,
-				DockConst_rho_lower_bound,
-				DockConst_base_dmov_mul_sqrt3,
-				DockConst_num_of_genes,
-				DockConst_base_dang_mul_sqrt3,
-				DockConst_cons_limit,
+			DockConst_pop_size,
+			LocalPopNext,
+			LocalEneNext,
+			&ls_eval_cnt,
+			&dockpars_prng_states[prng_offset], // ??? eliminate with other rand generator?
 
-				LocalPopNext[entity_ls],
-				&LocalEneNext[entity_ls],
-				&ls_eval_cnt_per_iter,
-				&dockpars_prng_states[prng_offset + entity_ls],
+			PC_rotlist,
+			PC_ref_coords_x,
+			PC_ref_coords_y,
+			PC_ref_coords_z,
+			PC_rotbonds_moving_vectors,
+			PC_rotbonds_unit_vectors,
+			PC_ref_orientation_quats,
+			DockConst_rotbondlist_length,
+			Host_RunId,
 
-				PC_rotlist,
-				PC_subrotlist_1,
-				PC_subrotlist_2,
-				PC_subrotlist_3,
-				PC_subrotlist_4,
-				PC_subrotlist_5,
-				PC_subrotlist_6,
-				PC_subrotlist_7,
-				PC_subrotlist_8,
-				PC_subrotlist_9,
-				PC_subrotlist_10,
-				PC_subrotlist_11,
-				PC_ref_coords_x,
-				PC_ref_coords_y,
-				PC_ref_coords_z,
-				PC_rotbonds_moving_vectors,
-				PC_rotbonds_unit_vectors,
-				PC_ref_orientation_quats,
-				DockConst_rotbondlist_length,
-				subrotlist_1_length,
-				subrotlist_2_length,
-				subrotlist_3_length,
-				subrotlist_4_length,
-				subrotlist_5_length,
-				subrotlist_6_length,
-				subrotlist_7_length,
-				subrotlist_8_length,
-				subrotlist_9_length,
-				subrotlist_10_length,
-				subrotlist_11_length,
-				Host_RunId,
+			IA_IE_atom_charges,
+			IA_IE_atom_types,
+			IA_intraE_contributors,
+			IA_reqm,
+			IA_reqm_hbond,
+			IA_atom1_types_reqm,
+			IA_atom2_types_reqm,
+			IA_VWpars_AC,
+			IA_VWpars_BD,
+			IA_dspars_S,
+			IA_dspars_V,
+			DockConst_smooth,
+			DockConst_num_of_intraE_contributors,
+			DockConst_grid_spacing,
+			DockConst_num_of_atypes,
+			DockConst_coeff_elec,
+			DockConst_qasp,
+			DockConst_coeff_desolv,
 
-				IA_IE_atom_charges,
-				IA_IE_atom_types,
-				IA_intraE_contributors,
-				IA_reqm,
-				IA_reqm_hbond,
-				IA_atom1_types_reqm,
-				IA_atom2_types_reqm,
-				IA_VWpars_AC,
-				IA_VWpars_BD,
-				IA_dspars_S,
-				IA_dspars_V,
-				DockConst_smooth,
-				DockConst_num_of_intraE_contributors,
-				DockConst_grid_spacing,
-				DockConst_num_of_atypes,
-				DockConst_coeff_elec,
-				DockConst_qasp,
-				DockConst_coeff_desolv,
-
-				IE_Fgrids,
-				DockConst_g1,
-				DockConst_g2,
-				DockConst_g3,
-				DockConst_num_of_atoms,
-				DockConst_gridsize_x_minus1,
-				DockConst_gridsize_y_minus1,
-				DockConst_gridsize_z_minus1,
-				Host_mul_tmp2,
-				Host_mul_tmp3
+			IE_Fgrids,
+			DockConst_g1,
+			DockConst_g2,
+			DockConst_g3,
+			DockConst_num_of_atoms,
+			DockConst_gridsize_x_minus1,
+			DockConst_gridsize_y_minus1,
+			DockConst_gridsize_z_minus1,
+			Host_mul_tmp2,
+			Host_mul_tmp3
 			);
 
-			// Accumulating number of evals
-			ls_eval_cnt += ls_eval_cnt_per_iter;
+		// Accumulating number of evals
+		//ls_eval_cnt += ls_eval_cnt_per_iter; // done inside perform_ls
 
-			#if defined (PRINT_ALL_KRNL)
-			printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
-			#endif
+#if defined (PRINT_ALL_KRNL)
+		printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
+#endif
 
-			#if defined (PRINT_ALL_KRNL)
-			printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
-			#endif
-		} // End of for-loop ls_ent_cnt
+#if defined (PRINT_ALL_KRNL)
+		printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
+#endif
 
-		#if defined (PRINT_ALL_KRNL) 
+#if defined (PRINT_ALL_KRNL) 
 		printf("\n");
 		printf("Finishing <local search>\n");
 		printf("\n");
-		#endif
+#endif
 		// ------------------------------------------------------------------
 
 		// Update current pops & energies
-		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-				LocalPopCurr[pop_cnt][gene_cnt] = LocalPopNext[pop_cnt][gene_cnt];
+		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+			for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+				LocalPopCurr[gene_cnt][pop_cnt] = LocalPopNext[gene_cnt][pop_cnt];
 			}
-
+		}
+		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			LocalEneCurr[pop_cnt] = LocalEneNext[pop_cnt];
 
-			#if defined (PRINT_ALL_KRNL)
+#if defined (PRINT_ALL_KRNL)
 			printf("Individual <updated>: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
-			#endif
+#endif
 		}
 
 		// Update energy evaluations count: count LS and GG evals
@@ -752,26 +686,29 @@ void lga (
 		// Update generation count
 		generation_cnt++;
 
-		#if defined (PRINT_ALL_KRNL)
+#if defined (PRINT_ALL_KRNL)
 		printf("eval_cnt: %u, generation_cnt: %u\n", eval_cnt, generation_cnt);
-		#endif
+#endif
+
 	} // End while eval_cnt & generation_cnt
 
 	// --------------------------------------------------------------------------
 	// Write final pop & energies back to FPGA-board DDRs
 	// --------------------------------------------------------------------------
-	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 		//printf("\n");
 		//printf("pop_cnt: %u\n", pop_cnt);
-		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-			GlobPopCurrFinal[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[pop_cnt][gene_cnt];
+		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+			GlobPopCurrFinal[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[gene_cnt][pop_cnt];
 
 			//printf("Final geno: %3u, %20.6f\n", gene_cnt, LocalPopCurr[pop_cnt][gene_cnt]);
 		}
-
+        }
+        for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+            
 		GlobEneCurr[Host_Offset_Ene + pop_cnt] = LocalEneCurr[pop_cnt];
 		//printf("Final energy: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
-	}
+        }
 
 	// Write final evals & generation counts to FPGA-board DDRs
 	GlobEvals_performed[Host_RunId] = eval_cnt;

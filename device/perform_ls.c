@@ -10,23 +10,13 @@ void perform_ls(
 			float				DockConst_base_dang_mul_sqrt3,
 			uchar				DockConst_cons_limit,
 
-			float*	restrict	in_out_genotype,
+                        uint			pop_size,
+			float*	restrict	in_out_genotype_,
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
 			uint*				dockpars_prng_states,
 	// pc
 	const	int*	restrict	PC_rotlist,
-	const	int* 	restrict	PC_subrotlist_1,
-	const	int* 	restrict	PC_subrotlist_2,
-	const	int* 	restrict	PC_subrotlist_3,
-	const	int* 	restrict	PC_subrotlist_4,
-	const	int* 	restrict	PC_subrotlist_5,
-	const	int* 	restrict	PC_subrotlist_6,
-	const	int* 	restrict	PC_subrotlist_7,
-	const	int* 	restrict	PC_subrotlist_8,
-	const	int* 	restrict	PC_subrotlist_9,
-	const	int* 	restrict	PC_subrotlist_10,
-	const	int* 	restrict	PC_subrotlist_11,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
 	const	float*	restrict	PC_ref_coords_z,
@@ -34,17 +24,6 @@ void perform_ls(
 	const	float*	restrict	PC_rotbonds_unit_vectors,
 	const	float*	restrict	PC_ref_orientation_quats,
 			uint				DockConst_rotbondlist_length,
-			uint				subrotlist_1_length,
-			uint				subrotlist_2_length,
-			uint				subrotlist_3_length,
-			uint				subrotlist_4_length,
-			uint				subrotlist_5_length,
-			uint				subrotlist_6_length,
-			uint				subrotlist_7_length,
-			uint				subrotlist_8_length,
-			uint				subrotlist_9_length,
-			uint				subrotlist_10_length,
-			uint				subrotlist_11_length,
 			uint				Host_RunId,
 	// ia
 	const	float*	restrict	IA_IE_atom_charges,
@@ -77,8 +56,10 @@ void perform_ls(
 			uint				Host_mul_tmp2,
 			uint				Host_mul_tmp3
 )
-{	
-	#if defined (PRINT_ALL_LS) 
+{
+	float (*in_out_genotype)[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE] = (float (*)[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE])in_out_genotype_;
+
+#if defined (PRINT_ALL_LS) 
 	printf("\n");
 	printf("Starting <local search> ... \n");
 	printf("\n");
@@ -88,23 +69,27 @@ void perform_ls(
 	printf("LS: DockConst_num_of_genes: %u\n",  	   	DockConst_num_of_genes);
 	printf("LS: DockConst_base_dang_mul_sqrt3: %f\n",  	DockConst_base_dang_mul_sqrt3);
 	printf("LS: DockConst_cons_limit: %u\n",           	DockConst_cons_limit);
-	#endif
+#endif
 
-	float local_coords_x[MAX_NUM_OF_ATOMS];
-	float local_coords_y[MAX_NUM_OF_ATOMS];
-	float local_coords_z[MAX_NUM_OF_ATOMS];
+	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 
 	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-		local_coords_x[i] = 0.0f;
-		local_coords_y[i] = 0.0f;
-		local_coords_z[i] = 0.0f;
+		for (uint j = 0; j < pop_size; j++) {
+			local_coords_x[i][j] = 0.0f;
+			local_coords_y[i][j] = 0.0f;
+			local_coords_z[i][j] = 0.0f;
+		}
 	}
 
 	// Reading incoming genotype and energy
 	float current_energy = *in_out_energy;
-	float genotype[ACTUAL_GENOTYPE_LENGTH];
+	float genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		genotype[i] = in_out_genotype[i];
+		for (uint j = 0; j < pop_size; j++) {
+			genotype[i][j] = in_out_genotype[i][j];
+		}
 	}
 	
 	float rho = 1.0f;
@@ -187,17 +172,6 @@ void perform_ls(
 		float energy_ie_ls;
 		calc_pc(
 			PC_rotlist,
-			PC_subrotlist_1,
-			PC_subrotlist_2,
-			PC_subrotlist_3,
-			PC_subrotlist_4,
-			PC_subrotlist_5,
-			PC_subrotlist_6,
-			PC_subrotlist_7,
-			PC_subrotlist_8,
-			PC_subrotlist_9,
-			PC_subrotlist_10,
-			PC_subrotlist_11,
 			PC_ref_coords_x,
 			PC_ref_coords_y,
 			PC_ref_coords_z,
@@ -205,17 +179,6 @@ void perform_ls(
 			PC_rotbonds_unit_vectors,
 			PC_ref_orientation_quats,
 			DockConst_rotbondlist_length,
-			subrotlist_1_length,
-			subrotlist_2_length,
-			subrotlist_3_length,
-			subrotlist_4_length,
-			subrotlist_5_length,
-			subrotlist_6_length,
-			subrotlist_7_length,
-			subrotlist_8_length,
-			subrotlist_9_length,
-			subrotlist_10_length,
-			subrotlist_11_length,
 			DockConst_num_of_genes,
 			Host_RunId,
 			entity_possible_new_genotype,
