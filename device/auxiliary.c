@@ -12,6 +12,8 @@
 #include <ftrace.h>
 #endif
 
+// should build this as separate object...
+#include "rand_gen.c"
 
 /* 
  * -----------------------------------------------
