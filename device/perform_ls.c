@@ -130,7 +130,7 @@ void perform_ls(
 				active_pop_size++;
 			}
 		}
-		
+#pragma _NEC ivdep
 		for (uint jj = 0; jj < active_pop_size; jj++) {
 			uint j = active_idx[jj];
 			if (positive_direction[j]) { // True
