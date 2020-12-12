@@ -133,17 +133,23 @@ endef
 all: veodock kernel0 kernel_ga
 
 # adding NEC ASL library
+
+ifeq ($(OMP),YES)
 OPT_KRNL += /opt/nec/ve/nlc/2.1.0/lib/libasl_openmp.a
+else
+OPT_KRNL += /opt/nec/ve/nlc/2.1.0/lib/libasl_sequential.a
+endif
+VEINCL = -I/opt/nec/ve/nlc/2.1.0/include
 
 # Notice: kernel0 is compiled without -shared
 # otherwise PROGINFO (via "make profile")
 # does not work!
 kernel0: $(KRNL0_SRC)
-	$(VE_COMPILER) -fpic  -I$(COMMON_DIR) -I$(KRNL_DIR) -o $(KRNL0_LIB) $(KRNL0_SRC) $(OPT_KRNL)
+	$(VE_COMPILER) -fpic  -I$(COMMON_DIR) -I$(KRNL_DIR) $(VEINCL) -o $(KRNL0_LIB) $(KRNL0_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
 kernel_ga: $(KRNL_GA_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -I$(KRNL_DIR) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
+	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -I$(KRNL_DIR) $(VEINCL) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
 	@echo $(newline)
 
 export VE_PROGINF := DETAIL

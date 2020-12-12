@@ -466,7 +466,7 @@ void make_reqrot_ordering(char number_of_req_rotations[MAX_NUM_OF_ATOMS],
 
 int gen_rotlist(
 	Liganddata*		myligand,
-	int				rotlist[MAX_NUM_OF_ROTATIONS],
+	int				rotlist[MAX_NUM_OF_ROTATIONS]
 )
 //The function generates the rotation list which will be stored in the constant memory field rotlist_const by
 //prepare_const_fields_for_fpga(). The structure of this array is described at that function.

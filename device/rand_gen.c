@@ -24,7 +24,7 @@ void randf_vec_fini()
     asl_library_finalize();
 }
 
-void rand_vec(float *val, int num)
+void randf_vec(float *val, int num)
 {
 #ifdef _OPENMP
 #pragma omp critical
@@ -33,16 +33,16 @@ void rand_vec(float *val, int num)
 }
 
 
-#if 1
+#if 0
 int main(int argc, char *argv[])
 {
   int n = 100;
   float val[n];
   
   randf_vec_init();
-  rand_vec(val, n);
+  randf_vec(val, n);
   for (int i = 0; i < n; i++)
     printf("%3d  %f\n", i, val[i]);
-  randf_ve_fini();
+  randf_vec_fini();
 }
 #endif
