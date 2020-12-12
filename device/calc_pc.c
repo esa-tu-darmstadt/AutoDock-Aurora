@@ -16,17 +16,12 @@ void calc_pc (
 	uint				Host_RunId,
 
         const	uint			DockConst_pop_size,
-	const	float*	restrict	genotype_,
-		float*	restrict 	local_coords_x_,
-		float*	restrict	local_coords_y_,
-		float*	restrict	local_coords_z_
+		float		genotype[][MAX_POPSIZE],
+		float	 	local_coords_x[][MAX_POPSIZE],
+		float		local_coords_y[][MAX_POPSIZE],
+		float		local_coords_z[][MAX_POPSIZE]
 )
 {
-	float (*genotype)[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE] = (float (*)[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE])genotype_;
-	float (*local_coords_x)[MAX_NUM_OF_ATOMS][MAX_POPSIZE] = (float (*)[MAX_NUM_OF_ATOMS][MAX_POPSIZE])local_coords_x_;
-	float (*local_coords_y)[MAX_NUM_OF_ATOMS][MAX_POPSIZE] = (float (*)[MAX_NUM_OF_ATOMS][MAX_POPSIZE])local_coords_y_;
-	float (*local_coords_z)[MAX_NUM_OF_ATOMS][MAX_POPSIZE] = (float (*)[MAX_NUM_OF_ATOMS][MAX_POPSIZE])local_coords_z_;
-  
 #if defined (PRINT_ALL_PC) 
 	printf("\n");
 	printf("Starting <pose calculation> ... \n");

@@ -11,7 +11,7 @@ void perform_ls(
 			uchar				DockConst_cons_limit,
 
                         uint			pop_size,
-			float*	restrict	in_out_genotype_,
+			float			in_out_genotype[][MAX_POPSIZE],
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
 			uint*				dockpars_prng_states,
@@ -57,8 +57,6 @@ void perform_ls(
 			uint				Host_mul_tmp3
 )
 {
-	float (*in_out_genotype)[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE] = (float (*)[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE])in_out_genotype_;
-
 #if defined (PRINT_ALL_LS) 
 	printf("\n");
 	printf("Starting <local search> ... \n");
@@ -84,7 +82,7 @@ void perform_ls(
 	}
 
 	// Reading incoming genotype and energy
-	float current_energy[MAX_POPCOUNT];
+	float current_energy[MAX_POPSIZE];
 	float genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
@@ -100,7 +98,7 @@ void perform_ls(
         uint iteration_cnt[MAX_POPSIZE];
         uint cons_succ[MAX_POPSIZE];
         uint cons_fail[MAX_POPSIZE];
-        uint LS_eval[MAX_POPSIZE];
+        uint LS_eval;
         int positive_direction[MAX_POPSIZE];  // converted from boolean to int
 	int ls_is_active[MAX_POPSIZE];  // filter for individuals that are still being iterated
 	uint num_active_ls = pop_size;
@@ -108,13 +106,13 @@ void perform_ls(
 	int active_pop_size; // counts compressed list of genomes
 	uint active_idx[MAX_POPSIZE]; // j index that corresponds to slot in compressed list
 	uint active_compr_idx[MAX_POPSIZE]; // compressed index corresponding to active j index
-	
+
+	LS_eval = 0;
 	for (uint j = 0; j < pop_size; j++) {
 		rho[j]                = 1.0f;
 		iteration_cnt[j]      = 0;
 		cons_succ[j]          = 0;
 		cons_fail[j]          = 0;
-		LS_eval[j]            = 0;
 		positive_direction[j] = 1;
 		ls_is_active[j]       = 1;
 	}
@@ -134,7 +132,7 @@ void perform_ls(
 		}
 		
 		for (uint jj = 0; jj < active_pop_size; jj++) {
-			j = active_idx[jj];
+			uint j = active_idx[jj];
 			if (positive_direction[j]) { // True
 				if (cons_succ[j] >= DockConst_cons_limit) {
 					rho[j] = LS_EXP_FACTOR * rho[j];
@@ -162,14 +160,14 @@ void perform_ls(
 		float deviate_minus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float randv[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-		randf_vec(randv, ACTUAL_GENOTYPE * MAX_POPSIZE);
+		randf_vec((float *)&randv[0][0], ACTUAL_GENOTYPE_LENGTH * MAX_POPSIZE);
 		
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
 			for (uint j = 0; j < pop_size; j++) {
 				if (ls_is_active[j]) {
-					float tmp_prng = randv[j];
+					float tmp_prng = randv[i][j];
 
 					// tmp1 is genotype_deviate
 					float tmp1 = rho[j] * (2.0f * tmp_prng - 1.0f);
@@ -286,7 +284,7 @@ void perform_ls(
 		LS_eval += active_pop_size;;
 
 		for (uint jj = 0; jj < active_pop_size; jj++) {
-			j = active_idx[jj];
+			uint j = active_idx[jj];
 			if (candidate_energy[jj] < current_energy[j]) {
 				// Updating offspring_genotype & genotype_bias
 
@@ -336,7 +334,7 @@ void perform_ls(
 	// Writing resulting genotype and energy
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		for (uint j = 0; j < pop_size; j++) {
-			in_out_genotype[i] = genotype[i];
+			in_out_genotype[i][j] = genotype[i][j];
 		}
 	}
 	for (uint j = 0; j < pop_size; j++) {

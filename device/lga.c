@@ -320,9 +320,9 @@ void lga (
 		printf("\n");
 		#endif
 
-                float randv[10 + DockConst_num_of_genes, MAX_POPSIZE];
+                float randv[10 + DockConst_num_of_genes][MAX_POPSIZE];
 
-                randf_vec(randv, (10 + DockConst_num_of_genes) * MAX_POPSIZE);
+                randf_vec((float *)&randv[0][0], (10 + DockConst_num_of_genes) * MAX_POPSIZE);
                 
 		/*
 		#pragma ivdep array (LocalPopNext)
@@ -350,18 +350,18 @@ void lga (
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
 			// Get ushort binary_tournament selection prngs (parent index)
-			ushort bt_tmp_u0 = (ushort) (DockConst_pop_size * randv[0, new_pop_cnt]);
-			ushort bt_tmp_u1 = (ushort) (DockConst_pop_size * randv[1, new_pop_cnt]);
-			ushort bt_tmp_u2 = (ushort) (DockConst_pop_size * randv[2, new_pop_cnt]);
-			ushort bt_tmp_u3 = (ushort) (DockConst_pop_size * randv[3, new_pop_cnt]);
+			ushort bt_tmp_u0 = (ushort) (DockConst_pop_size * randv[0][new_pop_cnt]);
+			ushort bt_tmp_u1 = (ushort) (DockConst_pop_size * randv[1][new_pop_cnt]);
+			ushort bt_tmp_u2 = (ushort) (DockConst_pop_size * randv[2][new_pop_cnt]);
+			ushort bt_tmp_u3 = (ushort) (DockConst_pop_size * randv[3][new_pop_cnt]);
 
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
 			// Get float binary_tournament selection prngs (tournament rate)
-			float bt_tmp_f0 = randv[4, new_pop_cnt];
-			float bt_tmp_f1 = randv[5, new_pop_cnt];
-			float bt_tmp_f2 = randv[6, new_pop_cnt];
-			float bt_tmp_f3 = randv[7, new_pop_cnt];
+			float bt_tmp_f0 = randv[4][new_pop_cnt];
+			float bt_tmp_f1 = randv[5][new_pop_cnt];
+			float bt_tmp_f2 = randv[6][new_pop_cnt];
+			float bt_tmp_f3 = randv[7][new_pop_cnt];
 
 			ushort parent1;
 			ushort parent2; 
@@ -415,8 +415,8 @@ void lga (
 			// TODO: VECTORIZE IT
 			// get uchar genetic_generation prngs (gene index)
 			// get float genetic_generation prngs (mutation rate)
-			uchar prng_GG_C_x = (uchar) (DockConst_num_of_genes * randv[8, new_pop_cnt]);
-			uchar prng_GG_C_y = (uchar) (DockConst_num_of_genes * randv[9, new_pop_cnt]);
+			uchar prng_GG_C_x = (uchar) (DockConst_num_of_genes * randv[8][new_pop_cnt]);
+			uchar prng_GG_C_y = (uchar) (DockConst_num_of_genes * randv[9][new_pop_cnt]);
 
 			uchar covr_point_low;
 			uchar covr_point_high;
@@ -447,7 +447,7 @@ void lga (
 			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 
 				// TODO: VERIFY IT
-				float prngGG = randv[10 + gene_cnt, new_pop_cnt];
+				float prngGG = randv[10 + gene_cnt][new_pop_cnt];
 				float tmp_offspring;
 
 				// Performing crossover
@@ -501,7 +501,7 @@ void lga (
                         DockConst_num_of_genes,
                         Host_RunId,
                         DockConst_pop_size,
-                        LocalPopNext[new_pop_cnt],     // Attention! in the original new_pop_cnt starts at 1, here it starts at 0!
+                        LocalPopNext,     // Attention! in the original new_pop_cnt starts at 1, here it starts at 0!
                         local_coords_x,
                         local_coords_y,
                         local_coords_z
