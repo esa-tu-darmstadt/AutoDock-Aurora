@@ -128,6 +128,19 @@ float esa_dot3(float a[3], float b[3]) {
 */
 }
 
+float esa_dot3_e(float a1, float a2, float a3, float b1, float b2, float b3) {
+
+	return (a1*b1 + a2*b2 + a3*b3);
+
+/*
+	float tmp[3];
+	for (uint i = 0; i < 3; i++) {
+		tmp[i] = a[i] * b[i];
+	}
+	return (tmp[0] + tmp[1] + tmp[2]);
+*/
+}
+
 float esa_dot4(float a[4], float b[4]) {
 	
 	return (a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]);
@@ -138,6 +151,19 @@ float esa_dot4(float a[4], float b[4]) {
 		tmp[i] = a[i] * b[i];
 	}
 	return (tmp[0] + tmp[1] + tmp[2] + tmp[3]);
+*/
+}
+
+float esa_dot4_e(float a1, float a2, float a3, float a4, float b1, float b2, float b3, float b4) {
+
+	return (a1*b1 + a2*b2 + a3*b3 + a4*b4);
+
+/*
+	float tmp = 0.0;
+	for (uint i = 0; i < 4; i++) {
+		tmp += a[i] * b[i];
+	}
+	return tmp;
 */
 }
 

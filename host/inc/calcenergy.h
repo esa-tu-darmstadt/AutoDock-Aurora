@@ -84,7 +84,7 @@ void make_reqrot_ordering(
 
 int gen_rotlist(
 	Liganddata*	myligand,
-	int				rotlist[MAX_NUM_OF_ROTATIONS]
+	int		rotlist[MAX_NUM_OF_ROTATIONS]
 );
 
 #endif /* CALCENERGY_H_ */

@@ -151,39 +151,33 @@ void calc_pc (
 					quatrot_temp_x = quatrot_left_x;
 					quatrot_temp_y = quatrot_left_y;
 					quatrot_temp_z = quatrot_left_z;
-					float quatrot_temp[4] = { quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z };
 
 					// Taking the first element of ref_orientation_quats_const member
-					float ref_4q[4] = {  ref_ori_quats_const_q, -ref_ori_quats_const_x, -ref_ori_quats_const_y, -ref_ori_quats_const_z };
-					float ref_4x[4] = {  ref_ori_quats_const_x,  ref_ori_quats_const_q,  ref_ori_quats_const_z, -ref_ori_quats_const_y };
-					float ref_4y[4] = {  ref_ori_quats_const_y, -ref_ori_quats_const_z,  ref_ori_quats_const_q,  ref_ori_quats_const_x };
-					float ref_4z[4] = {  ref_ori_quats_const_z,  ref_ori_quats_const_y, -ref_ori_quats_const_x,  ref_ori_quats_const_q };
-
-					quatrot_left_q = esa_dot4(quatrot_temp, ref_4q);
-					quatrot_left_x = esa_dot4(quatrot_temp, ref_4x);
-					quatrot_left_y = esa_dot4(quatrot_temp, ref_4y);
-					quatrot_left_z = esa_dot4(quatrot_temp, ref_4z);
+					quatrot_left_q = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_q, -ref_ori_quats_const_x, -ref_ori_quats_const_y, -ref_ori_quats_const_z);
+					quatrot_left_x = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_x,  ref_ori_quats_const_q,  ref_ori_quats_const_z, -ref_ori_quats_const_y);
+					quatrot_left_y = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_y, -ref_ori_quats_const_z,  ref_ori_quats_const_q,  ref_ori_quats_const_x);
+					quatrot_left_z = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_z,  ref_ori_quats_const_y, -ref_ori_quats_const_x,  ref_ori_quats_const_q);
 				}
 
-				float left_3q[3] = {-quatrot_left_x, -quatrot_left_y, -quatrot_left_z };
-				float left_3x[3] = { quatrot_left_q, -quatrot_left_z,  quatrot_left_y };
-				float left_3y[3] = { quatrot_left_z,  quatrot_left_q, -quatrot_left_x };
-				float left_3z[3] = {-quatrot_left_y,  quatrot_left_x,  quatrot_left_q };
-			
-				quatrot_temp_q = esa_dot3(left_3q, atom_to_rotate);
-				quatrot_temp_x = esa_dot3(left_3x, atom_to_rotate);
-				quatrot_temp_y = esa_dot3(left_3y, atom_to_rotate);
-				quatrot_temp_z = esa_dot3(left_3z, atom_to_rotate);
-				float quatrot_temp_2[4] = { quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z };
+				quatrot_temp_q = esa_dot3_e(quatrot_left_x,    -quatrot_left_y,    -quatrot_left_z,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
+				quatrot_temp_x = esa_dot3_e(quatrot_left_q,    -quatrot_left_z,     quatrot_left_y,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
+				quatrot_temp_y = esa_dot3_e(quatrot_left_z,     quatrot_left_q,    -quatrot_left_x,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
+				quatrot_temp_z = esa_dot3_e(-quatrot_left_y,    quatrot_left_x,     quatrot_left_q,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
 
-				float left_4x[4] = { -quatrot_left_x,  quatrot_left_q, -quatrot_left_z,  quatrot_left_y };
-				float left_4y[4] = { -quatrot_left_y,  quatrot_left_z,  quatrot_left_q, -quatrot_left_x };
-				float left_4z[4] = { -quatrot_left_z, -quatrot_left_y,  quatrot_left_x,  quatrot_left_q };
-
-				atom_to_rotate[0] = esa_dot4(quatrot_temp_2, left_4x);
-				atom_to_rotate[1] = esa_dot4(quatrot_temp_2, left_4y);
-				atom_to_rotate[2] = esa_dot4(quatrot_temp_2, left_4z);
-
+				atom_to_rotate[0] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
+                                                               -quatrot_left_x, quatrot_left_q,-quatrot_left_z, quatrot_left_y);
+				atom_to_rotate[1] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
+                                                               -quatrot_left_y, quatrot_left_z, quatrot_left_q,-quatrot_left_x);
+				atom_to_rotate[2] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
+							       -quatrot_left_z,-quatrot_left_y, quatrot_left_x, quatrot_left_q);
 				// Performing final movement and storing values
 				local_coords_x[atom_id][j] = atom_to_rotate[0] + rotation_movingvec[0];
 				local_coords_y[atom_id][j] = atom_to_rotate[1] + rotation_movingvec[1];
