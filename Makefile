@@ -132,6 +132,9 @@ endef
 
 all: veodock kernel0 kernel_ga
 
+# adding NEC ASL library
+OPT_KRNL += /opt/nec/ve/nlc/2.1.0/lib/libasl_openmp.a
+
 # Notice: kernel0 is compiled without -shared
 # otherwise PROGINFO (via "make profile")
 # does not work!
