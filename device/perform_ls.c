@@ -1,4 +1,8 @@
-#include "auxiliary.c"
+#include "auxiliary.h"
+#include "rand_gen.h"
+#include "energy_ia.h"
+#include "energy_ie.h"
+#include "calc_pc.h"
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------

@@ -1,8 +1,8 @@
-#include "auxiliary.c"
-#include "energy_ia.c"
-#include "energy_ie.c"
-#include "calc_pc.c"
-#include "perform_ls.c"
+#include "auxiliary.h"
+#include "energy_ia.h"
+#include "energy_ie.h"
+#include "calc_pc.h"
+#include "perform_ls.h"
 
 /*
 IC:  initial calculation of energy of populations
@@ -609,7 +609,7 @@ void lga (
 			LocalPopNext,
 			LocalEneNext,
 			&ls_eval_cnt,
-			&dockpars_prng_states[prng_offset], // ??? eliminate with other rand generator?
+			&dockpars_prng_states, // ??? eliminate with other rand generator?
 
 			PC_rotlist,
 			PC_ref_coords_x,
