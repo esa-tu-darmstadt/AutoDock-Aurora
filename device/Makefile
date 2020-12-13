@@ -16,7 +16,8 @@ COMMON_DIR=../common
 BIN_DIR=../bin
 
 # Device sources
-K_OBJS = calc_pc.o energy_ia.o energy_ie.o lga.o libkernel_ga.o perform_ls.o rand_gen.o
+K_OBJS = calc_pc.o energy_ia.o energy_ie.o lga.o libkernel_ga.o perform_ls.o rand_gen.o \
+ energy_ia_ser.o energy_ie_ser.o calc_pc_ser.o
 K_GA_NAME = libkernel_ga
 
 KRNL_GA_LIB = $(BIN_DIR)/$(K_GA_NAME).so
