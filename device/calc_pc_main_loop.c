@@ -21,7 +21,6 @@ void calc_pc_main_loop (
 ) {
     float genrotangle = local_genotype[5];
     
-    #pragma _NEC ivdep
     for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++)
 	{
 		int rotation_list_element = PC_rotlist[rotation_counter];
