@@ -1,4 +1,4 @@
-#include "auxiliary.c"
+#include "auxiliary.h"
 
 // --------------------------------------------------------------------------
 // Calculates the intermolecular energy of a ligand given by

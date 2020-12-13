@@ -2,13 +2,11 @@
 
 # ------------------------------------------------------
 # Compiler paths
+VH_COMPILER=g++
+
 AURORA_INC_PATH=/opt/nec/ve/veos/include
 AURORA_LIB_PATH=/opt/nec/ve/veos/lib64
 
-VH_COMPILER=g++
-VE_COMPILER=/opt/nec/ve/bin/ncc
-
-VE_EXEC=/opt/nec/ve/bin/ve_exec
 FTRACE=/opt/nec/ve/bin/ftrace
 
 # ------------------------------------------------------
@@ -36,10 +34,6 @@ K0_NAME=libhello
 K_GA_NAME=libkernel_ga
 K_LS_NAME=libkernel_ls
 
-KRNL0_SRC=$(KRNL_DIR)/$(K0_NAME).c
-KRNL0_LIB=$(BIN_DIR)/$(K0_NAME).so
-
-KRNL_GA_SRC=$(KRNL_DIR)/$(K_GA_NAME).c
 KRNL_GA_LIB=$(BIN_DIR)/$(K_GA_NAME).so
 
 K_NAMES=-DK0=$(K0_NAME) -DK_GA=$(K_GA_NAME)
@@ -64,45 +58,22 @@ HOST_DEBUG_BASIC=-O0 -g3 -Wall
 HOST_DEBUG_MEDIUM=$(HOST_DEBUG_BASIC) -DPRINT_ALL_VEO_API
 HOST_DEBUG_ALL=$(HOST_DEBUG_MEDIUM) -DDOCK_DEBUG
 
-KERNEL_TRACE=-ftrace -DENABLE_TRACE
-KERNEL_DEBUG_TRACEBACK=-traceback=verbose
-KERNEL_DIAGNOSTIC=-report-all
-KERNEL_DEBUG_MSG=-Wall -Wcomment -Werror -Wunknown-pragma
-KERNEL_DEBUG_UNUSED=-Wunused-variable -Wunused-parameter -Wunused-but-set-parameter -Wunused-but-set-variable -Wunused-value
-
-KERNEL_DEBUG_BASIC=$(KERNEL_DEBUG_MSG) $(KERNEL_DEBUG_UNUSED) $(KERNEL_DIAGNOSTIC) -finline-functions -mvector-low-precise-divide-function
-KERNEL_DEBUG_INFO_AND_NOOPT=-g -O0
-KERNEL_DEBUG_COMPLETE=$(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT)
-KERNEL_DEBUG_TRACE=$(KERNEL_TRACE) $(KERNEL_DEBUG_TRACEBACK)
-
 ifeq ($(CONFIG),FDEBUG)
 	OPT_HOST =$(HOST_DEBUG_ALL)
-#	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) -lm -DPRINT_ALL_KRNL -DPRINT_ALL_PC -DPRINT_ALL_IA  -DPRINT_ALL_IE -DPRINT_ALL_LS
-	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) -lm
 else ifeq ($(CONFIG),LDEBUG)
 	OPT_HOST =$(HOST_DEBUG_MEDIUM)
-	OPT_KRNL =$(KERNEL_DEBUG_BASIC) -lm
 else ifeq ($(CONFIG),RELEASE)
 	OPT_HOST =-O3
-	OPT_KRNL =$(KERNEL_DEBUG_BASIC) -lm
 # Do not use "make CONFIG=PROFILE eval"
 # Compiling this way is intended only 
 # to work with "make profile"
 else ifeq ($(CONFIG),PROFILE)
 	OPT_HOST =-O3
-	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) $(KERNEL_DEBUG_TRACE)  -lm
 else 
 	OPT_HOST =-O3
-	OPT_KRNL =-lm
 endif
 
 OMP=NO
-
-ifeq ($(OMP),YES)
-	OPT_KRNL +=-fopenmp
-else
-	OPT_KRNL +=
-endif
 
 # ------------------------------------------------------
 # Reproduce results (remove randomness)
@@ -127,32 +98,25 @@ define newline
 
 endef
 
+# ---------------------------------
+# Setting VE specific env variables
+# ---------------------------------
+export VE_PROGINF := DETAIL
+ifeq ($(TRACE),YES)
+export VEORUN_BIN := $(BIN_DIR)/veorun_ftrace
+POSTRUN = $(FTRACE) -f ftrace.out
+else
+POSTRUN =
+endif
+
+
 # ------------------------------------------------------
 # Compiling host and device codes
 
-all: veodock kernel0 kernel_ga
+all: veodock kernel_ga
 
-# adding NEC ASL library
-
-ifeq ($(OMP),YES)
-OPT_KRNL += /opt/nec/ve/nlc/2.1.0/lib/libasl_openmp.a
-else
-OPT_KRNL += /opt/nec/ve/nlc/2.1.0/lib/libasl_sequential.a
-endif
-VEINCL = -I/opt/nec/ve/nlc/2.1.0/include
-
-# Notice: kernel0 is compiled without -shared
-# otherwise PROGINFO (via "make profile")
-# does not work!
-kernel0: $(KRNL0_SRC)
-	$(VE_COMPILER) -fpic  -I$(COMMON_DIR) -I$(KRNL_DIR) $(VEINCL) -o $(KRNL0_LIB) $(KRNL0_SRC) $(OPT_KRNL)
-	@echo $(newline)
-
-kernel_ga: $(KRNL_GA_SRC)
-	$(VE_COMPILER) -fpic -shared -I$(COMMON_DIR) -I$(KRNL_DIR) $(VEINCL) -o $(KRNL_GA_LIB) $(KRNL_GA_SRC) $(OPT_KRNL)
-	@echo $(newline)
-
-export VE_PROGINF := DETAIL
+kernel_ga:
+	make -C device OMP=$(OMP) TRACE=$(TRACE)
 
 displayproginf:
 	@echo " "
@@ -191,7 +155,6 @@ EVAL_INPUTS_DIR=./AD-GPU_set_of_42/data
 inputs:
 	git submodule update --init --recursive
 	for dir in $(EVAL_INPUTS_DIR)/* ; do (cd $$dir && gunzip protein.*.map.gz); done
-	#for dir in $(EVAL_INPUTS_DIR)/* ; do (cd $$dir && gunzip -k protein.*.map.gz); done
 
 PDB      := 3ce3
 NEV      := 2048000
@@ -223,6 +186,8 @@ eval: all
 	-xraylfile $(EVAL_INPUTS_DIR)/$(PDB)/flex-xray.pdbqt \
 	-ffile $(EVAL_INPUTS_DIR)/$(PDB)/protein.maps.fld \
 	-resnam $(PDB)-"`date +"%Y-%m-%d-%H:%M"`"
+	$(POSTRUN)
 
 clean:
-	rm -f $(BIN_DIR)/* *.L initpop.txt ftrace.out
+	make -C device clean
+	rm -f $(BIN_DIR)/* initpop.txt ftrace.out

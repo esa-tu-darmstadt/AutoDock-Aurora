@@ -1,4 +1,4 @@
-#include "auxiliary.c"
+#include "auxiliary.h"
 
 // --------------------------------------------------------------------------
 // Calculates the intramolecular energy of a set of atomic ligand

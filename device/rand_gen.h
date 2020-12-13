@@ -3,6 +3,6 @@
 
 void randf_vec_init();
 void randf_vec_fini();
-void rand_vec(float *val, int num);
+void randf_vec(float *val, int num);
 
 #endif

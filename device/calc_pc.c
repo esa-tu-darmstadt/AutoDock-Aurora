@@ -1,4 +1,4 @@
-#include "auxiliary.c"
+#include "auxiliary.h"
 
 // --------------------------------------------------------------------------
 // Calculation of the pose of the ligand according to the input genotype.

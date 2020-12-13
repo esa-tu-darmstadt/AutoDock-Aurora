@@ -13,7 +13,7 @@ Ported from OpenCL code of []().
 **FIXME!**
 
 ```bash
-git clone --single-branch --branch sx-aurora https://gitlab.com/postdoc_tud/molecular-docking/autodock-aurora/autodock-aurora.git
+git clone --single-branch --branch sx-aurora --recurse-submodules --shallow-submodules https://gitlab.com/postdoc_tud/molecular-docking/autodock-aurora/autodock-aurora-2.git
 
 cd autodock-aurora
 
@@ -27,26 +27,27 @@ make CONFIG=FDEBUG
 ```
 
 * Host binary is compiled with symbols enabled for **gdb**
-* After compilation, `.L` are produced
+* Device binary is compiled with no vectorization (`-O0 -g`).
 
 To compile only the device code:
 
 ```
-make CONFIG=FDEBUG kernel_ga
+make -C device CONFIG=FDEBUG kernel_ga
 ```
 
 ### Compiling for PROGINF and FTRACE
 
-```
-make CONFIG=PROFILE
+PROGINF is always enabled as it costs no overhead.
 
-make profile
+For FTRACE pass `TRACE=YES` (uppercase "YES"!) as a make variable.
+```
+make PDB=1yv3 NRUN=16 TRACE=YES eval
 ```
 
 ### Compiling and evaluating
 
 ```
-make PDB=1yv3 NRUN=5 eval
+make PDB=1yv3 NRUN=16 eval
 ```
 
 `make eval` automatically configures all input arguments and set of parameters to launch a docking job.
@@ -59,7 +60,7 @@ By default `CONFIG`=RELEASE.
 ### Compiling with OpenMP + running validation using a single molecule
 
 ```
-make PDB=1yv3 NRUN=5 OMP=YES eval
+make PDB=1yv3 NRUN=16 OMP=YES eval
 ```
 
 ## Compiling with OpenMP + running validation using five molecules

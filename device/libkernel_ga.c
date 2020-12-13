@@ -1,5 +1,6 @@
-#include "auxiliary.c"
-#include "lga.c"
+#include "auxiliary.h"
+#include "rand_gen.h"
+#include "lga.h"
 
 /*
 IC:  initial calculation of energy of populations

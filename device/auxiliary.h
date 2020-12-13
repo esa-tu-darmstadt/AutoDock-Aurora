@@ -12,9 +12,6 @@
 #include <ftrace.h>
 #endif
 
-// should build this as separate object...
-#include "rand_gen.c"
-
 /* 
  * -----------------------------------------------
  * Overall
@@ -32,6 +29,7 @@ typedef enum {False, True} boolean;
  * 0 - 180, or 0 - 360 in sexagesimal
  * -----------------------------------------------
  * */
+static inline
 float map_angle_180 (float angle)
 {
 	float x = angle;
@@ -46,6 +44,7 @@ float map_angle_180 (float angle)
 	return x;
 }
 
+static inline
 float map_angle_360 (float angle) {
 	float x = angle;
 /*
@@ -59,62 +58,13 @@ float map_angle_360 (float angle) {
 	return x;
 }
 
-/*
- * -----------------------------------------------
- * Random
- * -----------------------------------------------
- * */
-
-/*
- * Scalar implementation rand().
- * This kernel subfunction generates a random int
- * with a linear congruential generator (LCG).
- * It uses the gcc LCG constants.
- */
-unsigned int rand(unsigned int* input) {
-  unsigned int rand;
-
-  // Calculating next state
-#if defined (REPRO)
-  rand = 1;
-#else
-  rand = (RAND_A * input[0] + RAND_C);
-#endif
-
-  // Saving next state to memory
-  input[0] = rand;
-
-  return rand;
-}
-
-/*
- * Scalar implementation randf().
- * This kernel subfunction generates a random floatq
- * greater than (or equal to) 0 and less than 1.
- * It uses rand() function.
- */
-float randf(unsigned int* input) {
-  float randf;
-
-  // State will be between 0 and 1
-#if defined (REPRO)
-  randf = 0.55f;
-#else
-/*
-	randf = (rand(input) / MAX_UINT) *0.999999f;
-*/
-	randf = rand(input) * MAX_ONE_FACTOR;
-#endif
-
-  return randf;
-}
-
 /* 
  * -----------------------------------------------
  * Pose calculation 
  * -----------------------------------------------
  * */
 
+static inline
 float esa_dot3(float a[3], float b[3]) {
 
 	return (a[0]*b[0] + a[1]*b[1] + a[2]*b[2]);
@@ -128,6 +78,7 @@ float esa_dot3(float a[3], float b[3]) {
 */
 }
 
+static inline
 float esa_dot3_e(float a1, float a2, float a3, float b1, float b2, float b3) {
 
 	return (a1*b1 + a2*b2 + a3*b3);
@@ -141,6 +92,7 @@ float esa_dot3_e(float a1, float a2, float a3, float b1, float b2, float b3) {
 */
 }
 
+static inline
 float esa_dot4(float a[4], float b[4]) {
 	
 	return (a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]);
@@ -154,6 +106,7 @@ float esa_dot4(float a[4], float b[4]) {
 */
 }
 
+static inline
 float esa_dot4_e(float a1, float a2, float a3, float a4, float b1, float b2, float b3, float b4) {
 
 	return (a1*b1 + a2*b2 + a3*b3 + a4*b4);
@@ -173,6 +126,7 @@ float esa_dot4_e(float a1, float a2, float a3, float a4, float b1, float b2, flo
  * -----------------------------------------------
  * */
 
+static inline
 int esa_ceil (float fp) {
   return ((-1) * floor(-1*fp));
 }
@@ -185,6 +139,7 @@ int esa_ceil (float fp) {
 
 // sqrt7 
 //https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
+static inline
 float esa_sqrt(const float x){
 	//uint i = as_uint(x);
 	unsigned int i = *(unsigned int*) &x;    	
