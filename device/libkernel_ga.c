@@ -81,7 +81,7 @@ uint64_t libkernel_ga (
 {
 	randf_vec_init();
 
-	#pragma omp parallel for
+#pragma omp parallel for schedule(static, 1)
 	for (unsigned int run_cnt = 0; run_cnt < Host_num_of_runs; run_cnt++) {
 
 /*
