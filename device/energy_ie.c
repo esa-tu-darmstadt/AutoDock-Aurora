@@ -54,14 +54,12 @@ void energy_ie (
 	for (uint j = 0; j < DockConst_pop_size; j++) {
 		final_interE[j] = 0.0f;
 	}
-
   
 	// For each ligand atom
 	for (uint atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++) {
 		uint atom1_typeid = IA_IE_atom_types[atom1_id];
-
 		float q = IA_IE_atom_charges[atom1_id];
-      
+
 		for (uint j = 0; j < DockConst_pop_size; j++) {
      
 			float x = local_coords_x[atom1_id][j];
