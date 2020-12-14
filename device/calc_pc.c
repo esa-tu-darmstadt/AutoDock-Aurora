@@ -69,7 +69,6 @@ void calc_pc (
 		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0) {	// If not dummy rotation
 			uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
-#pragma _NEC shortloop
 			for (uint j = 0; j < DockConst_pop_size; j++) {
 
 				// Capturing atom coordinates
