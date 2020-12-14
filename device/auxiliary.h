@@ -78,8 +78,10 @@ float esa_dot3(float a[3], float b[3]) {
 */
 }
 
+#define esa_dot3_e(a1,a2,a3,b1,b2,b3) (a1*b1 + a2*b2 + a3*b3)
+
 static inline
-float esa_dot3_e(float a1, float a2, float a3, float b1, float b2, float b3) {
+float esa_dot3_e_(float a1, float a2, float a3, float b1, float b2, float b3) {
 
 	return (a1*b1 + a2*b2 + a3*b3);
 
@@ -106,8 +108,10 @@ float esa_dot4(float a[4], float b[4]) {
 */
 }
 
+#define esa_dot4_e(a1,a2,a3,a4,b1,b2,b3,b4) (a1*b1 + a2*b2 + a3*b3 + a4*b4)
+
 static inline
-float esa_dot4_e(float a1, float a2, float a3, float a4, float b1, float b2, float b3, float b4) {
+float esa_dot4_e_(float a1, float a2, float a3, float a4, float b1, float b2, float b3, float b4) {
 
 	return (a1*b1 + a2*b2 + a3*b3 + a4*b4);
 

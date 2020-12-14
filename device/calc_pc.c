@@ -40,6 +40,7 @@ void calc_pc (
 	for (uint i = 3; i < DockConst_num_of_genes; i++) {
 		for (uint j = 0; j < DockConst_pop_size; j++) {
 			local_genotype[i][j] = genotype[i][j] * DEG_TO_RAD;
+			//local_genotype[i][j] = genotype[i][j] * 0.01745329252;
 		}
 	}
 
@@ -64,12 +65,13 @@ void calc_pc (
 #endif
 
 	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++) {
-		for (uint j = 0; j < DockConst_pop_size; j++) {
-			int rotation_list_element = PC_rotlist[rotation_counter];
+		int rotation_list_element = PC_rotlist[rotation_counter];
+		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0) {	// If not dummy rotation
+			uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
-			if ((rotation_list_element & RLIST_DUMMY_MASK) == 0) {	// If not dummy rotation
-				uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
-				
+#pragma _NEC shortloop
+			for (uint j = 0; j < DockConst_pop_size; j++) {
+
 				// Capturing atom coordinates
 				float atom_to_rotate[3];
 
@@ -125,7 +127,7 @@ void calc_pc (
 				float quatrot_left_q, quatrot_left_x, quatrot_left_y, quatrot_left_z;
 				float quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z;
 
-				rotation_angle = rotation_angle*0.5f;
+				rotation_angle = rotation_angle * 0.5f;
 
 				float sin_angle, cos_angle;
 				sin_angle      = sin(rotation_angle);
@@ -163,13 +165,13 @@ void calc_pc (
 								    ref_ori_quats_const_z,  ref_ori_quats_const_y, -ref_ori_quats_const_x,  ref_ori_quats_const_q);
 				}
 
-				quatrot_temp_q = esa_dot3_e(quatrot_left_x,    -quatrot_left_y,    -quatrot_left_z,
+				quatrot_temp_q = esa_dot3_e(  -quatrot_left_x,    -quatrot_left_y,    -quatrot_left_z,
                                                             atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
-				quatrot_temp_x = esa_dot3_e(quatrot_left_q,    -quatrot_left_z,     quatrot_left_y,
+				quatrot_temp_x = esa_dot3_e(   quatrot_left_q,    -quatrot_left_z,     quatrot_left_y,
                                                             atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
-				quatrot_temp_y = esa_dot3_e(quatrot_left_z,     quatrot_left_q,    -quatrot_left_x,
+				quatrot_temp_y = esa_dot3_e(   quatrot_left_z,     quatrot_left_q,    -quatrot_left_x,
                                                             atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
-				quatrot_temp_z = esa_dot3_e(-quatrot_left_y,    quatrot_left_x,     quatrot_left_q,
+				quatrot_temp_z = esa_dot3_e(  -quatrot_left_y,     quatrot_left_x,     quatrot_left_q,
                                                             atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
 
 				atom_to_rotate[0] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
@@ -179,12 +181,13 @@ void calc_pc (
 				atom_to_rotate[2] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
 							       -quatrot_left_z,-quatrot_left_y, quatrot_left_x, quatrot_left_q);
 				// Performing final movement and storing values
-				local_coords_x[atom_id][j] = atom_to_rotate[0] + rotation_movingvec[0];
-				local_coords_y[atom_id][j] = atom_to_rotate[1] + rotation_movingvec[1];
-				local_coords_z[atom_id][j] = atom_to_rotate[2] + rotation_movingvec[2];
-			} // End if-statement not dummy rotation
+				local_coords_x[atom_id][j] = (float)(atom_to_rotate[0] + rotation_movingvec[0]);
+				local_coords_y[atom_id][j] = (float)(atom_to_rotate[1] + rotation_movingvec[1]);
+				local_coords_z[atom_id][j] = (float)(atom_to_rotate[2] + rotation_movingvec[2]);
 
-		} // Loop over j (individuals)
+			} // Loop over j (individuals)
+
+		} // End if-statement not dummy rotation
 
 	} // End rotation_counter for-loop
     

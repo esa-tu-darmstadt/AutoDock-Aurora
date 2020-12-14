@@ -55,6 +55,8 @@ void calc_pc_ser (
 	genrot_unitvec[1] = sin_theta*sin(phi);
 	genrot_unitvec[2] = cos_theta;
 
+        //printf("--- %15.7e %15.7e %15.7e\n", genrot_unitvec[0], genrot_unitvec[1], genrot_unitvec[2]);
+
 	#if defined (ENABLE_TRACE)
 	ftrace_region_begin("PC_MAIN_LOOP");
 	#endif
