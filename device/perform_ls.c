@@ -106,6 +106,13 @@ void perform_ls(
         int positive_direction[MAX_POPSIZE];  // converted from boolean to int
 	int ls_is_active[MAX_POPSIZE];  // filter for individuals that are still being iterated
 	uint num_active_ls = pop_size;
+	float genotype_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+
+	int positive_dir_compr[MAX_POPSIZE];  // compressed array for positive direction
+        float rho_compr[MAX_POPSIZE];
+        uint iteration_compr[MAX_POPSIZE];
+        uint cons_succ_compr[MAX_POPSIZE];
+        uint cons_fail_compr[MAX_POPSIZE];
 
 	int active_pop_size; // counts compressed list of genomes
 	uint active_idx[MAX_POPSIZE]; // j index that corresponds to slot in compressed list
@@ -120,6 +127,11 @@ void perform_ls(
 		positive_direction[j] = 1;
 		ls_is_active[j]       = 1;
 	}
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
+		for (uint j = 0; j < pop_size; j++) {
+			genotype_bias[i][j] = 0.0f;
+		}
+	}
 
 	// Performing local search
 	//while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
@@ -127,28 +139,37 @@ void perform_ls(
 
 		// compressed list of active indices
 		active_pop_size = 0;
+#pragma _NEC packed_vector
 		for (uint j = 0; j < pop_size; j++) {
 			if (ls_is_active[j]) {
 				active_idx[active_pop_size] = j;
 				active_compr_idx[j] = active_pop_size;
+
+				positive_dir_compr[active_pop_size] = positive_direction[j];
+				rho_compr[active_pop_size] = rho[j];
+				iteration_compr[active_pop_size] = iteration_cnt[j];
+				cons_succ_compr[active_pop_size] = cons_succ[j];
+				cons_fail_compr[active_pop_size] = cons_fail[j];
+
 				active_pop_size++;
 			}
 		}
-#pragma _NEC ivdep
+
+#pragma _NEC packed_vector
 		for (uint jj = 0; jj < active_pop_size; jj++) {
-			uint j = active_idx[jj];
-			if (positive_direction[j]) { // True
-				if (cons_succ[j] >= DockConst_cons_limit) {
-					rho[j] = LS_EXP_FACTOR * rho[j];
-					cons_fail[j] = 0;
-					cons_succ[j] = 0;
+			//uint j = active_idx[jj];
+			if (positive_dir_compr[jj]) { // True
+				if (cons_succ_compr[jj] >= DockConst_cons_limit) {
+					rho_compr[jj] = LS_EXP_FACTOR * rho_compr[jj];
+					cons_fail_compr[jj] = 0;
+					cons_succ_compr[jj] = 0;
 				}
-				else if (cons_fail[j] >= DockConst_cons_limit) {
-					rho[j] = LS_CONT_FACTOR * rho[j];
-					cons_fail[j] = 0;
-					cons_succ[j] = 0;
+				else if (cons_fail_compr[jj] >= DockConst_cons_limit) {
+					rho_compr[jj] = LS_CONT_FACTOR * rho_compr[jj];
+					cons_fail_compr[jj] = 0;
+					cons_succ_compr[jj] = 0;
 				}
-				iteration_cnt[j]++;
+				iteration_compr[jj]++;
 			}
 		}
 
@@ -159,7 +180,6 @@ void perform_ls(
 		// -----------------------------------------------
 
 		float entity_possible_new_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
-		float genotype_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float deviate_plus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float deviate_minus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float randv[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
@@ -168,50 +188,50 @@ void perform_ls(
 		
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
+#pragma _NEC packed_vector
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
-			for (uint j = 0; j < pop_size; j++) {
-				if (ls_is_active[j]) {
-					float tmp_prng = randv[i][j];
+			for (uint jj = 0; jj < active_pop_size; jj++) {
+				uint j = active_idx[jj];
+				float tmp_prng = randv[i][jj];
 
-					// tmp1 is genotype_deviate
-					float tmp1 = rho[j] * (2.0f * tmp_prng - 1.0f);
+				// tmp1 is genotype_deviate
+				float tmp1 = rho_compr[jj] * (2.0f * tmp_prng - 1.0f);
 
-					if (i < 3) {
-						tmp1 = tmp1 * DockConst_base_dmov_mul_sqrt3;
+				if (i < 3) {
+					tmp1 = tmp1 * DockConst_base_dmov_mul_sqrt3;
+				}
+				else {
+					tmp1 = tmp1 * DockConst_base_dang_mul_sqrt3;
+				}
+
+				float deviate = 0.4f * tmp1;
+
+				// tmp2 is the addition: genotype_deviate + genotype_bias
+				// tmp3 is entity_possible_new_genotype
+				float tmp_bias = genotype_bias[i][j];
+				float bias = 0.6f * tmp_bias;
+
+				deviate_plus_bias[i][jj] = deviate + bias;
+				deviate_minus_bias[i][jj] = deviate - bias;
+
+				float tmp2 = tmp1 + tmp_bias;
+				float tmp3;
+				if (positive_dir_compr[jj]) {
+					tmp3 = genotype[i][j] + tmp2;
+				} else {
+					tmp3 = genotype[i][j] - tmp2;
+				}
+
+				if (i > 2) {
+					if (i == 4) {
+						tmp3 = map_angle_180(tmp3);
 					}
 					else {
-						tmp1 = tmp1 * DockConst_base_dang_mul_sqrt3;
+						tmp3 = map_angle_360(tmp3);
 					}
-
-					float deviate = 0.4f * tmp1;
-
-					// tmp2 is the addition: genotype_deviate + genotype_bias
-					// tmp3 is entity_possible_new_genotype
-					float tmp_bias = (iteration_cnt[j] == 1)? 0.0f : genotype_bias[i][j];
-					float bias = 0.6f * tmp_bias;
-
-					deviate_plus_bias[i][j] = deviate + bias;
-					deviate_minus_bias[i][j] = deviate - bias;
-
-					float tmp2 = tmp1 + tmp_bias;
-					float tmp3;
-					if (positive_direction[j]) {
-						tmp3 = genotype[i][j] + tmp2;
-					} else {
-						tmp3 = genotype[i][j] - tmp2;
-					}
-
-					if (i > 2) {
-						if (i == 4) {
-							tmp3 = map_angle_180(tmp3);
-						}
-						else {
-							tmp3 = map_angle_360(tmp3);
-						}
-					}
-
-					entity_possible_new_genotype[i][active_compr_idx[j]] = tmp3;
 				}
+
+				entity_possible_new_genotype[i][jj] = tmp3;
 			}
 		}
 
@@ -287,47 +307,60 @@ void perform_ls(
 		// Updating LS energy-evaluation count
 		LS_eval += active_pop_size;;
 
+		int energy_lower[MAX_POPSIZE];
 		for (uint jj = 0; jj < active_pop_size; jj++) {
 			uint j = active_idx[jj];
 			if (candidate_energy[jj] < current_energy[j]) {
-				// Updating offspring_genotype & genotype_bias
-
-				for (uint i = 0; i < DockConst_num_of_genes; i++) {
-					genotype_bias[i][j] = positive_direction[j] ? deviate_plus_bias[i][j] : deviate_minus_bias[i][j];
-					genotype[i][j] = entity_possible_new_genotype[i][jj];
-				}
-
-				current_energy[j] = candidate_energy[jj];
-				cons_succ[j]++;
-				cons_fail[j] = 0;
-				positive_direction[j] = 1;
+				energy_lower[jj] = 1;
+			} else {
+				energy_lower[jj] = 0;
 			}
-			else {
-				// Updating (halving) genotype_bias
+		}
 
-				for (uint i = 0; i < DockConst_num_of_genes; i++) {
-					genotype_bias[i][j] = (iteration_cnt[j] == 1)? 0.0f: (0.5f*genotype_bias[i][j]);
-				}
+		for (uint i = 0; i < DockConst_num_of_genes; i++) {
+#pragma _NEC ivdep
+			for (uint jj = 0; jj < active_pop_size; jj++) {
+				uint j = active_idx[jj];
+				if (energy_lower[jj]) {
+					genotype_bias[i][j] = positive_dir_compr[jj] ? deviate_plus_bias[i][jj] : deviate_minus_bias[i][jj];
+					genotype[i][j] = entity_possible_new_genotype[i][jj];
 
-				if (!positive_direction[j]) {
-					cons_fail[j]++;
-					cons_succ[j] = 0;
-				}
-				if (positive_direction[j]) {
-					positive_direction[j] = 0;
 				} else {
-					positive_direction[j] = 1;
+					genotype_bias[i][j] = (iteration_compr[jj] == 1)? 0.0f : 0.5f*genotype_bias[i][j];
+				}
+			}
+		}
+		for (uint jj = 0; jj < active_pop_size; jj++) {
+			uint j = active_idx[jj];
+			if (energy_lower[jj]) {
+				current_energy[j] = candidate_energy[jj];
+				cons_succ_compr[jj]++;
+				cons_fail_compr[jj] = 0;
+				positive_dir_compr[jj] = 1;
+			} else {
+				if (!positive_dir_compr[jj]) {
+					cons_fail_compr[jj]++;
+					cons_succ_compr[jj] = 0;
+					positive_dir_compr[jj] = 1;
+				} else {
+					positive_dir_compr[jj] = 0;
 				}
 			}
 		}
 
-		num_active_ls = pop_size;
-		for (uint j = 0; j < pop_size; j++) {
-			if ((iteration_cnt[j] > DockConst_max_num_of_iters) ||
-			    (rho[j] <= DockConst_rho_lower_bound)) {
-				ls_is_active[j] = 0;
+		num_active_ls = active_pop_size;
+		for (uint jj = 0; jj < active_pop_size; jj++) {
+			if ((iteration_compr[jj] > DockConst_max_num_of_iters) ||
+			    (rho_compr[jj] <= DockConst_rho_lower_bound)) {
+				ls_is_active[active_idx[jj]] = 0;
 				num_active_ls--;
 			}
+			uint j = active_idx[jj];
+			positive_direction[j] = positive_dir_compr[jj];
+			rho[j] = rho_compr[jj];
+			iteration_cnt[j] = iteration_compr[jj];
+			cons_succ[j] = cons_succ_compr[jj];
+			cons_fail[j] = cons_fail_compr[jj];
 		}
 
 	} // end of while (iteration_cnt) && (rho)
