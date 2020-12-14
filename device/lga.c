@@ -187,7 +187,6 @@ void lga (
         printf("<before energy calc>\n");
 #endif
 
-#if 1
         calc_pc(
                 PC_rotlist,
                 PC_ref_coords_x,
@@ -206,108 +205,7 @@ void lga (
                 local_coords_y,
                 local_coords_z
 		);
-#else
-	void calc_pc_ser (
-		const	int*	restrict	PC_rotlist,
-		const	float*	restrict	PC_ref_coords_x,
-		const	float*	restrict	PC_ref_coords_y,
-		const	float*	restrict	PC_ref_coords_z,
-		const	float*	restrict	PC_rotbonds_moving_vectors,
-		const	float*	restrict	PC_rotbonds_unit_vectors,
-		const	float*	restrict	PC_ref_orientation_quats,
-		uint				DockConst_rotbondlist_length,
-		uchar				DockConst_num_of_genes,
-		uint				Host_RunId,
-		const	float*	restrict	genotype,
-		float*	restrict 	local_coords_x,
-		float*	restrict	local_coords_y,
-		float*	restrict	local_coords_z
-		);
 
-	{
-		float LocalPopCurr_ser[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
-		float lcoords_x[MAX_NUM_OF_ATOMS];
-		float lcoords_y[MAX_NUM_OF_ATOMS];
-		float lcoords_z[MAX_NUM_OF_ATOMS];
-
-		void calc_pc_ser (
-			const	int*	restrict	PC_rotlist,
-			const	float*	restrict	PC_ref_coords_x,
-			const	float*	restrict	PC_ref_coords_y,
-			const	float*	restrict	PC_ref_coords_z,
-			const	float*	restrict	PC_rotbonds_moving_vectors,
-			const	float*	restrict	PC_rotbonds_unit_vectors,
-			const	float*	restrict	PC_ref_orientation_quats,
-			uint				DockConst_rotbondlist_length,
-			uchar				DockConst_num_of_genes,
-			uint				Host_RunId,
-			const	float*	restrict	genotype,
-			float*	restrict 	local_coords_x,
-			float*	restrict	local_coords_y,
-			float*	restrict	local_coords_z
-			);
-		
-		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-			for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-				lcoords_x[i] = 0.0f;
-				lcoords_y[i] = 0.0f;
-				lcoords_z[i] = 0.0f;
-			}
-
-			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-				float tmp_gene = PopulationCurrentInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
-				LocalPopCurr_ser[pop_cnt][gene_cnt] = tmp_gene;
-			}
-
-			calc_pc_ser (
-				PC_rotlist,
-				PC_ref_coords_x,
-				PC_ref_coords_y,
-				PC_ref_coords_z,
-				PC_rotbonds_moving_vectors,
-				PC_rotbonds_unit_vectors,
-				PC_ref_orientation_quats,
-				DockConst_rotbondlist_length,
-				DockConst_num_of_genes,
-				Host_RunId,
-				LocalPopCurr_ser[pop_cnt],
-				lcoords_x,
-				lcoords_y,
-				lcoords_z
-				);
-
-			for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-				if ((abs(lcoords_x[i] - local_coords_x[i][pop_cnt]) > 0.00001) ||
-				    (abs(lcoords_y[i] - local_coords_y[i][pop_cnt]) > 0.00001) ||
-				    (abs(lcoords_z[i] - local_coords_z[i][pop_cnt]) > 0.00001)) {
-					printf("pop_cnt %3d atom %3i  ser_x,y,z %15.5f %15.5f %15.5f -- vec_x,y,z %15.5f %15.5f %15.5f\n",
-					       pop_cnt, i, lcoords_x[i],lcoords_y[i],lcoords_z[i],
-					       local_coords_x[i][pop_cnt], local_coords_y[i][pop_cnt], local_coords_z[i][pop_cnt]);
-				}
-			}
-#if 0
-			for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-				local_coords_x[i][pop_cnt] = lcoords_x[i];
-				local_coords_y[i][pop_cnt] = lcoords_y[i];
-				local_coords_z[i][pop_cnt] = lcoords_z[i];
-			}
-#endif
-		}
-#if 0
-		printf("Individual Genome ...\n");
-		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-			printf("%3d ", pop_cnt);
-			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-				printf(" %14.7e", LocalPopCurr[gene_cnt][pop_cnt]);
-			}
-			printf("\n");
-		}
-#endif
-	}
-
-#endif
-
-#if 1
         energy_ia(
 		IA_IE_atom_charges,
 		IA_IE_atom_types,
@@ -333,79 +231,7 @@ void lga (
 		local_coords_y,
 		local_coords_z
 		);
-#else
 
-	void energy_ia_ser (
-		const	float*	restrict	IA_IE_atom_charges,
-		const	int*	restrict	IA_IE_atom_types,
-		const	int*	restrict	IA_intraE_contributors,
-		const	float*	restrict	IA_reqm,
-		const	float*	restrict	IA_reqm_hbond,
-		const	uint*	restrict	IA_atom1_types_reqm,
-		const	uint*	restrict	IA_atom2_types_reqm,
-		const	float*	restrict	IA_VWpars_AC,
-		const	float*	restrict	IA_VWpars_BD,
-		const	float*	restrict	IA_dspars_S,
-		const	float*	restrict	IA_dspars_V,
-		float				DockConst_smooth,
-		uint				DockConst_num_of_intraE_contributors,
-		float				DockConst_grid_spacing,
-		uint				DockConst_num_of_atypes,
-		float				DockConst_coeff_elec,
-		float				DockConst_qasp,
-		float				DockConst_coeff_desolv,
-		float*				final_intraE,
-		float*	restrict 	local_coords_x,
-		float*	restrict 	local_coords_y,
-		float* 	restrict 	local_coords_z
-		);
-	
-	float lcoords_x[MAX_NUM_OF_ATOMS];
-	float lcoords_y[MAX_NUM_OF_ATOMS];
-	float lcoords_z[MAX_NUM_OF_ATOMS];
-	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-		
-		for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-			lcoords_x[i] = local_coords_x[i][pop_cnt];
-			lcoords_y[i] = local_coords_y[i][pop_cnt];
-			lcoords_z[i] = local_coords_z[i][pop_cnt];
-		}
-		float final_intraE = 0.0f;
-
-		energy_ia_ser (
-			IA_IE_atom_charges,
-			IA_IE_atom_types,
-			IA_intraE_contributors,
-			IA_reqm,
-			IA_reqm_hbond,
-			IA_atom1_types_reqm,
-			IA_atom2_types_reqm,
-			IA_VWpars_AC,
-			IA_VWpars_BD,
-			IA_dspars_S,
-			IA_dspars_V,
-	 		DockConst_smooth,
-			DockConst_num_of_intraE_contributors,
-			DockConst_grid_spacing,
-			DockConst_num_of_atypes,
-			DockConst_coeff_elec,
-			DockConst_qasp,
-			DockConst_coeff_desolv,
-			&final_intraE,
-			lcoords_x,
-			lcoords_y,
-			lcoords_z
-			);
-		if (abs(final_intraE - energy_ia_ic[pop_cnt]) > 0.001) {
-			printf("pop_cnt = %d  intraE  vec: %21.3f   ser: %21.3f\n", pop_cnt, energy_ia_ic[pop_cnt], final_intraE);
-		}
-		
-	}
-	
-	
-#endif
-
-#if 1
         energy_ie(
 		IE_Fgrids,
 		IA_IE_atom_charges,
@@ -425,60 +251,6 @@ void lga (
 		local_coords_y,
 		local_coords_z
 		);
-
-#else
-	
-	void energy_ie_ser (
-		const	float*	restrict	IE_Fgrids,
-		const	float*	restrict	IA_IE_atom_charges,
-		const	int*	restrict	IA_IE_atom_types,
-		uchar				DockConst_g1,
-		uint				DockConst_g2,
-		uint				DockConst_g3,
-		uchar				DockConst_num_of_atoms,
-		float				DockConst_gridsize_x_minus1,
-		float				DockConst_gridsize_y_minus1,
-		float				DockConst_gridsize_z_minus1,
-		uint				Host_mul_tmp2,
-		uint				Host_mul_tmp3,
-		float*				final_interE,
-		float*	restrict	local_coords_x,
-		float*	restrict	local_coords_y,
-		float*	restrict	local_coords_z
-		);
-	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-		
-		for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-			lcoords_x[i] = local_coords_x[i][pop_cnt];
-			lcoords_y[i] = local_coords_y[i][pop_cnt];
-			lcoords_z[i] = local_coords_z[i][pop_cnt];
-		}
-		float final_interE = 0.0f;
-
-		energy_ie_ser (
-			IE_Fgrids,
-			IA_IE_atom_charges,
-			IA_IE_atom_types,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
-			DockConst_num_of_atoms,
-			DockConst_gridsize_x_minus1,
-			DockConst_gridsize_y_minus1,
-			DockConst_gridsize_z_minus1,
-			Host_mul_tmp2,
-			Host_mul_tmp3,
-			&final_interE,
-			lcoords_x,
-			lcoords_y,
-			lcoords_z
-			);
-
-		if (abs(final_interE - energy_ie_ic[pop_cnt]) > 0.001) {
-			printf("pop_cnt = %d  interE  vec: %21.3f   ser: %21.3f\n", pop_cnt, energy_ie_ic[pop_cnt], final_interE);
-		}
-	}
-#endif
 
 	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		LocalEneCurr[pop_cnt] = energy_ia_ic[pop_cnt] + energy_ie_ic[pop_cnt];
@@ -500,7 +272,6 @@ void lga (
 	uint eval_cnt = DockConst_pop_size; // takes into account the IC evals
 	uint generation_cnt = 0;
 
-#if 1
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
 
 		float LocalPopNext[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
@@ -928,8 +699,6 @@ void lga (
 #endif
 
 	} // End while eval_cnt & generation_cnt
-
-#endif // 0 // disabled for testing
 
 	// --------------------------------------------------------------------------
 	// Write final pop & energies back to FPGA-board DDRs
