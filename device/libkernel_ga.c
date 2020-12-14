@@ -22,7 +22,6 @@ uint64_t libkernel_ga (
 	// initialize random generator with seed passed from host
 	randf_vec_init(&(da->dockpars_prng_states)[0], DockConst_pop_size);
 
-
 #pragma omp parallel for schedule(static, 1)
 	for (unsigned int run_cnt = 0; run_cnt < Host_num_of_runs; run_cnt++) {
 
