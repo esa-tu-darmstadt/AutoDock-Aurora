@@ -187,7 +187,7 @@ void lga (
         printf("<before energy calc>\n");
 #endif
 
-//#if 0
+#if 1
         calc_pc(
                 PC_rotlist,
                 PC_ref_coords_x,
@@ -206,7 +206,7 @@ void lga (
                 local_coords_y,
                 local_coords_z
 		);
-//#else
+#else
 	void calc_pc_ser (
 		const	int*	restrict	PC_rotlist,
 		const	float*	restrict	PC_ref_coords_x,
@@ -279,17 +279,35 @@ void lga (
 			for (uint i = 0; i < DockConst_num_of_atoms; i++) {
 				if ((abs(lcoords_x[i] - local_coords_x[i][pop_cnt]) > 0.00001) ||
 				    (abs(lcoords_y[i] - local_coords_y[i][pop_cnt]) > 0.00001) ||
-				    (abs(lcoords_z[i] - local_coords_z[i][pop_cnt]) > 0.00001))
+				    (abs(lcoords_z[i] - local_coords_z[i][pop_cnt]) > 0.00001)) {
 					printf("pop_cnt %3d atom %3i  ser_x,y,z %15.5f %15.5f %15.5f -- vec_x,y,z %15.5f %15.5f %15.5f\n",
 					       pop_cnt, i, lcoords_x[i],lcoords_y[i],lcoords_z[i],
 					       local_coords_x[i][pop_cnt], local_coords_y[i][pop_cnt], local_coords_z[i][pop_cnt]);
+				}
 			}
+#if 0
+			for (uint i = 0; i < DockConst_num_of_atoms; i++) {
+				local_coords_x[i][pop_cnt] = lcoords_x[i];
+				local_coords_y[i][pop_cnt] = lcoords_y[i];
+				local_coords_z[i][pop_cnt] = lcoords_z[i];
+			}
+#endif
 		}
+#if 0
+		printf("Individual Genome ...\n");
+		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+			printf("%3d ", pop_cnt);
+			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+				printf(" %14.7e", LocalPopCurr[gene_cnt][pop_cnt]);
+			}
+			printf("\n");
+		}
+#endif
 	}
 
-//#endif
+#endif
 
-//#if 0
+#if 1
         energy_ia(
 		IA_IE_atom_charges,
 		IA_IE_atom_types,
@@ -315,7 +333,7 @@ void lga (
 		local_coords_y,
 		local_coords_z
 		);
-//#else
+#else
 
 	void energy_ia_ser (
 		const	float*	restrict	IA_IE_atom_charges,
@@ -385,9 +403,9 @@ void lga (
 	}
 	
 	
-//#endif
+#endif
 
-//#if 0
+#if 1
         energy_ie(
 		IE_Fgrids,
 		IA_IE_atom_charges,
@@ -408,7 +426,7 @@ void lga (
 		local_coords_z
 		);
 
-//#else
+#else
 	
 	void energy_ie_ser (
 		const	float*	restrict	IE_Fgrids,
@@ -460,21 +478,12 @@ void lga (
 			printf("pop_cnt = %d  interE  vec: %21.3f   ser: %21.3f\n", pop_cnt, energy_ie_ic[pop_cnt], final_interE);
 		}
 	}
-//#endif
+#endif
 
 	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		LocalEneCurr[pop_cnt] = energy_ia_ic[pop_cnt] + energy_ie_ic[pop_cnt];
         }
 
-#include <stdio.h>
-	FILE *fp = fopen("ve_energy.txt", "w");
-	fprintf(fp, "entity              energy_ia            energy_ie\n");
-	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
-		fprintf(fp, "%6d   %21.3f   %21.3f\n", pop_cnt, energy_ia_ic[pop_cnt], energy_ie_ic[pop_cnt]);
-	}
-	fclose(fp);
-	
-	
 	#if defined (PRINT_ALL_KRNL)
 	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		printf("Individual < after energy calc>: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
@@ -491,7 +500,7 @@ void lga (
 	uint eval_cnt = DockConst_pop_size; // takes into account the IC evals
 	uint generation_cnt = 0;
 
-#if 0
+#if 1
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
 
 		float LocalPopNext[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
