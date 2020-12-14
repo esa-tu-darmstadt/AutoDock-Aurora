@@ -16,8 +16,7 @@ COMMON_DIR=../common
 BIN_DIR=../bin
 
 # Device sources
-K_OBJS = calc_pc.o energy_ia.o energy_ie.o lga.o libkernel_ga.o perform_ls.o rand_gen.o \
- energy_ia_ser.o energy_ie_ser.o calc_pc_ser.o
+K_OBJS = calc_pc.o energy_ia.o energy_ie.o lga.o libkernel_ga.o perform_ls.o rand_gen.o
 K_GA_NAME = libkernel_ga
 
 KRNL_GA_LIB = $(BIN_DIR)/$(K_GA_NAME).so
@@ -35,7 +34,7 @@ KERNEL_DIAGNOSTIC=-report-all
 KERNEL_DEBUG_MSG=-Wall -Wcomment -Werror -Wunknown-pragma
 KERNEL_DEBUG_UNUSED=-Wunused-variable -Wunused-parameter -Wunused-but-set-parameter -Wunused-but-set-variable -Wunused-value
 
-KERNEL_DEBUG_BASIC=-g $(KERNEL_DEBUG_MSG) $(KERNEL_DEBUG_UNUSED) $(KERNEL_DIAGNOSTIC) -finline-functions #-mvector-low-precise-divide-function
+KERNEL_DEBUG_BASIC=-g $(KERNEL_DEBUG_MSG) $(KERNEL_DEBUG_UNUSED) $(KERNEL_DIAGNOSTIC) -finline-functions -mvector-packed -mvector-low-precise-divide-function
 KERNEL_DEBUG_INFO_AND_NOOPT=-g -O0
 KERNEL_DEBUG_COMPLETE=$(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT)
 KERNEL_DEBUG_TRACE=$(KERNEL_TRACE) $(KERNEL_DEBUG_TRACEBACK)
