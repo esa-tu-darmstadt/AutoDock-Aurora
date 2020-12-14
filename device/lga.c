@@ -187,7 +187,7 @@ void lga (
         printf("<before energy calc>\n");
 #endif
 
-//#if 0
+#if 1
         calc_pc(
                 PC_rotlist,
                 PC_ref_coords_x,
@@ -273,7 +273,7 @@ void lga (
 	uint eval_cnt = DockConst_pop_size; // takes into account the IC evals
 	uint generation_cnt = 0;
 
-#if 0
+#if 1
 	while ((eval_cnt < DockConst_num_of_energy_evals) && (generation_cnt < DockConst_num_of_generations)) {
 
 		float LocalPopNext[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
