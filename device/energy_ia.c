@@ -62,7 +62,7 @@ void energy_ia (
 
 #pragma _NEC packed_vector
 #pragma _NEC vovertake
-#pragma _NEC advance_gather
+                //#pragma _NEC advance_gather   # this directive is dangerous here!
 #pragma _NEC gather_reorder
 		for (uint j = 0; j < DockConst_pop_size; j++)
 		{
