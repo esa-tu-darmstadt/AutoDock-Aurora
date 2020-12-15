@@ -1,6 +1,8 @@
 #ifndef _INCLUDE_PERFORM_LS_H_
 #define _INCLUDE_PERFORM_LS_H_
 
+#include "rand_gen.h"
+
 void perform_ls(
 			ushort				DockConst_max_num_of_iters,
 			float				DockConst_rho_lower_bound,
@@ -13,7 +15,6 @@ void perform_ls(
 			float			in_out_genotype[][MAX_POPSIZE],
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
-			uint*				dockpars_prng_states,
 	// pc
 	const	int*	restrict	PC_rotlist,
 	const	float*	restrict	PC_ref_coords_x,

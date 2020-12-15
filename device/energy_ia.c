@@ -60,6 +60,10 @@ void energy_ia (
 		uint atom1_id = IA_intraE_contributors[3*contributor_counter];
 		uint atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 
+#pragma _NEC packed_vector
+#pragma _NEC vovertake
+#pragma _NEC advance_gather
+#pragma _NEC gather_reorder
 		for (uint j = 0; j < DockConst_pop_size; j++)
 		{
 

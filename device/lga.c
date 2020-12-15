@@ -613,7 +613,6 @@ void lga (
 			LocalPopNext,
 			LocalEneNext,
 			&ls_eval_cnt,
-			&dockpars_prng_states, // ??? eliminate with other rand generator?
 
 			PC_rotlist,
 			PC_ref_coords_x,
