@@ -60,6 +60,9 @@ void energy_ie (
 		uint atom1_typeid = IA_IE_atom_types[atom1_id];
 		float q = IA_IE_atom_charges[atom1_id];
 
+#pragma _NEC vovertake
+#pragma _NEC advance_gather
+#pragma _NEC gather_reorder
 		for (uint j = 0; j < DockConst_pop_size; j++) {
      
 			float x = local_coords_x[atom1_id][j];

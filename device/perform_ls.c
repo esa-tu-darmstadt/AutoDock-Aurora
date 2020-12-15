@@ -18,7 +18,6 @@ void perform_ls(
 			float			in_out_genotype[][MAX_POPSIZE],
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
-			uint*				dockpars_prng_states,
 	// pc
 	const	int*	restrict	PC_rotlist,
 	const	float*	restrict	PC_ref_coords_x,
@@ -133,6 +132,8 @@ void perform_ls(
 		}
 	}
 
+	float randv[ACTUAL_GENOTYPE_LENGTH * MAX_POPSIZE];
+
 	// Performing local search
 	//while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
 	while (num_active_ls > 0) {
@@ -182,9 +183,8 @@ void perform_ls(
 		float entity_possible_new_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float deviate_plus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 		float deviate_minus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
-		float randv[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-		randf_vec((float *)&randv[0][0], ACTUAL_GENOTYPE_LENGTH * MAX_POPSIZE);
+		randf_vec((float *)&randv[0], ACTUAL_GENOTYPE_LENGTH * active_pop_size);
 		
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
@@ -192,7 +192,7 @@ void perform_ls(
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
 			for (uint jj = 0; jj < active_pop_size; jj++) {
 				uint j = active_idx[jj];
-				float tmp_prng = randv[i][jj];
+				float tmp_prng = randv[i * active_pop_size + jj];
 
 				// tmp1 is genotype_deviate
 				float tmp1 = rho_compr[jj] * (2.0f * tmp_prng - 1.0f);
@@ -319,6 +319,9 @@ void perform_ls(
 
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
 #pragma _NEC ivdep
+#pragma _NEC vovertake
+#pragma _NEC advance_gather
+#pragma _NEC gather_reorder
 			for (uint jj = 0; jj < active_pop_size; jj++) {
 				uint j = active_idx[jj];
 				if (energy_lower[jj]) {
