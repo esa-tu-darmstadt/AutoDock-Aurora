@@ -39,7 +39,8 @@ double myrand(void)
 
 	if (first_call == 0)
 	{
-		srand((unsigned int) time(NULL));
+		//srand((unsigned int) time(NULL));
+		srand(123456);
 		first_call++;
 	}
 

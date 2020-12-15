@@ -138,7 +138,8 @@ filled with clock() */
 	std::vector<unsigned int> cpu_prng_seeds (size_prng_seeds_nelems);
 	
 	// Initializing seed generator
-	genseed(time(NULL));	
+	//genseed(time(NULL));	
+	genseed(1234567u);	
 
 	// Generating seeds (for each thread during GA)
 	for (unsigned int i = 0; i < size_prng_seeds_nelems; i++) {
