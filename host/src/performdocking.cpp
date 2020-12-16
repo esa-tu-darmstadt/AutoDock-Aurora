@@ -566,6 +566,9 @@ filled with clock() */
 	/* destroy the VEO process early in order to get a more accurate PROGINF */
 	veo_proc_destroy(ve_process);
 
+	/* destroy the VEO process early in order to get a more accurate PROGINF */
+	veo_proc_destroy(ve_process);
+
 	// -----------------------------------------------------------------------------------------------------
 	// Processing results
 	// -----------------------------------------------------------------------------------------------------
