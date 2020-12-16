@@ -64,7 +64,7 @@ ifeq ($(OMP),YES)
 endif
 
 ifeq ($(TRACE),YES)
-	OPT_KRNL += -ftrace
+	OPT_KRNL += -ftrace -DENABLE_TRACE
 	BUILDREQS = build_veorun_ftrace
 else
 	BUILDREQS =

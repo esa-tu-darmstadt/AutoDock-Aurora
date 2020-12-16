@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "rand_gen.h"
 
-static int nprints = 0;
 static asl_random_t rng;
 
 void randf_vec_init(unsigned int *seed, int seed_length)
@@ -21,18 +20,9 @@ void randf_vec_init(unsigned int *seed, int seed_length)
     if (rc != 0)
       printf("ERROR: asl_random_distribute_uniform returned rc=%d\n", rc);
 
-#if 0
-    printf("randf_initialize seed: ");
-    for (int i=0; i<seed_length; i++)
-      printf("%10u ", seed[i]);
-    printf("\n\n");
-#endif
-
     rc = asl_random_initialize(rng, seed_length, seed);
     if (rc != 0)
       printf("ERROR: asl_random_initialize returned rc=%d\n", rc);
-
-    nprints = 0;
   }
 }
 
@@ -47,17 +37,14 @@ void randf_vec_fini()
 
 void randf_vec(float *val, int num)
 {
+#if defined (ENABLE_TRACE)
+  ftrace_region_begin("randf_vec")
+#endif
 #pragma omp critical
   {
     asl_random_generate_s(rng, num, val);
   }
-#if 0
-  if (nprints++ < 10) {
-    printf("randf_vec: ");
-    for (int i=0; i<10; i++)
-      printf("%12.5e ", val[i]);
-    printf("\n\n");
-  }
+#if defined (ENABLE_TRACE)
+  ftrace_region_end("randf_vec")
 #endif
 }
-
