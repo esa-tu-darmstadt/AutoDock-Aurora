@@ -102,8 +102,12 @@ endef
 # Setting VE specific env variables
 # ---------------------------------
 export VE_PROGINF := DETAIL
+ENVSET = "env VE_PROGINF=DETAIL"
+ifeq ($(DEBUGVE),YES)
+ENVSET += " VEORUN_BIN=\"/opt/nec/ve/bin/gdb /opt/nec/ve/veos/libexec/aveorun\""
+endif
 ifeq ($(TRACE),YES)
-export VEORUN_BIN := $(BIN_DIR)/veorun_ftrace
+ENVSET += " VEORUN_BIN=$(BIN_DIR)/veorun_ftrace"
 POSTRUN = $(FTRACE) -f ftrace.out
 else
 POSTRUN =
@@ -178,7 +182,7 @@ test: all
 	-lsmet $(TESTLS)
 
 eval: all
-	$(BIN_DIR)/$(TARGET) \
+	$(ENVSET) $(BIN_DIR)/$(TARGET) \
 	-lsmet sw \
 	-lsit 300 -lsrat 100.000000 -smooth 0.500 \
 	-nev ${NEV} -ngen $(NGEN) -nrun $(NRUN) -psize $(POPSIZE) \
