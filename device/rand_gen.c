@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include "rand_gen.h"
 
+#if defined (ENABLE_TRACE)
+#include <ftrace.h>
+#endif
+
 static asl_random_t rng;
 
 void randf_vec_init(unsigned int *seed, int seed_length)
@@ -38,13 +42,13 @@ void randf_vec_fini()
 void randf_vec(float *val, int num)
 {
 #if defined (ENABLE_TRACE)
-  ftrace_region_begin("randf_vec")
+  ftrace_region_begin("randf_vec");
 #endif
 #pragma omp critical
   {
     asl_random_generate_s(rng, num, val);
   }
 #if defined (ENABLE_TRACE)
-  ftrace_region_end("randf_vec")
+  ftrace_region_end("randf_vec");
 #endif
 }
