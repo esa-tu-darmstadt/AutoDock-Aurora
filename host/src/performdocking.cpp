@@ -530,6 +530,9 @@ filled with clock() */
 	wrapper_veo_read_mem (ve_process, cpu_evals_of_runs.data(), mem_evals_performed, size_evals_of_runs_nbytes);
 	wrapper_veo_read_mem (ve_process, cpu_gens_of_runs.data(), mem_gens_performed, size_evals_of_runs_nbytes);
 
+	/* destroy the VEO process early in order to get a more accurate PROGINF */
+	veo_proc_destroy(ve_process);
+
 	// -----------------------------------------------------------------------------------------------------
 	// Processing results
 	// -----------------------------------------------------------------------------------------------------
@@ -541,6 +544,15 @@ filled with clock() */
 	for (int cnt_pop = 0; cnt_pop < size_energies_nelems; cnt_pop++)
 		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_nelems, cnt_pop, cpu_energies[cnt_pop]);
 	*/
+	long sum_energy_evals = 0, sum_generations = 0;
+	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
+		sum_energy_evals += cpu_evals_of_runs[run_cnt];
+		sum_generations += cpu_gens_of_runs[run_cnt];
+	}
+	float docking_time = ELAPSEDSECS(clock_stop_docking, clock_start_docking);
+	printf("Time spent in docking search      : %12.3fs\n", docking_time);
+	printf("Total number of energy evaluations: %ld -> %.5f us/eval\n", sum_energy_evals, (1.e6 * docking_time) / (float)sum_energy_evals);
+	printf("Total number of generations       : %ld\n", sum_generations);
 
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
 
