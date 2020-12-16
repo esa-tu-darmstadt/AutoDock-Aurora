@@ -39,8 +39,11 @@ double myrand(void)
 
 	if (first_call == 0)
 	{
-		//srand((unsigned int) time(NULL));
+#ifndef REPRO
+		srand((unsigned int) time(NULL));
+#else
 		srand(123456);
+#endif
 		first_call++;
 	}
 
