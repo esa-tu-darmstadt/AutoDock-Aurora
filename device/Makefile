@@ -40,19 +40,19 @@ KERNEL_DEBUG_COMPLETE=$(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT)
 KERNEL_DEBUG_TRACE=$(KERNEL_TRACE) $(KERNEL_DEBUG_TRACEBACK)
 
 ifeq ($(CONFIG),FDEBUG)
-#	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) -lm -DPRINT_ALL_KRNL -DPRINT_ALL_PC -DPRINT_ALL_IA  -DPRINT_ALL_IE -DPRINT_ALL_LS
-	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) -lm
+#	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) -DPRINT_ALL_KRNL -DPRINT_ALL_PC -DPRINT_ALL_IA  -DPRINT_ALL_IE -DPRINT_ALL_LS
+	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE)
 else ifeq ($(CONFIG),LDEBUG)
-	OPT_KRNL =$(KERNEL_DEBUG_BASIC) -lm
+	OPT_KRNL =$(KERNEL_DEBUG_BASIC)
 else ifeq ($(CONFIG),RELEASE)
-	OPT_KRNL =-O3 $(KERNEL_DEBUG_BASIC) -lm
+	OPT_KRNL =-O3 $(KERNEL_DEBUG_BASIC)
 # Do not use "make CONFIG=PROFILE eval"
 # Compiling this way is intended only 
 # to work with "make profile"
 else ifeq ($(CONFIG),PROFILE)
-	OPT_KRNL =-O3 $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_TRACE)  -lm
+	OPT_KRNL =-O3 $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_TRACE)
 else 
-	OPT_KRNL =-lm
+	OPT_KRNL =
 endif
 
 OMP=NO
@@ -66,7 +66,6 @@ endif
 ifeq ($(TRACE),YES)
 	OPT_KRNL += -ftrace
 	BUILDREQS = build_veorun_ftrace
-	ENVSET = env VEORUN_BIN=$(BIN_DIR)/veorun_ftrace
 else
 	BUILDREQS =
 endif
@@ -99,10 +98,11 @@ endef
 
 all: kernel_ga $(BUILDREQS)
 
+ADDLIBS = -lm
 ifeq ($(OMP),YES)
-ADDLIBS = /opt/nec/ve/nlc/2.1.0/lib/libasl_openmp.a
+ADDLIBS += /opt/nec/ve/nlc/2.1.0/lib/libasl_openmp.a
 else
-ADDLIBS = /opt/nec/ve/nlc/2.1.0/lib/libasl_sequential.a
+ADDLIBS += /opt/nec/ve/nlc/2.1.0/lib/libasl_sequential.a
 endif
 
 INCLUDES = -I$(COMMON_DIR) -I. -I/opt/nec/ve/nlc/2.1.0/include
@@ -112,6 +112,12 @@ kernel_ga: clean $(KRNL_GA_LIB)
 $(KRNL_GA_LIB): $(K_OBJS)
 	$(VE_COMPILER) -fpic -shared -o $@ $(OPT_KRNL) $(K_OBJS) $(ADDLIBS)
 	@echo $(newline)
+
+#lga.o: lga.c
+#	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT) -o $@ -c $<
+
+#energy_ie.o: energy_ie.c
+#	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT) -o $@ -c $<
 
 # TODO: better dependencies
 
