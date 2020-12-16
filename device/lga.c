@@ -328,21 +328,15 @@ void lga (
 
                 randf_vec((float *)&randv[0][0], (10 + DockConst_num_of_genes) * MAX_POPSIZE);
                 
-		/*
-		#pragma ivdep array (LocalPopNext)
-		#pragma ivdep array (LocalEneNext)
-		*/
-		for (uint new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
+                // ---------------------------------------------------
+                // Elitism: copying the best entity to new population
+                // ---------------------------------------------------
+		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+			LocalPopNext[gene_cnt][0] = LocalPopCurr[gene_cnt][best_entity];
+		} 		
+		LocalEneNext[0] = loc_energies[best_entity];
 
-			// ---------------------------------------------------
-			// Elitism: copying the best entity to new population
-			// ---------------------------------------------------
-			if (new_pop_cnt == 1) {
-				for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-					LocalPopNext[gene_cnt][0] = LocalPopCurr[gene_cnt][best_entity];
-				} 		
-				LocalEneNext[0] = loc_energies[best_entity];
-			}
+		for (uint new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
 
 			float local_entity_1 [ACTUAL_GENOTYPE_LENGTH];
 			float local_entity_2 [ACTUAL_GENOTYPE_LENGTH]; 
@@ -354,10 +348,10 @@ void lga (
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
 			// Get ushort binary_tournament selection prngs (parent index)
-			ushort bt_tmp_u0 = (ushort) (DockConst_pop_size * randv[0][new_pop_cnt]);
-			ushort bt_tmp_u1 = (ushort) (DockConst_pop_size * randv[1][new_pop_cnt]);
-			ushort bt_tmp_u2 = (ushort) (DockConst_pop_size * randv[2][new_pop_cnt]);
-			ushort bt_tmp_u3 = (ushort) (DockConst_pop_size * randv[3][new_pop_cnt]);
+			uint bt_tmp_u0 = (uint) (DockConst_pop_size * randv[0][new_pop_cnt]);
+			uint bt_tmp_u1 = (uint) (DockConst_pop_size * randv[1][new_pop_cnt]);
+			uint bt_tmp_u2 = (uint) (DockConst_pop_size * randv[2][new_pop_cnt]);
+			uint bt_tmp_u3 = (uint) (DockConst_pop_size * randv[3][new_pop_cnt]);
 
 			// TODO: FIX INDEXES
 			// TODO: VECTORIZE IT
@@ -367,8 +361,8 @@ void lga (
 			float bt_tmp_f2 = randv[6][new_pop_cnt];
 			float bt_tmp_f3 = randv[7][new_pop_cnt];
 
-			ushort parent1;
-			ushort parent2; 
+			uint parent1;
+			uint parent2; 
 
 			// First parent
 			if (loc_energies[bt_tmp_u0] < loc_energies[bt_tmp_u1]) {
@@ -419,11 +413,11 @@ void lga (
 			// TODO: VECTORIZE IT
 			// get uchar genetic_generation prngs (gene index)
 			// get float genetic_generation prngs (mutation rate)
-			uchar prng_GG_C_x = (uchar) (DockConst_num_of_genes * randv[8][new_pop_cnt]);
-			uchar prng_GG_C_y = (uchar) (DockConst_num_of_genes * randv[9][new_pop_cnt]);
+			uint prng_GG_C_x = (uint) (DockConst_num_of_genes * randv[8][new_pop_cnt]);
+			uint prng_GG_C_y = (uint) (DockConst_num_of_genes * randv[9][new_pop_cnt]);
 
-			uchar covr_point_low;
-			uchar covr_point_high;
+			uint covr_point_low;
+			uint covr_point_high;
 			boolean twopoint_cross_yes = False;
 
 			if (prng_GG_C_x == prng_GG_C_y) {
