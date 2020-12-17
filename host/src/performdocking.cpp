@@ -550,7 +550,7 @@ filled with clock() */
 		sum_generations += cpu_gens_of_runs[run_cnt];
 	}
 	float docking_time = ELAPSEDSECS(clock_stop_docking, clock_start_docking);
-	printf("Time spent in docking search      : %12.3fs\n", docking_time);
+	printf("Time spent in docking search      : %.3fs\n", docking_time);
 	printf("Total number of energy evaluations: %ld -> %.5f us/eval\n", sum_energy_evals, (1.e6 * docking_time) / (float)sum_energy_evals);
 	printf("Total number of generations       : %ld\n", sum_generations);
 

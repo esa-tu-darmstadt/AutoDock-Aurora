@@ -130,9 +130,10 @@ float esa_dot4_e_(float a1, float a2, float a3, float a4, float b1, float b2, fl
  * -----------------------------------------------
  * */
 
+/* https://www.codeproject.com/Tips/700780/Fast-floor-ceiling-functions */
 static inline
 int esa_ceil (float fp) {
-  return ((-1) * floor(-1*fp));
+  return (-floor(-fp));
 }
 
 /* 
