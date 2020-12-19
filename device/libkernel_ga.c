@@ -1,5 +1,6 @@
 #include "auxiliary.h"
 #include "rand_gen.h"
+#include "device_args.h"
 #include "lga.h"
 
 /*
@@ -12,6 +13,9 @@ LS:  local search
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
 // --------------------------------------------------------------------------
 uint64_t libkernel_ga (
+                       struct device_args *da
+                       )
+#if 0
 	const 	float*		PopulationCurrentInitial,
 			uint64_t  	VEVMA_PopulationCurrentFinal,
 			uint64_t  	VEVMA_EnergyCurrent,
@@ -78,9 +82,13 @@ uint64_t libkernel_ga (
 	// Values changing every LGA run
             uint		Host_num_of_runs
 )
+#endif
 {
+	uint DockConst_pop_size = da->DockConst_pop_size;
+	uint Host_num_of_runs = da->Host_num_of_runs;
+
 	// initialize random generator with seed passed from host
-	randf_vec_init(&dockpars_prng_states[0], DockConst_pop_size);
+	randf_vec_init(&(da->dockpars_prng_states)[0], DockConst_pop_size);
 
 
 #pragma omp parallel for schedule(static, 1)
@@ -96,69 +104,69 @@ uint64_t libkernel_ga (
 		unsigned int Host_Offset_Ene = run_cnt * DockConst_pop_size;
 
         lga(
-			PopulationCurrentInitial,
-			VEVMA_PopulationCurrentFinal,
-			VEVMA_EnergyCurrent,
-			VEVMA_Evals_performed,
-			VEVMA_Gens_performed,
-			dockpars_prng_states,
-			DockConst_pop_size,
-			DockConst_num_of_energy_evals,
-			DockConst_num_of_generations,
-			DockConst_tournament_rate,
-			DockConst_mutation_rate,
-			DockConst_abs_max_dmov,
-			DockConst_abs_max_dang,
-			Host_two_absmaxdmov,
-			Host_two_absmaxdang,
-			DockConst_crossover_rate,
-			DockConst_num_of_lsentities,
-			DockConst_num_of_genes,
+			da->PopulationCurrentInitial,
+			da->PopulationCurrentFinal,
+			da->EnergyCurrent,
+			da->Evals_performed,
+			da->Gens_performed,
+			da->dockpars_prng_states,
+			da->DockConst_pop_size,
+			da->DockConst_num_of_energy_evals,
+			da->DockConst_num_of_generations,
+			da->DockConst_tournament_rate,
+			da->DockConst_mutation_rate,
+			da->DockConst_abs_max_dmov,
+			da->DockConst_abs_max_dang,
+			da->Host_two_absmaxdmov,
+			da->Host_two_absmaxdang,
+			da->DockConst_crossover_rate,
+			da->DockConst_num_of_lsentities,
+			da->DockConst_num_of_genes,
 			// pc
-			PC_rotlist,
-			PC_ref_coords_x,// TODO: merge them into a single one?
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			DockConst_rotbondlist_length,
+			da->PC_rotlist,
+			da->PC_ref_coords_x,// TODO: merge them into a single one?
+			da->PC_ref_coords_y,
+			da->PC_ref_coords_z,
+			da->PC_rotbonds_moving_vectors,
+			da->PC_rotbonds_unit_vectors,
+			da->PC_ref_orientation_quats,
+			da->DockConst_rotbondlist_length,
 			// ia
-			IA_IE_atom_charges,
-			IA_IE_atom_types,
-			IA_intraE_contributors,
-			IA_reqm,
-			IA_reqm_hbond,
-			IA_atom1_types_reqm,
-			IA_atom2_types_reqm,
-			IA_VWpars_AC,
-			IA_VWpars_BD,
-			IA_dspars_S,
-			IA_dspars_V,
-			DockConst_smooth,
-			DockConst_num_of_intraE_contributors,
-			DockConst_grid_spacing,
-			DockConst_num_of_atypes,
-			DockConst_coeff_elec,
-			DockConst_qasp,
-			DockConst_coeff_desolv,
+			da->IA_IE_atom_charges,
+			da->IA_IE_atom_types,
+			da->IA_intraE_contributors,
+			da->IA_reqm,
+			da->IA_reqm_hbond,
+			da->IA_atom1_types_reqm,
+			da->IA_atom2_types_reqm,
+			da->IA_VWpars_AC,
+			da->IA_VWpars_BD,
+			da->IA_dspars_S,
+			da->IA_dspars_V,
+			da->DockConst_smooth,
+			da->DockConst_num_of_intraE_contributors,
+			da->DockConst_grid_spacing,
+			da->DockConst_num_of_atypes,
+			da->DockConst_coeff_elec,
+			da->DockConst_qasp,
+			da->DockConst_coeff_desolv,
 			// ie
-			VEVMA_Fgrids,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
-			DockConst_num_of_atoms,
-			DockConst_gridsize_x_minus1,
-			DockConst_gridsize_y_minus1,
-			DockConst_gridsize_z_minus1,
-			Host_mul_tmp2,
-			Host_mul_tmp3,
+			da->Fgrids,
+			da->DockConst_g1,
+			da->DockConst_g2,
+			da->DockConst_g3,
+			da->DockConst_num_of_atoms,
+			da->DockConst_gridsize_x_minus1,
+			da->DockConst_gridsize_y_minus1,
+			da->DockConst_gridsize_z_minus1,
+			da->Host_mul_tmp2,
+			da->Host_mul_tmp3,
 			// ls
-			DockConst_max_num_of_iters,
-			DockConst_rho_lower_bound,
-			DockConst_base_dmov_mul_sqrt3,
-			DockConst_base_dang_mul_sqrt3,
-			DockConst_cons_limit,
+			da->DockConst_max_num_of_iters,
+			da->DockConst_rho_lower_bound,
+			da->DockConst_base_dmov_mul_sqrt3,
+			da->DockConst_base_dang_mul_sqrt3,
+			da->DockConst_cons_limit,
 			// Values changing every LGA run
 			uint_run_cnt,
 			Host_Offset_Pop,
