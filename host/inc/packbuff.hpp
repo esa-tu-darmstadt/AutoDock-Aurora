@@ -22,9 +22,12 @@
 
 #include <stdlib.h>
 #include <string.h>
+<<<<<<< HEAD
 #include <stddef.h>
 #include <iostream>
 #include <fstream>
+=======
+>>>>>>> Adding PackBuff class that manages packing various data buffers into a
 #include <stdexcept>
 #include <vector>
 
