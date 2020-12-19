@@ -15,10 +15,10 @@ LS:  local search
 // --------------------------------------------------------------------------
 void lga (
 	const 	float*		PopulationCurrentInitial,
-		uint64_t  	VEVMA_PopulationCurrentFinal,
-		uint64_t  	VEVMA_EnergyCurrent,
-		uint64_t	VEVMA_Evals_performed,
-		uint64_t	VEVMA_Gens_performed,
+		float*  	PopulationCurrentFinal,
+		float*  	EnergyCurrent,
+		int*		Evals_performed,
+		int*		Gens_performed,
 		uint*		dockpars_prng_states,
 		uint		DockConst_pop_size,
 		uint            DockConst_num_of_energy_evals,
@@ -61,7 +61,7 @@ void lga (
 			float		DockConst_qasp,
 			float		DockConst_coeff_desolv,
 	// ie
-	const	uint64_t	VEVMA_Fgrids,
+	const	float*			Fgrids,
 			uchar		DockConst_g1,
 			uint		DockConst_g2,
 			uint		DockConst_g3,
@@ -132,16 +132,16 @@ void lga (
 
 	// --------------------------------------------------------------------------
 	// ga
-	float* GlobPopCurrFinal   = (float*)(VEVMA_PopulationCurrentFinal);
-	float* GlobEneCurr        = (float*)(VEVMA_EnergyCurrent);
-	uint* GlobEvals_performed = (uint*)(VEVMA_Evals_performed);
-	uint* GlobGens_performed  = (uint*)(VEVMA_Gens_performed);
+	float* GlobPopCurrFinal   = PopulationCurrentFinal;
+	float* GlobEneCurr        = EnergyCurrent;
+	uint* GlobEvals_performed = Evals_performed;
+	uint* GlobGens_performed  = Gens_performed;
 	// pc
 
 	// ia
 
 	// ie
-	const	float*	IE_Fgrids = (float*)(VEVMA_Fgrids);
+	const	float*	IE_Fgrids = Fgrids;
 
 	// --------------------------------------------------------------------------
 	float LocalPopCurr[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
