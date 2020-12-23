@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include <stdexcept>
 #include <vector>
 
@@ -33,7 +34,7 @@ private:
   size_t size_; // current size of the buffer
   size_t size_alloc;  // allocated size of the buffer
   size_t chunksz;  // minimum data buffer growth granularity
-  std::vector<void **> fixup_; // addresses that need to be "fixed" by adding the VE
+  std::vector<uint64_t> fixup_; // addresses that need to be "fixed" by adding the VE
 public:
   PackBuff(size_t n) : chunksz(n), size_(0) {
     data_ = (char *)malloc(chunksz);
@@ -45,7 +46,9 @@ public:
     if (data_)
       free(data_);
   }
-  void pack(void *buff, size_t len, void **address) {
+  /*
+   */
+  void pack(void *buff, size_t len, uint64_t address) {
     size_t asize = ALIGN8B(size_);  // aligned pointer to buff destination
     // realloc if needed
     if (asize + len > size_alloc) {
@@ -56,11 +59,16 @@ public:
 
       // fix relocations which are inside the old buffer!
       for (auto it = fixup_.begin(); it != fixup_.end(); ++it) {
-        auto address = *it;
-        if ((char *)address >= data_ && (char *)address < (data_ + size_)) {
-          size_t offset = (char *)address - data_;
-          *it = (void **)(new_data + offset);
+        auto addr = *it;
+        if (addr >= (uint64_t)data_ && addr < (uint64_t)(data_ + size_)) {
+          size_t offset = addr - (uint64_t)data_;
+          *it = (uint64_t)(new_data + offset);
         }
+      }
+      // fix current argument's address if inside the relocated region
+      if (address >= (uint64_t)data_ && address < (uint64_t)(data_ + size_)) {
+        size_t offset = address - (uint64_t)data_;
+        address = (uint64_t)(new_data + offset);
       }
       data_ = new_data;
       size_alloc = new_size;
@@ -70,19 +78,25 @@ public:
       memcpy((void *)(data_ + asize), (const void *)buff, len);
     }
     // mark fixup address
-    *address = (void *)asize;
+    *((uint64_t *)address) = asize;
     fixup_.push_back(address);
     size_ = asize + len;
   }
+  /*
+   */
   size_t size() {
     return size_;
   }
+  /*
+   */
   void fixup(uint64_t VE_addr) {
     for (auto it = fixup_.begin(); it != fixup_.end(); ++it) {
       auto address = *it;
-      *address = (void *)((uint64_t)(*address) + VE_addr);
+      *((uint64_t *)address) = *((uint64_t *)address) + VE_addr;
     }
   }
+  /*
+   */
   void *data() {
     return (void *)(data_);
   }
