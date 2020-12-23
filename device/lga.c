@@ -17,13 +17,8 @@ void lga (
 	const 	float*		PopulationCurrentInitial,
 		float*  	PopulationCurrentFinal,
 		float*  	EnergyCurrent,
-<<<<<<< HEAD
 		uint*		Evals_performed,
 		uint*		Gens_performed,
-=======
-		int*		Evals_performed,
-		int*		Gens_performed,
->>>>>>> Implemented passing device kernel args as one single struct included into
 		uint*		dockpars_prng_states,
 		uint		DockConst_pop_size,
 		uint            DockConst_num_of_energy_evals,
