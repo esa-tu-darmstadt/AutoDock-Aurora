@@ -1,6 +1,7 @@
 #include "performdocking.h"
 #include "device_args.h"
 #include "packbuff.hpp"
+#include <stddef.h>
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s)	STRINGIZE2(s)
@@ -403,10 +404,10 @@ filled with clock() */
 	auto pb = PackBuff(32*1024*1024);
 	
 	// pack the device_args struct as first element into the packed buffer
-	pb.pack((void *)&da, sizeof(da), (void **)&da_VEMVA);
+	pb.pack((void *)&da, sizeof(da), (uint64_t)&da_VEMVA);
 
-#define DA_IN_PB_PTR(ELEMENT) (void **)((char *)pb.data() + offsetof(struct device_args, ELEMENT))
-	       
+#define DA_IN_PB_PTR(ELEMENT) ((uint64_t)pb.data() + offsetof(struct device_args, ELEMENT))
+
 	// GA
 	pb.pack(cpu_init_populations.data(), size_populations_nbytes, DA_IN_PB_PTR(PopulationCurrentInitial));
 	pb.pack(NULL, size_populations_nbytes, DA_IN_PB_PTR(PopulationCurrentFinal));
