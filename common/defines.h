@@ -12,7 +12,8 @@
 #define RLIST_FIRSTROT_MASK  0x00010000
 #define RLIST_GENROT_MASK    0x00020000
 #define RLIST_DUMMY_MASK     0x00040000
-#define DEG_TO_RAD 	     0.0174533f
+//#define DEG_TO_RAD 	     0.0174533f
+#define DEG_TO_RAD	     0.0174532925f
 
 //#define COEFF_VDW 0.1662f
 //#define COEFF_HB 0.1209f
@@ -30,9 +31,9 @@
 #define MAX_NUM_GENES			(MAX_NUM_OF_ROTBONDS + 6)
 
 //TODO: DECIDE WHICH IS BETTER
-//#define MAX_POPSIZE 			2048
-#define MAX_POPSIZE 			256
-#define MAX_NUM_OF_RUNS			100
+#define MAX_POPSIZE 			2048
+//#define MAX_POPSIZE 			256
+#define MAX_NUM_OF_RUNS			1000
 
 // Must be bigger than MAX_NUM_OF_ROTBONDS+6
 #define GENOTYPE_LENGTH_IN_GLOBMEM 64

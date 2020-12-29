@@ -1,341 +1,204 @@
-#include "auxiliary.c"
-#include "calc_pc_main_loop.c"
+#include "auxiliary.h"
 
 // --------------------------------------------------------------------------
 // Calculation of the pose of the ligand according to the input genotype.
 // --------------------------------------------------------------------------
 void calc_pc (
 	const	int*	restrict	PC_rotlist,
-	const	int* 	restrict	PC_subrotlist_1,
-	const	int* 	restrict	PC_subrotlist_2,
-	const	int* 	restrict	PC_subrotlist_3,
-	const	int* 	restrict	PC_subrotlist_4,
-	const	int* 	restrict	PC_subrotlist_5,
-	const	int* 	restrict	PC_subrotlist_6,
-	const	int* 	restrict	PC_subrotlist_7,
-	const	int* 	restrict	PC_subrotlist_8,
-	const	int* 	restrict	PC_subrotlist_9,
-	const	int* 	restrict	PC_subrotlist_10,
-	const	int* 	restrict	PC_subrotlist_11,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
 	const	float*	restrict	PC_ref_coords_z,
 	const	float*	restrict	PC_rotbonds_moving_vectors,
 	const	float*	restrict	PC_rotbonds_unit_vectors,
 	const	float*	restrict	PC_ref_orientation_quats,
-			uint				DockConst_rotbondlist_length,
-			uint				subrotlist_1_length,
-			uint				subrotlist_2_length,
-			uint				subrotlist_3_length,
-			uint				subrotlist_4_length,
-			uint				subrotlist_5_length,
-			uint				subrotlist_6_length,
-			uint				subrotlist_7_length,
-			uint				subrotlist_8_length,
-			uint				subrotlist_9_length,
-			uint				subrotlist_10_length,
-			uint				subrotlist_11_length,
-			uchar				DockConst_num_of_genes,
-			uint				Host_RunId,
+	uint				DockConst_rotbondlist_length,
+	uchar				DockConst_num_of_genes,
+	uint				Host_RunId,
 
-	const	float*	restrict	genotype,
-			float*	restrict 	local_coords_x,
-			float*	restrict	local_coords_y,
-			float*	restrict	local_coords_z
+        const	uint			DockConst_pop_size,
+		float		genotype[][MAX_POPSIZE],
+		float	 	local_coords_x[][MAX_POPSIZE],
+		float		local_coords_y[][MAX_POPSIZE],
+		float		local_coords_z[][MAX_POPSIZE]
 )
 {
-	#if defined (PRINT_ALL_PC) 
+#if defined (PRINT_ALL_PC) 
 	printf("\n");
 	printf("Starting <pose calculation> ... \n");
 	printf("\n");
 	printf("\t%-40s %u\n", "DockConst_rotbondlist_length: ",	DockConst_rotbondlist_length);
 	printf("\t%-40s %u\n", "DockConst_num_of_genes: ",        	DockConst_num_of_genes);
-	printf("\t%-40s %u\n", "Host_RunId: ",        				Host_RunId);
-	#endif
+	printf("\t%-40s %u\n", "Host_RunId: ",        			Host_RunId);
+#endif
 
-	#if defined (ENABLE_TRACE)
+#if defined (ENABLE_TRACE)
 	ftrace_region_begin("PC_GENOTYPES_LOOP");
-	#endif
+#endif
 
-	float local_genotype [ACTUAL_GENOTYPE_LENGTH];
+	float local_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
 	for (uint i = 3; i < DockConst_num_of_genes; i++) {
-		local_genotype [i] = genotype[i] * DEG_TO_RAD;
+		for (uint j = 0; j < DockConst_pop_size; j++) {
+			local_genotype[i][j] = genotype[i][j] * DEG_TO_RAD;
+			//local_genotype[i][j] = genotype[i][j] * 0.01745329252;
+		}
 	}
 
-	#if defined (ENABLE_TRACE)
+#if defined (ENABLE_TRACE)
 	ftrace_region_end("PC_GENOTYPES_LOOP");
-	#endif
+#endif
 
-	float phi = local_genotype[3];
-	float theta = local_genotype[4];
+	float genrot_unitvec[3][MAX_POPSIZE];
+	for (uint j = 0; j < DockConst_pop_size; j++) {
+		float phi = local_genotype[3][j];
+		float theta = local_genotype[4][j];
 
-	float sin_theta = sin(theta);
-	float cos_theta = cos(theta);
-	float genrot_unitvec[3];
-	genrot_unitvec[0] = sin_theta*cos(phi);
-	genrot_unitvec[1] = sin_theta*sin(phi);
-	genrot_unitvec[2] = cos_theta;
+		float sin_theta = sin(theta);
+		float cos_theta = cos(theta);
+		genrot_unitvec[0][j] = sin_theta*cos(phi);
+		genrot_unitvec[1][j] = sin_theta*sin(phi);
+		genrot_unitvec[2][j] = cos_theta;
+	}
 
-	#if defined (ENABLE_TRACE)
+#if defined (ENABLE_TRACE)
 	ftrace_region_begin("PC_MAIN_LOOP");
-	#endif
+#endif
 
-	// This was the original call processing a single large rotlist
-/*
-	calc_pc_main_loop (
-    	PC_rotlist,
-    	PC_ref_coords_x,
-		PC_ref_coords_y,
-		PC_ref_coords_z,
-		PC_rotbonds_moving_vectors,
-		PC_rotbonds_unit_vectors,
-		PC_ref_orientation_quats,
-        DockConst_rotbondlist_length,
-        Host_RunId,
-    	genotype,
-    	local_coords_x,
-		local_coords_y,
-		local_coords_z,
-		genrot_unitvec,
-        local_genotype
-	);
-*/
-	// The alternative version consists of splitting
-	// the single rotlist into many sub-rotlists, where
-	// applying ivdep is correct.
-	// Note loops within sub-rotlists can be run in parallel,
-	// while sub-rotlists must be processed one after another.
+	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++) {
+		int rotation_list_element = PC_rotlist[rotation_counter];
+		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0) {	// If not dummy rotation
+			uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
-	if (subrotlist_1_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_1,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_1_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+			for (uint j = 0; j < DockConst_pop_size; j++) {
 
-	if (subrotlist_2_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_2,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_2_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+				// Capturing atom coordinates
+				float atom_to_rotate[3];
 
-	if (subrotlist_3_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_3,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_3_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+				if ((rotation_list_element & RLIST_FIRSTROT_MASK) != 0)	{ // If first rotation of this atom
+					atom_to_rotate[0] = PC_ref_coords_x[atom_id];
+					atom_to_rotate[1] = PC_ref_coords_y[atom_id];
+					atom_to_rotate[2] = PC_ref_coords_z[atom_id];
 
-	if (subrotlist_4_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_4,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_4_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+				} else {
+					atom_to_rotate[0] = local_coords_x[atom_id][j];
+					atom_to_rotate[1] = local_coords_y[atom_id][j];
+					atom_to_rotate[2] = local_coords_z[atom_id][j];
+				}
 
-	if (subrotlist_5_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_5,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_5_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+				// Capturing rotation vectors and angle
+				float rotation_unitvec[3];
+				float rotation_movingvec[3];
+				float rotation_angle;
 
-	if (subrotlist_6_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_6,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_6_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+				if ((rotation_list_element & RLIST_GENROT_MASK) != 0) {	// If general rotation
+					rotation_unitvec[0] = genrot_unitvec[0][j];
+					rotation_unitvec[1] = genrot_unitvec[1][j];
+					rotation_unitvec[2] = genrot_unitvec[2][j];
+                  
+					rotation_movingvec[0] = genotype[0][j];
+					rotation_movingvec[1] = genotype[1][j];
+					rotation_movingvec[2] = genotype[2][j];
 
-	if (subrotlist_7_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_7,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_7_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+					rotation_angle = local_genotype[5][j];
+				}
+				else	// If rotating around rotatable bond
+				{
+					uint rotbond_id = (rotation_list_element & RLIST_RBONDID_MASK) >> RLIST_RBONDID_SHIFT;
 
-	if (subrotlist_8_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_8,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_8_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+					rotation_unitvec[0] = PC_rotbonds_unit_vectors[3*rotbond_id];
+					rotation_unitvec[1] = PC_rotbonds_unit_vectors[3*rotbond_id+1];
+					rotation_unitvec[2] = PC_rotbonds_unit_vectors[3*rotbond_id+2];
+				
+					rotation_movingvec[0] = PC_rotbonds_moving_vectors[3*rotbond_id];
+					rotation_movingvec[1] = PC_rotbonds_moving_vectors[3*rotbond_id+1];
+					rotation_movingvec[2] = PC_rotbonds_moving_vectors[3*rotbond_id+2];
 
-	if (subrotlist_9_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_9,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_9_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+					rotation_angle = local_genotype[6+rotbond_id][j];
 
-	if (subrotlist_10_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_10,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_10_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+					// In addition performing the first movement 
+					// which is needed only if rotating around rotatable bond
+					atom_to_rotate[0] -= rotation_movingvec[0];
+					atom_to_rotate[1] -= rotation_movingvec[1];
+					atom_to_rotate[2] -= rotation_movingvec[2];
+				}
 
-	if (subrotlist_11_length > 0) {
-		calc_pc_main_loop (
-			PC_subrotlist_11,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			subrotlist_11_length,
-			Host_RunId,
-			genotype,
-			local_coords_x,
-			local_coords_y,
-			local_coords_z,
-			genrot_unitvec,
-			local_genotype
-		);
-	}
+				// Performing rotation
+				float quatrot_left_q, quatrot_left_x, quatrot_left_y, quatrot_left_z;
+				float quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z;
 
-	#if defined (ENABLE_TRACE)
+				rotation_angle = rotation_angle * 0.5f;
+
+				float sin_angle, cos_angle;
+				sin_angle      = sin(rotation_angle);
+				cos_angle      = cos(rotation_angle);
+				quatrot_left_q = cos_angle;
+				quatrot_left_x = sin_angle * rotation_unitvec[0];
+				quatrot_left_y = sin_angle * rotation_unitvec[1];
+				quatrot_left_z = sin_angle * rotation_unitvec[2];
+			
+
+				if ((rotation_list_element & RLIST_GENROT_MASK) != 0)	// If general rotation, 
+					// two rotations should be performed 
+					// (multiplying the quaternions)
+				{
+					const float  ref_ori_quats_const_q = PC_ref_orientation_quats[4*Host_RunId];
+					const float  ref_ori_quats_const_x = PC_ref_orientation_quats[4*Host_RunId+1];
+					const float  ref_ori_quats_const_y = PC_ref_orientation_quats[4*Host_RunId+2];
+					const float  ref_ori_quats_const_z = PC_ref_orientation_quats[4*Host_RunId+3];
+
+					// Calculating quatrot_left*ref_orientation_quats_const, 
+					// which means that reference orientation rotation is the first
+					quatrot_temp_q = quatrot_left_q;
+					quatrot_temp_x = quatrot_left_x;
+					quatrot_temp_y = quatrot_left_y;
+					quatrot_temp_z = quatrot_left_z;
+
+					// Taking the first element of ref_orientation_quats_const member
+					quatrot_left_q = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_q, -ref_ori_quats_const_x, -ref_ori_quats_const_y, -ref_ori_quats_const_z);
+					quatrot_left_x = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_x,  ref_ori_quats_const_q,  ref_ori_quats_const_z, -ref_ori_quats_const_y);
+					quatrot_left_y = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_y, -ref_ori_quats_const_z,  ref_ori_quats_const_q,  ref_ori_quats_const_x);
+					quatrot_left_z = esa_dot4_e(       quatrot_temp_q,         quatrot_temp_x,         quatrot_temp_y,         quatrot_temp_z,
+								    ref_ori_quats_const_z,  ref_ori_quats_const_y, -ref_ori_quats_const_x,  ref_ori_quats_const_q);
+				}
+
+				quatrot_temp_q = esa_dot3_e(  -quatrot_left_x,    -quatrot_left_y,    -quatrot_left_z,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
+				quatrot_temp_x = esa_dot3_e(   quatrot_left_q,    -quatrot_left_z,     quatrot_left_y,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
+				quatrot_temp_y = esa_dot3_e(   quatrot_left_z,     quatrot_left_q,    -quatrot_left_x,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
+				quatrot_temp_z = esa_dot3_e(  -quatrot_left_y,     quatrot_left_x,     quatrot_left_q,
+                                                            atom_to_rotate[0],  atom_to_rotate[1],  atom_to_rotate[2]);
+
+				atom_to_rotate[0] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
+                                                               -quatrot_left_x, quatrot_left_q,-quatrot_left_z, quatrot_left_y);
+				atom_to_rotate[1] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
+                                                               -quatrot_left_y, quatrot_left_z, quatrot_left_q,-quatrot_left_x);
+				atom_to_rotate[2] = esa_dot4_e( quatrot_temp_q, quatrot_temp_x, quatrot_temp_y, quatrot_temp_z,
+							       -quatrot_left_z,-quatrot_left_y, quatrot_left_x, quatrot_left_q);
+				// Performing final movement and storing values
+				local_coords_x[atom_id][j] = (float)(atom_to_rotate[0] + rotation_movingvec[0]);
+				local_coords_y[atom_id][j] = (float)(atom_to_rotate[1] + rotation_movingvec[1]);
+				local_coords_z[atom_id][j] = (float)(atom_to_rotate[2] + rotation_movingvec[2]);
+
+			} // Loop over j (individuals)
+
+		} // End if-statement not dummy rotation
+
+	} // End rotation_counter for-loop
+    
+#if defined (ENABLE_TRACE)
 	ftrace_region_end("PC_MAIN_LOOP");
-	#endif
+#endif
 
-	#if defined (PRINT_ALL_PC) 
+#if defined (PRINT_ALL_PC) 
 	printf("\n");
 	printf("Finishing <pose calculation>\n");
 	printf("\n");
-	#endif
+#endif
 }
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------

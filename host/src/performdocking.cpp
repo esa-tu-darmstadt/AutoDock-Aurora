@@ -133,12 +133,16 @@ filled with clock() */
 	// TODO: check passing of random numbers
 	// TODO: use parameter instead of hardcoding num_genes
 	// Allocating memory in CPU for pseudorandom number generator seeds
-	size_t size_prng_seeds_nelems = mypars->num_of_runs * mypars->pop_size;
+	size_t size_prng_seeds_nelems = mypars->pop_size;
 	size_t size_prng_seeds_nbytes = size_prng_seeds_nelems * sizeof(unsigned int);
 	std::vector<unsigned int> cpu_prng_seeds (size_prng_seeds_nelems);
 	
 	// Initializing seed generator
-	genseed(time(NULL));	
+#ifndef REPRO
+	genseed(time(NULL));
+#else
+	genseed(1234567u);
+#endif
 
 	// Generating seeds (for each thread during GA)
 	for (unsigned int i = 0; i < size_prng_seeds_nelems; i++) {
@@ -383,17 +387,6 @@ filled with clock() */
 	
 	// PC
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotlist_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_1_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_2_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_3_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_4_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_5_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_6_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_7_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_8_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_9_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_10_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.subrotlist_11_const[0]), size_rotlist_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_x_const[0]), size_ref_coords_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_y_const[0]), size_ref_coords_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_z_const[0]), size_ref_coords_nbytes);
@@ -401,17 +394,6 @@ filled with clock() */
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotbonds_unit_vectors_const[0]), size_rotbonds_unit_vectors_nbytes);
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_orientation_quats_const[0]), size_ref_orientation_quats_nbytes);
 	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_1_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_2_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_3_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_4_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_5_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_6_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_7_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_8_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_9_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_10_length);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, KerConstStatic.subrotlist_11_length);
 
 	// IA
 	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_charges_const[0]), size_InterE_atom_charges_nbytes);
@@ -484,17 +466,6 @@ filled with clock() */
 
 	// PC
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_1_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_1_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_2_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_2_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_3_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_3_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_4_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_4_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_5_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_5_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_6_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_6_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_7_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_7_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_8_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_8_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_9_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_9_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_10_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_10_length << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "subrotlist_11_length" << std::right << std::setw(SPACE_M) << KerConstStatic.subrotlist_11_length << "\n";
 	std::cout << std::endl;
 
 	// IA
@@ -559,6 +530,9 @@ filled with clock() */
 	wrapper_veo_read_mem (ve_process, cpu_evals_of_runs.data(), mem_evals_performed, size_evals_of_runs_nbytes);
 	wrapper_veo_read_mem (ve_process, cpu_gens_of_runs.data(), mem_gens_performed, size_evals_of_runs_nbytes);
 
+	/* destroy the VEO process early in order to get a more accurate PROGINF */
+	veo_proc_destroy(ve_process);
+
 	// -----------------------------------------------------------------------------------------------------
 	// Processing results
 	// -----------------------------------------------------------------------------------------------------
@@ -570,6 +544,15 @@ filled with clock() */
 	for (int cnt_pop = 0; cnt_pop < size_energies_nelems; cnt_pop++)
 		printf("total_num_energies: %u, cpu_energies[%u]: %f\n", size_energies_nelems, cnt_pop, cpu_energies[cnt_pop]);
 	*/
+	long sum_energy_evals = 0, sum_generations = 0;
+	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
+		sum_energy_evals += cpu_evals_of_runs[run_cnt];
+		sum_generations += cpu_gens_of_runs[run_cnt];
+	}
+	float docking_time = ELAPSEDSECS(clock_stop_docking, clock_start_docking);
+	printf("Time spent in docking search      : %.3fs\n", docking_time);
+	printf("Total number of energy evaluations: %ld -> %.5f us/eval\n", sum_energy_evals, (1.e6 * docking_time) / (float)sum_energy_evals);
+	printf("Total number of generations       : %ld\n", sum_generations);
 
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
 

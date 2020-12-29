@@ -129,7 +129,7 @@ void get_commandpars(const int* argc,
 	mypars->base_dang_mul_sqrt3 = 75.0*sqrt(3.0);		// 75�
 	mypars->cons_limit 	    = 4;			// 4
 	mypars->max_num_of_iters    = 300;
-	mypars->pop_size            = 150;
+	mypars->pop_size            = 256; // 150;
 	mypars->initpop_gen_or_loadfile = 0;
 	mypars->gen_pdbs 	    = 0;
 				    // char fldfile [128]

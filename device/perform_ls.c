@@ -1,4 +1,8 @@
-#include "auxiliary.c"
+#include "auxiliary.h"
+#include "rand_gen.h"
+#include "energy_ia.h"
+#include "energy_ie.h"
+#include "calc_pc.h"
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
@@ -10,23 +14,12 @@ void perform_ls(
 			float				DockConst_base_dang_mul_sqrt3,
 			uchar				DockConst_cons_limit,
 
-			float*	restrict	in_out_genotype,
+                        uint			pop_size,
+			float			in_out_genotype[][MAX_POPSIZE],
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
-			uint*				dockpars_prng_states,
 	// pc
 	const	int*	restrict	PC_rotlist,
-	const	int* 	restrict	PC_subrotlist_1,
-	const	int* 	restrict	PC_subrotlist_2,
-	const	int* 	restrict	PC_subrotlist_3,
-	const	int* 	restrict	PC_subrotlist_4,
-	const	int* 	restrict	PC_subrotlist_5,
-	const	int* 	restrict	PC_subrotlist_6,
-	const	int* 	restrict	PC_subrotlist_7,
-	const	int* 	restrict	PC_subrotlist_8,
-	const	int* 	restrict	PC_subrotlist_9,
-	const	int* 	restrict	PC_subrotlist_10,
-	const	int* 	restrict	PC_subrotlist_11,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
 	const	float*	restrict	PC_ref_coords_z,
@@ -34,17 +27,6 @@ void perform_ls(
 	const	float*	restrict	PC_rotbonds_unit_vectors,
 	const	float*	restrict	PC_ref_orientation_quats,
 			uint				DockConst_rotbondlist_length,
-			uint				subrotlist_1_length,
-			uint				subrotlist_2_length,
-			uint				subrotlist_3_length,
-			uint				subrotlist_4_length,
-			uint				subrotlist_5_length,
-			uint				subrotlist_6_length,
-			uint				subrotlist_7_length,
-			uint				subrotlist_8_length,
-			uint				subrotlist_9_length,
-			uint				subrotlist_10_length,
-			uint				subrotlist_11_length,
 			uint				Host_RunId,
 	// ia
 	const	float*	restrict	IA_IE_atom_charges,
@@ -77,8 +59,8 @@ void perform_ls(
 			uint				Host_mul_tmp2,
 			uint				Host_mul_tmp3
 )
-{	
-	#if defined (PRINT_ALL_LS) 
+{
+#if defined (PRINT_ALL_LS) 
 	printf("\n");
 	printf("Starting <local search> ... \n");
 	printf("\n");
@@ -88,116 +70,175 @@ void perform_ls(
 	printf("LS: DockConst_num_of_genes: %u\n",  	   	DockConst_num_of_genes);
 	printf("LS: DockConst_base_dang_mul_sqrt3: %f\n",  	DockConst_base_dang_mul_sqrt3);
 	printf("LS: DockConst_cons_limit: %u\n",           	DockConst_cons_limit);
-	#endif
+#endif
 
-	float local_coords_x[MAX_NUM_OF_ATOMS];
-	float local_coords_y[MAX_NUM_OF_ATOMS];
-	float local_coords_z[MAX_NUM_OF_ATOMS];
+	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 
 	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-		local_coords_x[i] = 0.0f;
-		local_coords_y[i] = 0.0f;
-		local_coords_z[i] = 0.0f;
+		for (uint j = 0; j < pop_size; j++) {
+			local_coords_x[i][j] = 0.0f;
+			local_coords_y[i][j] = 0.0f;
+			local_coords_z[i][j] = 0.0f;
+		}
 	}
 
 	// Reading incoming genotype and energy
-	float current_energy = *in_out_energy;
-	float genotype[ACTUAL_GENOTYPE_LENGTH];
+	float current_energy[MAX_POPSIZE];
+	float genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		genotype[i] = in_out_genotype[i];
+		for (uint j = 0; j < pop_size; j++) {
+			genotype[i][j] = in_out_genotype[i][j];
+		}
 	}
-	
-	float rho = 1.0f;
-	uint iteration_cnt = 0;
-	uint  cons_succ     = 0;
-	uint  cons_fail     = 0;
-	uint   LS_eval       = 0;
-	boolean positive_direction = True;
+	for (uint j = 0; j < pop_size; j++) {
+		current_energy[j] = in_out_energy[j];
+	}
+
+        float rho[MAX_POPSIZE];
+        uint iteration_cnt[MAX_POPSIZE];
+        uint cons_succ[MAX_POPSIZE];
+        uint cons_fail[MAX_POPSIZE];
+        uint LS_eval;
+        int positive_direction[MAX_POPSIZE];  // converted from boolean to int
+	int ls_is_active[MAX_POPSIZE];  // filter for individuals that are still being iterated
+	uint num_active_ls = pop_size;
+	float genotype_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+
+	int positive_dir_compr[MAX_POPSIZE];  // compressed array for positive direction
+        float rho_compr[MAX_POPSIZE];
+        uint iteration_compr[MAX_POPSIZE];
+        uint cons_succ_compr[MAX_POPSIZE];
+        uint cons_fail_compr[MAX_POPSIZE];
+
+	int active_pop_size; // counts compressed list of genomes
+	uint active_idx[MAX_POPSIZE]; // j index that corresponds to slot in compressed list
+	uint active_compr_idx[MAX_POPSIZE]; // compressed index corresponding to active j index
+
+	LS_eval = 0;
+	for (uint j = 0; j < pop_size; j++) {
+		rho[j]                = 1.0f;
+		iteration_cnt[j]      = 0;
+		cons_succ[j]          = 0;
+		cons_fail[j]          = 0;
+		positive_direction[j] = 1;
+		ls_is_active[j]       = 1;
+	}
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
+		for (uint j = 0; j < pop_size; j++) {
+			genotype_bias[i][j] = 0.0f;
+		}
+	}
+
+	float randv[ACTUAL_GENOTYPE_LENGTH * MAX_POPSIZE];
 
 	// Performing local search
-	while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
-		// -----------------------------------------------
-		// Exit condition is groups here. It allows pipelining
-		if (positive_direction == True) {
-			if (cons_succ >= DockConst_cons_limit) {
-				rho = LS_EXP_FACTOR * rho;
-				cons_fail = 0;
-				cons_succ = 0;
+	//while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
+	while (num_active_ls > 0) {
+
+		// compressed list of active indices
+		active_pop_size = 0;
+#pragma _NEC packed_vector
+		for (uint j = 0; j < pop_size; j++) {
+			if (ls_is_active[j]) {
+				active_idx[active_pop_size] = j;
+				active_compr_idx[j] = active_pop_size;
+
+				positive_dir_compr[active_pop_size] = positive_direction[j];
+				rho_compr[active_pop_size] = rho[j];
+				iteration_compr[active_pop_size] = iteration_cnt[j];
+				cons_succ_compr[active_pop_size] = cons_succ[j];
+				cons_fail_compr[active_pop_size] = cons_fail[j];
+
+				active_pop_size++;
 			}
-			else if (cons_fail >= DockConst_cons_limit) {
-				rho = LS_CONT_FACTOR * rho;
-				cons_fail = 0;
-				cons_succ = 0;
+		}
+
+#pragma _NEC packed_vector
+		for (uint jj = 0; jj < active_pop_size; jj++) {
+			//uint j = active_idx[jj];
+			if (positive_dir_compr[jj]) { // True
+				if (cons_succ_compr[jj] >= DockConst_cons_limit) {
+					rho_compr[jj] = LS_EXP_FACTOR * rho_compr[jj];
+					cons_fail_compr[jj] = 0;
+					cons_succ_compr[jj] = 0;
+				}
+				else if (cons_fail_compr[jj] >= DockConst_cons_limit) {
+					rho_compr[jj] = LS_CONT_FACTOR * rho_compr[jj];
+					cons_fail_compr[jj] = 0;
+					cons_succ_compr[jj] = 0;
+				}
+				iteration_compr[jj]++;
 			}
-			iteration_cnt++;
 		}
 
 		#if defined (PRINT_ALL)
-		printf("LS positive?: %u, iteration_cnt: %u, rho: %f, limit rho: %f\n",
-		positive_direction, iteration_cnt, rho, DockConst_rho_lower_bound);
+		//printf("LS positive?: %u, iteration_cnt: %u, rho: %f, limit rho: %f\n",
+		//positive_direction, iteration_cnt, rho, DockConst_rho_lower_bound);
 		#endif
 		// -----------------------------------------------
 
-		float entity_possible_new_genotype[ACTUAL_GENOTYPE_LENGTH];
-		float genotype_bias[ACTUAL_GENOTYPE_LENGTH];
-		float deviate_plus_bias[ACTUAL_GENOTYPE_LENGTH];
-		float deviate_minus_bias[ACTUAL_GENOTYPE_LENGTH];
+		float entity_possible_new_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+		float deviate_plus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+		float deviate_minus_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
+		randf_vec((float *)&randv[0], ACTUAL_GENOTYPE_LENGTH * active_pop_size);
+		
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
+#pragma _NEC packed_vector
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
-			float tmp_prng = randf(dockpars_prng_states);
+			for (uint jj = 0; jj < active_pop_size; jj++) {
+				uint j = active_idx[jj];
+				float tmp_prng = randv[i * active_pop_size + jj];
 
-			// tmp1 is genotype_deviate
-			float tmp1 = rho * (2.0f * tmp_prng - 1.0f);
+				// tmp1 is genotype_deviate
+				float tmp1 = rho_compr[jj] * (2.0f * tmp_prng - 1.0f);
 
-			if (i < 3) {
-				tmp1 = tmp1 * DockConst_base_dmov_mul_sqrt3;
-			}
-			else {
-				tmp1 = tmp1 * DockConst_base_dang_mul_sqrt3;
-			}
-
-			float deviate = 0.4f * tmp1;
-
-			// tmp2 is the addition: genotype_deviate + genotype_bias
-			// tmp3 is entity_possible_new_genotype
-			float tmp_bias = (iteration_cnt == 1)? 0.0f : genotype_bias[i];
-			float bias = 0.6f * tmp_bias;
-
-			deviate_plus_bias[i] = deviate + bias;
-			deviate_minus_bias[i] = deviate - bias;
-
-			float tmp2 = tmp1 + tmp_bias;
-			float tmp3 = (positive_direction == True)? (genotype [i] + tmp2): (genotype [i] - tmp2);
-
-			if (i > 2) {
-				if (i == 4) {
-					tmp3 = map_angle_180(tmp3);
+				if (i < 3) {
+					tmp1 = tmp1 * DockConst_base_dmov_mul_sqrt3;
 				}
 				else {
-					tmp3 = map_angle_360(tmp3);
+					tmp1 = tmp1 * DockConst_base_dang_mul_sqrt3;
 				}
-			}
 
-			entity_possible_new_genotype[i] = tmp3;
+				float deviate = 0.4f * tmp1;
+
+				// tmp2 is the addition: genotype_deviate + genotype_bias
+				// tmp3 is entity_possible_new_genotype
+				float tmp_bias = genotype_bias[i][j];
+				float bias = 0.6f * tmp_bias;
+
+				deviate_plus_bias[i][jj] = deviate + bias;
+				deviate_minus_bias[i][jj] = deviate - bias;
+
+				float tmp2 = tmp1 + tmp_bias;
+				float tmp3;
+				if (positive_dir_compr[jj]) {
+					tmp3 = genotype[i][j] + tmp2;
+				} else {
+					tmp3 = genotype[i][j] - tmp2;
+				}
+
+				if (i > 2) {
+					if (i == 4) {
+						tmp3 = map_angle_180(tmp3);
+					}
+					else {
+						tmp3 = map_angle_360(tmp3);
+					}
+				}
+
+				entity_possible_new_genotype[i][jj] = tmp3;
+			}
 		}
 
-		float energy_ia_ls;
-		float energy_ie_ls;
+		float energy_ia_ls[MAX_POPSIZE];
+		float energy_ie_ls[MAX_POPSIZE];
 		calc_pc(
 			PC_rotlist,
-			PC_subrotlist_1,
-			PC_subrotlist_2,
-			PC_subrotlist_3,
-			PC_subrotlist_4,
-			PC_subrotlist_5,
-			PC_subrotlist_6,
-			PC_subrotlist_7,
-			PC_subrotlist_8,
-			PC_subrotlist_9,
-			PC_subrotlist_10,
-			PC_subrotlist_11,
 			PC_ref_coords_x,
 			PC_ref_coords_y,
 			PC_ref_coords_z,
@@ -205,19 +246,9 @@ void perform_ls(
 			PC_rotbonds_unit_vectors,
 			PC_ref_orientation_quats,
 			DockConst_rotbondlist_length,
-			subrotlist_1_length,
-			subrotlist_2_length,
-			subrotlist_3_length,
-			subrotlist_4_length,
-			subrotlist_5_length,
-			subrotlist_6_length,
-			subrotlist_7_length,
-			subrotlist_8_length,
-			subrotlist_9_length,
-			subrotlist_10_length,
-			subrotlist_11_length,
 			DockConst_num_of_genes,
 			Host_RunId,
+			active_pop_size,
 			entity_possible_new_genotype,
 			local_coords_x,
 			local_coords_y,
@@ -242,7 +273,8 @@ void perform_ls(
 			DockConst_coeff_elec,
 			DockConst_qasp,
 			DockConst_coeff_desolv,
-			&energy_ia_ls,
+			active_pop_size,
+			energy_ia_ls,
 			local_coords_x,
 			local_coords_y,
 			local_coords_z
@@ -260,41 +292,78 @@ void perform_ls(
 			DockConst_gridsize_z_minus1,
 			Host_mul_tmp2,
 			Host_mul_tmp3,
-			&energy_ie_ls,
+			active_pop_size,
+			energy_ie_ls,
 			local_coords_x,
 			local_coords_y,
 			local_coords_z
 		);
-		float candidate_energy = energy_ia_ls + energy_ie_ls;
+
+		float candidate_energy[MAX_POPSIZE];
+		for (uint jj = 0; jj < active_pop_size; jj++) {
+			candidate_energy[jj] = energy_ia_ls[jj] + energy_ie_ls[jj];
+		}
 
 		// Updating LS energy-evaluation count
-		LS_eval++;
+		LS_eval += active_pop_size;;
 
-		if (candidate_energy < current_energy) {
-			// Updating offspring_genotype & genotype_bias
-
-			for (uint i = 0; i < DockConst_num_of_genes; i++) {
-				genotype_bias[i] = (positive_direction == True) ? deviate_plus_bias[i] : deviate_minus_bias[i];
-				genotype[i] = entity_possible_new_genotype[i];
+		int energy_lower[MAX_POPSIZE];
+		for (uint jj = 0; jj < active_pop_size; jj++) {
+			uint j = active_idx[jj];
+			if (candidate_energy[jj] < current_energy[j]) {
+				energy_lower[jj] = 1;
+			} else {
+				energy_lower[jj] = 0;
 			}
-
-			current_energy = candidate_energy;
-			cons_succ++;
-			cons_fail = 0;
-			positive_direction = True;
 		}
-		else {
-			// Updating (halving) genotype_bias
 
-			for (uint i = 0; i < DockConst_num_of_genes; i++) {
-				genotype_bias[i] = (iteration_cnt == 1)? 0.0f: (0.5f*genotype_bias[i]);
-			}
+		for (uint i = 0; i < DockConst_num_of_genes; i++) {
+#pragma _NEC ivdep
+#pragma _NEC vovertake
+#pragma _NEC advance_gather
+#pragma _NEC gather_reorder
+			for (uint jj = 0; jj < active_pop_size; jj++) {
+				uint j = active_idx[jj];
+				if (energy_lower[jj]) {
+					genotype_bias[i][j] = positive_dir_compr[jj] ? deviate_plus_bias[i][jj] : deviate_minus_bias[i][jj];
+					genotype[i][j] = entity_possible_new_genotype[i][jj];
 
-			if (positive_direction == False) {
-				cons_fail++;
-				cons_succ = 0;
+				} else {
+					genotype_bias[i][j] = (iteration_compr[jj] == 1)? 0.0f : 0.5f*genotype_bias[i][j];
+				}
 			}
-			positive_direction = (positive_direction == True) ? False: True;
+		}
+		for (uint jj = 0; jj < active_pop_size; jj++) {
+			uint j = active_idx[jj];
+			if (energy_lower[jj]) {
+				current_energy[j] = candidate_energy[jj];
+				cons_succ_compr[jj]++;
+				cons_fail_compr[jj] = 0;
+				positive_dir_compr[jj] = 1;
+			} else {
+				if (!positive_dir_compr[jj]) {
+					cons_fail_compr[jj]++;
+					cons_succ_compr[jj] = 0;
+					positive_dir_compr[jj] = 1;
+				} else {
+					positive_dir_compr[jj] = 0;
+				}
+			}
+		}
+
+		num_active_ls = active_pop_size;
+		for (uint jj = 0; jj < active_pop_size; jj++) {
+			if ((iteration_compr[jj] > DockConst_max_num_of_iters) ||
+			    (rho_compr[jj] <= DockConst_rho_lower_bound)) {
+				ls_is_active[active_idx[jj]] = 0;
+				num_active_ls--;
+			}
+			uint j = active_idx[jj];
+			positive_direction[j] = positive_dir_compr[jj];
+			rho[j] = rho_compr[jj];
+			iteration_cnt[j] = iteration_compr[jj];
+			cons_succ[j] = cons_succ_compr[jj];
+			cons_fail[j] = cons_fail_compr[jj];
 		}
 
 	} // end of while (iteration_cnt) && (rho)
@@ -303,9 +372,13 @@ void perform_ls(
 	*out_eval = LS_eval;
 
 	// Writing resulting genotype and energy
-	*in_out_energy = current_energy;
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		in_out_genotype[i] = genotype[i];
+		for (uint j = 0; j < pop_size; j++) {
+			in_out_genotype[i][j] = genotype[i][j];
+		}
+	}
+	for (uint j = 0; j < pop_size; j++) {
+		in_out_energy[j] = current_energy[j];
 	}
 	
 	#if defined (PRINT_ALL_IE) 

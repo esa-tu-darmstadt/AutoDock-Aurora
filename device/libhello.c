@@ -26,17 +26,6 @@ typedef struct
     float     		dspars_S_const               [MAX_NUM_OF_ATYPES];
     float     		dspars_V_const               [MAX_NUM_OF_ATYPES];
     int       		rotlist_const                [MAX_NUM_OF_ROTATIONS];
-	  int       		subrotlist_1_const [MAX_NUM_OF_ROTATIONS];
-	  int       		subrotlist_2_const [MAX_NUM_OF_ROTATIONS];
-	  int       		subrotlist_3_const [MAX_NUM_OF_ROTATIONS];
-	  int       		subrotlist_4_const [MAX_NUM_OF_ROTATIONS];
-	  int       		subrotlist_5_const [MAX_NUM_OF_ROTATIONS];
-	  int       		subrotlist_6_const [MAX_NUM_OF_ROTATIONS];
-    int       		subrotlist_7_const [MAX_NUM_OF_ROTATIONS];
-    int       		subrotlist_8_const [MAX_NUM_OF_ROTATIONS];
-    int       		subrotlist_9_const [MAX_NUM_OF_ROTATIONS];
-    int       		subrotlist_10_const [MAX_NUM_OF_ROTATIONS];
-    int       		subrotlist_11_const [MAX_NUM_OF_ROTATIONS];
     float 			  ref_coords_x_const			 [MAX_NUM_OF_ATOMS];
 	  float 			  ref_coords_y_const			 [MAX_NUM_OF_ATOMS];
 	  float 			  ref_coords_z_const			 [MAX_NUM_OF_ATOMS];
@@ -83,17 +72,6 @@ int main() {
 
   for (m = 0; m < MAX_NUM_OF_ROTATIONS; m++) { 
     KerConstStatic.rotlist_const[m] = (int) 5;
-    KerConstStatic.subrotlist_1_const[m] = (int) 5;
-    KerConstStatic.subrotlist_2_const[m] = (int) 5;
-    KerConstStatic.subrotlist_3_const[m] = (int) 5;
-    KerConstStatic.subrotlist_4_const[m] = (int) 5;
-    KerConstStatic.subrotlist_5_const[m] = (int) 5;
-    KerConstStatic.subrotlist_6_const[m] = (int) 5;
-    KerConstStatic.subrotlist_7_const[m] = (int) 5;
-    KerConstStatic.subrotlist_8_const[m] = (int) 5;
-    KerConstStatic.subrotlist_9_const[m] = (int) 5;
-    KerConstStatic.subrotlist_10_const[m] = (int) 5;
-    KerConstStatic.subrotlist_11_const[m] = (int) 5;
   }
 
   for (m = 0; m < MAX_NUM_OF_ATOMS; m++) { 
@@ -161,17 +139,6 @@ int main() {
               8, // dockpars.num_of_genes
 
               &KerConstStatic.rotlist_const[0],
-              &KerConstStatic.subrotlist_1_const[0],
-              &KerConstStatic.subrotlist_2_const[0],
-              &KerConstStatic.subrotlist_3_const[0],
-              &KerConstStatic.subrotlist_4_const[0],
-              &KerConstStatic.subrotlist_5_const[0],
-              &KerConstStatic.subrotlist_6_const[0],
-              &KerConstStatic.subrotlist_7_const[0],
-              &KerConstStatic.subrotlist_8_const[0],
-              &KerConstStatic.subrotlist_9_const[0],
-              &KerConstStatic.subrotlist_10_const[0],
-              &KerConstStatic.subrotlist_11_const[0],
               &KerConstStatic.ref_coords_x_const[0],
               &KerConstStatic.ref_coords_y_const[0],
               &KerConstStatic.ref_coords_z_const[0],
@@ -179,17 +146,6 @@ int main() {
               &KerConstStatic.rotbonds_unit_vectors_const[0],
               &KerConstStatic.ref_orientation_quats_const[0],
               31, // dockpars.rotbondlist_length
-              23, // subrotlist_1_length
-              8, // subrotlist_2_length
-              0, // subrotlist_3_length
-              0, // subrotlist_4_length
-              0, // subrotlist_5_length
-              0, // subrotlist_6_length
-              0, // subrotlist_7_length
-              0, // subrotlist_8_length
-              0, // subrotlist_9_length
-              0, // subrotlist_10_length
-              0, // subrotlist_11_length
 
               &KerConstStatic.atom_charges_const[0],
               &KerConstStatic.atom_types_const[0],
