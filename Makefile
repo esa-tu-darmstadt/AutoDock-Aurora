@@ -88,7 +88,7 @@ endif
 # ------------------------------------------------------
 # Priting out its git version hash
 GIT_VERSION := $(shell git describe --abbrev=40 --dirty --always --tags)
-CFLAGS+=-DVERSION=\"$(GIT_VERSION)\"
+CFLAGS+=-DVERSION=\"$(GIT_VERSION)\" -pg
 
 # ------------------------------------------------------
 # Note that the definition of "newline" contains two blank lines.
