@@ -45,12 +45,12 @@ ifeq ($(CONFIG),FDEBUG)
 else ifeq ($(CONFIG),LDEBUG)
 	OPT_KRNL =$(KERNEL_DEBUG_BASIC)
 else ifeq ($(CONFIG),RELEASE)
-	OPT_KRNL =-O3 $(KERNEL_DEBUG_BASIC)
+	OPT_KRNL =-O4 $(KERNEL_DEBUG_BASIC)
 # Do not use "make CONFIG=PROFILE eval"
 # Compiling this way is intended only 
 # to work with "make profile"
 else ifeq ($(CONFIG),PROFILE)
-	OPT_KRNL =-O3 $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_TRACE)
+	OPT_KRNL =-O4 $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_TRACE)
 else 
 	OPT_KRNL =
 endif
@@ -118,6 +118,9 @@ $(KRNL_GA_LIB): $(K_OBJS)
 
 #energy_ie.o: energy_ie.c
 #	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT) -o $@ -c $<
+
+#energy_ia.o: energy_ia.c
+#	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) -g -O2 -o $@ -c $<
 
 # TODO: better dependencies
 

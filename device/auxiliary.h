@@ -17,9 +17,12 @@
  * Overall
  * -----------------------------------------------
  * */
+#ifndef SHORT_TYPE_NAMES_
+#define SHORT_TYPE_NAMES_
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int  uint;
+#endif
 
 typedef enum {False, True} boolean;
 

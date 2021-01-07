@@ -135,7 +135,7 @@ void energy_ia (
 			float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
 			float inverse_smoothed_distance_pow_12 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_6;
 
-			float term_partialE3 = atomic_distance * (-8.5525f + (86.9525f / (1.0f + 7.7839f * exp(-0.3154f * atomic_distance))));
+			float term_partialE3 = atomic_distance * (-8.5525f + (86.9525f / (1.0f + 7.7839f * expf(-0.3154f * atomic_distance))));
 			float term_inv_partialE3 = (1.0f / term_partialE3);
 
 			// Calculating energy contributions
@@ -164,7 +164,7 @@ void energy_ia (
 				partialE4 += (
 					(IA_dspars_S[atom1_typeid] + DockConst_qasp * fabs(IA_IE_atom_charges[atom1_id])) * IA_dspars_V[atom2_typeid] + 
 					(IA_dspars_S[atom2_typeid] + DockConst_qasp * fabs(IA_IE_atom_charges[atom2_id])) * IA_dspars_V[atom1_typeid]) * 
-					DockConst_coeff_desolv*exp(-0.0386f*distance_pow_2);
+					DockConst_coeff_desolv*expf(-0.0386f*distance_pow_2);
 			} // if cuttoff2 - internuclear-distance at 20.48A
 	
 			final_intraE[j] += partialE1 + partialE2 + partialE3 + partialE4;

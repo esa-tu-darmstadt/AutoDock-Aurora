@@ -1,4 +1,7 @@
 #include "performdocking.h"
+#include "device_args.h"
+#include "packbuff.hpp"
+#include <stddef.h>
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s)	STRINGIZE2(s)
@@ -215,15 +218,6 @@ filled with clock() */
 	// -----------------------------------------------------------------------------------------------------
 
 	// LGA
-	uint64_t mem_dockpars_conformations_current_Final;
-	uint64_t mem_dockpars_energies_current;
-	uint64_t mem_evals_performed;
-	uint64_t mem_gens_performed;
-
-	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_conformations_current_Final, size_populations_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_energies_current, size_energies_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_evals_performed, size_evals_of_runs_nbytes);
-	wrapper_veo_alloc_mem (ve_process, &mem_gens_performed, size_evals_of_runs_nbytes);
 
 	// Pose Calculation buffers
 	size_t size_rotlist_nelems = MAX_NUM_OF_ROTATIONS;
@@ -249,9 +243,6 @@ filled with clock() */
 
 	size_t size_InterE_atom_types_nelems = MAX_NUM_OF_ATOMS;
 	size_t size_InterE_atom_types_nbytes = size_InterE_atom_types_nelems * sizeof(char);
-
-	wrapper_veo_alloc_mem (ve_process, &mem_dockpars_fgrids, size_floatgrids_nbytes);
-	wrapper_veo_write_mem (ve_process, mem_dockpars_fgrids, cpu_floatgrids, size_floatgrids_nbytes);
 
 	// IA buffers
 	size_t size_IntraE_atom_charges_nelems = MAX_NUM_OF_ATOMS;
@@ -361,82 +352,113 @@ filled with clock() */
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
 
+	// the device_args structure contains the arguments for the kernel function
+	struct device_args da;
+	// VE virtual address of da structure, passed to kernel
+	uint64_t da_VEMVA;
+
+	// TODO: fill scalar values into device_args structure
+	// GA
+	da.DockConst_pop_size            = dockpars.pop_size;
+	da.DockConst_num_of_energy_evals = dockpars.num_of_energy_evals;
+	da.DockConst_num_of_generations  = dockpars.num_of_generations;
+	da.DockConst_tournament_rate     = dockpars.tournament_rate;
+	da.DockConst_mutation_rate       = dockpars.mutation_rate;
+	da.DockConst_abs_max_dmov        = dockpars.abs_max_dmov;    
+	da.DockConst_abs_max_dang        = dockpars.abs_max_dang;
+	da.Host_two_absmaxdmov           = two_absmaxdmov;
+	da.Host_two_absmaxdang           = two_absmaxdang;
+	da.DockConst_crossover_rate      = dockpars.crossover_rate;
+	da.DockConst_num_of_lsentities   = dockpars.num_of_lsentities;
+	da.DockConst_num_of_genes        = dockpars.num_of_genes;
+	// PC
+	da.DockConst_rotbondlist_length  = dockpars.rotbondlist_length;
+	// IA
+	da.DockConst_smooth                     = dockpars.smooth;
+	da.DockConst_num_of_intraE_contributors = dockpars.num_of_intraE_contributors;
+	da.DockConst_grid_spacing               = dockpars.grid_spacing;
+	da.DockConst_num_of_atypes              = dockpars.num_of_atypes;
+	da.DockConst_coeff_elec                 = dockpars.coeff_elec;
+	da.DockConst_qasp                       = dockpars.qasp;
+	da.DockConst_coeff_desolv               = dockpars.coeff_desolv;
+	// IE
+	da.DockConst_g1                = dockpars.g1;
+	da.DockConst_g2                = dockpars.g2;
+	da.DockConst_g3                = dockpars.g3;
+	da.DockConst_num_of_atoms      = dockpars.num_of_atoms;
+	da.DockConst_gridsize_x_minus1 = fgridsizex_minus1;
+	da.DockConst_gridsize_y_minus1 = fgridsizey_minus1;
+	da.DockConst_gridsize_z_minus1 = fgridsizez_minus1;
+	da.Host_mul_tmp2               = mul_tmp2;
+	da.Host_mul_tmp3               = mul_tmp3;
+	// LS
+	da.DockConst_max_num_of_iters    = Host_max_num_of_iters;
+	da.DockConst_rho_lower_bound     = dockpars.rho_lower_bound; 
+	da.DockConst_base_dmov_mul_sqrt3 = dockpars.base_dmov_mul_sqrt3;
+	da.DockConst_base_dang_mul_sqrt3 = dockpars.base_dang_mul_sqrt3;
+	da.DockConst_cons_limit          = Host_cons_limit;
+	// Values changing every LGA run
+	da.Host_num_of_runs = mypars->num_of_runs;
+	
+	// packed buffer with all arguments to be passed, alloc chunksize = 32MB
+	auto pb = PackBuff(32*1024*1024);
+	
+	// pack the device_args struct as first element into the packed buffer
+	pb.pack((void *)&da, sizeof(da), (uint64_t)&da_VEMVA);
+
+#define DA_IN_PB_PTR(ELEMENT) ((uint64_t)pb.data() + offsetof(struct device_args, ELEMENT))
+
+	// GA
+	pb.pack(cpu_init_populations.data(), size_populations_nbytes, DA_IN_PB_PTR(PopulationCurrentInitial));
+	pb.pack(NULL, size_populations_nbytes, DA_IN_PB_PTR(PopulationCurrentFinal));
+	pb.pack(NULL, size_energies_nbytes, DA_IN_PB_PTR(EnergyCurrent));
+	pb.pack(NULL, size_evals_of_runs_nbytes, DA_IN_PB_PTR(Evals_performed));
+	pb.pack(NULL, size_evals_of_runs_nbytes, DA_IN_PB_PTR(Gens_performed));
+	pb.pack(cpu_prng_seeds.data(), size_prng_seeds_nbytes, DA_IN_PB_PTR(dockpars_prng_states));
+	
+	// PC
+	pb.pack(&KerConstStatic.rotlist_const[0], size_rotlist_nbytes, DA_IN_PB_PTR(PC_rotlist));
+	pb.pack(&KerConstStatic.ref_coords_x_const[0], size_ref_coords_nbytes, DA_IN_PB_PTR(PC_ref_coords_x));
+	pb.pack(&KerConstStatic.ref_coords_y_const[0], size_ref_coords_nbytes, DA_IN_PB_PTR(PC_ref_coords_y));
+	pb.pack(&KerConstStatic.ref_coords_z_const[0], size_ref_coords_nbytes, DA_IN_PB_PTR(PC_ref_coords_z));
+	pb.pack(&KerConstStatic.rotbonds_moving_vectors_const[0], size_rotbonds_moving_vectors_nbytes, DA_IN_PB_PTR(PC_rotbonds_moving_vectors));
+	pb.pack(&KerConstStatic.rotbonds_unit_vectors_const[0], size_rotbonds_unit_vectors_nbytes, DA_IN_PB_PTR(PC_rotbonds_unit_vectors));
+	pb.pack(&KerConstStatic.ref_orientation_quats_const[0], size_ref_orientation_quats_nbytes, DA_IN_PB_PTR(PC_ref_orientation_quats));
+
+	// IA
+	pb.pack(&KerConstStatic.atom_charges_const[0], size_InterE_atom_charges_nbytes, DA_IN_PB_PTR(IA_IE_atom_charges));
+	pb.pack(&KerConstStatic.atom_types_const[0], size_InterE_atom_types_nbytes, DA_IN_PB_PTR(IA_IE_atom_types));
+	pb.pack(&KerConstStatic.intraE_contributors_const[0], size_intraE_contributors_nbytes, DA_IN_PB_PTR(IA_intraE_contributors));
+	pb.pack(&KerConstStatic.reqm_const[0], size_reqm_nbytes, DA_IN_PB_PTR(IA_reqm));
+	pb.pack(&KerConstStatic.reqm_hbond_const[0], size_reqm_hbond_nbytes, DA_IN_PB_PTR(IA_reqm_hbond));
+	pb.pack(&KerConstStatic.atom1_types_reqm_const[0], size_atom1_types_reqm_nbytes, DA_IN_PB_PTR(IA_atom1_types_reqm));
+	pb.pack(&KerConstStatic.atom2_types_reqm_const[0], size_atom2_types_reqm_nbytes, DA_IN_PB_PTR(IA_atom2_types_reqm));
+	pb.pack(&KerConstStatic.VWpars_AC_const[0], size_VWpars_AC_nbytes, DA_IN_PB_PTR(IA_VWpars_AC));
+	pb.pack(&KerConstStatic.VWpars_BD_const[0], size_VWpars_BD_nbytes, DA_IN_PB_PTR(IA_VWpars_BD));
+	pb.pack(&KerConstStatic.dspars_S_const[0], size_dspars_S_nbytes, DA_IN_PB_PTR(IA_dspars_S));
+	pb.pack(&KerConstStatic.dspars_V_const[0], size_dspars_V_nbytes, DA_IN_PB_PTR(IA_dspars_V));
+
+	// IE
+	pb.pack(cpu_floatgrids, size_floatgrids_nbytes, DA_IN_PB_PTR(Fgrids));
+
+	// allocate memory for entire packed buffer on VE
+	uint64_t mem_kernel_args_packbuff;
+	wrapper_veo_alloc_mem(ve_process, &mem_kernel_args_packbuff, pb.size());
+
+	// fix "relocation" addresses to point to VE virtual addresses
+	pb.fixup(mem_kernel_args_packbuff);
+
+	// update local device_args structure such that we can free the packbuff later
+	memcpy(&da, pb.data(), sizeof(da));
+	
+	// transfer packbuff to device
+	wrapper_veo_write_mem(ve_process, mem_kernel_args_packbuff, pb.data(), pb.size());
+
 	// Creating a VEO arguments object
 	int narg = 0;
 	struct veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc ();
-
-	// GA
-	wrapper_veo_args_set_stack (kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(cpu_init_populations.data()), size_populations_nbytes);
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_conformations_current_Final);
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_dockpars_energies_current);
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_evals_performed);
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_gens_performed);
-	wrapper_veo_args_set_stack (kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(cpu_prng_seeds.data()), size_prng_seeds_nbytes);
-	wrapper_veo_args_set_i32   (kernel_ga_arg_ptr, narg++, dockpars.pop_size);
-	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_energy_evals);
-	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_generations);
-	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.tournament_rate);
-	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.mutation_rate);
-	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.abs_max_dmov);
-	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.abs_max_dang);
-	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, two_absmaxdmov);
-	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, two_absmaxdang);
-	wrapper_veo_args_set_float (kernel_ga_arg_ptr, narg++, dockpars.crossover_rate);
-	wrapper_veo_args_set_u32   (kernel_ga_arg_ptr, narg++, dockpars.num_of_lsentities);
-	wrapper_veo_args_set_u8    (kernel_ga_arg_ptr, narg++, dockpars.num_of_genes);
 	
-	// PC
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotlist_const[0]), size_rotlist_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_x_const[0]), size_ref_coords_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_y_const[0]), size_ref_coords_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_coords_z_const[0]), size_ref_coords_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotbonds_moving_vectors_const[0]), size_rotbonds_moving_vectors_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.rotbonds_unit_vectors_const[0]), size_rotbonds_unit_vectors_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.ref_orientation_quats_const[0]), size_ref_orientation_quats_nbytes);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.rotbondlist_length);
-
-	// IA
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_charges_const[0]), size_InterE_atom_charges_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom_types_const[0]), size_InterE_atom_types_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.intraE_contributors_const[0]), size_intraE_contributors_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.reqm_const[0]), size_reqm_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.reqm_hbond_const[0]), size_reqm_hbond_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom1_types_reqm_const[0]), size_atom1_types_reqm_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.atom2_types_reqm_const[0]), size_atom2_types_reqm_nbytes);	
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.VWpars_AC_const[0]), size_VWpars_AC_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.VWpars_BD_const[0]), size_VWpars_BD_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.dspars_S_const[0]), size_dspars_S_nbytes);
-	wrapper_veo_args_set_stack 	(kernel_ga_arg_ptr, VEO_INTENT_IN, narg++, (char*)(&KerConstStatic.dspars_V_const[0]), size_dspars_V_nbytes);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.smooth);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.num_of_intraE_contributors);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.grid_spacing);
-	wrapper_veo_args_set_u32	(kernel_ga_arg_ptr, narg++, dockpars.num_of_atypes);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.coeff_elec);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.qasp);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, dockpars.coeff_desolv);
-
-	// IE
-	wrapper_veo_args_set_u64	(kernel_ga_arg_ptr, narg++, mem_dockpars_fgrids);
-	wrapper_veo_args_set_u8     (kernel_ga_arg_ptr, narg++, dockpars.g1);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.g2);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, dockpars.g3);
-	wrapper_veo_args_set_u8     (kernel_ga_arg_ptr, narg++, dockpars.num_of_atoms);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, fgridsizex_minus1);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, fgridsizey_minus1);
-	wrapper_veo_args_set_float 	(kernel_ga_arg_ptr, narg++, fgridsizez_minus1);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, mul_tmp2);
-	wrapper_veo_args_set_u32 	(kernel_ga_arg_ptr, narg++, mul_tmp3);
-
-	// LS
-	wrapper_veo_args_set_u16	(kernel_ga_arg_ptr, narg++, Host_max_num_of_iters);
-	wrapper_veo_args_set_float	(kernel_ga_arg_ptr, narg++, dockpars.rho_lower_bound);
-	wrapper_veo_args_set_float	(kernel_ga_arg_ptr, narg++, dockpars.base_dmov_mul_sqrt3);
-	wrapper_veo_args_set_float	(kernel_ga_arg_ptr, narg++, dockpars.base_dang_mul_sqrt3);
-	wrapper_veo_args_set_u8	    (kernel_ga_arg_ptr, narg++, Host_cons_limit);
-
-	// Values changing every LGA run
-	wrapper_veo_args_set_u32	(kernel_ga_arg_ptr, narg++, mypars->num_of_runs);
-
+	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_kernel_args_packbuff);
 
 	// -----------------------------------------------------------------------------------------------------
 	// Displaying kernel argument values
@@ -446,10 +468,10 @@ filled with clock() */
 	std::cout << "Kernel LGA" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
 
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(SPACE_M) << mem_dockpars_conformations_current_Final << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << mem_dockpars_energies_current << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << mem_evals_performed << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(SPACE_M) << mem_gens_performed << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(SPACE_M) << da.PopulationCurrentFinal << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << da.EnergyCurrent << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << da.Evals_performed << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(SPACE_M) << da.Gens_performed << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.pop_size" << std::right << std::setw(SPACE_M) << dockpars.pop_size << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_energy_evals" << std::right << std::setw(SPACE_M) << dockpars.num_of_energy_evals << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_generations" << std::right << std::setw(SPACE_M) << dockpars.num_of_generations << "\n";
@@ -479,7 +501,7 @@ filled with clock() */
 	std::cout << std::endl;	
 
 	// IE
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_fgrids" << std::right << std::setw(SPACE_M) << mem_dockpars_fgrids << "\n";
+	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_fgrids" << std::right << std::setw(SPACE_M) << da.Fgrids << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g1" << std::right << std::setw(SPACE_M) << int { dockpars.g1 } << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g2" << std::right << std::setw(SPACE_M) << dockpars.g2 << "\n";
 	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g3" << std::right << std::setw(SPACE_M) << dockpars.g3 << "\n";
@@ -525,10 +547,10 @@ filled with clock() */
 	// Reading results from device
 	// -----------------------------------------------------------------------------------------------------
 
-	wrapper_veo_read_mem (ve_process, cpu_final_populations.data(), mem_dockpars_conformations_current_Final, size_populations_nbytes);
-	wrapper_veo_read_mem (ve_process, cpu_energies.data(), mem_dockpars_energies_current, size_energies_nbytes);
-	wrapper_veo_read_mem (ve_process, cpu_evals_of_runs.data(), mem_evals_performed, size_evals_of_runs_nbytes);
-	wrapper_veo_read_mem (ve_process, cpu_gens_of_runs.data(), mem_gens_performed, size_evals_of_runs_nbytes);
+	wrapper_veo_read_mem (ve_process, cpu_final_populations.data(), (uint64_t)da.PopulationCurrentFinal, size_populations_nbytes);
+	wrapper_veo_read_mem (ve_process, cpu_energies.data(), (uint64_t)da.EnergyCurrent, size_energies_nbytes);
+	wrapper_veo_read_mem (ve_process, cpu_evals_of_runs.data(), (uint64_t)da.Evals_performed, size_evals_of_runs_nbytes);
+	wrapper_veo_read_mem (ve_process, cpu_gens_of_runs.data(), (uint64_t)da.Gens_performed, size_evals_of_runs_nbytes);
 
 	/* destroy the VEO process early in order to get a more accurate PROGINF */
 	veo_proc_destroy(ve_process);
