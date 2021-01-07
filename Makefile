@@ -142,7 +142,7 @@ profile: displayproginf displayftrace
 veodock: $(SRC)
 	make clean
 	@echo $(newline)
-	$(VH_COMPILER) -std=c++11\
+	$(VH_COMPILER) -std=c++11 \
 	-o$(BIN_DIR)/$(TARGET) \
 	$(CFLAGS) \
 	$(SRC) \
