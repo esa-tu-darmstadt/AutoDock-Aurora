@@ -58,7 +58,7 @@ void lga (
 			float		DockConst_qasp,
 			float		DockConst_coeff_desolv,
 	// ie
-	const	uint64_t	VEVMA_Fgrids,
+	const	float*		Fgrids,
 			uchar		DockConst_g1,
 			uint		DockConst_g2,
 			uint		DockConst_g3,
