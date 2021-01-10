@@ -16,43 +16,40 @@ typedef struct
 } AD4_free_energy_coeffs;
 
 typedef struct
-//Struct which contains the docking parameters (partly parameters for fpga)
 {
 	unsigned long num_of_energy_evals;
 	unsigned long num_of_generations;
-		float abs_max_dmov;
-		float abs_max_dang;
-		float mutation_rate;
-		float crossover_rate;
-		float lsearch_rate;
-
-		float smooth;
-
+	float abs_max_dmov;
+	float abs_max_dang;
+	float mutation_rate;
+	float crossover_rate;
+	float lsearch_rate;
+	float smooth;
 	unsigned long num_of_ls;
-		float tournament_rate;
-		float rho_lower_bound;
-		float base_dmov_mul_sqrt3;
-		float base_dang_mul_sqrt3;
+	float tournament_rate;
+	float rho_lower_bound;
+	float base_dmov_mul_sqrt3;
+	float base_dang_mul_sqrt3;
 	unsigned long cons_limit;
 	unsigned long max_num_of_iters;
 	unsigned long pop_size;
-		char  initpop_gen_or_loadfile;
+	char initpop_gen_or_loadfile;
 	unsigned char gen_pdbs;
-		char  fldfile [128];
-		char  ligandfile [128];
-		char  xrayligandfile [128];
-		bool  given_xrayligandfile;
-		float ref_ori_angles [3];
+	char fldfile [128];
+	char ligandfile [128];
+	char xrayligandfile [128];
+	bool given_xrayligandfile;
+	float ref_ori_angles [3];
 	unsigned long num_of_runs;
-		char  reflig_en_reqired;
-		char  unbound_model;
+	char reflig_en_reqired;
+	char unbound_model;
 	AD4_free_energy_coeffs coeffs;
-		char  handle_symmetry;
-		char  gen_finalpop;
-		char  gen_best;
-		char  resname [128];
-		float qasp;
-		float rmsd_tolerance;
+	char handle_symmetry;
+	char gen_finalpop;
+	char gen_best;
+	char resname [128];
+	float qasp;
+	float rmsd_tolerance;
 } Dockpars;
 
 int get_filenames_and_ADcoeffs(const int*,
