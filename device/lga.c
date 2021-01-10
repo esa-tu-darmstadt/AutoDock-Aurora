@@ -694,14 +694,13 @@ void lga (
 	} // End while eval_cnt & generation_cnt
 
 	// --------------------------------------------------------------------------
-	// Write final pop & energies back to FPGA-board DDRs
+	// Write final pop & energies back to SX-Aurora VE external memory
 	// --------------------------------------------------------------------------
 	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 		//printf("\n");
 		//printf("pop_cnt: %u\n", pop_cnt);
 		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			GlobPopCurrFinal[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[gene_cnt][pop_cnt];
-
 			//printf("Final geno: %3u, %20.6f\n", gene_cnt, LocalPopCurr[pop_cnt][gene_cnt]);
 		}
         }
@@ -711,7 +710,7 @@ void lga (
 		//printf("Final energy: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
         }
 
-	// Write final evals & generation counts to FPGA-board DDRs
+	// Write final evals & generation counts to SX-Aurora VE external memory
 	GlobEvals_performed[Host_RunId] = eval_cnt;
 	GlobGens_performed [Host_RunId] = generation_cnt;
 
