@@ -48,7 +48,7 @@ void energy_ia (
 #if defined (ENABLE_TRACE)
 	ftrace_region_begin("IA_MAIN_LOOP");
 #endif
-	for (uint j = 0; j < DockConst_pop_size; j++)
+	for (int j = 0; j < DockConst_pop_size; j++)
 	{
 		final_intraE[j] = 0.0f;      
 	}
@@ -64,7 +64,7 @@ void energy_ia (
 #pragma _NEC vovertake
                 //#pragma _NEC advance_gather   # this directive is dangerous here!
 #pragma _NEC gather_reorder
-		for (uint j = 0; j < DockConst_pop_size; j++)
+		for (int j = 0; j < DockConst_pop_size; j++)
 		{
 
 			float subx = local_coords_x[atom1_id][j] - local_coords_x[atom2_id][j];
