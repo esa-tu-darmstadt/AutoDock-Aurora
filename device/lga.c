@@ -172,7 +172,7 @@ void lga (
 
         // Read genotypes
         for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+		for (int pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			float tmp_gene = PopulationCurrentInitial[Host_Offset_Pop + pop_cnt * ACTUAL_GENOTYPE_LENGTH + gene_cnt];
 			LocalPopCurr[gene_cnt][pop_cnt] = tmp_gene;
 		}
@@ -252,7 +252,7 @@ void lga (
 		local_coords_z
 		);
 
-	for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+	for (int pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 		LocalEneCurr[pop_cnt] = energy_ia_ic[pop_cnt] + energy_ie_ic[pop_cnt];
         }
 
@@ -291,7 +291,7 @@ void lga (
 		ushort best_entity = 0;
 		loc_energies[0] = LocalEneCurr[0];
 
-		for (uint pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
+		for (int pop_cnt = 1; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			// copy energy to local memory
 			loc_energies[pop_cnt] = LocalEneCurr[pop_cnt];
 
@@ -336,7 +336,7 @@ void lga (
 		} 		
 		LocalEneNext[0] = loc_energies[best_entity];
 
-		for (uint new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
+		for (int new_pop_cnt = 1; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
 
 			float local_entity_1 [ACTUAL_GENOTYPE_LENGTH];
 			float local_entity_2 [ACTUAL_GENOTYPE_LENGTH]; 
@@ -442,7 +442,7 @@ void lga (
 			}
 
 			// Crossover and mutation
-			for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+			for (int gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 
 				// TODO: VERIFY IT
 				float prngGG = randv[10 + gene_cnt][new_pop_cnt];
@@ -669,11 +669,11 @@ void lga (
 
 		// Update current pops & energies
 		for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-			for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+			for (int pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 				LocalPopCurr[gene_cnt][pop_cnt] = LocalPopNext[gene_cnt][pop_cnt];
 			}
 		}
-		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+		for (int pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			LocalEneCurr[pop_cnt] = LocalEneNext[pop_cnt];
 
 #if defined (PRINT_ALL_KRNL)
@@ -699,13 +699,13 @@ void lga (
 	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 		//printf("\n");
 		//printf("pop_cnt: %u\n", pop_cnt);
-		for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+		for (int pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
 			GlobPopCurrFinal[Host_Offset_Pop + pop_cnt*ACTUAL_GENOTYPE_LENGTH + gene_cnt] = LocalPopCurr[gene_cnt][pop_cnt];
 
 			//printf("Final geno: %3u, %20.6f\n", gene_cnt, LocalPopCurr[pop_cnt][gene_cnt]);
 		}
         }
-        for (uint pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
+        for (int pop_cnt = 0; pop_cnt < DockConst_pop_size; pop_cnt++) {
             
 		GlobEneCurr[Host_Offset_Ene + pop_cnt] = LocalEneCurr[pop_cnt];
 		//printf("Final energy: %3u, %20.6f\n", pop_cnt, LocalEneCurr[pop_cnt]);
