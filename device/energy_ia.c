@@ -162,8 +162,8 @@ void energy_ia (
               
 				// Calculating desolvation term
 				partialE4 += (
-					(IA_dspars_S[atom1_typeid] + DockConst_qasp * fabs(IA_IE_atom_charges[atom1_id])) * IA_dspars_V[atom2_typeid] + 
-					(IA_dspars_S[atom2_typeid] + DockConst_qasp * fabs(IA_IE_atom_charges[atom2_id])) * IA_dspars_V[atom1_typeid]) * 
+					(IA_dspars_S[atom1_typeid] + DockConst_qasp * esa_fabs(IA_IE_atom_charges[atom1_id])) * IA_dspars_V[atom2_typeid] + 
+					(IA_dspars_S[atom2_typeid] + DockConst_qasp * esa_fabs(IA_IE_atom_charges[atom2_id])) * IA_dspars_V[atom1_typeid]) * 
 					DockConst_coeff_desolv*expf(-0.0386f*distance_pow_2);
 			} // if cuttoff2 - internuclear-distance at 20.48A
 	
