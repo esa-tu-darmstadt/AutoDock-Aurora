@@ -35,11 +35,11 @@ void calc_pc (
 	ftrace_region_begin("PC_GENOTYPES_LOOP");
 #endif
 
-	float local_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+	float local_genotype[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
 
-	for (uint i = 3; i < DockConst_num_of_genes; i++) {
-		for (uint j = 0; j < DockConst_pop_size; j++) {
-			local_genotype[i][j] = genotype[i][j] * DEG_TO_RAD;
+	for (int i = 3; i < DockConst_num_of_genes; i++) {
+		for (int j = 0; j < DockConst_pop_size; j++) {
+			local_genotype[j][i] = genotype[i][j] * DEG_TO_RAD;
 			//local_genotype[i][j] = genotype[i][j] * 0.01745329252;
 		}
 	}
@@ -48,28 +48,28 @@ void calc_pc (
 	ftrace_region_end("PC_GENOTYPES_LOOP");
 #endif
 
-	float genrot_unitvec[3][MAX_POPSIZE];
-	for (uint j = 0; j < DockConst_pop_size; j++) {
-		float phi = local_genotype[3][j];
-		float theta = local_genotype[4][j];
+	float genrot_unitvec[MAX_POPSIZE][3];
+	for (int j = 0; j < DockConst_pop_size; j++) {
+		float phi = local_genotype[j][3];
+		float theta = local_genotype[j][4];
 
-		float sin_theta = sin(theta);
-		float cos_theta = cos(theta);
-		genrot_unitvec[0][j] = sin_theta*cos(phi);
-		genrot_unitvec[1][j] = sin_theta*sin(phi);
-		genrot_unitvec[2][j] = cos_theta;
+		float sin_theta = sinf(theta);
+		float cos_theta = cosf(theta);
+		genrot_unitvec[j][0] = sin_theta*cosf(phi);
+		genrot_unitvec[j][1] = sin_theta*sinf(phi);
+		genrot_unitvec[j][2] = cos_theta;
 	}
 
 #if defined (ENABLE_TRACE)
 	ftrace_region_begin("PC_MAIN_LOOP");
 #endif
 
-	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++) {
+	for (int rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++) {
 		int rotation_list_element = PC_rotlist[rotation_counter];
 		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0) {	// If not dummy rotation
 			uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
-			for (uint j = 0; j < DockConst_pop_size; j++) {
+			for (int j = 0; j < DockConst_pop_size; j++) {
 
 				// Capturing atom coordinates
 				float atom_to_rotate[3];
@@ -91,15 +91,15 @@ void calc_pc (
 				float rotation_angle;
 
 				if ((rotation_list_element & RLIST_GENROT_MASK) != 0) {	// If general rotation
-					rotation_unitvec[0] = genrot_unitvec[0][j];
-					rotation_unitvec[1] = genrot_unitvec[1][j];
-					rotation_unitvec[2] = genrot_unitvec[2][j];
+					rotation_unitvec[0] = genrot_unitvec[j][0];
+					rotation_unitvec[1] = genrot_unitvec[j][1];
+					rotation_unitvec[2] = genrot_unitvec[j][2];
                   
 					rotation_movingvec[0] = genotype[0][j];
 					rotation_movingvec[1] = genotype[1][j];
 					rotation_movingvec[2] = genotype[2][j];
 
-					rotation_angle = local_genotype[5][j];
+					rotation_angle = local_genotype[j][5];
 				}
 				else	// If rotating around rotatable bond
 				{
@@ -113,7 +113,7 @@ void calc_pc (
 					rotation_movingvec[1] = PC_rotbonds_moving_vectors[3*rotbond_id+1];
 					rotation_movingvec[2] = PC_rotbonds_moving_vectors[3*rotbond_id+2];
 
-					rotation_angle = local_genotype[6+rotbond_id][j];
+					rotation_angle = local_genotype[j][6+rotbond_id];
 
 					// In addition performing the first movement 
 					// which is needed only if rotating around rotatable bond
@@ -129,8 +129,8 @@ void calc_pc (
 				rotation_angle = rotation_angle * 0.5f;
 
 				float sin_angle, cos_angle;
-				sin_angle      = sin(rotation_angle);
-				cos_angle      = cos(rotation_angle);
+				sin_angle      = sinf(rotation_angle);
+				cos_angle      = cosf(rotation_angle);
 				quatrot_left_q = cos_angle;
 				quatrot_left_x = sin_angle * rotation_unitvec[0];
 				quatrot_left_y = sin_angle * rotation_unitvec[1];
