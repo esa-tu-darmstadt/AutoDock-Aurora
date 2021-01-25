@@ -35,7 +35,7 @@ void calc_pc (
 	ftrace_region_begin("PC_GENOTYPES_LOOP");
 #endif
 
-	float local_genotype[MAX_POPSIZE][ACTUAL_GENOTYPE_LENGTH];
+	float local_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
 	for (int i = 3; i < DockConst_num_of_genes; i++) {
 		for (int j = 0; j < DockConst_pop_size; j++) {
@@ -91,15 +91,15 @@ void calc_pc (
 				float rotation_angle;
 
 				if ((rotation_list_element & RLIST_GENROT_MASK) != 0) {	// If general rotation
-					rotation_unitvec[0] = genrot_unitvec[j][0];
-					rotation_unitvec[1] = genrot_unitvec[j][1];
-					rotation_unitvec[2] = genrot_unitvec[j][2];
+					rotation_unitvec[0] = genrot_unitvec[0][j];
+					rotation_unitvec[1] = genrot_unitvec[1][j];
+					rotation_unitvec[2] = genrot_unitvec[2][j];
                   
 					rotation_movingvec[0] = genotype[0][j];
 					rotation_movingvec[1] = genotype[1][j];
 					rotation_movingvec[2] = genotype[2][j];
 
-					rotation_angle = local_genotype[j][5];
+					rotation_angle = local_genotype[5][j];
 				}
 				else	// If rotating around rotatable bond
 				{
@@ -113,7 +113,7 @@ void calc_pc (
 					rotation_movingvec[1] = PC_rotbonds_moving_vectors[3*rotbond_id+1];
 					rotation_movingvec[2] = PC_rotbonds_moving_vectors[3*rotbond_id+2];
 
-					rotation_angle = local_genotype[j][6+rotbond_id];
+					rotation_angle = local_genotype[6+rotbond_id][j];
 
 					// In addition performing the first movement 
 					// which is needed only if rotating around rotatable bond
