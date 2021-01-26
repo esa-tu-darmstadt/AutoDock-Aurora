@@ -6,9 +6,9 @@
 #include "processligand.h"
 #include "getparameters.h"
 
-// Members of this struct are passed to the FPGA OpenCL kernels as inputs.
+// Members of this struct are passed to kernels as inputs.
 // Struct members are parameters related to the ligand, the grid
-// and the genetic algorithm, or they are pointers of FPGA memory areas
+// and the genetic algorithm, or they are pointers to accelerator's memory areas
 // used for storing different data such as the current
 // and the next population genotypes and energies, the grids,
 // the evaluation counters and the random number generator states.
