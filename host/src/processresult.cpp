@@ -355,7 +355,7 @@ void make_resfiles(float* final_population,
 
 		//copying best result to output parameter
 		if (i == 0)		//assuming this is the best one (final_population is arranged), however,
-		{				//arrangement was made according to the unaccurate values calculated by FPGA
+		{				//arrangement was made according to the unaccurate values calculated by SX-Aurora VE
 			best_result->interE = accurate_interE [i];
 			best_result->intraE = accurate_intraE [i];
 			best_result->reslig_realcoord = temp_docked;
@@ -389,7 +389,7 @@ void make_resfiles(float* final_population,
 		fprintf(fp, " Entity |      dx [A]      |      dy [A]      |      dz [A]      |     phi [�]      |    theta [�]     | alpha_genrot [�] |");
 		for (i=0; i<ligand_from_pdb->num_of_rotbonds; i++)
 			fprintf(fp, " alpha_rotb%2d [�] |", i);
-		fprintf(fp, " intramolecular energy | intermolecular energy | total energy calculated by CPU / calculated by FPGA / difference | RMSD [A] | \n");
+		fprintf(fp, " intramolecular energy | intermolecular energy | total energy calculated by CPU / calculated by SX-Aurora VE / difference | RMSD [A] | \n");
 
 		fprintf(fp, "--------+------------------+------------------+------------------+------------------+------------------+------------------+");
 		for (i=0; i<ligand_from_pdb->num_of_rotbonds; i++)
@@ -523,8 +523,8 @@ void cluster_analysis(Ligandresult myresults [], int num_of_runs, char* report_f
 	fprintf(fp, "           RUN TIME INFO           \n");
 	fprintf(fp, "===================================\n\n");
 
-	fprintf(fp, "Average FPGA run time for 1 run:           %lfs\n", docking_avg_runtime);
-	fprintf(fp, "Total FPGA docking run time:               %fs\n", docking_avg_runtime*mypars->num_of_runs);
+	fprintf(fp, "Average SX-Aurora VE run time for 1 run:           %lfs\n", docking_avg_runtime);
+	fprintf(fp, "Total SX-Aurora VE docking run time:               %fs\n", docking_avg_runtime*mypars->num_of_runs);
 
 	fprintf(fp, "Program run time:                          %lfs\n", program_runtime);
 	fprintf(fp, "\n\n");

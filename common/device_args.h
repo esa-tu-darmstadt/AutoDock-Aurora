@@ -12,8 +12,8 @@ struct device_args {
 	const float *PopulationCurrentInitial;
 	float *PopulationCurrentFinal;
 	float *EnergyCurrent;
-	int   *Evals_performed;
-	int   *Gens_performed;
+	uint  *Evals_performed;
+	uint  *Gens_performed;
 	uint  *dockpars_prng_states;
 	uint  DockConst_pop_size;
 	uint  DockConst_num_of_energy_evals;
