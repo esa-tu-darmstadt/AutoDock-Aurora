@@ -2,6 +2,7 @@
 #include "device_args.h"
 #include "packbuff.hpp"
 #include <stddef.h>
+#include <sys/time.h>
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s)	STRINGIZE2(s)
@@ -100,6 +101,8 @@ filled with clock() */
 	clock_t clock_start_docking;
 	clock_t	clock_stop_docking;
 	clock_t clock_stop_program_before_clustering;
+
+	timeval tv_start_docking, tv_stop_docking;
 
 	Liganddata myligand_reference;
 
@@ -445,6 +448,9 @@ filled with clock() */
 	uint64_t mem_kernel_args_packbuff;
 	wrapper_veo_alloc_mem(ve_process, &mem_kernel_args_packbuff, pb.size());
 
+        //// save data buffer
+        //pb.save("packbuff_save.dat");
+
 	// fix "relocation" addresses to point to VE virtual addresses
 	pb.fixup(mem_kernel_args_packbuff);
 
@@ -531,6 +537,7 @@ filled with clock() */
 	uint64_t retval_ga;
 
 	clock_start_docking = clock();
+	gettimeofday(&tv_start_docking, NULL);
 
 	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
 	printf("Execution run: ");
@@ -539,6 +546,10 @@ filled with clock() */
 	wrapper_veo_call_wait_result(veo_thread_context, kernel_ga_id, &retval_ga);
 
 	clock_stop_docking = clock();
+	gettimeofday(&tv_stop_docking, NULL);
+	double elapsed_time_docking;
+	elapsed_time_docking = (((double)tv_stop_docking.tv_sec * 1.e6 + (double)tv_stop_docking.tv_usec) -
+				((double)tv_start_docking.tv_sec * 1.e6 + (double)tv_start_docking.tv_usec)) / 1.e6;
 
 	printf("\n");
 	fflush(stdout);
@@ -571,9 +582,8 @@ filled with clock() */
 		sum_energy_evals += cpu_evals_of_runs[run_cnt];
 		sum_generations += cpu_gens_of_runs[run_cnt];
 	}
-	float docking_time = ELAPSEDSECS(clock_stop_docking, clock_start_docking);
-	printf("Time spent in docking search      : %.3fs\n", docking_time);
-	printf("Total number of energy evaluations: %ld -> %.5f us/eval\n", sum_energy_evals, (1.e6 * docking_time) / (float)sum_energy_evals);
+	printf("Time spent in docking search      : %.3fs\n", elapsed_time_docking);
+	printf("Total number of energy evaluations: %ld -> %.5f us/eval\n", sum_energy_evals, (1.e6 * elapsed_time_docking) / (float)sum_energy_evals);
 	printf("Total number of generations       : %ld\n", sum_generations);
 
 	for (unsigned int run_cnt = 0; run_cnt < mypars->num_of_runs; run_cnt++) {
@@ -614,6 +624,8 @@ filled with clock() */
 
 	clock_stop_program_before_clustering = clock();
 
+        printf("arrange_result and make_resfiles took : %.3fs\n",
+               ELAPSEDSECS(clock_stop_program_before_clustering, clock_stop_docking));
 
 	clusanal_gendlg(cpu_result_ligands.data(), 
 			mypars->num_of_runs,
@@ -621,10 +633,13 @@ filled with clock() */
    		        mygrid, 
 			argc,
 			argv,
-			ELAPSEDSECS(clock_stop_docking, clock_start_docking)/mypars->num_of_runs,
+			elapsed_time_docking,
 			ELAPSEDSECS(clock_stop_program_before_clustering, clock_start_program));
 
 	clock_stop_docking = clock();
+
+        printf("clustering took : %.3fs\n",
+               ELAPSEDSECS(clock_stop_docking, clock_stop_program_before_clustering));
 
 	return 0;
 }
