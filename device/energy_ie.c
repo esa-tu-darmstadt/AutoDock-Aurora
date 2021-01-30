@@ -56,8 +56,8 @@ void energy_ie (
 	}
   
 	// For each ligand atom
-	for (uint atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++) {
-		uint atom1_typeid = IA_IE_atom_types[atom1_id];
+	for (int atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++) {
+		int atom1_typeid = IA_IE_atom_types[atom1_id];
 		float q = IA_IE_atom_charges[atom1_id];
 
 #pragma _NEC vovertake
