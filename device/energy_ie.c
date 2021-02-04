@@ -51,19 +51,19 @@ void energy_ie (
 	ftrace_region_begin("IE_MAIN_LOOP");
 #endif
 
-	for (uint j = 0; j < DockConst_pop_size; j++) {
+	for (int j = 0; j < DockConst_pop_size; j++) {
 		final_interE[j] = 0.0f;
 	}
   
 	// For each ligand atom
-	for (uint atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++) {
-		uint atom1_typeid = IA_IE_atom_types[atom1_id];
+	for (int atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++) {
+		int atom1_typeid = IA_IE_atom_types[atom1_id];
 		float q = IA_IE_atom_charges[atom1_id];
 
 #pragma _NEC vovertake
 #pragma _NEC advance_gather
 #pragma _NEC gather_reorder
-		for (uint j = 0; j < DockConst_pop_size; j++) {
+		for (int j = 0; j < DockConst_pop_size; j++) {
      
 			float x = local_coords_x[atom1_id][j];
 			float y = local_coords_y[atom1_id][j];
@@ -88,9 +88,9 @@ void energy_ie (
 			}
 			else
 			{
-				int x_low  = (int) floor(x);
-				int y_low  = (int) floor(y);
-				int z_low  = (int) floor(z);
+				int x_low  = (int) floorf(x);
+				int y_low  = (int) floorf(y);
+				int z_low  = (int) floorf(z);
 				int x_high = (int) esa_ceil(x);
 				int y_high = (int) esa_ceil(y);
 				int z_high = (int) esa_ceil(z);

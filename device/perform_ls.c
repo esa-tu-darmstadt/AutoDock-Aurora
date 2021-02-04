@@ -76,8 +76,8 @@ void perform_ls(
 	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 
-	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-		for (uint j = 0; j < pop_size; j++) {
+	for (int i = 0; i < DockConst_num_of_atoms; i++) {
+		for (int j = 0; j < pop_size; j++) {
 			local_coords_x[i][j] = 0.0f;
 			local_coords_y[i][j] = 0.0f;
 			local_coords_z[i][j] = 0.0f;
@@ -88,12 +88,12 @@ void perform_ls(
 	float current_energy[MAX_POPSIZE];
 	float genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		for (uint j = 0; j < pop_size; j++) {
+	for (int i = 0; i < DockConst_num_of_genes; i++) {
+		for (int j = 0; j < pop_size; j++) {
 			genotype[i][j] = in_out_genotype[i][j];
 		}
 	}
-	for (uint j = 0; j < pop_size; j++) {
+	for (int j = 0; j < pop_size; j++) {
 		current_energy[j] = in_out_energy[j];
 	}
 
@@ -118,7 +118,7 @@ void perform_ls(
 	uint active_compr_idx[MAX_POPSIZE]; // compressed index corresponding to active j index
 
 	LS_eval = 0;
-	for (uint j = 0; j < pop_size; j++) {
+	for (int j = 0; j < pop_size; j++) {
 		rho[j]                = 1.0f;
 		iteration_cnt[j]      = 0;
 		cons_succ[j]          = 0;
@@ -126,8 +126,8 @@ void perform_ls(
 		positive_direction[j] = 1;
 		ls_is_active[j]       = 1;
 	}
-	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		for (uint j = 0; j < pop_size; j++) {
+	for (int i = 0; i < DockConst_num_of_genes; i++) {
+		for (int j = 0; j < pop_size; j++) {
 			genotype_bias[i][j] = 0.0f;
 		}
 	}
@@ -141,7 +141,7 @@ void perform_ls(
 		// compressed list of active indices
 		active_pop_size = 0;
 #pragma _NEC packed_vector
-		for (uint j = 0; j < pop_size; j++) {
+		for (int j = 0; j < pop_size; j++) {
 			if (ls_is_active[j]) {
 				active_idx[active_pop_size] = j;
 				active_compr_idx[j] = active_pop_size;
@@ -157,7 +157,7 @@ void perform_ls(
 		}
 
 #pragma _NEC packed_vector
-		for (uint jj = 0; jj < active_pop_size; jj++) {
+		for (int jj = 0; jj < active_pop_size; jj++) {
 			//uint j = active_idx[jj];
 			if (positive_dir_compr[jj]) { // True
 				if (cons_succ_compr[jj] >= DockConst_cons_limit) {
@@ -189,9 +189,9 @@ void perform_ls(
 		// Generating new random deviate
 		// rho is the deviation of the uniform distribution
 #pragma _NEC packed_vector
-		for (uint i = 0; i < DockConst_num_of_genes; i++) {
-			for (uint jj = 0; jj < active_pop_size; jj++) {
-				uint j = active_idx[jj];
+		for (int i = 0; i < DockConst_num_of_genes; i++) {
+			for (int jj = 0; jj < active_pop_size; jj++) {
+				int j = active_idx[jj];
 				float tmp_prng = randv[i * active_pop_size + jj];
 
 				// tmp1 is genotype_deviate
@@ -300,7 +300,7 @@ void perform_ls(
 		);
 
 		float candidate_energy[MAX_POPSIZE];
-		for (uint jj = 0; jj < active_pop_size; jj++) {
+		for (int jj = 0; jj < active_pop_size; jj++) {
 			candidate_energy[jj] = energy_ia_ls[jj] + energy_ie_ls[jj];
 		}
 
@@ -308,8 +308,8 @@ void perform_ls(
 		LS_eval += active_pop_size;;
 
 		int energy_lower[MAX_POPSIZE];
-		for (uint jj = 0; jj < active_pop_size; jj++) {
-			uint j = active_idx[jj];
+		for (int jj = 0; jj < active_pop_size; jj++) {
+			int j = active_idx[jj];
 			if (candidate_energy[jj] < current_energy[j]) {
 				energy_lower[jj] = 1;
 			} else {
@@ -317,13 +317,13 @@ void perform_ls(
 			}
 		}
 
-		for (uint i = 0; i < DockConst_num_of_genes; i++) {
+		for (int i = 0; i < DockConst_num_of_genes; i++) {
 #pragma _NEC ivdep
 #pragma _NEC vovertake
 #pragma _NEC advance_gather
 #pragma _NEC gather_reorder
-			for (uint jj = 0; jj < active_pop_size; jj++) {
-				uint j = active_idx[jj];
+			for (int jj = 0; jj < active_pop_size; jj++) {
+				int j = active_idx[jj];
 				if (energy_lower[jj]) {
 					genotype_bias[i][j] = positive_dir_compr[jj] ? deviate_plus_bias[i][jj] : deviate_minus_bias[i][jj];
 					genotype[i][j] = entity_possible_new_genotype[i][jj];
@@ -333,8 +333,8 @@ void perform_ls(
 				}
 			}
 		}
-		for (uint jj = 0; jj < active_pop_size; jj++) {
-			uint j = active_idx[jj];
+		for (int jj = 0; jj < active_pop_size; jj++) {
+			int j = active_idx[jj];
 			if (energy_lower[jj]) {
 				current_energy[j] = candidate_energy[jj];
 				cons_succ_compr[jj]++;
@@ -352,13 +352,13 @@ void perform_ls(
 		}
 
 		num_active_ls = active_pop_size;
-		for (uint jj = 0; jj < active_pop_size; jj++) {
+		for (int jj = 0; jj < active_pop_size; jj++) {
 			if ((iteration_compr[jj] > DockConst_max_num_of_iters) ||
 			    (rho_compr[jj] <= DockConst_rho_lower_bound)) {
 				ls_is_active[active_idx[jj]] = 0;
 				num_active_ls--;
 			}
-			uint j = active_idx[jj];
+			int j = active_idx[jj];
 			positive_direction[j] = positive_dir_compr[jj];
 			rho[j] = rho_compr[jj];
 			iteration_cnt[j] = iteration_compr[jj];
@@ -372,12 +372,12 @@ void perform_ls(
 	*out_eval = LS_eval;
 
 	// Writing resulting genotype and energy
-	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		for (uint j = 0; j < pop_size; j++) {
+	for (int i = 0; i < DockConst_num_of_genes; i++) {
+		for (int j = 0; j < pop_size; j++) {
 			in_out_genotype[i][j] = genotype[i][j];
 		}
 	}
-	for (uint j = 0; j < pop_size; j++) {
+	for (int j = 0; j < pop_size; j++) {
 		in_out_energy[j] = current_energy[j];
 	}
 	

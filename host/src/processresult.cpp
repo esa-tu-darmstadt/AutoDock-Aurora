@@ -1,4 +1,5 @@
 #include "processresult.h"
+#include <algorithm>
 
 void arrange_result(float* final_population, float* energies, const int pop_size)
 //The function arranges the rows of the input array (first array index is considered to be the row
@@ -14,6 +15,27 @@ void arrange_result(float* final_population, float* energies, const int pop_size
 	float temp_genotype[ACTUAL_GENOTYPE_LENGTH];
 	float temp_energy;
 
+#if 0
+	struct IE {
+		int i;
+		float energy;
+		float genome[ACTUAL_GENOTYPE_LENGTH];
+	};
+	IE eidx[pop_size];
+	float *pop_copy = new float[ACTUAL_GENOTYPE_LENGTH * pop_size];
+
+	for (j=0; j<pop_size-1; j++) {
+		eidx[j].i = j;
+		eidx[j].energy = energies[j];
+	}
+	std::sort(eidx, eidx + pop_size, [](const IE& a, const IE& b) ->bool { return a.energy <= b.energy; });
+	memcpy(pop_copy, final_population, pop_size * ACTUAL_GENOTYPE_LENGTH * sizeof(float));
+	for (j=0; j<pop_size-1; j++) {
+		energies[j] = eidx[j].energy;
+		memcpy(final_population+j*ACTUAL_GENOTYPE_LENGTH, &pop_copy[eidx[j].i * ACTUAL_GENOTYPE_LENGTH], ACTUAL_GENOTYPE_LENGTH * sizeof(float));
+	}
+	delete [] pop_copy;
+#else
 	for (j=0; j<pop_size-1; j++)
 		for (i=pop_size-2; i>=j; i--)		//arrange according to sum of inter- and intramolecular energies
 			if (energies[i] > energies[i+1])
@@ -31,6 +53,7 @@ void arrange_result(float* final_population, float* energies, const int pop_size
 				energies[i] = energies[i+1];
 				energies[i+1] = temp_energy;
 			}
+#endif
 }
 
 
@@ -542,7 +565,7 @@ void cluster_analysis(Ligandresult myresults [], int num_of_runs, char* report_f
 }
 
 void clusanal_gendlg(Ligandresult myresults [], int num_of_runs, const Liganddata* ligand_ref,
-					 const Dockpars* mypars, const Gridinfo* mygrid, const int* argc, char** argv, const double docking_avg_runtime,
+					 const Dockpars* mypars, const Gridinfo* mygrid, const int* argc, char** argv, const double docking_runtime,
 					 const double program_runtime)
 //The function performs ranked cluster analisys similar to that of AutoDock and creates a file with report_file_name name, the result
 //will be written to it.
@@ -568,6 +591,8 @@ void clusanal_gendlg(Ligandresult myresults [], int num_of_runs, const Liganddat
 	double cluster_tolerance = mypars->rmsd_tolerance;
 	const double AD4_coeff_tors = mypars->coeffs.AD4_coeff_tors;
 	double torsional_energy;
+
+	double docking_avg_runtime = docking_runtime / (double)num_of_runs;
 
 	//first of all, let's calculate the constant torsional free energy term
 	torsional_energy = AD4_coeff_tors * ligand_ref->num_of_rotbonds;
@@ -825,6 +850,8 @@ void clusanal_gendlg(Ligandresult myresults [], int num_of_runs, const Liganddat
 	                		myresults[j].interE + torsional_energy, (myresults [j]).rmsd_from_cluscent, (myresults [j]).rmsd_from_ref);
 			}
 	}
+
+	fprintf(fp, "\nDocking run time %.3f sec\n", docking_runtime);
 
 	fclose(fp);
 

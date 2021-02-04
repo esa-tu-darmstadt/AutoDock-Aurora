@@ -37,8 +37,8 @@ void calc_pc (
 
 	float local_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-	for (uint i = 3; i < DockConst_num_of_genes; i++) {
-		for (uint j = 0; j < DockConst_pop_size; j++) {
+	for (int i = 3; i < DockConst_num_of_genes; i++) {
+		for (int j = 0; j < DockConst_pop_size; j++) {
 			local_genotype[i][j] = genotype[i][j] * DEG_TO_RAD;
 			//local_genotype[i][j] = genotype[i][j] * 0.01745329252;
 		}
@@ -49,14 +49,14 @@ void calc_pc (
 #endif
 
 	float genrot_unitvec[3][MAX_POPSIZE];
-	for (uint j = 0; j < DockConst_pop_size; j++) {
+	for (int j = 0; j < DockConst_pop_size; j++) {
 		float phi = local_genotype[3][j];
 		float theta = local_genotype[4][j];
 
-		float sin_theta = sin(theta);
-		float cos_theta = cos(theta);
-		genrot_unitvec[0][j] = sin_theta*cos(phi);
-		genrot_unitvec[1][j] = sin_theta*sin(phi);
+		float sin_theta = sinf(theta);
+		float cos_theta = cosf(theta);
+		genrot_unitvec[0][j] = sin_theta*cosf(phi);
+		genrot_unitvec[1][j] = sin_theta*sinf(phi);
 		genrot_unitvec[2][j] = cos_theta;
 	}
 
@@ -64,12 +64,12 @@ void calc_pc (
 	ftrace_region_begin("PC_MAIN_LOOP");
 #endif
 
-	for (uint rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++) {
+	for (int rotation_counter = 0; rotation_counter < DockConst_rotbondlist_length; rotation_counter++) {
 		int rotation_list_element = PC_rotlist[rotation_counter];
 		if ((rotation_list_element & RLIST_DUMMY_MASK) == 0) {	// If not dummy rotation
 			uint atom_id = rotation_list_element & RLIST_ATOMID_MASK;
 
-			for (uint j = 0; j < DockConst_pop_size; j++) {
+			for (int j = 0; j < DockConst_pop_size; j++) {
 
 				// Capturing atom coordinates
 				float atom_to_rotate[3];
@@ -129,8 +129,8 @@ void calc_pc (
 				rotation_angle = rotation_angle * 0.5f;
 
 				float sin_angle, cos_angle;
-				sin_angle      = sin(rotation_angle);
-				cos_angle      = cos(rotation_angle);
+				sin_angle      = sinf(rotation_angle);
+				cos_angle      = cosf(rotation_angle);
 				quatrot_left_q = cos_angle;
 				quatrot_left_x = sin_angle * rotation_unitvec[0];
 				quatrot_left_y = sin_angle * rotation_unitvec[1];

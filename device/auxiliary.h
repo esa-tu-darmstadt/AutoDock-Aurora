@@ -136,7 +136,7 @@ float esa_dot4_e_(float a1, float a2, float a3, float a4, float b1, float b2, fl
 /* https://www.codeproject.com/Tips/700780/Fast-floor-ceiling-functions */
 static inline
 int esa_ceil (float fp) {
-  return (-floor(-fp));
+  return (-floorf(-fp));
 }
 
 /* 
@@ -155,5 +155,17 @@ float esa_sqrt(const float x){
 	i >>= 1; 				// approximation of square root 	
 	return *(float*) &i; 	// return as_float(i);
 }  
+
+static inline
+float esa_fabs(const float x){
+	//return x >= 0.0f ? x : -x;
+
+	//return fabsf(x);
+
+	return fabs(x);  // is fastest!
+
+	// https://stackoverflow.com/questions/23474796/is-there-a-fast-fabsf-replacement-for-float-in-c
+	//*(unsigned int *)(&x) &= 0x7fffffff; return x;
+}
 
 #endif /* AUXILIARY_H_ */
