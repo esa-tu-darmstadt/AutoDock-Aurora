@@ -9,6 +9,8 @@ typedef unsigned int  uint;
 #endif
 
 struct device_args {
+	int  ve_proc_id;
+	int  ve_num_procs;
 	const float *PopulationCurrentInitial;
 	float *PopulationCurrentFinal;
 	float *EnergyCurrent;

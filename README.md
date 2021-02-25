@@ -108,3 +108,45 @@ It runs above command bit for five different molecules, PDB = {`1yv3`, `1ywr`, `
 ```
 
 
+## Running on multiple VEs
+
+Multi-VE runs can be used to increase the performance by spreading the work across multiple VEs.
+
+Specify the VE IDs in the environment variable `VE_NODE_IDS` as a comma separated list. For example,
+running on four VEs and using up all cores on them requires:
+```
+export VE_NODE_IDS=0,1,2,3
+```
+
+The environment variable can also be used to run autodock on a particular VE, by default VE#8 is chosen.
+For example:
+```
+export VE_NODE_IDS=6
+```
+
+
+### Multiple processes on one VE
+
+When VEs are using uniform memory access mode (non-NUMA), the default number of OpenMP threads
+a process can use is equal to the number of cores, eg. 8 cores on VE20B. By limiting the number
+of OpenMP threads one can run multiple processes on one VE, for example:
+
+```
+# 2 OpenMP threads per process
+export VE_OMP_NUM_THREADS=2
+
+# run on 4 processes on VE #1
+export VE_NODE_IDS=1,1,1,1
+```
+
+
+### NUMA mode
+
+Vector Engines in NUMA mode by default only allow half of the cores to be in one OpenMP process.
+A VE10B or VE20B a maximum of 4 OpenMP threads per process. In order to benefit of the NUMA
+effects of reduced memory network/ports conflicts, one can use the multi-process mode.
+Simply run two processes on each VE:
+
+```
+export VE_NODE_IDS=0,0
+```
