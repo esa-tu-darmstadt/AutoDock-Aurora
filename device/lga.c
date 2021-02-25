@@ -79,8 +79,8 @@ void lga (
 			uchar		DockConst_cons_limit,
 	// Values changing every LGA run
 			uint		Host_RunId,
-			uint 	    Host_Offset_Pop,
-			uint	    Host_Offset_Ene
+			uint		Host_Offset_Pop,
+			uint		Host_Offset_Ene
 )
 {
 #if defined (PRINT_ALL_KRNL)
