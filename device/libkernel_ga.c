@@ -24,7 +24,7 @@ uint64_t libkernel_ga (
         int ve_num_procs = da->ve_num_procs;
 
 	// initialize random generator with seed passed from host
-	randf_vec_init(&(da->dockpars_prng_states)[ve_proc_id * DockConst_pop_size], DockConst_pop_size);
+	randf_vec_init(&(da->dockpars_prng_states[ve_proc_id * DockConst_pop_size]), DockConst_pop_size);
 
 	int ve_num_of_runs = (Host_num_of_runs + ve_num_procs - 1) / ve_num_procs;
 
