@@ -36,7 +36,7 @@ uint64_t libkernel_ga (
 		fflush(stdout);
 */
 		// Values changing every LGA run
-		unsigned int uint_run_cnt  = run_cnt - run_cnt_start;
+		unsigned int uint_run_cnt  = run_cnt; // - run_cnt_start;
 		unsigned int Host_Offset_Pop = uint_run_cnt * DockConst_pop_size * ACTUAL_GENOTYPE_LENGTH;
 		unsigned int Host_Offset_Ene = uint_run_cnt * DockConst_pop_size;
 

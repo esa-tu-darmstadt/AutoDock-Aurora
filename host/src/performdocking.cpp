@@ -600,14 +600,15 @@ filled with clock() */
 
 		kernel_ga_id[ve_id] = wrapper_veo_call_async_by_name(veo_thread_context[ve_id], kernel_ga_handle[ve_id], name_k_ga, kernel_ga_arg_ptr);
 
-		// serialize, for testing
-		wrapper_veo_call_wait_result(veo_thread_context[ve_id], kernel_ga_id[ve_id], &retval_ga[ve_id]);
+		// SERIALIZE! for testing, only
+		//wrapper_veo_call_wait_result(veo_thread_context[ve_id], kernel_ga_id[ve_id], &retval_ga[ve_id]);
 	}
-#if 0
+#if 1
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
 		wrapper_veo_call_wait_result(veo_thread_context[ve_id], kernel_ga_id[ve_id], &retval_ga[ve_id]);
 	}
 #endif
+
 	clock_stop_docking = clock();
 	gettimeofday(&tv_stop_docking, NULL);
 	double elapsed_time_docking;
@@ -639,13 +640,13 @@ filled with clock() */
 		size_t size_evals_of_runs_offs = run_begin * sizeof(int);
 
 		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_final_populations.data() + size_populations_offs),
-				      (uint64_t)da_copy[ve_id]->PopulationCurrentFinal, size_populations_nbytes);
+				      (uint64_t)da_copy[ve_id]->PopulationCurrentFinal + size_populations_offs, size_populations_nbytes);
 		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_energies.data() + size_energies_offs),
-				      (uint64_t)da_copy[ve_id]->EnergyCurrent, size_energies_nbytes);
+				      (uint64_t)da_copy[ve_id]->EnergyCurrent + size_energies_offs, size_energies_nbytes);
 		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_evals_of_runs.data() + size_evals_of_runs_offs),
-				      (uint64_t)da_copy[ve_id]->Evals_performed, size_evals_of_runs_nbytes);
+				      (uint64_t)da_copy[ve_id]->Evals_performed + size_evals_of_runs_offs, size_evals_of_runs_nbytes);
 		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_gens_of_runs.data() + size_evals_of_runs_offs),
-				      (uint64_t)da_copy[ve_id]->Gens_performed, size_evals_of_runs_nbytes);
+				      (uint64_t)da_copy[ve_id]->Gens_performed + size_evals_of_runs_offs, size_evals_of_runs_nbytes);
 	}
 
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
