@@ -3,6 +3,8 @@
 #include "device_args.h"
 #include "lga.h"
 
+#define MIN(a,b) ((a)<(b)?(a):(b))
+
 /*
 IC:  initial calculation of energy of populations
 GG:  genetic generation
@@ -18,23 +20,27 @@ uint64_t libkernel_ga (
 {
 	uint DockConst_pop_size = da->DockConst_pop_size;
 	uint Host_num_of_runs = da->Host_num_of_runs;
+        int ve_proc_id = da->ve_proc_id;
+        int ve_num_procs = da->ve_num_procs;
 
 	// initialize random generator with seed passed from host
-	randf_vec_init(&(da->dockpars_prng_states)[0], DockConst_pop_size);
+	randf_vec_init(&(da->dockpars_prng_states)[ve_proc_id * DockConst_pop_size], DockConst_pop_size);
+
+	int ve_num_of_runs = (Host_num_of_runs + ve_num_procs - 1) / ve_num_procs;
 
 #pragma omp parallel for schedule(static, 1)
-	for (unsigned int run_cnt = 0; run_cnt < Host_num_of_runs; run_cnt++) {
+	for (unsigned int run_cnt = run_cnt_start; run_cnt < run_cnt_end; run_cnt++) {
 
 /*
 		printf(" %u", run_cnt+1); 
 		fflush(stdout);
 */
 		// Values changing every LGA run
-		unsigned int uint_run_cnt  = run_cnt;
-		unsigned int Host_Offset_Pop = run_cnt * DockConst_pop_size* ACTUAL_GENOTYPE_LENGTH;
-		unsigned int Host_Offset_Ene = run_cnt * DockConst_pop_size;
+		unsigned int uint_run_cnt  = run_cnt - run_cnt_start;
+		unsigned int Host_Offset_Pop = uint_run_cnt * DockConst_pop_size * ACTUAL_GENOTYPE_LENGTH;
+		unsigned int Host_Offset_Ene = uint_run_cnt * DockConst_pop_size;
 
-        lga(
+		lga(
 			da->PopulationCurrentInitial,
 			da->PopulationCurrentFinal,
 			da->EnergyCurrent,

@@ -553,7 +553,9 @@ void lga (
                 }
 
 #if defined (PRINT_ALL_KRNL)
-		printf("Individual < after energy calc>: %3u, %20.6f\n", new_pop_cnt, LocalEneNext[new_pop_cnt]);
+                for (uint new_pop_cnt = 0; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
+                  printf("Individual < after energy calc>: %3u, %20.6f\n", new_pop_cnt, LocalEneNext[new_pop_cnt]);
+                }
 #endif
                 
 #if defined (PRINT_ALL_KRNL) 
@@ -653,11 +655,11 @@ void lga (
 		//ls_eval_cnt += ls_eval_cnt_per_iter; // done inside perform_ls
 
 #if defined (PRINT_ALL_KRNL)
-		printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
+		//printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
 #endif
 
 #if defined (PRINT_ALL_KRNL)
-		printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
+		//printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
 #endif
 
 #if defined (PRINT_ALL_KRNL) 
