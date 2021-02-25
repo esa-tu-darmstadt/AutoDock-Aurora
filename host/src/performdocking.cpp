@@ -180,15 +180,18 @@ filled with clock() */
 	std::vector<unsigned int> cpu_prng_seeds (size_prng_seeds_nelems);
 	
 	// Initializing seed generator
-#ifndef REPRO
 	genseed(time(NULL));
-#else
-	genseed(1234567u);
-#endif
 
 	// Generating seeds (for each thread during GA)
-	for (int i = 0; i < size_prng_seeds_nelems; i++) {
-		cpu_prng_seeds[i] = genseed(0u);
+	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
+#ifndef REPRO
+		// each VE process gets the same seeds in reproducibility mode
+		// this only makes sense for testing and debugging!
+		genseed(1234567u);
+#endif
+		for (int i = 0; i < mypars->pop_size; i++) {
+			cpu_prng_seeds[ve_id * mypars->pop_size + i] = genseed(0u);
+		}
 	}
 
 	size_t size_evals_of_runs_nelems = mypars->num_of_runs;
@@ -634,7 +637,6 @@ filled with clock() */
 		size_t size_evals_of_runs_nelems = run_end - run_begin;
 		size_t size_evals_of_runs_nbytes = size_evals_of_runs_nelems * sizeof(int);
 		size_t size_evals_of_runs_offs = run_begin * sizeof(int);
-
 
 		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_final_populations.data() + size_populations_offs),
 				      (uint64_t)da_copy[ve_id]->PopulationCurrentFinal, size_populations_nbytes);
