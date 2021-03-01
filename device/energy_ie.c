@@ -1,4 +1,5 @@
 #include "auxiliary.h"
+#include <string.h>
 
 // --------------------------------------------------------------------------
 // Calculates the intermolecular energy of a ligand given by
@@ -51,11 +52,16 @@ void energy_ie (
 	ftrace_region_begin("IE_MAIN_LOOP");
 #endif
 
+#ifdef __clang__
+        memset((void *)final_interE, 0, DockConst_pop_size * sizeof(float));
+#else
 	for (int j = 0; j < DockConst_pop_size; j++) {
 		final_interE[j] = 0.0f;
 	}
-  
+#endif
+
 	// For each ligand atom
+#pragma _NEC novector
 	for (int atom1_id = 0; atom1_id < DockConst_num_of_atoms; atom1_id++) {
 		int atom1_typeid = IA_IE_atom_types[atom1_id];
 		float q = IA_IE_atom_charges[atom1_id];
@@ -101,29 +107,32 @@ void energy_ie (
 
 				// Calculates the weights for trilinear interpolation
 				// based on the location of the point inside
-				float weights [2][2][2];
-				weights [0][0][0] = (1-dx)*(1-dy)*(1-dz);
-				weights [1][0][0] = dx*(1-dy)*(1-dz);
-				weights [0][1][0] = (1-dx)*dy*(1-dz);
-				weights [1][1][0] = dx*dy*(1-dz);
-				weights [0][0][1] = (1-dx)*(1-dy)*dz;
-				weights [1][0][1] = dx*(1-dy)*dz;
-				weights [0][1][1] = (1-dx)*dy*dz;
-				weights [1][1][1] = dx*dy*dz;
+				//float weights [2][2][2];
+                                float weight000, weight001, weight010;
+                                float weight011, weight100, weight101;
+                                float weight110, weight111;
+				weight000 = (1.0f-dx)*(1.0f-dy)*(1.0f-dz);
+				weight100 = dx*(1.0f-dy)*(1.0f-dz);
+				weight010 = (1.0f-dx)*dy*(1.0f-dz);
+				weight110 = dx*dy*(1.0f-dz);
+				weight001 = (1.0f-dx)*(1.0f-dy)*dz;
+				weight101 = dx*(1.0f-dy)*dz;
+				weight011 = (1.0f-dx)*dy*dz;
+				weight111 = dx*dy*dz;
 
 #if defined (PRINT_ALL)
 				printf("\n\nPartial results for atom with id %i:\n", atom1_id);
 				printf("x_low = %d, x_high = %d, x_frac = %f\n", x_low, x_high, dx);
 				printf("y_low = %d, y_high = %d, y_frac = %f\n", y_low, y_high, dy);
 				printf("z_low = %d, z_high = %d, z_frac = %f\n\n", z_low, z_high, dz);
-				printf("coeff(0,0,0) = %f\n", weights [0][0][0]);
-				printf("coeff(1,0,0) = %f\n", weights [1][0][0]);
-				printf("coeff(0,1,0) = %f\n", weights [0][1][0]);
-				printf("coeff(1,1,0) = %f\n", weights [1][1][0]);
-				printf("coeff(0,0,1) = %f\n", weights [0][0][1]);
-				printf("coeff(1,0,1) = %f\n", weights [1][0][1]);
-				printf("coeff(0,1,1) = %f\n", weights [0][1][1]);
-				printf("coeff(1,1,1) = %f\n", weights [1][1][1]);
+				printf("coeff(0,0,0) = %f\n", weight000);
+				printf("coeff(1,0,0) = %f\n", weight100);
+				printf("coeff(0,1,0) = %f\n", weight010);
+				printf("coeff(1,1,0) = %f\n", weight110);
+				printf("coeff(0,0,1) = %f\n", weight001);
+				printf("coeff(1,0,1) = %f\n", weight101);
+				printf("coeff(0,1,1) = %f\n", weight011);
+				printf("coeff(1,1,1) = %f\n", weight111);
 #endif
 
 				// Added temporal variables
@@ -146,88 +155,118 @@ void energy_ie (
 				uint mul_tmp = atom1_typeid * DockConst_g3;
 
 				// Energy contribution of the current grid type
-				float cube [2][2][2];
-				cube [0][0][0] = IE_Fgrids[cube_000 + mul_tmp];
-				cube [1][0][0] = IE_Fgrids[cube_100 + mul_tmp];
-				cube [0][1][0] = IE_Fgrids[cube_010 + mul_tmp];
-				cube [1][1][0] = IE_Fgrids[cube_110 + mul_tmp];
-				cube [0][0][1] = IE_Fgrids[cube_001 + mul_tmp];
-				cube [1][0][1] = IE_Fgrids[cube_101 + mul_tmp];
-				cube [0][1][1] = IE_Fgrids[cube_011 + mul_tmp];
-				cube [1][1][1] = IE_Fgrids[cube_111 + mul_tmp];
+				//float cube [2][2][2];
+                                float cub000, cub001, cub010;
+                                float cub011, cub100, cub101;
+                                float cub110, cub111;
+				cub000 = IE_Fgrids[cube_000 + mul_tmp];
+				cub100 = IE_Fgrids[cube_100 + mul_tmp];
+				cub010 = IE_Fgrids[cube_010 + mul_tmp];
+				cub110 = IE_Fgrids[cube_110 + mul_tmp];
+				cub001 = IE_Fgrids[cube_001 + mul_tmp];
+				cub101 = IE_Fgrids[cube_101 + mul_tmp];
+				cub011 = IE_Fgrids[cube_011 + mul_tmp];
+				cub111 = IE_Fgrids[cube_111 + mul_tmp];
 
 #if defined (PRINT_ALL)
 				printf("Interpolation of van der Waals map:\n");
-				printf("cube(0,0,0) = %f\n", cube [0][0][0]);
-				printf("cube(1,0,0) = %f\n", cube [1][0][0]);
-				printf("cube(0,1,0) = %f\n", cube [0][1][0]);
-				printf("cube(1,1,0) = %f\n", cube [1][1][0]);
-				printf("cube(0,0,1) = %f\n", cube [0][0][1]);
-				printf("cube(1,0,1) = %f\n", cube [1][0][1]);
-				printf("cube(0,1,1) = %f\n", cube [0][1][1]);
-				printf("cube(1,1,1) = %f\n", cube [1][1][1]);
+				printf("cube(0,0,0) = %f\n", cub000);
+				printf("cube(1,0,0) = %f\n", cub100);
+				printf("cube(0,1,0) = %f\n", cub010);
+				printf("cube(1,1,0) = %f\n", cub110);
+				printf("cube(0,0,1) = %f\n", cub001);
+				printf("cube(1,0,1) = %f\n", cub101);
+				printf("cube(0,1,1) = %f\n", cub011);
+				printf("cube(1,1,1) = %f\n", cub111);
 #endif
 
-				partialE1 = TRILININTERPOL(cube, weights);
+				//partialE1 = TRILININTERPOL(cube, weights);
+                                partialE1 =
+					cub000 * weight000 +
+					cub100 * weight100 +
+					cub010 * weight010 +
+					cub110 * weight110 +
+					cub001 * weight001 +
+					cub101 * weight101 +
+					cub011 * weight011 +
+					cub111 * weight111;
 
 #if defined (PRINT_ALL)
 				printf("interpolated value = %f\n\n", TRILININTERPOL(cube, weights));
 #endif
 
 				// Energy contribution of the electrostatic grid
-				cube [0][0][0] = IE_Fgrids_2[cube_000];
-				cube [1][0][0] = IE_Fgrids_2[cube_100];
-				cube [0][1][0] = IE_Fgrids_2[cube_010];
-				cube [1][1][0] = IE_Fgrids_2[cube_110];
-				cube [0][0][1] = IE_Fgrids_2[cube_001];
-				cube [1][0][1] = IE_Fgrids_2[cube_101];
-				cube [0][1][1] = IE_Fgrids_2[cube_011];
-				cube [1][1][1] = IE_Fgrids_2[cube_111];
+				cub000 = IE_Fgrids_2[cube_000];
+				cub100 = IE_Fgrids_2[cube_100];
+				cub010 = IE_Fgrids_2[cube_010];
+				cub110 = IE_Fgrids_2[cube_110];
+				cub001 = IE_Fgrids_2[cube_001];
+				cub101 = IE_Fgrids_2[cube_101];
+				cub011 = IE_Fgrids_2[cube_011];
+				cub111 = IE_Fgrids_2[cube_111];
 
 #if defined (PRINT_ALL)
 				printf("Interpolation of electrostatic map:\n");
-				printf("cube(0,0,0) = %f\n", cube [0][0][0]);
-				printf("cube(1,0,0) = %f\n", cube [1][0][0]);
-				printf("cube(0,1,0) = %f\n", cube [0][1][0]);
-				printf("cube(1,1,0) = %f\n", cube [1][1][0]);
-				printf("cube(0,0,1) = %f\n", cube [0][0][1]);
-				printf("cube(1,0,1) = %f\n", cube [1][0][1]);
-				printf("cube(0,1,1) = %f\n", cube [0][1][1]);
-				printf("cube(1,1,1) = %f\n", cube [1][1][1]);
+				printf("cube(0,0,0) = %f\n", cub000);
+				printf("cube(1,0,0) = %f\n", cub100);
+				printf("cube(0,1,0) = %f\n", cub010);
+				printf("cube(1,1,0) = %f\n", cub110);
+				printf("cube(0,0,1) = %f\n", cub001);
+				printf("cube(1,0,1) = %f\n", cub101);
+				printf("cube(0,1,1) = %f\n", cub011);
+				printf("cube(1,1,1) = %f\n", cub111);
 #endif
 
-				partialE2 = q * TRILININTERPOL(cube, weights);
-		
+				//partialE2 = q * TRILININTERPOL(cube, weights);
+                                partialE2 = q * (
+					cub000 * weight000 +
+					cub100 * weight100 +
+					cub010 * weight010 +
+					cub110 * weight110 +
+					cub001 * weight001 +
+					cub101 * weight101 +
+					cub011 * weight011 +
+					cub111 * weight111);
+
 #if defined (PRINT_ALL)
 				printf("interpolated value = %f, multiplied by q = %f\n\n", TRILININTERPOL(cube, weights), q*TRILININTERPOL(cube, weights));
 #endif
 
 				// Energy contribution of the desolvation grid
-				cube [0][0][0] = IE_Fgrids_3[cube_000];
-				cube [1][0][0] = IE_Fgrids_3[cube_100];
-				cube [0][1][0] = IE_Fgrids_3[cube_010];
-				cube [1][1][0] = IE_Fgrids_3[cube_110];
-				cube [0][0][1] = IE_Fgrids_3[cube_001];
-				cube [1][0][1] = IE_Fgrids_3[cube_101];
-				cube [0][1][1] = IE_Fgrids_3[cube_011];
-				cube [1][1][1] = IE_Fgrids_3[cube_111];
+				cub000 = IE_Fgrids_3[cube_000];
+				cub100 = IE_Fgrids_3[cube_100];
+				cub010 = IE_Fgrids_3[cube_010];
+				cub110 = IE_Fgrids_3[cube_110];
+				cub001 = IE_Fgrids_3[cube_001];
+				cub101 = IE_Fgrids_3[cube_101];
+				cub011 = IE_Fgrids_3[cube_011];
+				cub111 = IE_Fgrids_3[cube_111];
 
 #if defined (PRINT_ALL)
 				printf("Interpolation of desolvation map:\n");
-				printf("cube(0,0,0) = %f\n", cube [0][0][0]);
-				printf("cube(1,0,0) = %f\n", cube [1][0][0]);
-				printf("cube(0,1,0) = %f\n", cube [0][1][0]);
-				printf("cube(1,1,0) = %f\n", cube [1][1][0]);
-				printf("cube(0,0,1) = %f\n", cube [0][0][1]);
-				printf("cube(1,0,1) = %f\n", cube [1][0][1]);
-				printf("cube(0,1,1) = %f\n", cube [0][1][1]);
-				printf("cube(1,1,1) = %f\n", cube [1][1][1]);
+				printf("cube(0,0,0) = %f\n", cub000);
+				printf("cube(1,0,0) = %f\n", cub100);
+				printf("cube(0,1,0) = %f\n", cub010);
+				printf("cube(1,1,0) = %f\n", cub110);
+				printf("cube(0,0,1) = %f\n", cub001);
+				printf("cube(1,0,1) = %f\n", cub101);
+				printf("cube(0,1,1) = %f\n", cub011);
+				printf("cube(1,1,1) = %f\n", cub111);
 #endif
 
-				partialE3 = fabs(q) * TRILININTERPOL(cube, weights);
+				//partialE3 = fabsf(q) * TRILININTERPOL(cube, weights);
+                                partialE3 = fabsf(q) * (
+					cub000 * weight000 +
+					cub100 * weight100 +
+					cub010 * weight010 +
+					cub110 * weight110 +
+					cub001 * weight001 +
+					cub101 * weight101 +
+					cub011 * weight011 +
+					cub111 * weight111);
 
 #if defined (PRINT_ALL)
-				printf("interpolated value = %f, multiplied by abs(q) = %f\n\n", TRILININTERPOL(cube, weights), fabs(q) * trilin_interpol(cube, weights));
+				printf("interpolated value = %f, multiplied by abs(q) = %f\n\n", TRILININTERPOL(cube, weights), esa_fabs(q) * trilin_interpol(cube, weights));
 				printf("Current value of intermolecular energy = %f\n\n\n", interE);
 #endif
 			}

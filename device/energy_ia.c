@@ -1,4 +1,5 @@
 #include "auxiliary.h"
+#include <string.h>
 
 // --------------------------------------------------------------------------
 // Calculates the intramolecular energy of a set of atomic ligand
@@ -48,22 +49,27 @@ void energy_ia (
 #if defined (ENABLE_TRACE)
 	ftrace_region_begin("IA_MAIN_LOOP");
 #endif
+#ifdef __clang__
+        memset((void *)final_intraE, 0, DockConst_pop_size * sizeof(float));
+#else
 	for (int j = 0; j < DockConst_pop_size; j++)
 	{
 		final_intraE[j] = 0.0f;      
 	}
+#endif
 
 	// For each intramolecular atom contributor pair
 	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++)
 	{
 
-		uint atom1_id = IA_intraE_contributors[3*contributor_counter];
-		uint atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
+		int atom1_id = IA_intraE_contributors[3*contributor_counter];
+		int atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 
 #pragma _NEC packed_vector
 #pragma _NEC vovertake
                 //#pragma _NEC advance_gather   # this directive is dangerous here!
 #pragma _NEC gather_reorder
+                //#pragma omp simd safelen(256)
 		for (int j = 0; j < DockConst_pop_size; j++)
 		{
 
@@ -87,8 +93,8 @@ void energy_ia (
 			float partialE4 = 0.0f;
 
 			// Getting types ids
-			uint atom1_typeid = IA_IE_atom_types[atom1_id];
-			uint atom2_typeid = IA_IE_atom_types[atom2_id];
+			int atom1_typeid = IA_IE_atom_types[atom1_id];
+			int atom2_typeid = IA_IE_atom_types[atom2_id];
 
 			// Getting optimum pair distance (opt_distance) from reqm and reqm_hbond
 			// reqm: equilibrium internuclear separation 
@@ -97,8 +103,8 @@ void energy_ia (
 			// 	 (sum of the vdW radii of two like atoms (A)) in the case of hbond 
 			float opt_distance;
 
-			uint atom1_type_vdw_hb = IA_atom1_types_reqm[atom1_typeid];
-			uint atom2_type_vdw_hb = IA_atom2_types_reqm[atom2_typeid];
+			int atom1_type_vdw_hb = IA_atom1_types_reqm[atom1_typeid];
+			int atom2_type_vdw_hb = IA_atom2_types_reqm[atom2_typeid];
 			
 			if (IA_intraE_contributors[3*contributor_counter + 2] == 1)	// H-bond
 			{
