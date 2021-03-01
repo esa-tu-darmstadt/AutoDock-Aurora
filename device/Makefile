@@ -122,6 +122,22 @@ $(KRNL_GA_LIB): $(K_OBJS)
 #energy_ia.o: energy_ia.c
 #	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) -g -O2 -o $@ -c $<
 
+ifeq ($(LLVM),YES)
+energy_ia.o: energy_ia.c
+	RV_FORCE_WIDTH=512 clang -I../common -target ve-linux -O3 -fopenmp-simd -mllvm -rv \
+		-llvm -ve-ignore-masks=0 \
+		-Rpass="(inline|unroll|loop.*)" -ffp-contract=fast -o $@ -c $<
+	#clang -I../common -target ve-linux -g -O2 -fopenmp-simd -mllvm -rv -Rpass="(inline|unroll|loop.*)" -ffp-contract=fast -o $@ -c $<
+	#clang -I../common -target ve-linux -O3 -fopenmp-simd -mllvm -rv -Rpass="(inline|unroll|loop.*)" -ffp-contract=fast -o $@ -c $<
+	#clang -I../common -target ve-linux -O3 -mllvm -force-target-num-vector-regs=0 -fplugin=libRV.so -Rpass="(inline|unroll|loop.*)" -mvepacked -ffp-contract=fast -o $@ -c $<
+
+energy_ie.o: energy_ie.c
+	RV_FORCE_WIDTH=512 clang -I../common -target ve-linux -O3 -fopenmp-simd -mllvm -rv \
+		-llvm -ve-ignore-masks=0 -mvepacked \
+		-Rpass="(inline|unroll|loop.*)" -ffp-contract=fast -o $@ -c $<
+endif
+
+
 # TODO: better dependencies
 
 %.o: %.c
