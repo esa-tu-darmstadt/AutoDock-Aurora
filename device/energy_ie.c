@@ -62,6 +62,9 @@ void energy_ie (
 	ftrace_region_begin("IE_MAIN_LOOP");
 #endif
 
+#ifdef __clang__
+        memset((void *)final_interE, 0, DockConst_pop_size * sizeof(float));
+#else
 	for (int j = 0; j < DockConst_pop_size; j++) {
 		final_interE[j] = 0.0f;
 	}
