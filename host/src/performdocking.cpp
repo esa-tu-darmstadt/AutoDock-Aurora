@@ -492,11 +492,14 @@ filled with clock() */
 	
 	uint64_t kernel_ga_id[ve_num_procs];
 	uint64_t retval_ga[ve_num_procs];
-
+	uint64_t padding[ve_num_procs];
+#ifndef PADDING
+#define PADDING 0
+#endif
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
 		// allocate memory for entire packed buffer on VE
 		uint64_t mem_kernel_args_packbuff;
-		wrapper_veo_alloc_mem(ve_process[ve_id], &mem_kernel_args_packbuff, pb.size());
+		wrapper_veo_alloc_mem(ve_process[ve_id], &mem_kernel_args_packbuff, pb.size() + 128 * ve_num_procs);
 
 		//// save data buffer
 		//pb.save("packbuff_save.dat");
@@ -505,21 +508,24 @@ filled with clock() */
 		device_args *pb_da = (device_args *)pb.data();
 		pb_da->ve_proc_id = ve_id;
 
+		// padding
+		padding[ve_id] = PADDING * ve_id;
+		
 		// fix "relocation" addresses to point to VE virtual addresses
-		pb.fixup(mem_kernel_args_packbuff);
+		pb.fixup(mem_kernel_args_packbuff + padding[ve_id]);
 
 		// update local device_args structure (copy) such that we can free the packbuff later
 		da_copy[ve_id] = new device_args;
 		memcpy(da_copy[ve_id], pb.data(), sizeof(da));
 
 		// transfer packbuff to device
-		wrapper_veo_write_mem(ve_process[ve_id], mem_kernel_args_packbuff, pb.data(), pb.size());
+		wrapper_veo_write_mem(ve_process[ve_id], mem_kernel_args_packbuff + padding[ve_id], pb.data(), pb.size());
 
 		// TODO: this is a memory leak because there is no free
 		veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc();
 
 		// Creating a VEO arguments object
-		wrapper_veo_args_set_u64(kernel_ga_arg_ptr, 0, mem_kernel_args_packbuff);
+		wrapper_veo_args_set_u64(kernel_ga_arg_ptr, 0, mem_kernel_args_packbuff + padding[ve_id]);
 
 		if (ve_id == 0) {
 			// -----------------------------------------------------------------------------------------------------

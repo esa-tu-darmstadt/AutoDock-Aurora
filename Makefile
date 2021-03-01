@@ -24,7 +24,7 @@ WRAPPERVEO_SRC=$(wildcard $(WRAPPERVEO_DIR)/*.cpp)
 HOST_SRC=$(wildcard $(HOST_SRC_DIR)/*.cpp)
 SRC=$(WRAPPERVEO_SRC) $(HOST_SRC)
 
-HOST_FLAGS=-Wall -Wcomment #-Werror
+HOST_FLAGS=-g -Wall -Wcomment #-Werror
 IFLAGS=-I$(COMMON_DIR) -I$(HOST_INC_DIR) -I$(WRAPPERVEO_DIR) -I$(AURORA_INC_PATH)
 LFLAGS=-L$(AURORA_LIB_PATH)
 CFLAGS=$(HOST_FLAGS) $(IFLAGS) $(LFLAGS)
@@ -72,6 +72,8 @@ else ifeq ($(CONFIG),PROFILE)
 else 
 	OPT_HOST =-O3
 endif
+PADDING ?= 0
+OPT_HOST += -DPADDING=$(PADDING)
 
 OMP=NO
 
@@ -88,7 +90,7 @@ endif
 # ------------------------------------------------------
 # Priting out its git version hash
 GIT_VERSION := $(shell git describe --abbrev=40 --dirty --always --tags)
-CFLAGS+=-DVERSION=\"$(GIT_VERSION)\" -pg
+CFLAGS+=-DVERSION=\"$(GIT_VERSION)\" #-pg
 
 # ------------------------------------------------------
 # Note that the definition of "newline" contains two blank lines.
