@@ -62,9 +62,9 @@ void lga (
 			float		DockConst_coeff_desolv,
 	// ie
 	const	float*			Fgrids,
-			uchar		DockConst_g1,
-			uint		DockConst_g2,
-			uint		DockConst_g3,
+			uchar		DockConst_xsz,
+			uint		DockConst_ysz,
+			uint		DockConst_zsz,
 			uchar		DockConst_num_of_atoms,
 			float		DockConst_gridsize_x_minus1,
 			float		DockConst_gridsize_y_minus1,
@@ -113,9 +113,9 @@ void lga (
 	printf("%-40s %f\n", "DockConst_qasp: ", 				DockConst_qasp);
 	printf("%-40s %f\n", "DockConst_coeff_desolv: ", 		DockConst_coeff_desolv);
 	printf("\n");
-	printf("%-40s %u\n", "DockConst_g1: ",					DockConst_g1);
-	printf("%-40s %u\n", "DockConst_g2: ",					DockConst_g2);
-	printf("%-40s %u\n", "DockConst_g3: ",					DockConst_g3);
+	printf("%-40s %u\n", "DockConst_xsz: ",					DockConst_xsz);
+	printf("%-40s %u\n", "DockConst_ysz: ",					DockConst_ysz);
+	printf("%-40s %u\n", "DockConst_zsz: ",					DockConst_zsz);
 	printf("%-40s %u\n", "DockConst_num_of_atoms: ",		DockConst_num_of_atoms);
 	printf("%-40s %f\n", "DockConst_gridsize_x_minus1: ", 	DockConst_gridsize_x_minus1);
 	printf("%-40s %f\n", "DockConst_gridsize_y_minus1: ", 	DockConst_gridsize_y_minus1);
@@ -236,9 +236,9 @@ void lga (
 		IE_Fgrids,
 		IA_IE_atom_charges,
 		IA_IE_atom_types,
-		DockConst_g1,
-		DockConst_g2,
-		DockConst_g3,
+		DockConst_xsz,
+		DockConst_ysz,
+		DockConst_zsz,
 		DockConst_num_of_atoms,
 		DockConst_gridsize_x_minus1,
 		DockConst_gridsize_y_minus1,
@@ -533,9 +533,9 @@ void lga (
 			IE_Fgrids,
 			IA_IE_atom_charges,
 			IA_IE_atom_types,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
+			DockConst_xsz,
+			DockConst_ysz,
+			DockConst_zsz,
 			DockConst_num_of_atoms,
 			DockConst_gridsize_x_minus1,
 			DockConst_gridsize_y_minus1,
@@ -640,9 +640,9 @@ void lga (
 			DockConst_coeff_desolv,
 
 			IE_Fgrids,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
+			DockConst_xsz,
+			DockConst_ysz,
+			DockConst_zsz,
 			DockConst_num_of_atoms,
 			DockConst_gridsize_x_minus1,
 			DockConst_gridsize_y_minus1,

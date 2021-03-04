@@ -59,9 +59,9 @@ void lga (
 			float		DockConst_coeff_desolv,
 	// ie
 	const	float*		Fgrids,
-			uchar		DockConst_g1,
-			uint		DockConst_g2,
-			uint		DockConst_g3,
+			uchar		DockConst_xsz,
+			uchar		DockConst_ysz,
+			uchar		DockConst_zsz,
 			uchar		DockConst_num_of_atoms,
 			float		DockConst_gridsize_x_minus1,
 			float		DockConst_gridsize_y_minus1,
