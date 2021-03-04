@@ -427,9 +427,9 @@ filled with clock() */
 	da.DockConst_qasp                       = dockpars.qasp;
 	da.DockConst_coeff_desolv               = dockpars.coeff_desolv;
 	// IE
-	da.DockConst_g1                = dockpars.g1;
-	da.DockConst_g2                = dockpars.g2;
-	da.DockConst_g3                = dockpars.g3;
+	da.DockConst_xsz               = dockpars.gridsize_x;
+	da.DockConst_ysz               = dockpars.gridsize_y;
+	da.DockConst_zsz               = dockpars.gridsize_z;
 	da.DockConst_num_of_atoms      = dockpars.num_of_atoms;
 	da.DockConst_gridsize_x_minus1 = fgridsizex_minus1;
 	da.DockConst_gridsize_y_minus1 = fgridsizey_minus1;
