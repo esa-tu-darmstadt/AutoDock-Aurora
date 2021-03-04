@@ -163,11 +163,11 @@ float esa_sqrt(const float x){
 static inline
 float esa_fabs(const float x){
 	//return x >= 0.0f ? x : -x;
-
-	//return fabsf(x);
-
+#ifdef __clang__
+	return fabsf(x);
+#else
 	return fabs(x);  // is fastest!
-
+#endif
 	// https://stackoverflow.com/questions/23474796/is-there-a-fast-fabsf-replacement-for-float-in-c
 	//*(unsigned int *)(&x) &= 0x7fffffff; return x;
 }
