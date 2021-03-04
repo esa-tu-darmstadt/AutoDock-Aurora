@@ -1,6 +1,7 @@
 #include "auxiliary.h"
 #include <string.h>
 
+
 // --------------------------------------------------------------------------
 // Calculates the intermolecular energy of a ligand given by
 // ligand xyz-positions, and a receptor represented as a grid. 
@@ -12,9 +13,9 @@ void energy_ie (
 	const	float*	restrict	IE_Fgrids,
 	const	float*	restrict	IA_IE_atom_charges,
 	const	int*	restrict	IA_IE_atom_types,
-			uchar				DockConst_g1,
-			uint				DockConst_g2,
-			uint				DockConst_g3,
+			uchar				DockConst_xsz,
+			uchar				DockConst_ysz,
+			uchar				DockConst_zsz,
 			uchar				DockConst_num_of_atoms,
 			float				DockConst_gridsize_x_minus1,
 			float				DockConst_gridsize_y_minus1,
@@ -45,20 +46,25 @@ void energy_ie (
 	printf("\t%-40s %u\n", "Host_mul_tmp3: ",				Host_mul_tmp3);
 #endif
 
-	const float* IE_Fgrids_2 = &IE_Fgrids[Host_mul_tmp2];
-	const float* IE_Fgrids_3 = &IE_Fgrids[Host_mul_tmp3];
+	// interpret IE_Fgrids as multidimensional static array
+	const float (*IE_Fg)[MAX_NUM_OF_ATYPES+2][DockConst_zsz][DockConst_ysz][DockConst_xsz] =
+		(void *)(IE_Fgrids);
+	const float (*IE_Fg_2)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
+		(void *)(&IE_Fgrids[Host_mul_tmp2]);
+	const float (*IE_Fg_3)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
+ 		(void *)(&IE_Fgrids[Host_mul_tmp3]);
 
+//#pragma _NEC retain(IE_Fg)
+//#pragma _NEC retain(IE_Fg_2)
+//#pragma _NEC retain(IE_Fg_3)
+	
 #if defined (ENABLE_TRACE)
 	ftrace_region_begin("IE_MAIN_LOOP");
 #endif
 
-#ifdef __clang__
-        memset((void *)final_interE, 0, DockConst_pop_size * sizeof(float));
-#else
 	for (int j = 0; j < DockConst_pop_size; j++) {
 		final_interE[j] = 0.0f;
 	}
-#endif
 
 	// For each ligand atom
 #pragma _NEC novector
@@ -69,6 +75,7 @@ void energy_ie (
 #pragma _NEC vovertake
 #pragma _NEC advance_gather
 #pragma _NEC gather_reorder
+#pragma omp simd
 		for (int j = 0; j < DockConst_pop_size; j++) {
      
 			float x = local_coords_x[atom1_id][j];
@@ -94,12 +101,12 @@ void energy_ie (
 			}
 			else
 			{
-				int x_low  = (int) floorf(x);
-				int y_low  = (int) floorf(y);
-				int z_low  = (int) floorf(z);
-				int x_high = (int) esa_ceil(x);
-				int y_high = (int) esa_ceil(y);
-				int z_high = (int) esa_ceil(z);
+				float x_low  = floorf(x);
+				float y_low  = floorf(y);
+				float z_low  = floorf(z);
+				int ix = (int)x_low;
+				int iy = (int)y_low;
+				int iz = (int)z_low;
 
 				float dx = x - x_low;
 				float dy = y - y_low;
@@ -134,40 +141,20 @@ void energy_ie (
 				printf("coeff(0,1,1) = %f\n", weight011);
 				printf("coeff(1,1,1) = %f\n", weight111);
 #endif
-
-				// Added temporal variables
-				uint cube_000, cube_100, cube_010, cube_110, cube_001, cube_101, cube_011, cube_111;
-
-				uint ylow_times_g1  = y_low  * DockConst_g1;
-				uint yhigh_times_g1 = y_high * DockConst_g1;
-				uint zlow_times_g2  = z_low  * DockConst_g2;
-				uint zhigh_times_g2 = z_high * DockConst_g2;
-
-				cube_000 = x_low  + ylow_times_g1  + zlow_times_g2;
-				cube_100 = x_high + ylow_times_g1  + zlow_times_g2;
-				cube_010 = x_low  + yhigh_times_g1 + zlow_times_g2;
-				cube_110 = x_high + yhigh_times_g1 + zlow_times_g2;
-				cube_001 = x_low  + ylow_times_g1  + zhigh_times_g2;
-				cube_101 = x_high + ylow_times_g1  + zhigh_times_g2;
-				cube_011 = x_low  + yhigh_times_g1 + zhigh_times_g2;
-				cube_111 = x_high + yhigh_times_g1 + zhigh_times_g2;
-
-				uint mul_tmp = atom1_typeid * DockConst_g3;
-
 				// Energy contribution of the current grid type
 				//float cube [2][2][2];
                                 float cub000, cub001, cub010;
                                 float cub011, cub100, cub101;
                                 float cub110, cub111;
-				cub000 = IE_Fgrids[cube_000 + mul_tmp];
-				cub100 = IE_Fgrids[cube_100 + mul_tmp];
-				cub010 = IE_Fgrids[cube_010 + mul_tmp];
-				cub110 = IE_Fgrids[cube_110 + mul_tmp];
-				cub001 = IE_Fgrids[cube_001 + mul_tmp];
-				cub101 = IE_Fgrids[cube_101 + mul_tmp];
-				cub011 = IE_Fgrids[cube_011 + mul_tmp];
-				cub111 = IE_Fgrids[cube_111 + mul_tmp];
-
+				cub000 = (*IE_Fg)[atom1_typeid][iz  ][iy  ][ix  ];
+				cub100 = (*IE_Fg)[atom1_typeid][iz  ][iy  ][ix+1];
+				cub010 = (*IE_Fg)[atom1_typeid][iz  ][iy+1][ix  ];
+				cub110 = (*IE_Fg)[atom1_typeid][iz  ][iy+1][ix+1];
+				cub001 = (*IE_Fg)[atom1_typeid][iz+1][iy  ][ix  ];
+				cub101 = (*IE_Fg)[atom1_typeid][iz+1][iy  ][ix+1];
+				cub011 = (*IE_Fg)[atom1_typeid][iz+1][iy+1][ix  ];
+				cub111 = (*IE_Fg)[atom1_typeid][iz+1][iy+1][ix+1];
+				
 #if defined (PRINT_ALL)
 				printf("Interpolation of van der Waals map:\n");
 				printf("cube(0,0,0) = %f\n", cub000);
@@ -196,14 +183,14 @@ void energy_ie (
 #endif
 
 				// Energy contribution of the electrostatic grid
-				cub000 = IE_Fgrids_2[cube_000];
-				cub100 = IE_Fgrids_2[cube_100];
-				cub010 = IE_Fgrids_2[cube_010];
-				cub110 = IE_Fgrids_2[cube_110];
-				cub001 = IE_Fgrids_2[cube_001];
-				cub101 = IE_Fgrids_2[cube_101];
-				cub011 = IE_Fgrids_2[cube_011];
-				cub111 = IE_Fgrids_2[cube_111];
+				cub000 = (*IE_Fg_2)[iz  ][iy  ][ix  ];
+				cub100 = (*IE_Fg_2)[iz  ][iy  ][ix+1];
+				cub010 = (*IE_Fg_2)[iz  ][iy+1][ix  ];
+				cub110 = (*IE_Fg_2)[iz  ][iy+1][ix+1];
+				cub001 = (*IE_Fg_2)[iz+1][iy  ][ix  ];
+				cub101 = (*IE_Fg_2)[iz+1][iy  ][ix+1];
+				cub011 = (*IE_Fg_2)[iz+1][iy+1][ix  ];
+				cub111 = (*IE_Fg_2)[iz+1][iy+1][ix+1];
 
 #if defined (PRINT_ALL)
 				printf("Interpolation of electrostatic map:\n");
@@ -233,14 +220,14 @@ void energy_ie (
 #endif
 
 				// Energy contribution of the desolvation grid
-				cub000 = IE_Fgrids_3[cube_000];
-				cub100 = IE_Fgrids_3[cube_100];
-				cub010 = IE_Fgrids_3[cube_010];
-				cub110 = IE_Fgrids_3[cube_110];
-				cub001 = IE_Fgrids_3[cube_001];
-				cub101 = IE_Fgrids_3[cube_101];
-				cub011 = IE_Fgrids_3[cube_011];
-				cub111 = IE_Fgrids_3[cube_111];
+				cub000 = (*IE_Fg_3)[iz  ][iy  ][ix  ];
+				cub100 = (*IE_Fg_3)[iz  ][iy  ][ix+1];
+				cub010 = (*IE_Fg_3)[iz  ][iy+1][ix  ];
+				cub110 = (*IE_Fg_3)[iz  ][iy+1][ix+1];
+				cub001 = (*IE_Fg_3)[iz+1][iy  ][ix  ];
+				cub101 = (*IE_Fg_3)[iz+1][iy  ][ix+1];
+				cub011 = (*IE_Fg_3)[iz+1][iy+1][ix  ];
+				cub111 = (*IE_Fg_3)[iz+1][iy+1][ix+1];
 
 #if defined (PRINT_ALL)
 				printf("Interpolation of desolvation map:\n");
@@ -275,12 +262,13 @@ void energy_ie (
 	
 		} // End j Loop (over individuals)
 
+                
 	} // End of atom1_id for-loop
 
 #if defined (ENABLE_TRACE)
 	ftrace_region_end("IE_MAIN_LOOP");
 #endif
-
+	
 	// --------------------------------------------------------------
 
 #if defined (PRINT_ALL_IE) 

@@ -89,9 +89,9 @@ uint64_t libkernel_ga (
 			da->DockConst_coeff_desolv,
 			// ie
 			da->Fgrids,
-			da->DockConst_g1,
-			da->DockConst_g2,
-			da->DockConst_g3,
+			da->DockConst_xsz,
+			da->DockConst_ysz,
+			da->DockConst_zsz,
 			da->DockConst_num_of_atoms,
 			da->DockConst_gridsize_x_minus1,
 			da->DockConst_gridsize_y_minus1,
