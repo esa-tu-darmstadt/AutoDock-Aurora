@@ -65,7 +65,7 @@ void energy_ia (
 #pragma _NEC vovertake
                 //#pragma _NEC advance_gather   # this directive is dangerous here!
 #pragma _NEC gather_reorder
-#pragma omp simd
+#pragma omp simd safelen(256)
 		for (int j = 0; j < DockConst_pop_size; j++)
 		{
 
@@ -137,9 +137,6 @@ void energy_ia (
 			float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
 			float inverse_smoothed_distance_pow_12 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_6;
 
-			float term_partialE3 = atomic_distance * (-8.5525f + (86.9525f / (1.0f + 7.7839f * expf(-0.3154f * atomic_distance))));
-			float term_inv_partialE3 = (1.0f / term_partialE3);
-
 			// Calculating energy contributions
 			// Cuttoff1: internuclear-distance at 8A only for vdw and hbond.
 			if (atomic_distance < 8.0f) 
@@ -159,6 +156,9 @@ void energy_ia (
 			// Cuttoff2: internuclear-distance at 20.48A only for el and sol.
 			if (atomic_distance < 20.48f)
 			{
+				float term_partialE3 = atomic_distance * (-8.5525f + (86.9525f / (1.0f + 7.7839f * expf(-0.3154f * atomic_distance))));
+				float term_inv_partialE3 = (1.0f / term_partialE3);
+
 				// Calculating electrostatic term
 				partialE3 += DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id] * term_inv_partialE3;
               
