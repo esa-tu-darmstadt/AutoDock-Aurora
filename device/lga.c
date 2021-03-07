@@ -218,6 +218,7 @@ void lga (
 		IA_VWpars_BD,
 		IA_dspars_S,
 		IA_dspars_V,
+		//DockConst_num_of_atoms,
 		DockConst_smooth,
 		DockConst_num_of_intraE_contributors,
 		DockConst_grid_spacing,
@@ -485,8 +486,15 @@ void lga (
                 } // End loop over new_pop_cnt
 
                 // Calculate energy
+#if 1
+                // make sure the buffers are 8 byte aligned
+                double energy_gg[MAX_POPSIZE];
+		float (*energy_ia_gg)[MAX_POPSIZE] = (void *)&energy_gg[0];
+		float (*energy_ie_gg)[MAX_POPSIZE] = (void *)&energy_gg[MAX_POPSIZE/2];
+#else
                 float energy_ia_gg[MAX_POPSIZE];
                 float energy_ie_gg[MAX_POPSIZE];
+#endif
                 calc_pc(
                         PC_rotlist,
                         PC_ref_coords_x,
@@ -516,6 +524,7 @@ void lga (
 			IA_VWpars_BD,
 			IA_dspars_S,
 			IA_dspars_V,
+                        //DockConst_num_of_atoms,
 			DockConst_smooth,
 			DockConst_num_of_intraE_contributors,
 			DockConst_grid_spacing,
@@ -549,7 +558,7 @@ void lga (
 			local_coords_z
 			);
                 for (uint new_pop_cnt = 0; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
-			LocalEneNext[new_pop_cnt] = energy_ia_gg[new_pop_cnt] + energy_ie_gg[new_pop_cnt];
+			LocalEneNext[new_pop_cnt] = (*energy_ia_gg)[new_pop_cnt] + (*energy_ie_gg)[new_pop_cnt];
                 }
 
 #if defined (PRINT_ALL_KRNL)

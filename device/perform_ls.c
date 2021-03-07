@@ -266,6 +266,7 @@ void perform_ls(
 			IA_VWpars_BD,
 			IA_dspars_S,
 			IA_dspars_V,
+                        //DockConst_num_of_atoms,
 			DockConst_smooth,
 			DockConst_num_of_intraE_contributors,
 			DockConst_grid_spacing,
