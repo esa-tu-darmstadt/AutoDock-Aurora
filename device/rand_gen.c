@@ -6,7 +6,6 @@
 #include <ftrace.h>
 #endif
 
-static int nprints = 0;
 static asl_random_t rng;
 
 void randf_vec_init(unsigned int *seed, int seed_length)

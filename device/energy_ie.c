@@ -75,7 +75,7 @@ void energy_ie (
 #pragma _NEC vovertake
 #pragma _NEC advance_gather
 #pragma _NEC gather_reorder
-#pragma omp simd
+#pragma omp simd simdlen(512)
 		for (int j = 0; j < DockConst_pop_size; j++) {
      
 			float x = local_coords_x[atom1_id][j];
