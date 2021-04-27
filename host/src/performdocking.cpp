@@ -660,11 +660,6 @@ filled with clock() */
 		veo_proc_destroy(ve_process[ve_id]);
 	}
 
-	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
-		/* destroy the VEO process early in order to get a more accurate PROGINF */
-		veo_proc_destroy(ve_process[ve_id]);
-	}
-
 	// -----------------------------------------------------------------------------------------------------
 	// Processing results
 	// -----------------------------------------------------------------------------------------------------

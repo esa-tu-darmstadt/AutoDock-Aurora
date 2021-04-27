@@ -27,6 +27,8 @@ uint64_t libkernel_ga (
 	randf_vec_init(&(da->dockpars_prng_states[ve_proc_id * DockConst_pop_size]), DockConst_pop_size);
 
 	int ve_num_of_runs = (Host_num_of_runs + ve_num_procs - 1) / ve_num_procs;
+	unsigned int run_cnt_start = ve_proc_id * ve_num_of_runs;
+	unsigned int run_cnt_end = MIN((ve_proc_id + 1) * ve_num_of_runs, Host_num_of_runs);
 
 #pragma omp parallel for schedule(static, 1)
 	for (unsigned int run_cnt = run_cnt_start; run_cnt < run_cnt_end; run_cnt++) {
