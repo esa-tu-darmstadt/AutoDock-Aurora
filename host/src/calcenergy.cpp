@@ -240,7 +240,6 @@ int gen_rotlist(
 {
 	int atom_id, rotb_id, parallel_rot_id, rotlist_id;
 	char number_of_req_rotations[MAX_NUM_OF_ATOMS];
-	char number_of_req_rotations_copy[MAX_NUM_OF_ATOMS];
 	char atom_id_of_numrots[MAX_NUM_OF_ATOMS];
 	char atom_wasnt_rotated_yet[MAX_NUM_OF_ATOMS];
 	int new_rotlist_element;
@@ -248,6 +247,15 @@ int gen_rotlist(
 	char rotbond_candidate;
 	char remaining_rots_around_rotbonds;
 
+	// Subrotation lists
+	// At some point, some code was proposed to build subrotations lists.
+	// This was removed thereafter due to lower benefits in performance
+	// compared to outer-loop pushing.
+	// The printfs below are just vestige from that proposal,
+	// which might be retaken eventually.
+/*
+	char number_of_req_rotations_copy[MAX_NUM_OF_ATOMS];
+*/
 
 	myligand->num_of_rotcyc = 0;
 	myligand->num_of_rotations_required = 0;
@@ -272,11 +280,18 @@ int gen_rotlist(
 		myligand->num_of_rotations_required += number_of_req_rotations[atom_id];
 	}
 
+	// Subrotation lists
+	// At some point, some code was proposed to build subrotations lists.
+	// This was removed thereafter due to lower benefits in performance
+	// compared to outer-loop pushing.
+	// The printfs below are just vestige from that proposal,
+	// which might be retaken eventually.
+/*
 	for (atom_id=0; atom_id<myligand->num_of_atoms; atom_id++)
 	{
 		number_of_req_rotations_copy[atom_id] = number_of_req_rotations[atom_id];
 	}
-
+*/
 	rotlist_id=0;
 	make_reqrot_ordering(number_of_req_rotations, atom_id_of_numrots, myligand->num_of_atoms);
 	while (number_of_req_rotations[0] != 0)	//if the atom with the most remaining rotations has to be rotated 0 times, done
@@ -340,10 +355,7 @@ int gen_rotlist(
 		(myligand->num_of_rotcyc)++;
 	}
 
-	// ---------------------------------------------------------------------------
-	// Printing rotation lists
-	// ---------------------------------------------------------------------------
-
+	// Subrotation lists
 	// At some point, some code was proposed to build subrotations lists.
 	// This was removed thereafter due to lower benefits in performance
 	// compared to outer-loop pushing.
