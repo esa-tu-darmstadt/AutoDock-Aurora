@@ -115,7 +115,6 @@ void perform_ls(
 
 	int active_pop_size; // counts compressed list of genomes
 	uint active_idx[MAX_POPSIZE]; // j index that corresponds to slot in compressed list
-	uint active_compr_idx[MAX_POPSIZE]; // compressed index corresponding to active j index
 
 	LS_eval = 0;
 	for (int j = 0; j < pop_size; j++) {
@@ -144,7 +143,6 @@ void perform_ls(
 		for (int j = 0; j < pop_size; j++) {
 			if (ls_is_active[j]) {
 				active_idx[active_pop_size] = j;
-				active_compr_idx[j] = active_pop_size;
 
 				positive_dir_compr[active_pop_size] = positive_direction[j];
 				rho_compr[active_pop_size] = rho[j];
