@@ -255,8 +255,6 @@ filled with clock() */
 	size_t size_ref_orientation_quats_nbytes = size_ref_orientation_quats_nelems * 4 * sizeof(float);
 
 	// IE buffers
-	uint64_t mem_dockpars_fgrids;
-
 	size_t size_InterE_atom_charges_nelems = MAX_NUM_OF_ATOMS;
 	size_t size_InterE_atom_charges_nbytes = size_InterE_atom_charges_nelems * sizeof(float);
 
@@ -564,7 +562,6 @@ filled with clock() */
 			std::cout << std::endl;
 
 			// IE
-			std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_fgrids" << std::right << std::setw(SPACE_M) << da.Fgrids << "\n";
 			std::cout << std::left << std::setw(SPACE_L) << "dockpars.g1" << std::right << std::setw(SPACE_M) << int { dockpars.g1 } << "\n";
 			std::cout << std::left << std::setw(SPACE_L) << "dockpars.g2" << std::right << std::setw(SPACE_M) << dockpars.g2 << "\n";
 			std::cout << std::left << std::setw(SPACE_L) << "dockpars.g3" << std::right << std::setw(SPACE_M) << dockpars.g3 << "\n";
