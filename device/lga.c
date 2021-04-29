@@ -29,7 +29,6 @@ void lga (
 		float           Host_two_absmaxdmov,
 		float           Host_two_absmaxdang,
 		float           DockConst_crossover_rate,
-		uint            DockConst_num_of_lsentities,
 		uchar           DockConst_num_of_genes,
 	// pc
 	const	int* 		PC_rotlist,
@@ -96,7 +95,6 @@ void lga (
 	printf("%-40s +/-%fA\n", "Host_two_absmaxdmov: ",		Host_two_absmaxdmov);
 	printf("%-40s +/-%f°\n", "Host_two_absmaxdang: ",  		Host_two_absmaxdang);
 	printf("%-40s %f\n", "DockConst_crossover_rate: ", 		DockConst_crossover_rate);
-	printf("%-40s %u\n", "DockConst_num_of_lsentities: ",   DockConst_num_of_lsentities);
 	printf("%-40s %u\n", "DockConst_num_of_genes: ",        DockConst_num_of_genes);
 	printf("%-40s %u\n", "Host_RunId: ",        			Host_RunId);
 	printf("%-40s %u\n", "Host_Offset_Pop: ",        		Host_Offset_Pop);

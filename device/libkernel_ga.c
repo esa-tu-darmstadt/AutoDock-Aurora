@@ -58,7 +58,6 @@ uint64_t libkernel_ga (
 			da->Host_two_absmaxdmov,
 			da->Host_two_absmaxdang,
 			da->DockConst_crossover_rate,
-			da->DockConst_num_of_lsentities,
 			da->DockConst_num_of_genes,
 			// pc
 			da->PC_rotlist,
