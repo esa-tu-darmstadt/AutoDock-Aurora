@@ -27,20 +27,20 @@ uint64_t libkernel_ga (
 	randf_vec_init(&(da->dockpars_prng_states[ve_proc_id * DockConst_pop_size]), DockConst_pop_size);
 
 	int ve_num_of_runs = (Host_num_of_runs + ve_num_procs - 1) / ve_num_procs;
-	unsigned int run_cnt_start = ve_proc_id * ve_num_of_runs;
-	unsigned int run_cnt_end = MIN((ve_proc_id + 1) * ve_num_of_runs, Host_num_of_runs);
+	uint run_cnt_start = ve_proc_id * ve_num_of_runs;
+	uint run_cnt_end = MIN((ve_proc_id + 1) * ve_num_of_runs, Host_num_of_runs);
 
 #pragma omp parallel for schedule(static, 1)
-	for (unsigned int run_cnt = run_cnt_start; run_cnt < run_cnt_end; run_cnt++) {
+	for (uint run_cnt = run_cnt_start; run_cnt < run_cnt_end; run_cnt++) {
 
 /*
 		printf(" %u", run_cnt+1); 
 		fflush(stdout);
 */
 		// Values changing every LGA run
-		unsigned int uint_run_cnt  = run_cnt; // - run_cnt_start;
-		unsigned int Host_Offset_Pop = uint_run_cnt * DockConst_pop_size * ACTUAL_GENOTYPE_LENGTH;
-		unsigned int Host_Offset_Ene = uint_run_cnt * DockConst_pop_size;
+		uint uint_run_cnt  = run_cnt; // - run_cnt_start;
+		uint Host_Offset_Pop = uint_run_cnt * DockConst_pop_size * ACTUAL_GENOTYPE_LENGTH;
+		uint Host_Offset_Ene = uint_run_cnt * DockConst_pop_size;
 
 		lga(
 			da->PopulationCurrentInitial,
