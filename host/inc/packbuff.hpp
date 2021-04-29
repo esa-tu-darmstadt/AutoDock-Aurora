@@ -32,13 +32,18 @@
 
 
 class PackBuff {
+  struct reloc {
+    uint64_t address;
+    int64_t offset;
+    reloc() : address(0), offset(0) {}
+    reloc(uint64_t addr, uint64_t offs) : address(addr), offset(offs) {}
+  };
 private:
   char *data_;  // data of the packed buffer
   size_t size_; // current size of the buffer
   size_t size_alloc;  // allocated size of the buffer
   size_t chunksz;  // minimum data buffer growth granularity
-  std::vector<uint64_t> fixup_; // addresses that need to be "fixed" by adding the VE
-  bool fixup_done = false; // marker for fixup/relocations not done (false) or done (true)
+  std::vector<reloc> fixup_; // addresses that need to be "fixed" by adding the VE
 public:
   PackBuff(size_t n) : chunksz(n), size_(0) {
     data_ = (char *)malloc(chunksz);
@@ -63,10 +68,8 @@ public:
 
       // fix relocations which are inside the old buffer!
       for (auto it = fixup_.begin(); it != fixup_.end(); ++it) {
-        auto addr = *it;
-        if (addr >= (uint64_t)data_ && addr < (uint64_t)(data_ + size_)) {
-          size_t offset = addr - (uint64_t)data_;
-          *it = (uint64_t)(new_data + offset);
+        if (it->address >= (uint64_t)data_ && it->address < (uint64_t)(data_ + size_)) {
+          it->address = it->address - (uint64_t)data_ + (uint64_t)new_data;
         }
       }
       // fix current argument's address if inside the relocated region
@@ -82,8 +85,7 @@ public:
       memcpy((void *)(data_ + asize), (const void *)buff, len);
     }
     // mark fixup address
-    *((uint64_t *)address) = asize;
-    fixup_.push_back(address);
+    fixup_.push_back(reloc(address, asize));
     size_ = asize + len;
   }
 
@@ -96,14 +98,8 @@ public:
 
   /*
     Save the relocation information and the data buffer into a file.
-    This is intended for debug purposes and should be called *BEFORE*
-    the fixup() step.
   */
   int save(const char* fname) {
-    if (this->fixup_done) {
-      std::cerr << "You can only save before doing the fixups!\n";
-      return 1;
-    }
     std::ofstream wf(fname, std::ios::out | std::ios::binary);
     if (!wf) {
       std::cerr << "Cannot open file!\n";
@@ -113,11 +109,11 @@ public:
     uint64_t data_begin = (uint64_t)this->data();
     uint64_t data_end = data_begin + this->size();
     int num_relocs = 0;
-    uint64_t relocs[fixup_.size()];
+    struct reloc relocs[fixup_.size()];
     for (auto it = fixup_.begin(); it != fixup_.end(); ++it) {
-      auto address = *it;
-      if (address >= data_begin && address < data_end) {
-        relocs[num_relocs] = address - data_begin;
+      if (it->address >= data_begin && it->address < data_end) {
+        relocs[num_relocs].address = it->address - data_begin;
+        relocs[num_relocs].offset = it->offset;
         num_relocs++;
       }
     }
@@ -126,7 +122,7 @@ public:
     // write number of relocations
     wf.write((char *)&num_relocs, sizeof(num_relocs));
     // write the relocations
-    wf.write((char *)&relocs[0], sizeof(uint64_t) * num_relocs);
+    wf.write((char *)&relocs[0], sizeof(struct reloc) * num_relocs);
     // write data buffer
     wf.write(data_, this->size());
     wf.close();
@@ -161,10 +157,10 @@ public:
     
     // read number of relocations
     rf.read((char *)&num_relocs, sizeof(num_relocs));
-    uint64_t relocs[num_relocs];
+    struct reloc relocs[num_relocs];
 
     // read the relocation offsets
-    rf.read((char *)&relocs[0], sizeof(uint64_t) * num_relocs);
+    rf.read((char *)&relocs[0], sizeof(struct reloc) * num_relocs);
 
     // read the data buffer
     rf.read((char *)buff, buff_size);
@@ -176,8 +172,8 @@ public:
     }
     
     for (int i = 0; i < num_relocs; i++) {
-      uint64_t address = (uint64_t)buff + relocs[i];
-      *((uint64_t *)address) = *((uint64_t *)address) + (uint64_t)buff;
+      uint64_t address = (uint64_t)buff + relocs[i].address;
+      *((uint64_t *)address) = relocs[i].offset + (uint64_t)buff;
     }
     return buff;
   }
@@ -189,10 +185,8 @@ public:
    */
   void fixup(uint64_t VE_addr) {
     for (auto it = fixup_.begin(); it != fixup_.end(); ++it) {
-      auto address = *it;
-      *((uint64_t *)address) = *((uint64_t *)address) + VE_addr;
+      *((uint64_t *)it->address) = it->offset + VE_addr;
     }
-    this->fixup_done = true;
   }
   /*
    */

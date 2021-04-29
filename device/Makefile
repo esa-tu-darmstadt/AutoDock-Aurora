@@ -6,6 +6,7 @@ AURORA_INC_PATH=/opt/nec/ve/veos/include
 AURORA_LIB_PATH=/opt/nec/ve/veos/lib64
 
 VE_COMPILER=/opt/nec/ve/bin/ncc
+VE_CPP=/opt/nec/ve/bin/nc++
 
 VE_EXEC=/opt/nec/ve/bin/ve_exec
 FTRACE=/opt/nec/ve/bin/ftrace
@@ -50,7 +51,7 @@ else ifeq ($(CONFIG),RELEASE)
 # Compiling this way is intended only 
 # to work with "make profile"
 else ifeq ($(CONFIG),PROFILE)
-	OPT_KRNL =-O4 $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_TRACE)
+	OPT_KRNL =-O3 $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_TRACE)
 else 
 	OPT_KRNL =
 endif
@@ -69,6 +70,7 @@ ifeq ($(TRACE),YES)
 else
 	BUILDREQS =
 endif
+
 
 # ------------------------------------------------------
 # Reproduce results (remove randomness)
@@ -98,6 +100,9 @@ endef
 
 all: kernel_ga $(BUILDREQS)
 
+# energy_ie.ll: energy_ie.c
+# 	rvclang -I../common -target ve-linux -O3 -fopenmp-simd -mllvm -rv -Rpass="(inline|unroll|loop.*)" -emit-llvm -S -o $@ -c $<
+#
 ADDLIBS = -lm
 ifeq ($(OMP),YES)
 ADDLIBS += /opt/nec/ve/nlc/2.1.0/lib/libasl_openmp.a
@@ -116,11 +121,39 @@ $(KRNL_GA_LIB): $(K_OBJS)
 #lga.o: lga.c
 #	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT) -o $@ -c $<
 
-#energy_ie.o: energy_ie.c
+energy_ie.o: energy_ie.c
+	$(VE_COMPILER) -fpic $(INCLUDES) $(OPT_KRNL) -mretain-list-vector -o $@ -c $<
 #	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT) -o $@ -c $<
 
 #energy_ia.o: energy_ia.c
 #	$(VE_COMPILER) -fpic $(INCLUDES) $(KERNEL_DEBUG_BASIC) -g -O2 -o $@ -c $<
+
+ifeq ($(LLVM),YES)
+LLVMFLAGS=$(INCLUDES) --target=ve-linux -fopenmp-simd -O3 -ffast-math -fpic -mllvm -rv -fno-integrated-as
+ifeq ($(TRACE),YES)
+    LLVMFLAGS += -DENABLE_TRACE
+endif
+ADDLIBS += /home/focht/llvm-ve-rv/lib/clang/12.0.0/lib/ve-linux/libclang_rt.builtins.a
+
+energy_ia.o: energy_ia.c
+	clang ${LLVMFLAGS} -o $@ -c $<
+
+#energy_ie.c: energy_ie.c
+#	clang -std=c11 ${LLVMFLAGS} -o $@ -c $<
+
+energy_i%.s: energy_i%.c
+	clang ${LLVMFLAGS} -o $@ -S -c $<
+
+#calc_pc.o: calc_pc.c
+#	clang ${LLVMFLAGS} -o $@ -c $<
+
+#lga.o: lga.c
+#	clang ${LLVMFLAGS} -o $@ -c $<
+
+#perform_ls.o: perform_ls.c
+#	clang ${LLVMFLAGS} -o $@ -c $<
+
+endif
 
 # TODO: better dependencies
 
@@ -135,4 +168,4 @@ build_veorun_ftrace:
 
 
 clean:
-	rm -f $(KRNL_GA_LIB) *.o *.L $(BIN_DIR)/veorun_ftrace
+	rm -f $(KRNL_GA_LIB) *.o *.L $(BIN_DIR)/veorun_ftrace *.s

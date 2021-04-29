@@ -62,9 +62,9 @@ void lga (
 			float		DockConst_coeff_desolv,
 	// ie
 	const	float*			Fgrids,
-			uchar		DockConst_g1,
-			uint		DockConst_g2,
-			uint		DockConst_g3,
+			uchar		DockConst_xsz,
+			uint		DockConst_ysz,
+			uint		DockConst_zsz,
 			uchar		DockConst_num_of_atoms,
 			float		DockConst_gridsize_x_minus1,
 			float		DockConst_gridsize_y_minus1,
@@ -79,8 +79,8 @@ void lga (
 			uchar		DockConst_cons_limit,
 	// Values changing every LGA run
 			uint		Host_RunId,
-			uint 	    Host_Offset_Pop,
-			uint	    Host_Offset_Ene
+			uint		Host_Offset_Pop,
+			uint		Host_Offset_Ene
 )
 {
 #if defined (PRINT_ALL_KRNL)
@@ -113,9 +113,9 @@ void lga (
 	printf("%-40s %f\n", "DockConst_qasp: ", 				DockConst_qasp);
 	printf("%-40s %f\n", "DockConst_coeff_desolv: ", 		DockConst_coeff_desolv);
 	printf("\n");
-	printf("%-40s %u\n", "DockConst_g1: ",					DockConst_g1);
-	printf("%-40s %u\n", "DockConst_g2: ",					DockConst_g2);
-	printf("%-40s %u\n", "DockConst_g3: ",					DockConst_g3);
+	printf("%-40s %u\n", "DockConst_xsz: ",					DockConst_xsz);
+	printf("%-40s %u\n", "DockConst_ysz: ",					DockConst_ysz);
+	printf("%-40s %u\n", "DockConst_zsz: ",					DockConst_zsz);
 	printf("%-40s %u\n", "DockConst_num_of_atoms: ",		DockConst_num_of_atoms);
 	printf("%-40s %f\n", "DockConst_gridsize_x_minus1: ", 	DockConst_gridsize_x_minus1);
 	printf("%-40s %f\n", "DockConst_gridsize_y_minus1: ", 	DockConst_gridsize_y_minus1);
@@ -218,6 +218,7 @@ void lga (
 		IA_VWpars_BD,
 		IA_dspars_S,
 		IA_dspars_V,
+		//DockConst_num_of_atoms,
 		DockConst_smooth,
 		DockConst_num_of_intraE_contributors,
 		DockConst_grid_spacing,
@@ -236,9 +237,9 @@ void lga (
 		IE_Fgrids,
 		IA_IE_atom_charges,
 		IA_IE_atom_types,
-		DockConst_g1,
-		DockConst_g2,
-		DockConst_g3,
+		DockConst_xsz,
+		DockConst_ysz,
+		DockConst_zsz,
 		DockConst_num_of_atoms,
 		DockConst_gridsize_x_minus1,
 		DockConst_gridsize_y_minus1,
@@ -485,8 +486,15 @@ void lga (
                 } // End loop over new_pop_cnt
 
                 // Calculate energy
+#if 1
+                // make sure the buffers are 8 byte aligned
+                double energy_gg[MAX_POPSIZE];
+		float (*energy_ia_gg)[MAX_POPSIZE] = (void *)&energy_gg[0];
+		float (*energy_ie_gg)[MAX_POPSIZE] = (void *)&energy_gg[MAX_POPSIZE/2];
+#else
                 float energy_ia_gg[MAX_POPSIZE];
                 float energy_ie_gg[MAX_POPSIZE];
+#endif
                 calc_pc(
                         PC_rotlist,
                         PC_ref_coords_x,
@@ -516,6 +524,7 @@ void lga (
 			IA_VWpars_BD,
 			IA_dspars_S,
 			IA_dspars_V,
+                        //DockConst_num_of_atoms,
 			DockConst_smooth,
 			DockConst_num_of_intraE_contributors,
 			DockConst_grid_spacing,
@@ -533,9 +542,9 @@ void lga (
 			IE_Fgrids,
 			IA_IE_atom_charges,
 			IA_IE_atom_types,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
+			DockConst_xsz,
+			DockConst_ysz,
+			DockConst_zsz,
 			DockConst_num_of_atoms,
 			DockConst_gridsize_x_minus1,
 			DockConst_gridsize_y_minus1,
@@ -549,11 +558,13 @@ void lga (
 			local_coords_z
 			);
                 for (uint new_pop_cnt = 0; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
-			LocalEneNext[new_pop_cnt] = energy_ia_gg[new_pop_cnt] + energy_ie_gg[new_pop_cnt];
+			LocalEneNext[new_pop_cnt] = (*energy_ia_gg)[new_pop_cnt] + (*energy_ie_gg)[new_pop_cnt];
                 }
 
 #if defined (PRINT_ALL_KRNL)
-		printf("Individual < after energy calc>: %3u, %20.6f\n", new_pop_cnt, LocalEneNext[new_pop_cnt]);
+                for (uint new_pop_cnt = 0; new_pop_cnt < DockConst_pop_size; new_pop_cnt++) {
+                  printf("Individual < after energy calc>: %3u, %20.6f\n", new_pop_cnt, LocalEneNext[new_pop_cnt]);
+                }
 #endif
                 
 #if defined (PRINT_ALL_KRNL) 
@@ -638,9 +649,9 @@ void lga (
 			DockConst_coeff_desolv,
 
 			IE_Fgrids,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
+			DockConst_xsz,
+			DockConst_ysz,
+			DockConst_zsz,
 			DockConst_num_of_atoms,
 			DockConst_gridsize_x_minus1,
 			DockConst_gridsize_y_minus1,
@@ -653,11 +664,11 @@ void lga (
 		//ls_eval_cnt += ls_eval_cnt_per_iter; // done inside perform_ls
 
 #if defined (PRINT_ALL_KRNL)
-		printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
+		//printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
 #endif
 
 #if defined (PRINT_ALL_KRNL)
-		printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
+		//printf("%u, ls_eval_cnt: %u\n", ls_ent_cnt, ls_eval_cnt);
 #endif
 
 #if defined (PRINT_ALL_KRNL) 

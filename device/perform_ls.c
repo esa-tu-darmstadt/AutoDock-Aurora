@@ -7,7 +7,7 @@
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 void perform_ls(
-			ushort				DockConst_max_num_of_iters,
+			uint				DockConst_max_num_of_iters,
 			float				DockConst_rho_lower_bound,
 			float				DockConst_base_dmov_mul_sqrt3,
 			uchar				DockConst_num_of_genes,
@@ -49,9 +49,9 @@ void perform_ls(
 			float				DockConst_coeff_desolv,
 	// ie
 	const	float*	restrict	IE_Fgrids,
-			uchar				DockConst_g1,
-			uint				DockConst_g2,
-			uint				DockConst_g3,
+			uchar				DockConst_xsz,
+			uchar				DockConst_ysz,
+			uchar				DockConst_zsz,
 			uchar				DockConst_num_of_atoms,
 			float				DockConst_gridsize_x_minus1,
 			float				DockConst_gridsize_y_minus1,
@@ -266,6 +266,7 @@ void perform_ls(
 			IA_VWpars_BD,
 			IA_dspars_S,
 			IA_dspars_V,
+                        //DockConst_num_of_atoms,
 			DockConst_smooth,
 			DockConst_num_of_intraE_contributors,
 			DockConst_grid_spacing,
@@ -283,9 +284,9 @@ void perform_ls(
 			IE_Fgrids,
 			IA_IE_atom_charges,
 			IA_IE_atom_types,
-			DockConst_g1,
-			DockConst_g2,
-			DockConst_g3,
+			DockConst_xsz,
+			DockConst_ysz,
+			DockConst_zsz,
 			DockConst_num_of_atoms,
 			DockConst_gridsize_x_minus1,
 			DockConst_gridsize_y_minus1,

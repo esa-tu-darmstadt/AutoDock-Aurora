@@ -3,6 +3,10 @@
 #include "packbuff.hpp"
 #include <stddef.h>
 #include <sys/time.h>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s)	STRINGIZE2(s)
@@ -87,13 +91,45 @@ filled with clock() */
 	strcpy(path_k_ga, krnl_folder); strcat(path_k_ga, "/"); strcat(path_k_ga, name_k_ga); strcat(path_k_ga, ".so"); std::cout << "path_k_ga: " << path_k_ga << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
 
+	// Determine number of VE processes to start
+	// If starting multiple on same VE, OpenMP thread number must be set appropriately
+	vector<int> ve_node_ids;
+
+	if (const char* env_p = std::getenv("VE_NODE_IDS")) {
+		std::stringstream env_s;
+		env_s << std::string(env_p);
+		while (env_s.good()) {
+			std::string substr;
+			getline(env_s, substr, ',');
+			ve_node_ids.push_back(std::stoi(substr));
+		}
+	} else {
+		ve_node_ids.push_back(0);
+	}
+	std::cout << "Running in " << ve_node_ids.size() << " VE processes" << std::endl;
+	std::cout << "VE numbers ";
+	for (int v : ve_node_ids)
+		std::cout << v << " ";
+	std::cout << std::endl;
+
+	int ve_num_procs = ve_node_ids.size();
+
 	// VEO code
 	wrapper_veo_api_version ();
 
-	// Loading "ve_hello" on VE node 0
-	struct veo_proc_handle *ve_process = wrapper_veo_proc_create(0);
-	uint64_t kernel_ga_handle = wrapper_veo_load_library(ve_process, path_k_ga);
-	struct veo_thr_ctxt *veo_thread_context = wrapper_veo_context_open(ve_process);
+	// Start VE procs
+	veo_proc_handle *ve_process[ve_num_procs];
+	uint64_t kernel_ga_handle[ve_num_procs];
+	veo_thr_ctxt *veo_thread_context[ve_num_procs];
+
+	for (int i = 0; i < ve_num_procs; i++) {
+		ve_process[i] = wrapper_veo_proc_create(ve_node_ids[i]);
+		kernel_ga_handle[i] = wrapper_veo_load_library(ve_process[i], path_k_ga);
+		veo_thread_context[i] = wrapper_veo_context_open(ve_process[i]);
+	}
+
+	// maximum number of runs per VE proc
+	int ve_num_of_runs = (mypars->num_of_runs + ve_num_procs - 1) / ve_num_procs;
 
 	// End of Host Setup
 	// =======================================================================
@@ -139,20 +175,23 @@ filled with clock() */
 	// TODO: check passing of random numbers
 	// TODO: use parameter instead of hardcoding num_genes
 	// Allocating memory in CPU for pseudorandom number generator seeds
-	size_t size_prng_seeds_nelems = mypars->pop_size;
+	size_t size_prng_seeds_nelems = mypars->pop_size * ve_num_procs;
 	size_t size_prng_seeds_nbytes = size_prng_seeds_nelems * sizeof(unsigned int);
 	std::vector<unsigned int> cpu_prng_seeds (size_prng_seeds_nelems);
 	
 	// Initializing seed generator
-#ifndef REPRO
 	genseed(time(NULL));
-#else
-	genseed(1234567u);
-#endif
 
 	// Generating seeds (for each thread during GA)
-	for (unsigned int i = 0; i < size_prng_seeds_nelems; i++) {
-		cpu_prng_seeds[i] = genseed(0u);
+	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
+#ifdef REPRO
+		// each VE process gets the same seeds in reproducibility mode
+		// this only makes sense for testing and debugging!
+		genseed(1234567u);
+#endif
+		for (int i = 0; i < mypars->pop_size; i++) {
+			cpu_prng_seeds[ve_id * mypars->pop_size + i] = genseed(0u);
+		}
 	}
 
 	size_t size_evals_of_runs_nelems = mypars->num_of_runs;
@@ -356,11 +395,14 @@ filled with clock() */
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
 
 	// the device_args structure contains the arguments for the kernel function
-	struct device_args da;
+	device_args da;
 	// VE virtual address of da structure, passed to kernel
 	uint64_t da_VEMVA;
 
-	// TODO: fill scalar values into device_args structure
+	// VE proc ID, is changed for each new proc in multi-proc runs
+	da.ve_proc_id = 0;
+	da.ve_num_procs = ve_num_procs;
+	// fill scalar values into device_args structure
 	// GA
 	da.DockConst_pop_size            = dockpars.pop_size;
 	da.DockConst_num_of_energy_evals = dockpars.num_of_energy_evals;
@@ -385,9 +427,9 @@ filled with clock() */
 	da.DockConst_qasp                       = dockpars.qasp;
 	da.DockConst_coeff_desolv               = dockpars.coeff_desolv;
 	// IE
-	da.DockConst_g1                = dockpars.g1;
-	da.DockConst_g2                = dockpars.g2;
-	da.DockConst_g3                = dockpars.g3;
+	da.DockConst_xsz               = dockpars.gridsize_x;
+	da.DockConst_ysz               = dockpars.gridsize_y;
+	da.DockConst_zsz               = dockpars.gridsize_z;
 	da.DockConst_num_of_atoms      = dockpars.num_of_atoms;
 	da.DockConst_gridsize_x_minus1 = fgridsizex_minus1;
 	da.DockConst_gridsize_y_minus1 = fgridsizey_minus1;
@@ -407,9 +449,10 @@ filled with clock() */
 	auto pb = PackBuff(32*1024*1024);
 	
 	// pack the device_args struct as first element into the packed buffer
+	// this way we know how to find it easily
 	pb.pack((void *)&da, sizeof(da), (uint64_t)&da_VEMVA);
 
-#define DA_IN_PB_PTR(ELEMENT) ((uint64_t)pb.data() + offsetof(struct device_args, ELEMENT))
+#define DA_IN_PB_PTR(ELEMENT) ((uint64_t)pb.data() + offsetof(device_args, ELEMENT))
 
 	// GA
 	pb.pack(cpu_init_populations.data(), size_populations_nbytes, DA_IN_PB_PTR(PopulationCurrentInitial));
@@ -444,106 +487,133 @@ filled with clock() */
 	// IE
 	pb.pack(cpu_floatgrids, size_floatgrids_nbytes, DA_IN_PB_PTR(Fgrids));
 
-	// allocate memory for entire packed buffer on VE
-	uint64_t mem_kernel_args_packbuff;
-	wrapper_veo_alloc_mem(ve_process, &mem_kernel_args_packbuff, pb.size());
-
-        //// save data buffer
-        //pb.save("packbuff_save.dat");
-
-	// fix "relocation" addresses to point to VE virtual addresses
-	pb.fixup(mem_kernel_args_packbuff);
-
-	// update local device_args structure such that we can free the packbuff later
-	memcpy(&da, pb.data(), sizeof(da));
+	// we keep a copy of each proc's device_args structure
+	device_args *da_copy[ve_num_procs];
 	
-	// transfer packbuff to device
-	wrapper_veo_write_mem(ve_process, mem_kernel_args_packbuff, pb.data(), pb.size());
+	uint64_t kernel_ga_id[ve_num_procs];
+	uint64_t retval_ga[ve_num_procs];
+	uint64_t padding[ve_num_procs];
+#ifndef PADDING
+#define PADDING 0
+#endif
+	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
+		// allocate memory for entire packed buffer on VE
+		uint64_t mem_kernel_args_packbuff;
+		wrapper_veo_alloc_mem(ve_process[ve_id], &mem_kernel_args_packbuff, pb.size() + 128 * ve_num_procs);
 
-	// Creating a VEO arguments object
-	int narg = 0;
-	struct veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc ();
-	
-	wrapper_veo_args_set_u64   (kernel_ga_arg_ptr, narg++, mem_kernel_args_packbuff);
+		//// save data buffer
+		//pb.save("packbuff_save.dat");
 
-	// -----------------------------------------------------------------------------------------------------
-	// Displaying kernel argument values
-	// -----------------------------------------------------------------------------------------------------
+		// set VE proc ID in packbuff
+		device_args *pb_da = (device_args *)pb.data();
+		pb_da->ve_proc_id = ve_id;
 
-	std::cout << "\n---------------------------------------------------------------------------------\n";
-	std::cout << "Kernel LGA" << std::endl;
-	std::cout << "---------------------------------------------------------------------------------\n";
+		// padding
+		padding[ve_id] = PADDING * ve_id;
+		
+		// fix "relocation" addresses to point to VE virtual addresses
+		pb.fixup(mem_kernel_args_packbuff + padding[ve_id]);
 
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(SPACE_M) << da.PopulationCurrentFinal << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << da.EnergyCurrent << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << da.Evals_performed << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(SPACE_M) << da.Gens_performed << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.pop_size" << std::right << std::setw(SPACE_M) << dockpars.pop_size << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_energy_evals" << std::right << std::setw(SPACE_M) << dockpars.num_of_energy_evals << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_generations" << std::right << std::setw(SPACE_M) << dockpars.num_of_generations << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.tournament_rate" << std::right << std::setw(SPACE_M) << dockpars.tournament_rate << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.mutation_rate" << std::right << std::setw(SPACE_M) << dockpars.mutation_rate << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dmov" << std::right << std::setw(SPACE_M) << dockpars.abs_max_dmov << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dang" << std::right << std::setw(SPACE_M) << dockpars.abs_max_dang << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdmov" << std::right << std::setw(SPACE_M) << two_absmaxdmov << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdang" << std::right << std::setw(SPACE_M) << two_absmaxdang << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.crossover_rate" << std::right << std::setw(SPACE_M) << dockpars.crossover_rate << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_lsentities" << std::right << std::setw(SPACE_M) << dockpars.num_of_lsentities << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_genes" << std::right << std::setw(SPACE_M) << int { dockpars.num_of_genes } << "\n";
-	std::cout << std::endl;
+		// update local device_args structure (copy) such that we can free the packbuff later
+		da_copy[ve_id] = new device_args;
+		memcpy(da_copy[ve_id], pb.data(), sizeof(da));
 
-	// PC
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
-	std::cout << std::endl;
+		// transfer packbuff to device
+		wrapper_veo_write_mem(ve_process[ve_id], mem_kernel_args_packbuff + padding[ve_id], pb.data(), pb.size());
 
-	// IA
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.smooth" << std::right << std::setw(SPACE_M) << dockpars.smooth << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_intraE_contributors" << std::right << std::setw(SPACE_M) << dockpars.num_of_intraE_contributors << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.grid_spacing" << std::right << std::setw(SPACE_M) << dockpars.grid_spacing << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atypes" << std::right << std::setw(SPACE_M) << dockpars.num_of_atypes << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_elec" << std::right << std::setw(SPACE_M) << dockpars.coeff_elec << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.qasp" << std::right << std::setw(SPACE_M) << dockpars.qasp << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_desolv" << std::right << std::setw(SPACE_M) << dockpars.coeff_desolv << "\n";
-	std::cout << std::endl;	
+		// TODO: this is a memory leak because there is no free
+		veo_args *kernel_ga_arg_ptr = wrapper_veo_args_alloc();
 
-	// IE
-	std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_fgrids" << std::right << std::setw(SPACE_M) << da.Fgrids << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g1" << std::right << std::setw(SPACE_M) << int { dockpars.g1 } << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g2" << std::right << std::setw(SPACE_M) << dockpars.g2 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.g3" << std::right << std::setw(SPACE_M) << dockpars.g3 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atoms" << std::right << std::setw(SPACE_M) << int { dockpars.num_of_atoms } << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "fgridsizex_minus1" << std::right << std::setw(SPACE_M) << fgridsizex_minus1 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "fgridsizey_minus1" << std::right << std::setw(SPACE_M) << fgridsizey_minus1 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "fgridsizez_minus1" << std::right << std::setw(SPACE_M) << fgridsizez_minus1 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mul_tmp2" << std::right << std::setw(SPACE_M) << mul_tmp2 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mul_tmp3" << std::right << std::setw(SPACE_M) << mul_tmp3 << "\n";
-	std::cout << std::endl;	
+		// Creating a VEO arguments object
+		wrapper_veo_args_set_u64(kernel_ga_arg_ptr, 0, mem_kernel_args_packbuff + padding[ve_id]);
 
-	// LS
-	std::cout << std::left << std::setw(SPACE_L) << "Host_max_num_of_iters" << std::right << std::setw(SPACE_M) << Host_max_num_of_iters << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.rho_lower_bound" << std::right << std::setw(SPACE_M) << dockpars.rho_lower_bound << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dmov_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dmov_mul_sqrt3 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dang_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dang_mul_sqrt3 << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "Host_cons_limit" << std::right << std::setw(SPACE_M) << int { Host_cons_limit } << "\n";
-	std::cout << std::left << std::setw(SPACE_L) << "mypars->num_of_runs" << std::right << std::setw(SPACE_M) << mypars->num_of_runs << "\n";
-	std::cout << "\n---------------------------------------------------------------------------------\n";
-	std::cout << std::endl;
+		if (ve_id == 0) {
+			// -----------------------------------------------------------------------------------------------------
+			// Displaying kernel argument values
+			// -----------------------------------------------------------------------------------------------------
 
-	// -----------------------------------------------------------------------------------------------------
-	// Launching kernel
-	// -----------------------------------------------------------------------------------------------------
+			std::cout << "\n---------------------------------------------------------------------------------\n";
+			std::cout << "Kernel LGA" << std::endl;
+			std::cout << "---------------------------------------------------------------------------------\n";
 
-	uint64_t kernel_ga_id;
-	uint64_t retval_ga;
+			std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_conformations_current_Final" << std::right << std::setw(SPACE_M) << da.PopulationCurrentFinal << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_energies_current" << std::right << std::setw(SPACE_M) << da.EnergyCurrent << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "mem_evals_performed" << std::right << std::setw(SPACE_M) << da.Evals_performed << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "mem_gens_performed" << std::right << std::setw(SPACE_M) << da.Gens_performed << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.pop_size" << std::right << std::setw(SPACE_M) << dockpars.pop_size << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_energy_evals" << std::right << std::setw(SPACE_M) << dockpars.num_of_energy_evals << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_generations" << std::right << std::setw(SPACE_M) << dockpars.num_of_generations << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.tournament_rate" << std::right << std::setw(SPACE_M) << dockpars.tournament_rate << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.mutation_rate" << std::right << std::setw(SPACE_M) << dockpars.mutation_rate << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dmov" << std::right << std::setw(SPACE_M) << dockpars.abs_max_dmov << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.abs_max_dang" << std::right << std::setw(SPACE_M) << dockpars.abs_max_dang << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdmov" << std::right << std::setw(SPACE_M) << two_absmaxdmov << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "two_absmaxdang" << std::right << std::setw(SPACE_M) << two_absmaxdang << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.crossover_rate" << std::right << std::setw(SPACE_M) << dockpars.crossover_rate << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_lsentities" << std::right << std::setw(SPACE_M) << dockpars.num_of_lsentities << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_genes" << std::right << std::setw(SPACE_M) << int { dockpars.num_of_genes } << "\n";
+			std::cout << std::endl;
 
-	clock_start_docking = clock();
-	gettimeofday(&tv_start_docking, NULL);
+			// PC
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.rotbondlist_length" << std::right << std::setw(SPACE_M) << dockpars.rotbondlist_length << "\n";
+			std::cout << std::endl;
 
-	printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
-	printf("Execution run: ");
+			// IA
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.smooth" << std::right << std::setw(SPACE_M) << dockpars.smooth << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_intraE_contributors" << std::right << std::setw(SPACE_M) << dockpars.num_of_intraE_contributors << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.grid_spacing" << std::right << std::setw(SPACE_M) << dockpars.grid_spacing << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atypes" << std::right << std::setw(SPACE_M) << dockpars.num_of_atypes << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_elec" << std::right << std::setw(SPACE_M) << dockpars.coeff_elec << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.qasp" << std::right << std::setw(SPACE_M) << dockpars.qasp << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.coeff_desolv" << std::right << std::setw(SPACE_M) << dockpars.coeff_desolv << "\n";
+			std::cout << std::endl;
 
-	kernel_ga_id = wrapper_veo_call_async_by_name(veo_thread_context, kernel_ga_handle, name_k_ga, kernel_ga_arg_ptr);
-	wrapper_veo_call_wait_result(veo_thread_context, kernel_ga_id, &retval_ga);
+			// IE
+			std::cout << std::left << std::setw(SPACE_L) << "mem_dockpars_fgrids" << std::right << std::setw(SPACE_M) << da.Fgrids << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.g1" << std::right << std::setw(SPACE_M) << int { dockpars.g1 } << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.g2" << std::right << std::setw(SPACE_M) << dockpars.g2 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.g3" << std::right << std::setw(SPACE_M) << dockpars.g3 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.num_of_atoms" << std::right << std::setw(SPACE_M) << int { dockpars.num_of_atoms } << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "fgridsizex_minus1" << std::right << std::setw(SPACE_M) << fgridsizex_minus1 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "fgridsizey_minus1" << std::right << std::setw(SPACE_M) << fgridsizey_minus1 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "fgridsizez_minus1" << std::right << std::setw(SPACE_M) << fgridsizez_minus1 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "mul_tmp2" << std::right << std::setw(SPACE_M) << mul_tmp2 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "mul_tmp3" << std::right << std::setw(SPACE_M) << mul_tmp3 << "\n";
+			std::cout << std::endl;
+
+			// LS
+			std::cout << std::left << std::setw(SPACE_L) << "Host_max_num_of_iters" << std::right << std::setw(SPACE_M) << Host_max_num_of_iters << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.rho_lower_bound" << std::right << std::setw(SPACE_M) << dockpars.rho_lower_bound << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dmov_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dmov_mul_sqrt3 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dang_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dang_mul_sqrt3 << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "Host_cons_limit" << std::right << std::setw(SPACE_M) << int { Host_cons_limit } << "\n";
+			std::cout << std::left << std::setw(SPACE_L) << "mypars->num_of_runs" << std::right << std::setw(SPACE_M) << mypars->num_of_runs << "\n";
+			std::cout << "\n---------------------------------------------------------------------------------\n";
+			std::cout << std::endl;
+		}
+
+		// -----------------------------------------------------------------------------------------------------
+		// Launching kernel
+		// -----------------------------------------------------------------------------------------------------
+
+		if (ve_id == 0) {
+			clock_start_docking = clock();
+			gettimeofday(&tv_start_docking, NULL);
+		}
+
+		printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
+		printf("Execution run: (VE proc %d)", ve_id);
+
+		kernel_ga_id[ve_id] = wrapper_veo_call_async_by_name(veo_thread_context[ve_id], kernel_ga_handle[ve_id], name_k_ga, kernel_ga_arg_ptr);
+
+		// SERIALIZE! for testing, only
+		//wrapper_veo_call_wait_result(veo_thread_context[ve_id], kernel_ga_id[ve_id], &retval_ga[ve_id]);
+	}
+#if 1
+	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
+		wrapper_veo_call_wait_result(veo_thread_context[ve_id], kernel_ga_id[ve_id], &retval_ga[ve_id]);
+	}
+#endif
 
 	clock_stop_docking = clock();
 	gettimeofday(&tv_stop_docking, NULL);
@@ -558,13 +628,37 @@ filled with clock() */
 	// Reading results from device
 	// -----------------------------------------------------------------------------------------------------
 
-	wrapper_veo_read_mem (ve_process, cpu_final_populations.data(), (uint64_t)da.PopulationCurrentFinal, size_populations_nbytes);
-	wrapper_veo_read_mem (ve_process, cpu_energies.data(), (uint64_t)da.EnergyCurrent, size_energies_nbytes);
-	wrapper_veo_read_mem (ve_process, cpu_evals_of_runs.data(), (uint64_t)da.Evals_performed, size_evals_of_runs_nbytes);
-	wrapper_veo_read_mem (ve_process, cpu_gens_of_runs.data(), (uint64_t)da.Gens_performed, size_evals_of_runs_nbytes);
+	//////////
+	// TODO EF
+	//////////
+	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
+		int run_begin = ve_id * ve_num_of_runs;
+		int run_end = std::min((ve_id + 1) * ve_num_of_runs, (int)mypars->num_of_runs);
+		
+		size_t size_populations_nelems = (run_end - run_begin) * mypars->pop_size * ACTUAL_GENOTYPE_LENGTH;
+		size_t size_populations_nbytes = size_populations_nelems * sizeof(float);
+		size_t size_populations_offs = run_begin * mypars->pop_size * ACTUAL_GENOTYPE_LENGTH * sizeof(float);
+		size_t size_energies_nelems = (run_end - run_begin) * mypars->pop_size;
+		size_t size_energies_nbytes = size_energies_nelems * sizeof(float);
+		size_t size_energies_offs = run_begin * mypars->pop_size * sizeof(float);
+		size_t size_evals_of_runs_nelems = run_end - run_begin;
+		size_t size_evals_of_runs_nbytes = size_evals_of_runs_nelems * sizeof(int);
+		size_t size_evals_of_runs_offs = run_begin * sizeof(int);
 
-	/* destroy the VEO process early in order to get a more accurate PROGINF */
-	veo_proc_destroy(ve_process);
+		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_final_populations.data() + size_populations_offs),
+				      (uint64_t)da_copy[ve_id]->PopulationCurrentFinal + size_populations_offs, size_populations_nbytes);
+		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_energies.data() + size_energies_offs),
+				      (uint64_t)da_copy[ve_id]->EnergyCurrent + size_energies_offs, size_energies_nbytes);
+		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_evals_of_runs.data() + size_evals_of_runs_offs),
+				      (uint64_t)da_copy[ve_id]->Evals_performed + size_evals_of_runs_offs, size_evals_of_runs_nbytes);
+		wrapper_veo_read_mem (ve_process[ve_id], (void *)((char *)cpu_gens_of_runs.data() + size_evals_of_runs_offs),
+				      (uint64_t)da_copy[ve_id]->Gens_performed + size_evals_of_runs_offs, size_evals_of_runs_nbytes);
+	}
+
+	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
+		/* destroy the VEO process early in order to get a more accurate PROGINF */
+		veo_proc_destroy(ve_process[ve_id]);
+	}
 
 	// -----------------------------------------------------------------------------------------------------
 	// Processing results

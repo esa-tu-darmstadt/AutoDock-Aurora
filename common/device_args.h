@@ -9,6 +9,8 @@ typedef unsigned int  uint;
 #endif
 
 struct device_args {
+	int  ve_proc_id;
+	int  ve_num_procs;
 	const float *PopulationCurrentInitial;
 	float *PopulationCurrentFinal;
 	float *EnergyCurrent;
@@ -57,9 +59,9 @@ struct device_args {
 	float DockConst_coeff_desolv;
 	// ie
 	const float *Fgrids;
-	uchar DockConst_g1;
-	uint  DockConst_g2;
-	uint  DockConst_g3;
+	uchar DockConst_xsz;
+	uchar DockConst_ysz;
+	uchar DockConst_zsz;
 	uchar DockConst_num_of_atoms;
 	float DockConst_gridsize_x_minus1;
 	float DockConst_gridsize_y_minus1;
