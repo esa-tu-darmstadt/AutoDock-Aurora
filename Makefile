@@ -30,13 +30,12 @@ LFLAGS=-L$(AURORA_LIB_PATH)
 CFLAGS=$(HOST_FLAGS) $(IFLAGS) $(LFLAGS)
 
 # Device sources
-K0_NAME=libhello
 K_GA_NAME=libkernel_ga
 K_LS_NAME=libkernel_ls
 
 KRNL_GA_LIB=$(BIN_DIR)/$(K_GA_NAME).so
 
-K_NAMES=-DK0=$(K0_NAME) -DK_GA=$(K_GA_NAME)
+K_NAMES=-DK_GA=$(K_GA_NAME)
 
 # Kernel flags
 KFLAGS=-DKRNL_LIB_DIRECTORY=$(BIN_DIR) \
