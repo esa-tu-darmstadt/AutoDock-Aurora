@@ -77,19 +77,19 @@ parameters argc and argv:
 		contains the state of the clock tick counter at the beginning of the program
 filled with clock() */
 {
-	// =======================================================================
+	// -------------------------------------------------------------------------
 	// Host Setup
-	// =======================================================================
+	// -------------------------------------------------------------------------
 
 	const char* name_k_ga = KRNL_GA;
 	const char* krnl_folder = KRNL_BIN_FOLDER;
 	char path_k_ga[100];
-
-	std::cout << "\n---------------------------------------------------------------------------------\n";
-	std::cout << "Kernel binaries (VEO libraries)" << std::endl;
-	std::cout << "---------------------------------------------------------------------------------\n";
-	strcpy(path_k_ga, krnl_folder); strcat(path_k_ga, "/"); strcat(path_k_ga, name_k_ga); strcat(path_k_ga, ".so"); std::cout << "path_k_ga: " << path_k_ga << std::endl;
-	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
+	strcpy(path_k_ga, krnl_folder);
+	strcat(path_k_ga, "/");
+	strcat(path_k_ga, name_k_ga);
+	strcat(path_k_ga, ".so");
+	std::cout << "Kernel: " << path_k_ga << std::endl;
+	std::cout << std::endl;
 
 	// Determine number of VE processes to start
 	// If starting multiple on same VE, OpenMP thread number must be set appropriately
@@ -132,7 +132,7 @@ filled with clock() */
 	int ve_num_of_runs = (mypars->num_of_runs + ve_num_procs - 1) / ve_num_procs;
 
 	// End of Host Setup
-	// =======================================================================
+	// -------------------------------------------------------------------------
 
 	clock_t clock_start_docking;
 	clock_t	clock_stop_docking;
