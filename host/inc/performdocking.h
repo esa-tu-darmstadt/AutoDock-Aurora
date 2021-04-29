@@ -26,10 +26,4 @@ int docking_with_aurora(
 			clock_t		clock_start_program
 );
 
-double check_progress(int* evals_of_runs,
-		      int generation_cnt,
-		      int max_num_of_evals,
-		      int max_num_of_gens,
-		      int num_of_runs);
-
 #endif /* PERFORMDOCKING_H_ */
