@@ -341,9 +341,15 @@ int gen_rotlist(
 	}
 
 	// ---------------------------------------------------------------------------
-	// Building rotation lists
+	// Printing rotation lists
 	// ---------------------------------------------------------------------------
 
+	// At some point, some code was proposed to build subrotations lists.
+	// This was removed thereafter due to lower benefits in performance
+	// compared to outer-loop pushing.
+	// The printfs below are just vestige from that proposal,
+	// which might be retaken eventually.
+/*
 	printf("\n# rotlist elements: %u\n", rotlist_id);
 	for (unsigned int rot_cnt = 0; rot_cnt < myligand->num_of_rotations_required; rot_cnt++) {
 		unsigned int atom_id = rotlist[rot_cnt] & RLIST_ATOMID_MASK;
@@ -354,6 +360,6 @@ int gen_rotlist(
 	for (unsigned int atom_cnt = 0; atom_cnt < myligand->num_of_atoms; atom_cnt++) {
 		printf("atom-id: %u \tnum-rot-req: %u\n", atom_cnt, number_of_req_rotations_copy[atom_cnt]);
 	}
-
+*/
 	return 0;
 }

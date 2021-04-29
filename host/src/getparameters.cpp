@@ -560,10 +560,7 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 //In addition, as part of reference orientation handling,
 //the function moves myligand to origo and scales it according to grid spacing.
 {
-	//int entity_id;
-	//int gene_id;
 	int gen_pop;
-	//int gen_seeds;
 	FILE* fp;
 	/*
 	float init_orientation[MAX_NUM_OF_ROTBONDS+6];
@@ -572,13 +569,12 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 
 	unsigned int pop_size = mypars->pop_size;
 
-	//initial population
+	// Initial population
 	gen_pop = 0;
 
-	//Reading initial population from file if only 1 run was requested
+	// Reading initial population from file if only 1 run was requested
 	if (mypars->initpop_gen_or_loadfile == 1)
 	{
-///*
 		if (mypars->num_of_runs != 1)
 		{
 			printf("Warning: more than 1 run was requested. New populations will be generated \ninstead of being loaded from initpop.txt\n");
@@ -586,7 +582,6 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 		}
 		else
 		{
-//*/
 			fp = fopen("initpop.txt","r");
 			if (fp == NULL)
 			{
@@ -597,46 +592,40 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 			{
 				for (unsigned int entity_id=0; entity_id<pop_size; entity_id++)
 					for (unsigned char gene_id=0; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++)
-						//fscanf(fp, "%f", &(init_populations[entity_id*GENOTYPE_LENGTH_IN_GLOBMEM+gene_id]));
 						fscanf(fp, "%f", &(init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id]));
 
-				//reading reference orienation angles from file
+				// Reading reference orienation angles from file
 				fscanf(fp, "%f", &(mypars->ref_ori_angles[0]));
 				fscanf(fp, "%f", &(mypars->ref_ori_angles[1]));
 				fscanf(fp, "%f", &(mypars->ref_ori_angles[2]));
 
 				fclose(fp);
 			}
-///*
 		}
-//*/
 	}
 	else
 		gen_pop = 1;
 
-	//Generating initial population
+	// Generating initial population
 	if (gen_pop == 1)
 	{
 		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++)
 			for (unsigned char gene_id=0; gene_id<3; gene_id++)
-				//init_populations[entity_id*GENOTYPE_LENGTH_IN_GLOBMEM+gene_id] = (float) myrand()*(mygrid->size_xyz_angstr[gene_id]);
 				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = (float) myrand()*(mygrid->size_xyz_angstr[gene_id]);
 
 		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++)
 			for (unsigned char gene_id=3; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++)
 				if (gene_id == 4)
-					//init_populations[entity_id*GENOTYPE_LENGTH_IN_GLOBMEM+gene_id] = myrand()*180;
 					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*180;
 				else
-					//init_populations[entity_id*GENOTYPE_LENGTH_IN_GLOBMEM+gene_id] = myrand()*360;
 					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*360;
 
-		//generating reference orientation angles
+		// Generating reference orientation angles
 		mypars->ref_ori_angles[0] = (float) floor(myrand()*360*100)/100.0;
 		mypars->ref_ori_angles[1] = (float) floor(myrand()*360*100)/100.0;
 		mypars->ref_ori_angles[2] = (float) floor(myrand()*360*100)/100.0;
 
-		//Writing first initial population to initpop.txt
+		// Writing first initial population to initpop.txt
 		fp = fopen("initpop.txt", "w");
 		if (fp == NULL)
 			printf("Warning: can't create initpop.txt.\n");
@@ -644,10 +633,9 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 		{
 			for (unsigned int entity_id=0; entity_id<pop_size; entity_id++)
 				for (unsigned char gene_id=0; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++)
-					//fprintf(fp, "%f ", init_populations[entity_id*GENOTYPE_LENGTH_IN_GLOBMEM+gene_id]);
 					fprintf(fp, "%f ", init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id]);
 
-			//writing reference orientation angles to initpop.txt
+			// Writing reference orientation angles to initpop.txt
 			fprintf(fp, "%f ", mypars->ref_ori_angles[0]);
 			fprintf(fp, "%f ", mypars->ref_ori_angles[1]);
 			fprintf(fp, "%f ", mypars->ref_ori_angles[2]);
@@ -656,11 +644,10 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 		}
 	}
 
-	//genotypes should contain x, y and z genes in grid spacing instead of Angstroms
-	//(but was previously generated in Angstroms since fdock does the same)
+	// Genotypes should contain x, y and z genes in grid spacing instead of Angstroms
+	// (but was previously generated in Angstroms since fdock does the same)
 	for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++)
 		for (unsigned char gene_id=0; gene_id<3; gene_id++)
-			//init_populations [entity_id*GENOTYPE_LENGTH_IN_GLOBMEM+gene_id] = init_populations [entity_id*GENOTYPE_LENGTH_IN_GLOBMEM+gene_id]/mygrid->spacing;
 			init_populations [entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = init_populations [entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id]/mygrid->spacing;
 
 	/*
@@ -695,5 +682,4 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 	move_ligand(myligand, movvec_to_origo);
 	scale_ligand(myligand, 1.0/mygrid->spacing);
 	get_moving_and_unit_vectors(myligand);
-
 }
