@@ -621,8 +621,10 @@ filled with clock() */
 			gettimeofday(&tv_start_docking, NULL);
 		}
 
-		printf("\nDocking runs to be executed: %lu", mypars->num_of_runs);
-		printf("\nExecution run: (VE proc %d)", ve_id);
+		std::cout << std::endl;
+		std::cout << "Docking runs to be executed: " << mypars->num_of_runs << std::endl;
+		std::cout << "Execution run: (VE proc " << ve_id << " )" << std::endl;
+		std::cout << std::flush;
 
 		kernel_ga_id[ve_id] = wrapper_veo_call_async_by_name(veo_thread_context[ve_id], kernel_ga_handle[ve_id], name_k_ga, kernel_ga_arg_ptr);
 
@@ -641,8 +643,8 @@ filled with clock() */
 	elapsed_time_docking = (((double)tv_stop_docking.tv_sec * 1.e6 + (double)tv_stop_docking.tv_usec) -
 				((double)tv_start_docking.tv_sec * 1.e6 + (double)tv_start_docking.tv_usec)) / 1.e6;
 
-	printf("\n");
-	fflush(stdout);
+	std::cout << std::endl;
+	std::cout << std::flush;
 
 	// -------------------------------------------------------------------------
 	// Reading results from device
