@@ -324,9 +324,8 @@ filled with clock() */
 	// Printing sizes
 	// -------------------------------------------------------------------------
 
-	// Following printfs are commented out. Enable them on a need basis.
-	// FIXME: rather use a directive fot this purpose!
-/*
+	// LGA
+#ifdef DOCK_DEBUG
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << std::left << std::setw(SPACE_L) << "Memory sizes" << std::right << std::setw(SPACE_M) << "Bytes" << std::right << std::setw(SPACE_S) << "KB" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
@@ -334,27 +333,29 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_energies_nbytes" << std::right << std::setw(SPACE_M) << size_energies_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_energies_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_evals_of_runs_nbytes" << std::right << std::setw(SPACE_M) << size_evals_of_runs_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_evals_of_runs_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_prng_seeds_nbytes" << std::right << std::setw(SPACE_M) << size_prng_seeds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_prng_seeds_nbytes) << std::endl;
-*/
+#endif
+
 	size_t size_ga = size_populations_nbytes + size_populations_nbytes +
 		size_energies_nbytes + size_evals_of_runs_nbytes +
 		size_evals_of_runs_nbytes + size_prng_seeds_nbytes;
 
 	// Pose Calculation
-/*
+#ifdef DOCK_DEBUG
 	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_rotlist_nbytes" << std::right << std::setw(SPACE_M) << size_rotlist_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotlist_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_ref_coords_nbytes" << std::right << std::setw(SPACE_M) << size_ref_coords_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_ref_coords_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_rotbonds_moving_vectors_nbytes" << std::right << std::setw(SPACE_M) << size_rotbonds_moving_vectors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotbonds_moving_vectors_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_rotbonds_unit_vectors_nbytes" << std::right << std::setw(SPACE_M) << size_rotbonds_unit_vectors_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_rotbonds_unit_vectors_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_ref_orientation_quats_nbytes" << std::right << std::setw(SPACE_M) << size_ref_orientation_quats_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_ref_orientation_quats_nbytes) << std::endl;
-*/
+#endif
+
 	size_t size_pc = size_rotlist_nbytes + size_ref_coords_nbytes +
 		size_ref_coords_nbytes + size_ref_coords_nbytes +
 		size_rotbonds_moving_vectors_nbytes + size_rotbonds_unit_vectors_nbytes +
 		size_ref_orientation_quats_nbytes;
 
 	// IA
-/*
+#ifdef DOCK_DEBUG
 	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_charges_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_charges_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_InterE_atom_charges_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_InterE_atom_types_nbytes" << std::right << std::setw(SPACE_M) << size_InterE_atom_types_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_InterE_atom_types_nbytes) << std::endl;
@@ -367,7 +368,8 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_VWpars_BD_nbytes" << std::right << std::setw(SPACE_M) << size_VWpars_BD_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_VWpars_BD_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_dspars_S_nbytes" << std::right << std::setw(SPACE_M) << size_dspars_S_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_dspars_S_nbytes) << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_dspars_V_nbytes" << std::right << std::setw(SPACE_M) << size_dspars_V_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_dspars_V_nbytes) << std::endl;
-*/
+#endif
+
 	size_t size_ia = size_InterE_atom_charges_nbytes + size_InterE_atom_types_nbytes +
 		size_intraE_contributors_nbytes + size_reqm_nbytes + size_reqm_hbond_nbytes +
 		size_atom1_types_reqm_nbytes + size_atom2_types_reqm_nbytes +
@@ -375,19 +377,22 @@ filled with clock() */
 		size_dspars_S_nbytes + size_dspars_V_nbytes;
 
 	// IE
-/*
+#ifdef DOCK_DEBUG
 	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
-*/
+#endif
+
 	size_t size_ie = size_floatgrids_nbytes;
 
 	// Total amount memory
 	size_t size_total_mem = size_ga + size_pc + size_ia + size_ie;
-/*
+
+#ifdef DOCK_DEBUG
 	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) << size_total_mem << std::right << std::setw(SPACE_S) << sizeKB(size_total_mem) << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n" << std::endl;
-*/
+#endif
+
 	// -------------------------------------------------------------------------
 	// Defining kernel arguments
 	// -------------------------------------------------------------------------
@@ -539,6 +544,7 @@ filled with clock() */
 		// Creating a VEO arguments object
 		wrapper_veo_args_set_u64(kernel_ga_arg_ptr, 0, mem_kernel_args_packbuff + padding[ve_id]);
 
+#ifdef DOCK_DEBUG
 		if (ve_id == 0) {
 			// -----------------------------------------------------------------
 			// Displaying kernel argument values
@@ -603,6 +609,7 @@ filled with clock() */
 			std::cout << "\n---------------------------------------------------------------------------------\n";
 			std::cout << std::endl;
 		}
+#endif
 
 		// ---------------------------------------------------------------------
 		// Launching kernel
@@ -613,8 +620,8 @@ filled with clock() */
 			gettimeofday(&tv_start_docking, NULL);
 		}
 
-		printf("Docking runs to be executed: %lu\n", mypars->num_of_runs); 
-		printf("Execution run: (VE proc %d)", ve_id);
+		printf("\nDocking runs to be executed: %lu", mypars->num_of_runs);
+		printf("\nExecution run: (VE proc %d)", ve_id);
 
 		kernel_ga_id[ve_id] = wrapper_veo_call_async_by_name(veo_thread_context[ve_id], kernel_ga_handle[ve_id], name_k_ga, kernel_ga_arg_ptr);
 
