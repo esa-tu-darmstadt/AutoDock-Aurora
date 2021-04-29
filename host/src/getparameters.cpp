@@ -139,7 +139,7 @@ void get_commandpars(const int* argc,
 	mypars->reflig_en_reqired   = 0;
 				    // char unbound_model
 				    // AD4_free_energy_coeffs coeffs
-	mypars->handle_symmetry     = 0;
+	mypars->handle_symmetry     = 1;
 	mypars->gen_finalpop        = 0;
 	mypars->gen_best            = 0;
 	strcpy(mypars->resname, "docking");
@@ -446,7 +446,7 @@ void get_commandpars(const int* argc,
 		// ---------------------------------
 
 		//Argument: handle molecular symmetry during rmsd calculation
-		//If the value is not zero, molecular syymetry will be taken into account during rmsd calculation and clustering.
+		//If the value is not zero, molecular symmetry will be taken into account during rmsd calculation and clustering.
 		if (strcmp("-hsym", argv [i]) == 0)
 		{
 			arg_recognized = 1;
