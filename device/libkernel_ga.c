@@ -48,7 +48,6 @@ uint64_t libkernel_ga (
 			da->EnergyCurrent,
 			da->Evals_performed,
 			da->Gens_performed,
-			da->dockpars_prng_states,
 			da->DockConst_pop_size,
 			da->DockConst_num_of_energy_evals,
 			da->DockConst_num_of_generations,
