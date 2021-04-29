@@ -88,7 +88,8 @@ filled with clock() */
 	strcat(path_k_ga, "/");
 	strcat(path_k_ga, name_k_ga);
 	strcat(path_k_ga, ".so");
-	std::cout << "Kernel: " << path_k_ga << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl << "Kernel: " << path_k_ga << std::endl;
 	std::cout << std::endl;
 
 	// Determine number of VE processes to start
