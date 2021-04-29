@@ -159,8 +159,6 @@ void lga (
 		}
 	}
 
-	uint prng_offset = Host_Offset_Ene; // run_cnt * dockpars.pop_siz
-
 	// --------------------------------------------------------------------------
 	// Initial Calculation (IC) of scores
 	// --------------------------------------------------------------------------
@@ -586,26 +584,13 @@ void lga (
 
 		uint ls_eval_cnt = 0;
 
-                /*
-                  #pragma ivdep
-                */
-
-                // commented out because local search is performed for ALL individuals, not only for
-                // a small random subset
-        
-                //for (uint ls_ent_cnt = 0; ls_ent_cnt < DockConst_num_of_lsentities; ls_ent_cnt++) {
-                //
-                //  uint ls_eval_cnt_per_iter;
-                //
-                //  // TODO: FIX INDEX FOR PRNG
-                //  // Choose random & different entities on every iteration
-                //  ushort entity_ls = (ushort)(DockConst_pop_size * randf(&dockpars_prng_states[prng_offset]));
+		// Local Search is performed for ALL individuals,
+		// not only for a small random subset
 
 #if defined (PRINT_ALL_KRNL)
-                //printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
+		//printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
 #endif
 
-        
 		perform_ls(
 			DockConst_max_num_of_iters,
 			DockConst_rho_lower_bound,
