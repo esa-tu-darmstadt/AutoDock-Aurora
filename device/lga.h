@@ -16,7 +16,6 @@ void lga (
 		float*		EnergyCurrent,
 		uint*		Evals_performed,
 		uint*		Gens_performed,
-		uint*		dockpars_prng_states,
 		uint		DockConst_pop_size,
 		uint        DockConst_num_of_energy_evals,
 		uint        DockConst_num_of_generations,
@@ -27,7 +26,6 @@ void lga (
 		float       Host_two_absmaxdmov,
 		float       Host_two_absmaxdang,
 		float       DockConst_crossover_rate,
-		uint        DockConst_num_of_lsentities,
 		uchar       DockConst_num_of_genes,
 	// pc
 	const	int* 		PC_rotlist,
