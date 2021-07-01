@@ -63,9 +63,12 @@ void ls_ad(
             uint                Host_mul_tmp3
     // gradients
     const   int*    restrict    GRAD_rotbonds,
-            int*    restrict    GRAD_rotbonds_atoms,
+    const   int*    restrict    GRAD_rotbonds_atoms,
     const   int*    restrict    GRAD_num_rotating_atoms_per_rotbond,
 
+    const   float*  restrict    GRAD_angle,
+    const   float*  restrict    GRAD_dependence_on_theta,
+    const   float*  restrict    GRAD_dependence_on_rotangle
 );
 
 #endif
