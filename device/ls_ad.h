@@ -9,21 +9,23 @@
  */
 
 void ls_ad(
-    uint DockConst_num_of_atoms,    // FIXME: SW defines it as uchar
     
     
-    float DockConst_gridsize_x_minus1, // FIXME: ADGPU defines it as int
-    float DockConst_gridsize_y_minus1,
-    float DockConst_gridsize_z_minus1,
+    
+
     //uint DockConst_gridsize_x_times_y, // FIXME: present in ADPGU, but not in SW
     //uint DockConst_gridsize_x_times_y_times_z, // FIXME: present in ADGPU, but not in SW
-    
-    // ie
-    const float* restrict IE_Fgrids,
 
     // pc
-    uint DockConst_rotbondlist_length,
-
+    const   int*    restrict    PC_rotlist,
+    const   float*  restrict    PC_ref_coords_x,
+    const   float*  restrict    PC_ref_coords_y,
+    const   float*  restrict    PC_ref_coords_z,
+    const   float*  restrict    PC_rotbonds_moving_vectors,
+    const   float*  restrict    PC_rotbonds_unit_vectors,
+    const   float*  restrict    PC_ref_orientation_quats,
+            uint                DockConst_rotbondlist_length,
+            uint                Host_RunId,
     // ia
     const   float*  restrict    IA_IE_atom_charges,
     const   int*    restrict    IA_IA_atom_types,
@@ -43,7 +45,18 @@ void ls_ad(
             float               DockConst_coeff_elec,
             float               DockConst_qasp,
             float               DockConst_coeff_desolv,
-    
+    // ie
+    const   float*  restrict    IE_Fgrids,
+            uchar               DockConst_xsz,
+            uchar               DockConst_ysz,
+            uchar               DockConst_zsz,
+            uint                DockConst_num_of_atoms,    // FIXME: SW defines it as uchar
+            float               DockConst_gridsize_x_minus1, // FIXME: ADGPU defines it as int
+            float               DockConst_gridsize_y_minus1,
+            float               DockConst_gridsize_z_minus1,
+            uint                Host_mul_tmp2,
+            uint                Host_mul_tmp3
+
 
     float in_out_genotype[][MAX_POPSIZE], // ADGPU: __global float* restrict dockpars_conformations_next,
     float* restrict in_out_energy, // ADGPU: __global float* restrict dockpars_energies_next,
