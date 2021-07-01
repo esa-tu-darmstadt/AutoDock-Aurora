@@ -66,6 +66,27 @@ void ls_ad(
     const   float*  restrict    GRAD_dependence_on_theta,
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
+        // Partial results of the gradient step
+        float gradient[ACTUAL_GENOTYPE_LENGTH];
+
+        // Energy may go up, so we keep track of the best energy ever
+        // calculated.
+        // Then, we return the genotype corresponding to the best
+        // observed energy, i.e., "best genotype"
+        float best_energy;
+        float best_genotype[ACTUAL_GENOTYPE_LENGTH];
+
+        // Gradient of the intermolecular energy per each ligand atom
+        // Also used to store the accummulated gradient per each ligand atom
+        float gradient_inter_x[MAX_NUM_OF_ATOMS];
+        float gradient_inter_y[MAX_NUM_OF_ATOMS];
+        float gradient_inter_z[MAX_NUM_OF_ATOMS];
+
+        // Gradient of the intramolecular energy per each ligand atom
+        float gradient_intra_x[MAX_NUM_OF_ATOMS];
+        float gradient_intra_y[MAX_NUM_OF_ATOMS];
+        float gradient_intra_z[MAX_NUM_OF_ATOMS];
+        
 
 
 }
