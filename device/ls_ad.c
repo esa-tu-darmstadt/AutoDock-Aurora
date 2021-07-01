@@ -86,7 +86,25 @@ void ls_ad(
         float gradient_intra_x[MAX_NUM_OF_ATOMS];
         float gradient_intra_y[MAX_NUM_OF_ATOMS];
         float gradient_intra_z[MAX_NUM_OF_ATOMS];
-        
+
+        // Ligand-atom position and partial energies
+        float local_coords_x[MAX_NUM_OF_ATOMS]; //__local float4 calc_coords[MAX_NUM_OF_ATOMS];
+        float local_coords_y[MAX_NUM_OF_ATOMS];
+        float local_coords_z[MAX_NUM_OF_ATOMS];
+        float local_coords_w[MAX_NUM_OF_ATOMS];
+
+        float partial_energies[NUM_OF_THREADS_PER_BLOCK]; // FIXME: remove it?
+
+        // Squared gradients E[g^2]
+        float square_gradients[ACTUAL_GENOTYPE_LENGTH];
+
+        // Update vector, i.e., "delta"
+        // It is added to the genotype to create the next genotype.
+        // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
+        float delta[ACTUAL_GENOTYPE_LENGTH];
+
+        // Squared updates E[dx^2]
+        float square_delta[ACTUAL_GENOTYPE_LENGTH];
 
 
 }
