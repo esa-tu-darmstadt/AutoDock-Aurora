@@ -9,9 +9,14 @@
  */
 
 void ls_ad(
-    
-    
-    
+            uchar               DockConst_num_of_genes, // ADGPU defines it as int
+
+
+
+            uint                pop_size,
+            float               in_out_genotype[][MAX_POPSIZE], // ADGPU: __global float* restrict dockpars_conformations_next,
+            float*  restrict    in_out_energy, // ADGPU: __global float* restrict dockpars_energies_next,
+            uint*   restrict    out_eval, // ADGPU: __global int* restrict dockpars_evals_of_new_entities,
 
     //uint DockConst_gridsize_x_times_y, // FIXME: present in ADPGU, but not in SW
     //uint DockConst_gridsize_x_times_y_times_z, // FIXME: present in ADGPU, but not in SW
@@ -56,16 +61,6 @@ void ls_ad(
             float               DockConst_gridsize_z_minus1,
             uint                Host_mul_tmp2,
             uint                Host_mul_tmp3
-
-
-    float in_out_genotype[][MAX_POPSIZE], // ADGPU: __global float* restrict dockpars_conformations_next,
-    float* restrict in_out_energy, // ADGPU: __global float* restrict dockpars_energies_next,
-    uint* restrict out_eval, // ADGPU: __global int* restrict dockpars_evals_of_new_entities,
-
-    uint pop_size,
-    uchar DockConst_num_of_genes, // ADGPU defines it as int
-
-
 
 
 );
