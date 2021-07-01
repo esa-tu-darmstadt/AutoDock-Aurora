@@ -4,6 +4,9 @@
 #include "energy_ie.h"
 #include "calc_pc.h"
 
+// Stopping criterion from Solis-Wets
+//#define ADADELTA_AUTOSTOP
+
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 
@@ -118,7 +121,11 @@ void ls_ad(
     // Initializing best_energy
     best_energy = INFINITY; // TODO: check correctness
 
-#ifdef
+#ifdef ADADELTA_AUTOSTOP
+	float rho = 1.0f;
+	uint cons_succ = 0;
+	uint cons_fail = 0;
+#endif
 
 
     // TODO: add other blocks for ADADELTA autostop
@@ -135,8 +142,11 @@ void ls_ad(
 
 
 
-
+#ifdef ADADELTA_AUTOSTOP
+	} while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > 0.01f));
+#else
     } while (iteration_cnt < DockConst_max_num_of_iters);
+#endif
 
 }
 
