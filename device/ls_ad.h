@@ -10,9 +10,6 @@
 
 void ls_ad(
             uchar               DockConst_num_of_genes, // ADGPU defines it as int
-
-
-
             uint                pop_size,
             float               in_out_genotype[][MAX_POPSIZE], // ADGPU: __global float* restrict dockpars_conformations_next,
             float*  restrict    in_out_energy, // ADGPU: __global float* restrict dockpars_energies_next,
