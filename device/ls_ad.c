@@ -96,7 +96,7 @@ void ls_ad(
         float partial_energies[NUM_OF_THREADS_PER_BLOCK]; // FIXME: remove it?
 
         // Squared gradients E[g^2]
-        float square_gradients[ACTUAL_GENOTYPE_LENGTH];
+        float square_gradient[ACTUAL_GENOTYPE_LENGTH];
 
         // Update vector, i.e., "delta"
         // It is added to the genotype to create the next genotype.
@@ -106,7 +106,17 @@ void ls_ad(
         // Squared updates E[dx^2]
         float square_delta[ACTUAL_GENOTYPE_LENGTH];
 
+        // Initializing vectors
+        for (uint i= 0; i < DockConst_num_of_genes; i++) {
+                gradient[i] = 0.0f;
+                square_gradient[i] = 0.0f;
+                delta[i] = 0.0f;
+                square_delta[i] = 0.0f;
+                best_genotype[i] = in_out_genotype[i]; // FIXME
+        }
 
+        // Initializing best_energy
+        best_energy = INFINITY; // FIXME!
 }
 
 // --------------------------------------------------------------------------
