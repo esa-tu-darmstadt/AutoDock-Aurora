@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------
 
 void ls_ad(
+			uint				DockConst_max_num_of_iters,
             uchar               DockConst_num_of_genes, // ADGPU defines it as int
             uint                pop_size,
             float               in_out_genotype[][MAX_POPSIZE], // ADGPU: __global float* restrict dockpars_conformations_next,
@@ -66,57 +67,77 @@ void ls_ad(
     const   float*  restrict    GRAD_dependence_on_theta,
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
-        // Partial results of the gradient step
-        float gradient[ACTUAL_GENOTYPE_LENGTH];
+    // Partial results of the gradient step
+	float gradient[ACTUAL_GENOTYPE_LENGTH];
 
-        // Energy may go up, so we keep track of the best energy ever
-        // calculated.
-        // Then, we return the genotype corresponding to the best
-        // observed energy, i.e., "best genotype"
-        float best_energy;
-        float best_genotype[ACTUAL_GENOTYPE_LENGTH];
+	// Energy may go up, so we keep track of the best energy ever calculated.
+	// Then, we return the genotype corresponding to the best
+	// observed energy, i.e., "best genotype"
+    float best_energy;
+    float best_genotype[ACTUAL_GENOTYPE_LENGTH];
 
-        // Gradient of the intermolecular energy per each ligand atom
-        // Also used to store the accummulated gradient per each ligand atom
-        float gradient_inter_x[MAX_NUM_OF_ATOMS];
-        float gradient_inter_y[MAX_NUM_OF_ATOMS];
-        float gradient_inter_z[MAX_NUM_OF_ATOMS];
+    // Gradient of the intermolecular energy per each ligand atom
+    // Also used to store the accummulated gradient per each ligand atom
+    float gradient_inter_x[MAX_NUM_OF_ATOMS];
+    float gradient_inter_y[MAX_NUM_OF_ATOMS];
+    float gradient_inter_z[MAX_NUM_OF_ATOMS];
 
-        // Gradient of the intramolecular energy per each ligand atom
-        float gradient_intra_x[MAX_NUM_OF_ATOMS];
-        float gradient_intra_y[MAX_NUM_OF_ATOMS];
-        float gradient_intra_z[MAX_NUM_OF_ATOMS];
+    // Gradient of the intramolecular energy per each ligand atom
+    float gradient_intra_x[MAX_NUM_OF_ATOMS];
+    float gradient_intra_y[MAX_NUM_OF_ATOMS];
+    float gradient_intra_z[MAX_NUM_OF_ATOMS];
 
-        // Ligand-atom position and partial energies
-        float local_coords_x[MAX_NUM_OF_ATOMS]; //__local float4 calc_coords[MAX_NUM_OF_ATOMS];
-        float local_coords_y[MAX_NUM_OF_ATOMS];
-        float local_coords_z[MAX_NUM_OF_ATOMS];
-        float local_coords_w[MAX_NUM_OF_ATOMS];
+    // Ligand-atom position and partial energies
+    float local_coords_x[MAX_NUM_OF_ATOMS]; //__local float4 calc_coords[MAX_NUM_OF_ATOMS];
+    float local_coords_y[MAX_NUM_OF_ATOMS];
+    float local_coords_z[MAX_NUM_OF_ATOMS];
+    float local_coords_w[MAX_NUM_OF_ATOMS];
 
-        float partial_energies[NUM_OF_THREADS_PER_BLOCK]; // FIXME: remove it?
+    float partial_energies[NUM_OF_THREADS_PER_BLOCK]; // FIXME: remove it?
 
-        // Squared gradients E[g^2]
-        float square_gradient[ACTUAL_GENOTYPE_LENGTH];
+    // Squared gradients E[g^2]
+    float square_gradient[ACTUAL_GENOTYPE_LENGTH];
 
-        // Update vector, i.e., "delta"
-        // It is added to the genotype to create the next genotype.
-        // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
-        float delta[ACTUAL_GENOTYPE_LENGTH];
+    // Update vector, i.e., "delta"
+    // It is added to the genotype to create the next genotype.
+    // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
+    float delta[ACTUAL_GENOTYPE_LENGTH];
 
-        // Squared updates E[dx^2]
-        float square_delta[ACTUAL_GENOTYPE_LENGTH];
+    // Squared updates E[dx^2]
+    float square_delta[ACTUAL_GENOTYPE_LENGTH];
 
-        // Initializing vectors
-        for (uint i= 0; i < DockConst_num_of_genes; i++) {
-                gradient[i] = 0.0f;
-                square_gradient[i] = 0.0f;
-                delta[i] = 0.0f;
-                square_delta[i] = 0.0f;
-                best_genotype[i] = in_out_genotype[i]; // FIXME
-        }
+    // Initializing vectors
+    for (uint i= 0; i < DockConst_num_of_genes; i++) {
+		gradient[i] = 0.0f;
+        square_gradient[i] = 0.0f;
+        delta[i] = 0.0f;
+        square_delta[i] = 0.0f;
+        best_genotype[i] = in_out_genotype[i]; // TODO: add 2dimension
+    }
 
-        // Initializing best_energy
-        best_energy = INFINITY; // FIXME!
+    // Initializing best_energy
+    best_energy = INFINITY; // TODO: check correctness
+
+#ifdef
+
+
+    // TODO: add other blocks for ADADELTA autostop
+
+    // Perfoming ADADELTA iterations
+
+    // The termination criteria is based on a maximum number of iterations,
+    // and the minimum step size allowed for single-precision FP numbers
+    // (IEEE-754 single float has a precision of about 6 decimal digits)
+    do {
+
+
+
+
+
+
+
+    } while (iteration_cnt < DockConst_max_num_of_iters);
+
 }
 
 // --------------------------------------------------------------------------
