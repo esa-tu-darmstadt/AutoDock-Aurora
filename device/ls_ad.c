@@ -7,6 +7,10 @@
 // Stopping criterion from Solis-Wets
 //#define ADADELTA_AUTOSTOP
 
+// ADADELTA parameters
+#define RHO 0.8f
+#define EPSILON 1e-2 // TODO: make sure it is in SP FP
+
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 
@@ -70,6 +74,10 @@ void ls_ad(
     const   float*  restrict    GRAD_dependence_on_theta,
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
+	// Genotype and its energy
+	float genotype[ACTUAL_GENOTYPE_LENGTH];
+	float energy;
+
     // Partial results of the gradient step
 	float gradient[ACTUAL_GENOTYPE_LENGTH];
 
@@ -115,8 +123,12 @@ void ls_ad(
         square_gradient[i] = 0.0f;
         delta[i] = 0.0f;
         square_delta[i] = 0.0f;
+		genotype[i] = in_out_genotype[i]; // TODO: add 2dimension
         best_genotype[i] = in_out_genotype[i]; // TODO: add 2dimension
     }
+
+	// Initializing energy
+	energy = *in_out_energy; // TODO: make sure this read is correct
 
     // Initializing best_energy
     best_energy = INFINITY; // TODO: check correctness
@@ -132,10 +144,32 @@ void ls_ad(
 
     // Perfoming ADADELTA iterations
 
+	// Iteration counter for the ADADELTA minimizer
+	uint iteration_cnt = 0;
+
     // The termination criteria is based on a maximum number of iterations,
     // and the minimum step size allowed for single-precision FP numbers
     // (IEEE-754 single float has a precision of about 6 decimal digits)
     do {
+
+#ifdef (PRINT_ALL_LS_AD)
+	printf("LS_ADADELTA: iteration_cnt: %u\n", iteration-cnt);
+#endif
+
+		// Calculating energy and gradients
+		energy_and_gradient();
+
+		for (uint i = 0; i < DockConst_num_of_genes; i++) {
+
+			if (energy < best_energy) {
+				best_genotype[i] = genotype[i];
+			}
+
+			// Accummulating gradient^2 (Eq.8 in paper)
+			// square_gradient corresponds to E[g^2]
+			square_gradient[i] = RHO * square_gradient[i] + (1.0f - RHO) * gradient[i] * gradient[i];
+
+		}
 
 
 
