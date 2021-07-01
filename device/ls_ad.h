@@ -61,7 +61,10 @@ void ls_ad(
             float               DockConst_gridsize_z_minus1,
             uint                Host_mul_tmp2,
             uint                Host_mul_tmp3
-
+    // gradients
+    const   int*    restrict    GRAD_rotbonds,
+            int*    restrict    GRAD_rotbonds_atoms,
+    const   int*    restrict    GRAD_num_rotating_atoms_per_rotbond,
 
 );
 
