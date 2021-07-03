@@ -229,7 +229,7 @@ void ls_ad(
 	// --------------------------------------------------------------------------
 
 	// TODO: double check if ADGPU uses two types of mapping functions
-	// Mapping torsion angles
+	// Mapping angles
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		if (i > 2) {
 			if (i == 4) {
