@@ -207,7 +207,18 @@ void ls_ad(
 
 	iteration_cnt = iteration_cnt + 1;
 
-
+#ifdef ADADELTA_AUTOSTOP
+	if (cons_succ >=4) {
+		rho *= LS_EXP_FACTOR;
+		cons_succ = 0;
+	}
+	else {
+		if (cons_fail >= 4) {
+			rho *= LS_CONT_FACTOR;
+			cons_fail = 0;
+		}
+	}
+#endif
 
 #ifdef ADADELTA_AUTOSTOP
 	} while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > 0.01f));
