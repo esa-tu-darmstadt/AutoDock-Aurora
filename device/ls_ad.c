@@ -250,6 +250,8 @@ void ls_ad(
 	// Updating energy
 	in_out_energy = best_energy;
 
+	// Updating evals
+	*out_eval = iteration_cnt;
 
 }
 
