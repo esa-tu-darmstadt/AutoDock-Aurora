@@ -146,6 +146,7 @@ void ls_ad(
 	// Iteration counter for the ADADELTA minimizer
 	uint iteration_cnt = 0;
 
+	// --------------------------------------------------------------------------
     // The termination criteria is based on a maximum number of iterations,
     // and the minimum step size allowed for single-precision FP numbers
     // (IEEE-754 single float has a precision of about 6 decimal digits)
@@ -225,6 +226,25 @@ void ls_ad(
 #else
     } while (iteration_cnt < DockConst_max_num_of_iters);
 #endif
+	// --------------------------------------------------------------------------
+
+	// TODO: double check if ADGPU uses two types of mapping functions
+	// Mapping torsion angles
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
+		if (i > 2) {
+			if (i == 4) {
+				best_genotype[i] = map_angle_180(best_genotype[i]);
+			} else {
+				best_genotype[i] = map_angle_360(best_genotype[i]);
+			}
+		}
+	}
+
+	// Updating old offspring in population
+
+	// Updating eval counter and energy
+
+
 
 }
 
