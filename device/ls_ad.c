@@ -229,7 +229,7 @@ void ls_ad(
 	// --------------------------------------------------------------------------
 
 	// TODO: double check if ADGPU uses two types of mapping functions
-	// Mapping torsion angles
+	// Mapping angles
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		if (i > 2) {
 			if (i == 4) {
@@ -240,10 +240,15 @@ void ls_ad(
 		}
 	}
 
+	// TODO: vectorize it
 	// Updating old offspring in population
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
+		in_out_genotype[i] = best_genotype[i];
+	}
 
-	// Updating eval counter and energy
-
+	// TODO: vectorize it
+	// Updating energy
+	in_out_energy = best_energy;
 
 
 }
