@@ -139,7 +139,6 @@ void ls_ad(
 	uint cons_fail = 0;
 #endif
 
-
     // TODO: add other blocks for ADADELTA autostop
 
     // Perfoming ADADELTA iterations
@@ -178,7 +177,7 @@ void ls_ad(
             square_delta[i] = RHO * square_delta[i] + (1.0f - RHO) * delta[i] * delta[i];
 
             // Applying update
-            genotype[i] += delta[i];
+            genotype[i] = genotype[i] + delta[i];
 
 		}
 
@@ -190,6 +189,23 @@ void ls_ad(
 	}
 #endif
 
+	// Updating number of ADADELTA iterations (energy evaluations)
+	if (energy < best_energy) {
+		best_energy = energy;
+
+#ifdef ADADELTA_AUTOSTOP
+		cons_succ++;
+		cons_fail = 0;
+#endif
+	}
+#ifdef ADADELTA_AUTOSTOP
+	else {
+		cons_succ = 0;
+		cons_fail++;
+	}
+#endif
+
+	iteration_cnt = iteration_cnt + 1;
 
 
 
