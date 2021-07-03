@@ -169,6 +169,17 @@ void ls_ad(
 			// square_gradient corresponds to E[g^2]
 			square_gradient[i] = RHO * square_gradient[i] + (1.0f - RHO) * gradient[i] * gradient[i];
 
+            // Computing update (Eq.9 in paper)
+            float tmp_div = (square_delta[i] + EPSILON) / (square_gradient[i] + EPSILON);
+            delta[i] = -1.0f * gradient[i] * esa_sqrt(tmp_div);
+
+            // Accummulating update^2
+            // square_delta corresponds to E[dx^2]
+            square_delta[i] = RHO * square_delta[i] + (1.0f - RHO) * delta[i] * delta[i];
+
+            // Applying update
+            genotype[i] += delta[i];
+
 		}
 
 
