@@ -155,7 +155,7 @@ void ls_ad(
 #ifdef (PRINT_ALL_LS_AD)
 	printf("LS_ADADELTA: iteration_cnt: %u\n", iteration-cnt);
 #endif
-
+		// TODO
 		// Calculating energy and gradients
 		energy_and_gradient();
 
@@ -182,7 +182,13 @@ void ls_ad(
 
 		}
 
-
+#ifdef (PRINT_ALL_LS_AD)
+	printf("\n%s\n", "----------------------------------------------------------");
+	printf("%13s %20s %15s %15s %15s\n", "gene", "sq_grad", "delta", "sq_delta", "new.genotype");
+	for (uint i = 0; i < DockConst_num_of_genes; i++) {
+		printf("%13u %20.6f %15.6f %15.6f %15.6f\n", i, square_gradient[i], delta[i], square_delta[i], genotype[i]);
+	}
+#endif
 
 
 
