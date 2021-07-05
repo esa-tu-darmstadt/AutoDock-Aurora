@@ -37,7 +37,7 @@ void ls_ad(
             uint                Host_RunId,
     // ia
     const   float*  restrict    IA_IE_atom_charges,
-    const   int*    restrict    IA_IA_atom_types,
+    const   int*    restrict    IA_IE_atom_types,
     const   int*    restrict    IA_intraE_contributors,
     const   float*  restrict    IA_reqm,
     const   float*  restrict    IA_reqm_hbond,
