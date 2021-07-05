@@ -43,7 +43,7 @@ void ls_ad(
     const   float*  restrict    IA_dspars_V,
             float               DockConst_smooth,
             uint                DockConst_num_of_intraE_contributors,
-            float               DockConst_grd_spacing,
+            float               DockConst_grid_spacing,
             uint                DockConst_num_of_atypes,
             float               DockConst_coeff_elec,
             float               DockConst_qasp,

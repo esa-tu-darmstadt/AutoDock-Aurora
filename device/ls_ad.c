@@ -49,7 +49,7 @@ void ls_ad(
     const   float*  restrict    IA_dspars_V,
             float               DockConst_smooth,
             uint                DockConst_num_of_intraE_contributors,
-            float               DockConst_grd_spacing,
+            float               DockConst_grid_spacing,
             uint                DockConst_num_of_atypes,
             float               DockConst_coeff_elec,
             float               DockConst_qasp,
@@ -59,8 +59,8 @@ void ls_ad(
             uchar               DockConst_xsz,
             uchar               DockConst_ysz,
             uchar               DockConst_zsz,
-            uint                DockConst_num_of_atoms,    // FIXME: SW defines it as uchar
-            float               DockConst_gridsize_x_minus1, // FIXME: ADGPU defines it as int
+            uint                DockConst_num_of_atoms,    // TODO FIXME: SW defines it as uchar
+            float               DockConst_gridsize_x_minus1, // TODO FIXME: ADGPU defines it as int
             float               DockConst_gridsize_y_minus1,
             float               DockConst_gridsize_z_minus1,
             uint                Host_mul_tmp2,
