@@ -81,6 +81,40 @@ void energy_and_gradient (
 			partialE2 = 0.0f;
 			partialE3 + 0.0f;
 
+			gradient_inter_x[atom_id] = 16777216.0f;
+			gradient_inter_y[atom_id] = 16777216.0f;
+			gradient_inter_z[atom_id] = 16777216.0f;
+		}
+		else {
+			float x_low = floorf(x);
+			float y_low = floorf(y);
+			float z_low = floorf(z);
+
+			int ix = (int)x_low;
+			int iy = (int)y_low;
+			int iz = (int)z_low;
+
+			float dx = x - x_low;
+			float dy = y - y_low;
+			float dz = z - z_low;
+
+			float omdx = 1.0f - dx;
+			float omdy = 1.0f - dy;
+			float omdz = 1.0f - dz;
+
+			// Calculating interpolation weights
+			float weight000, weight001, weight010;
+			float weight011, weight100, weight101;
+			float weight110, weight111;
+			weight000 = omdx * omdy * omdz;
+			weight100 = dx * omdy * omdz;
+			weight010 = omdx * dy * omdz;
+			weight110 = dx * dy * omdz;
+			weight001 = omdx * omdy * dz;
+			weight101 = dx * omdy * dz;
+			weight011 = omdx * dy * dz;
+			weight111 = dx * dy * dz;
+
 
 
 		}
