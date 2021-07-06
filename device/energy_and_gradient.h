@@ -31,7 +31,7 @@ void energy_and_gradient (
 	const 	float*	restrict	IA_dspars_V,
 			float				DockConst_smooth,
 			uint 				DockConst_num_of_intraE_contributors,
-			float 				DockConst_grid_spacing
+			float 				DockConst_grid_spacing,
 			uint 				DockConst_num_of_atypes,
 			float				DockConst_coeff_elec,
 			float				DockConst_qasp,
@@ -43,8 +43,7 @@ void energy_and_gradient (
 
     const   float*  restrict    GRAD_angle,
     const   float*  restrict    GRAD_dependence_on_theta,
-    const   float*  restrict    GRAD_dependence_on_rotangle	
+    const   float*  restrict    GRAD_dependence_on_rotangle
 );
-
 
 #endif
