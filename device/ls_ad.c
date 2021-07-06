@@ -74,19 +74,6 @@ void ls_ad(
     const   float*  restrict    GRAD_dependence_on_theta,
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
-
-	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
-	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
-	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
-
-	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-		for (uint j = 0; j < pop_size; j++) {
-			local_coords_x[i][j] = 0.0f;
-			local_coords_y[i][j] = 0.0f;
-			local_coords_z[i][j] = 0.0f;
-		}
-	}
-
 	// Genotype and its energy
 	float genotype[ACTUAL_GENOTYPE_LENGTH];
 	float energy;
@@ -116,6 +103,32 @@ void ls_ad(
     float local_coords_y[MAX_NUM_OF_ATOMS];
     float local_coords_z[MAX_NUM_OF_ATOMS];
     float local_coords_w[MAX_NUM_OF_ATOMS];
+
+/*
+	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+*/
+	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
+/*
+		for (uint j = 0; j < pop_size; j++) {
+			local_coords_x[i][j] = 0.0f;
+			local_coords_y[i][j] = 0.0f;
+			local_coords_z[i][j] = 0.0f;
+		}
+*/
+        local_coords_x[i] = 0.0f;
+        local_coords_y[i] = 0.0f;
+        local_coords_z[i] = 0.0f;
+
+        gradient_inter_x[i] = 0.0f;
+        gradient_inter_y[i] = 0.0f;
+        gradient_inter_z[i] = 0.0f;
+
+        gradient_intra_x[i] = 0.0f;
+        gradient_intra_y[i] = 0.0f;
+        gradient_intra_z[i] = 0.0f;
+	}
 
     float partial_energies[NUM_OF_THREADS_PER_BLOCK]; // FIXME: remove it?
 
@@ -187,7 +200,14 @@ void ls_ad(
 			local_coords_y,
 			local_coords_z
 		);
-		energy_and_gradient();
+		energy_and_gradient(
+            gradient_inter_x,
+            gradient_inter_y,
+            gradient_inter_z,
+            gradient_intra_x,
+            gradient_intra_y,
+            gradient_intra_z
+        );
 
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
 

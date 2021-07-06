@@ -2,9 +2,22 @@
 
 void energy_and_gradient (
 	const	uint 				DockConst_pop_size,
+
+			float*				local_coords_x,
+			float*				local_coords_y,
+			float* 				local_coords_z,
+
+/*
 			float				local_coords_x[][MAX_POPSIZE],
 			float				local_coords_y[][MAX_POPSIZE],
 			float 				local_coords_z[][MAX_POPSIZE],
+*/
+			float*				gradient_inter_x,
+			float*				gradient_inter_y,
+			float*				gradient_inter_z,
+			float*				gradient_intra_x,
+			float*				gradient_intra_y,
+			float*				gradient_intra_z,
 	// ie
 	const 	float* 	restrict	IE_Fgrids,
 	const 	float*	restrict	IA_IE_atom_charges,
@@ -45,6 +58,33 @@ void energy_and_gradient (
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
 
+	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
 
+		float x = local_coords_x[atom_id];
+		float y = local_coords_y[atom_id];
+		float z = local_coords_z[atom_id];
+
+		float partialE1;
+		float partialE2;
+		float partialE3;
+
+		// If atom is outside of the grid
+		if ((x < 0.0f) || (x >= DockConst_gridsize_x_minus1) ||
+			(y < 0.0f) || (y >= DockConst_gridsize_y_minus1) ||
+			(z < 0.0f) || (z >= DockConst_gridsize_z_minus1)) {
+
+			x = x - 0.5f * DockConst_gridsize_x_minus1; // TODO: in ADGPU is just DockConst_gridsize_x
+			y = y - 0.5f * DockConst_gridsize_y_minus1;
+			z = z - 0.5f * DockConst_gridsize_z_minus1;
+
+			partialE1 = 16777216.0f;
+			partialE2 = 0.0f;
+			partialE3 + 0.0f;
+
+
+
+		}
+
+	}
 
 }

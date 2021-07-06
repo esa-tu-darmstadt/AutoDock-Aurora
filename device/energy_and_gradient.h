@@ -3,9 +3,23 @@
 
 void energy_and_gradient (
 	const	uint 				DockConst_pop_size,
+
+			float*				local_coords_x,
+			float*				local_coords_y,
+			float* 				local_coords_z,
+
+/*
 			float				local_coords_x[][MAX_POPSIZE],
 			float				local_coords_y[][MAX_POPSIZE],
 			float 				local_coords_z[][MAX_POPSIZE],
+*/
+
+			float*				gradient_inter_x,
+			float*				gradient_inter_y,
+			float*				gradient_inter_z,
+			float*				gradient_intra_x,
+			float*				gradient_intra_y,
+			float*				gradient_intra_z,
 	// ie
 	const 	float* 	restrict	IE_Fgrids,
 	const 	float*	restrict	IA_IE_atom_charges,
