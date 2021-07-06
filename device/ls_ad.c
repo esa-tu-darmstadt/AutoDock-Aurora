@@ -74,6 +74,19 @@ void ls_ad(
     const   float*  restrict    GRAD_dependence_on_theta,
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
+
+	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+
+	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
+		for (uint j = 0; j < pop_size; j++) {
+			local_coords_x[i][j] = 0.0f;
+			local_coords_y[i][j] = 0.0f;
+			local_coords_z[i][j] = 0.0f;
+		}
+	}
+
 	// Genotype and its energy
 	float genotype[ACTUAL_GENOTYPE_LENGTH];
 	float energy;
@@ -157,6 +170,23 @@ void ls_ad(
 #endif
 		// TODO
 		// Calculating energy and gradients
+        calc_pc (
+            PC_rotlist,
+			PC_ref_coords_x,
+			PC_ref_coords_y,
+			PC_ref_coords_z,
+			PC_rotbonds_moving_vectors,
+			PC_rotbonds_unit_vectors,
+			PC_ref_orientation_quats,
+			DockConst_rotbondlist_length,
+			DockConst_num_of_genes,
+			Host_RunId,
+			active_pop_size,    // TODO: FIXME
+			entity_possible_new_genotype,   // TODO: FIXME
+			local_coords_x,
+			local_coords_y,
+			local_coords_z
+		);
 		energy_and_gradient();
 
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
