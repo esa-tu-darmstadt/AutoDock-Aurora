@@ -126,6 +126,21 @@ void energy_and_gradient (
 			weight011 = omdx * dy * dz;
 			weight111 = dx * dy * dz;
 
+#ifdef (PRINT_ALL)
+			printf("\n\nPartial results for atom with id %i:\n", atom_id);
+			printf("x_low = %f, x_frac = %f\n", x_low, dx);
+			printf("y_low = %f, y_frac = %f\n", y_low, dy);
+			printf("z_low = %f, z_frac = %f\n", z_low, dz);
+			printf("weight(0,0,0) = %f\n", weight000);
+			printf("weight(1,0,0) = %f\n", weight100);
+			printf("weight(0,1,0) = %f\n", weight010);
+			printf("weight(1,1,0) = %f\n", weight110);
+			printf("weight(0,0,1) = %f\n", weight001);
+			printf("weight(1,0,1) = %f\n", weight101);
+			printf("weight(0,1,1) = %f\n", weight011);
+			printf("weight(1,1,1) = %f\n", weight111);
+#endif
+
 			// Energy contribution of the current grid type
 			float cub000, cub001, cub010;
 			float cub011, cub100, cub101;
@@ -140,6 +155,18 @@ void energy_and_gradient (
 			cub011 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix  ];
 			cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
 
+#ifdef (PRINT_ALL)
+			printf("Interpolation of van der Waals map:\n");
+			printf("cube(0,0,0) = %f\n". cub000);
+			printf("cube(1,0,0) = %f\n". cub100);
+			printf("cube(0,1,0) = %f\n". cub010);
+			printf("cube(1,1,0) = %f\n". cub110);
+			printf("cube(0,0,1) = %f\n". cub001);
+			printf("cube(1,0,1) = %f\n". cub101);
+			printf("cube(0,1,1) = %f\n". cub011);
+			printf("cube(1,1,1) = %f\n". cub111);
+#endif
+
 			// Calculating affinity energy
 			partialE1 = cub000 * weight000 +
 						cub100 * weight100 +
@@ -149,6 +176,10 @@ void energy_and_gradient (
 						cub101 * weight101 +
 						cub011 * weight011 +
 						cub111 * weight111;
+
+#ifdef (PRINT_ALL)
+			printf("interpolated energy partialE1 = %f\n\n", partialE1);
+#endif
 
 
 
