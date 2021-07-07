@@ -57,8 +57,19 @@ void energy_and_gradient (
     const   float*  restrict    GRAD_dependence_on_theta,
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
+	// Interpreting IE_Fgrids as multidimensional static array
+	const float (*IE_Fg)[MAX_NUM_OF_ATYPES+2][DockConst_zsz][DockConst_ysz][DockConst_xsz] =
+		(void*)(IE_Fgrids);
+	const float (*IE_Fg_2)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
+		(void*)(&IE_Fgrids[Host_mul_tmp2]);
+	const float (*IE_Fg_3)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
+		(void*)(&IE_Fgrids[Host_mul_tmp3]);
+
 
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
+
+		int atom_typeid = IA_IE_atom_types[atom_id];
+		float q = IA_IE_atom_charges[atom_id];
 
 		float x = local_coords_x[atom_id];
 		float y = local_coords_y[atom_id];
@@ -114,6 +125,35 @@ void energy_and_gradient (
 			weight101 = dx * omdy * dz;
 			weight011 = omdx * dy * dz;
 			weight111 = dx * dy * dz;
+
+			// Energy contribution of the current grid type
+			float cub000, cub001, cub010;
+			float cub011, cub100, cub101;
+			float cub110, cub111;
+
+			cub000 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix  ];
+			cub100 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix+1];
+			cub010 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix  ];
+			cub110 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix+1];
+			cub001 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix  ];
+			cub100 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix+1];
+			cub011 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix  ];
+			cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
+
+			// Calculating affinity energy
+			partialE1 = cub000 * weight000 +
+						cub100 * weight100 +
+						cub010 * weight010 +
+						cub110 * weight110 +
+						cub001 * weight001 +
+						cub101 * weight101 +
+						cub011 * weight011 +
+						cub111 * weight111;
+
+
+
+
+
 
 
 
