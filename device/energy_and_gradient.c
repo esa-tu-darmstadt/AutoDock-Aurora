@@ -205,6 +205,11 @@ void energy_and_gradient (
 
 			// See detailed decomposition in original AD-GPU
 
+			// -------------------------------------------------------------------
+			// Calculating gradients (forces) corresponding to
+			// "atype" intermolecular energy
+			// -------------------------------------------------------------------
+
 			// Vector in x-direction
 			gradient_inter_x[atom_id] += omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
 										   dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011));
