@@ -469,7 +469,7 @@ void energy_and_gradient (
 				// Calculating desolvation term
 				partialIAE4 = desolv_const * esa_expf0(-0.03858025f * distance_pow_2);
 
-				//priv_gradient_per_intracontributor += ;
+				priv_gradient_per_intracontributor += desolv_const * -0.077160f * atomic_distance * esa_expf0(-0.03858025f * distance_pow_2);
 
 			} // End if cuttoff2 - internuclear-distance at 20.48A
 
