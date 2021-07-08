@@ -1,6 +1,7 @@
 #include "auxiliary.h"
 
 void energy_and_gradient (
+	const	uchar               DockConst_num_of_genes, // ADGPU defines it as int
 	const	uint 				DockConst_pop_size,
 			float*				final_interE,
 			float*				final_intraE,
@@ -20,6 +21,7 @@ void energy_and_gradient (
 			float*				gradient_intra_x,
 			float*				gradient_intra_y,
 			float*				gradient_intra_z,
+			float*				gradient_genotype,
 	// ie
 	const 	float* 	restrict	IE_Fgrids,
 	const 	float*	restrict	IA_IE_atom_charges,
@@ -67,6 +69,23 @@ void energy_and_gradient (
 	const float (*IE_Fg_3)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
 		(void*)(&IE_Fgrids[Host_mul_tmp3]);
 
+	// Initializing
+	// TODO: make sure this is strictly necessary
+	// (caller may be doing the same, but maybe not redundant)
+	// TODO: merge with for-loop below
+	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
+		gradient_inter_x[atom_id] = 0.0f;
+		gradient_inter_y[atom_id] = 0.0f;
+		gradient_inter_z[atom_id] = 0.0f;
+
+		gradient_intra_x[atom_id] = 0.0f;
+		gradient_intra_y[atom_id] = 0.0f;
+		gradient_intra_z[atom_id] = 0.0f;
+	}
+
+	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+		gradient_genotype[gene_cnt] = 0.0f;
+	}
 
 	// ================================================
 	// CALCULATING INTERMOLECULAR ENERGY & GRADIENTS
@@ -525,6 +544,10 @@ void energy_and_gradient (
 		gradient_inter_y[atom_id] += gradient_intra_y[atom_id];
 		gradient_inter_z[atom_id] += gradient_intra_z[atom_id];
 	}
+
+	// ================================================
+	// OBTAINING TRANSLATION-RELATED GRADIENTS
+	// ================================================
 
 
 }

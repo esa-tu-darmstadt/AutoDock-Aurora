@@ -212,7 +212,8 @@ void ls_ad(
             gradient_inter_z,
             gradient_intra_x,
             gradient_intra_y,
-            gradient_intra_z
+            gradient_intra_z,
+            gradient
         );
 
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
