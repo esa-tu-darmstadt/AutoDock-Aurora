@@ -562,5 +562,48 @@ void energy_and_gradient (
 	gradient_genotype[1] *= DockConst_grid_spacing;
 	gradient_genotype[2] *= DockConst_grid_spacing;
 
+	// ================================================
+	// OBTAINING ROTATION-RELATED GRADIENTS
+
+	// Transform gradient_inter_{x|y|z}
+	// into local_gradients[i] (with four quaternion genes)
+
+	// Transform local_gradients[i] (with four quaternion genes)
+	// into local_gradients[i] (with three genes)
+	// ================================================
+
+	float torque_x = 0.0f;
+	float torque_y = 0.0f;
+	float torque_z = 0.0f;
+
+	// Variable holding the center of rotation
+	// In getparameters.cpp, it indicates translation genes are
+	// in grid spacing (instead of Angstrom)
+	float about_x = 0.0f;
+	float about_y = 0.0f;
+	float about_z = 0.0f;
+
+	// Temporal variable for calculating translation differences.
+	// They are converted back to Angstrom here
+	float r_x, r_y; r_z;
+
+	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
+		r_x = (local_coords_x[atom_id] - about_x) * DockConst_grid_spacing;
+		r_y = (local_coords_y[atom_id] - about_y) * DockConst_grid_spacing;
+		r_z = (local_coords_z[atom_id] - about_z) * DockConst_grid_spacing;
+
+		// Reusing "gradient_inter_*" for total gradient (inter + intra)
+		float force_x = gradient_inter_x[atom_id];
+		float force_y = gradient_inter_y[atom_id];
+		float force_z = gradient_inter_z[atom_id];
+
+		// TODO: implement vector cross product 3x3
+	}
+
+
+
+
+
 	
+
 }
