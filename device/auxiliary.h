@@ -12,11 +12,9 @@
 #include <ftrace.h>
 #endif
 
-/* 
- * -----------------------------------------------
- * Overall
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Overall
+// -----------------------------------------------
 #ifndef SHORT_TYPE_NAMES_
 #define SHORT_TYPE_NAMES_
 typedef unsigned char uchar;
@@ -26,12 +24,10 @@ typedef unsigned int  uint;
 
 typedef enum {False, True} boolean;
 
-/*
- * -----------------------------------------------
- * Map the argument into the interval
- * 0 - 180, or 0 - 360 in sexagesimal
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Map the argument into the interval
+// 0 - 180, or 0 - 360 in sexagesimal
+// -----------------------------------------------
 static inline
 float map_angle_180 (float angle)
 {
@@ -61,12 +57,9 @@ float map_angle_360 (float angle) {
 	return x;
 }
 
-/* 
- * -----------------------------------------------
- * Pose calculation 
- * -----------------------------------------------
- * */
-
+// -----------------------------------------------
+// Pose calculation
+// -----------------------------------------------
 static inline
 float esa_dot3(float a[3], float b[3]) {
 
@@ -127,11 +120,9 @@ float esa_dot4_e_(float a1, float a2, float a3, float a4, float b1, float b2, fl
 */
 }
 
-/* 
- * -----------------------------------------------
- * Intermolecular
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Intermolecular
+// -----------------------------------------------
 
 /* https://www.codeproject.com/Tips/700780/Fast-floor-ceiling-functions */
 static inline
@@ -143,11 +134,9 @@ int esa_ceil (float fp) {
 #endif
 }
 
-/* 
- * -----------------------------------------------
- * Intramolecular
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Intramolecular
+// -----------------------------------------------
 
 // sqrt7 
 //https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
