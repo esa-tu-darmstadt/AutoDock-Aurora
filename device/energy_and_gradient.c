@@ -390,7 +390,9 @@ void energy_and_gradient (
 			float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
 			float subz = local_coords_z[atom1_id] - local_coords_z[atom2_id];
 
-			float atomic_distance = esa_sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
+			// Calculating atomic distance
+			float dist = esa_sqrt(subx*subx + suby*suby + subz*subz);
+			float atomic_distance = dist * DockConst_grid_spacing;
 
 #ifdef (PRINT_ALL)
 			printf("\nContrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
@@ -482,6 +484,15 @@ void energy_and_gradient (
 		//} // End for (uint j = 0 ...)
 
 		*final_intraE += partialIAE1 - partialIAE2 + partialIAE3 + partialIAE4;
+
+		// Decomposing "priv_gradient_per_intracontributor"
+		// into the contribution of each atom of the pair.
+		// Distances in Ansgtroms of vector that goes from "atom1_id"-to-"atom2_id".
+		// Therefore, -subx, -suby. -subz are used.
+		float subx_div_dist = -subx / dist;
+		float suby_div_dist = -suby / dist;
+		float subz_div_dist = -subz / dist;
+
 
 	} // End for (uint contributor_counter = 0 ...)
 
