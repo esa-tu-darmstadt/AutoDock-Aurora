@@ -275,13 +275,44 @@ void energy_and_gradient (
 			gradient_inter_z[atom_id] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 										        dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
+			// Energy contribution of the desolvation grid
+			cub000 = (*IE_Fg_3)[iz  ][iy  ][ix  ];
+			cub100 = (*IE_Fg_3)[iz  ][iy  ][ix+1];
+			cub010 = (*IE_Fg_3)[iz  ][iy+1][ix  ];
+			cub110 = (*IE_Fg_3)[iz  ][iy+1][ix+1];
+			cub001 = (*IE_Fg_3)[iz+1][iy  ][ix  ];
+			cub101 = (*IE_Fg_3)[iz+1][iy  ][ix+1];
+			cub011 = (*IE_Fg_3)[iz+1][iy+1][ix  ];
+			cub111 = (*IE_Fg_3)[iz+1][iy+1][ix+1];
 
+#ifdef (PRINT_ALL)
+			printf("Interpolation of desolvation map:\n");
+			printf("cube(0,0,0) = %f\n". cub000);
+			printf("cube(1,0,0) = %f\n". cub100);
+			printf("cube(0,1,0) = %f\n". cub010);
+			printf("cube(1,1,0) = %f\n". cub110);
+			printf("cube(0,0,1) = %f\n". cub001);
+			printf("cube(1,0,1) = %f\n". cub101);
+			printf("cube(0,1,1) = %f\n". cub011);
+			printf("cube(1,1,1) = %f\n". cub111);
+#endif
 
+			partialE3 = fabsf(q) * (
+						cub000 * weight000 +
+						cub100 * weight100 +
+						cub010 * weight010 +
+						cub110 * weight110 +
+						cub001 * weight001 +
+						cub101 * weight101 +
+						cub011 * weight011 +
+						cub111 * weight111);
 
+#ifdef (PRINT_ALL)
+			printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf(q), partialE3);
+#endif
 
+		} // End if
 
-		}
-
-	}
+	} // End for (uint atom_id = 0 ...)
 
 }
