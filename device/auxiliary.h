@@ -240,4 +240,6 @@ void esa_cross3_e_(float a1, float a2, float a3, float b1, float b2, float b3, f
 	*c3 = (a1 * b2) - (a2 * b1);
 }
 
+#define esa_length3_e(a1,a2,a3) esa_sqrt(a1*a1 + a2*a2 + a3*a3)
+
 #endif /* AUXILIARY_H_ */

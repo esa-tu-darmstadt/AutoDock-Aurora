@@ -572,9 +572,9 @@ void energy_and_gradient (
 	// into local_gradients[i] (with three genes)
 	// ================================================
 
-	float torque_x = 0.0f;
-	float torque_y = 0.0f;
-	float torque_z = 0.0f;
+	float torque_rot_x = 0.0f;
+	float torque_rot_y = 0.0f;
+	float torque_rot_z = 0.0f;
 
 	// Variable holding the center of rotation
 	// In getparameters.cpp, it indicates translation genes are
@@ -599,12 +599,13 @@ void energy_and_gradient (
 
 		float tmp_x, tmp_y, tmp_z;
 		esa_cross3_e_(r_x, r_y, r_z, force_x, force_y, force_z, &tmp_x, &tmp_y, &tmp_z);
-		torque_x += tmp_x;
-		torque_y += tmp_y;
-		torque_z += tmp_z;
-
+		torque_rot_x += tmp_x;
+		torque_rot_y += tmp_y;
+		torque_rot_z += tmp_z;
 	}
 
+	// genes[3:7] = rotation.axisangle_to_q(torque, rad)
+	float torque_length = esa_length3_e(torque_rot_x, torque_rot_y, torque_rot_z);
 
 
 
