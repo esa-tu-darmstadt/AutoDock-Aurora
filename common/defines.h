@@ -57,4 +57,16 @@
 				       cube[0][1][0]*weights[0][1][0] +cube[1][1][0]*weights[1][1][0] + \
 				       cube[0][0][1]*weights[0][0][1] +cube[1][0][1]*weights[1][0][1] + \
 				       cube[0][1][1]*weights[0][1][1] +cube[1][1][1]*weights[1][1][1])
+
+// Constants for dielectric term of the
+// electrostatic component of the intramolecular energy/gradient
+#define DIEL_A					-8.5525f
+#define DIEL_WAT				78.4f
+#define DIEL_B					(DIEL_WAT - DIEL_A)	// 86.9525f
+#define DIEL_LAMBDA				0.003627f
+#define DIEL_H					DIEL_LAMBDA
+#define DIEL_K					7.7839f
+#define DIEL_B_TIMES_H			(DIEL_B * DIEL_H)	// 0.315376718f
+#define DIEL_B_TIMES_H_TIMES_K	(DIEL_B_TIMES_H * DIEL_K)	// 2.454860831f
+
 #endif /* DEFINES_H_ */
