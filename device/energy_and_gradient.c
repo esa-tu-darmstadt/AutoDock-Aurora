@@ -297,7 +297,9 @@ void energy_and_gradient (
 			printf("cube(1,1,1) = %f\n". cub111);
 #endif
 
-			partialE3 = fabsf(q) * (
+			float fabsf_q = fabsf(q);
+
+			partialE3 = fabsf_q * (
 						cub000 * weight000 +
 						cub100 * weight100 +
 						cub010 * weight010 +
@@ -308,8 +310,25 @@ void energy_and_gradient (
 						cub111 * weight111);
 
 #ifdef (PRINT_ALL)
-			printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf(q), partialE3);
+			printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf_q, partialE3);
 #endif
+
+			// -------------------------------------------------------------------
+			// Calculating gradients (forces) corresponding to
+			// "dsol" intermolecular energy
+			// -------------------------------------------------------------------
+
+			// Vector in x-direction
+			gradient_inter_x[atom_id] += fabsf_q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+													  dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
+
+			// Vector in y-direction
+			gradient_inter_y[atom_id] += fabsf_q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+													  dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
+
+			// Vector in z-direction
+			gradient_inter_z[atom_id] += fabsf_q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+													  dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
 		} // End if
 
