@@ -449,27 +449,30 @@ void energy_and_gradient (
 			// Calculating energy contributions
 			// Cuttoff2: internuclear-distance at 20.48A only for el and sol.
 			if (atomic_distance < 20.48f) {
-				float term_partialE3 = atomic_distance *
-					(DIEL_A + (DIEL_B / (1.0f + DIEL_K * esa_expf0(-DIEL_B_TIMES_H * atomic_distance))));
+				float tmp_exp0 = esa_expf0(DIEL_B_TIMES_H * atomic_distance);
+				float inv_tmp_exp0 = 1.0f / tmp_exp0;
+
+				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * inv_tmp_exp0));
 				float term_inv_partialE3 = (1.0f / term_partialE3);
 
 				// Calculating electrostatic term
 				partialIAE3 = elec_const * term_inv_partialE3;
 
 				// http://www.wolframalpha.com/input/?i=1%2F(x*(A%2B(B%2F(1%2BK*exp(-h*B*x)))))
-				float tmp_exp1 = esa_expf0(DIEL_B_TIMES_H * atomic_distance) + DIEL_K;
-				float tmp_exp2 = esa_expf0(DIEL_B_TIMES_H * atomic_distance) * (DIEL_B_TIMES_H_TIMES_K * atomic_distance + esa_expf0(DIEL_B_TIMES_H * atomic_distance) + DIEL_K);
+				float tmp_exp1 = tmp_exp0 + DIEL_K;
+				float tmp_exp2 = tmp_exp0 * (DIEL_B_TIMES_H_TIMES_K * atomic_distance + tmp_exp0 + DIEL_K);
 				float upper = DIEL_A * tmp_exp1 * tmp_exp1 + DIEL_B * tmp_exp2;
 
-				float tmp_exp3 = DIEL_A * (esa_expf0(DIEL_B_TIMES_H * atomic_distance) + DIEL_K) + DIEL_B * esa_expf0(DIEL_B_TIMES_H * atomic_distance);
+				float tmp_exp3 = DIEL_A * (tmp_exp0 + DIEL_K) + DIEL_B * tmp_exp0;
 				float lower = distance_pow_2 * tmp_exp3 * tmp_exp3;
 
 				priv_gradient_per_intracontributor += -elec_const * (upper/lower);
 
 				// Calculating desolvation term
-				partialIAE4 = desolv_const * esa_expf0(-0.03858025f * distance_pow_2);
+				float tmp_exp4 = esa_expf0(-0.03858025f * distance_pow_2);
+				partialIAE4 = desolv_const * tmp_exp4;
 
-				priv_gradient_per_intracontributor += desolv_const * -0.077160f * atomic_distance * esa_expf0(-0.03858025f * distance_pow_2);
+				priv_gradient_per_intracontributor += -0.077160f * atomic_distance * partialIAE4;
 
 			} // End if cuttoff2 - internuclear-distance at 20.48A
 
