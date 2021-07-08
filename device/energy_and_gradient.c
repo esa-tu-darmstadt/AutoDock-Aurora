@@ -607,7 +607,14 @@ void energy_and_gradient (
 	// genes[3:7] = rotation.axisangle_to_q(torque, rad)
 	float torque_length = esa_length3_e(torque_rot_x, torque_rot_y, torque_rot_z);
 
+	// Finding quaternion performing
+	// infinitesimal rotation around torque axis
+	float quat_torque_x, quat_torque_y, quat_torque_z, quat_torque_w;
 
+	quat_torque_w =  COS_HALF_INFINITESIMAL_RADIAN;
+	//quat_torque_x = 
+	//quat_torque_y = 
+	//quat_torque_z = 
 
 
 	
