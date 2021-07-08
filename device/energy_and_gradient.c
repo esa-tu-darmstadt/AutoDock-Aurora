@@ -539,7 +539,7 @@ void energy_and_gradient (
 		gradient_inter_y[atom_id] = gradient_inter_y[atom_id] / DockConst_grid_spacing;
 		gradient_inter_z[atom_id] = gradient_inter_z[atom_id] / DockConst_grid_spacing;
 
-		// Reusing  "gradient_inter_*" for total gradient (inter + intra)
+		// Reusing "gradient_inter_*" for total gradient (inter + intra)
 		gradient_inter_x[atom_id] += gradient_intra_x[atom_id];
 		gradient_inter_y[atom_id] += gradient_intra_y[atom_id];
 		gradient_inter_z[atom_id] += gradient_intra_z[atom_id];
@@ -548,6 +548,19 @@ void energy_and_gradient (
 	// ================================================
 	// OBTAINING TRANSLATION-RELATED GRADIENTS
 	// ================================================
+	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
+		// Accummulating "gradient_inter_*"
+		gradient_genotype[0] += gradient_inter_x[atom_id]; // gradient for gene 0: gene x
+		gradient_genotype[1] += gradient_inter_y[atom_id]; // gradient for gene 1: gene y
+		gradient_genotype[2] += gradient_inter_z[atom_id]; // gradient for gene 2: gene z
+	}
 
+	// Scaling gradient for translational genes as
+	// their corresponding gradients were calculated in the space
+	// where these genes are in Angstrom, but AD-GPU translational genes are in grids
+	gradient_genotype[0] *= DockConst_grid_spacing;
+	gradient_genotype[1] *= DockConst_grid_spacing;
+	gradient_genotype[2] *= DockConst_grid_spacing;
 
+	
 }
