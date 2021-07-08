@@ -201,10 +201,12 @@ void ls_ad(
 			local_coords_z
 		);
 
-        float energy_ie = 0; // TODO: will use eventually: float energy_ie_ls[MAX_POPSIZE];
+        float energy_ie = 0; // TODO: will use eventually: float energy_ie[MAX_POPSIZE];
+        float energy_ia = 0; // TODO: will use eventually: float energy_ia[MAX_POPSIZE];
 
 		energy_and_gradient(
-            &energy_ie
+            &energy_ie,
+            &energy_ia,
             gradient_inter_x,
             gradient_inter_y,
             gradient_inter_z,

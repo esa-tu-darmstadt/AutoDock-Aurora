@@ -3,6 +3,7 @@
 void energy_and_gradient (
 	const	uint 				DockConst_pop_size,
 			float*				final_interE,
+			float*				final_intraE,
 
 			float*				local_coords_x,
 			float*				local_coords_y,
@@ -395,10 +396,10 @@ void energy_and_gradient (
 			printf("\nContrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
 #endif
 
-			float partialE1 = 0.0f;
-			float partialE2 = 0.0f;
-			float partialE3 = 0.0f;
-			float partialE4 = 0.0f;
+			float partialIAE1 = 0.0f;
+			float partialIAE2 = 0.0f;
+			float partialIAE3 = 0.0f;
+			float partialIAE4 = 0.0f;
 
 			// Getting smoothed_distance = function(atomic_distance, opt_distance)
 			float smoothed_distance;
@@ -425,20 +426,20 @@ void energy_and_gradient (
 			// Cuttoff1: internuclear-distance at 8A only for vdw and hbond.
 			if (atomic_distance < 8.0f) {
 
-				partialE1 = vdW_const1 * inverse_smoothed_distance_pow_12; // TODO: do the same for Solis-Wets
-				float partialE1_times_12 = 12.0f * partialE1;
+				partialIAE1 = vdW_const1 * inverse_smoothed_distance_pow_12; // TODO: do the same for Solis-Wets
+				float partialIAE1_times_12 = 12.0f * partialIAE1;
 
 				float gradient_numerator;
 
 				// Calculating van der Waals / hydrogen bond term
 				if (hbond) {	// H-bond
 					float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
-					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_10;
-					gradient_numerator = 10.0f * partialE2 - partialE1_times_12;
+					partialIAE2 = vdW_const2 * inverse_smoothed_distance_pow_10;
+					gradient_numerator = 10.0f * partialIAE2 - partialIAE1_times_12;
 				}
 				else {	// Van der Waals
-					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_6;
-					gradient_numerator =  6.0f * partialE2 - partialE1_times_12;
+					partialIAE2 = vdW_const2 * inverse_smoothed_distance_pow_6;
+					gradient_numerator =  6.0f * partialIAE2 - partialIAE1_times_12;
 				}
 
 				priv_gradient_per_intracontributor += gradient_numerator * inverse_smoothed_distance;
@@ -453,14 +454,15 @@ void energy_and_gradient (
 				float term_inv_partialE3 = (1.0f / term_partialE3);
 
 				// Calculating electrostatic term
-				partialE3 = elec_const * term_inv_partialE3;
+				partialIAE3 = elec_const * term_inv_partialE3;
 
 				// Calculating desolvation term
-				partialE4 = desolv_const * esa_expf0(-0.0386f * distance_pow_2);
+				partialIAE4 = desolv_const * esa_expf0(-0.0386f * distance_pow_2);
 			} // End if cuttoff2 - internuclear-distance at 20.48A
 
 		//} // End for (uint j = 0 ...)
 
+		*final_intraE += partialIAE1 - partialIAE2 + partialIAE3 + partialIAE4;
 
 	} // End for (uint contributor_counter = 0 ...)
 

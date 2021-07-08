@@ -4,6 +4,7 @@
 void energy_and_gradient (
 	const	uint 				DockConst_pop_size,
 			float*				final_interE,
+			float*				final_intraE,
 
 			float*				local_coords_x,
 			float*				local_coords_y,
