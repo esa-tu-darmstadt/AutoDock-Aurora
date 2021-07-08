@@ -263,6 +263,17 @@ void energy_and_gradient (
 			// "elec" intermolecular energy
 			// -------------------------------------------------------------------
 
+			// Vector in x-direction
+			gradient_inter_x[atom_id] += q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+										        dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
+
+			// Vector in y-direction
+			gradient_inter_y[atom_id] += q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+										        dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
+
+			// Vector in z-direction
+			gradient_inter_z[atom_id] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+										        dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
 
 
