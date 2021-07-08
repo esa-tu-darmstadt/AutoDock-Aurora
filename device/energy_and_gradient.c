@@ -337,4 +337,49 @@ void energy_and_gradient (
 
 	} // End for (uint atom_id = 0 ...)
 
+	float delta_distance = 0.5f*DockConst_smooth;
+
+	// For each intramolecular atom contributor pair
+	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++)
+	{
+		int atom1_id = IA_intraE_contributors[3*contributor_counter];
+		int atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
+		int is_H_bond = IA_intraE_contributors[3*contributor_counter + 2];
+		uint hbond = (is_H_bond == 1)? 1:0; // evaluates to 1 in case of H-bond, 0 otherwise	// TODO: apply to Solis-Wets
+
+		// Getting types ids
+		int atom1_typeid = IA_IE_atom_types[atom1_id];
+		int atom2_typeid = IA_IE_atom_types[atom2_id];
+
+		int atom1_type_vdw_hb = IA_atom1_types_reqm[atom1_typeid];
+		int atom2_type_vdw_hb = IA_atom2_types_reqm[atom2_typeid];
+
+		// Calculation of delta distance moved outside this loop
+		// TODO: test the same for Solis-Wets
+
+		// Getting optimum pair distance (opt_distance) from reqm and reqm_hbond
+		// reqm: equilibrium internuclear separation
+		//       (sum of the vdW radii of two like atoms (A)) in the case of vdW
+		// reqm_hbond: equilibrium internuclear separation
+		// 	 (sum of the vdW radii of two like atoms (A)) in the case of hbond
+		float opt_distance;
+
+		if (hbond) {	// H-bond
+			opt_distance = IA_reqm_hbond[atom1_type_vdw_hb] + IA_reqm_hbond[atom2_type_vdw_hb];
+		} else {	// Van der Waals
+			opt_distance = 0.5f*(IA_reqm[atom1_type_vdw_hb] + IA_reqm[atom2_type_vdw_hb]);
+		}
+
+		float vdW_const1 = IA_VWpars_AC[atom1_typeid * DockConst_num_of_atypes + atom2_typeid];
+		float vdW_const2 = IA_VWpars_BD[atom1_typeid * DockConst_num_of_atypes + atom2_typeid];
+
+		float desolv_const = ((IA_dspars_S[atom1_typeid] + DockConst_qasp * esa_fabs(IA_IE_atom_charges[atom1_id])) * IA_dspars_V[atom2_typeid] +
+				      		  (IA_dspars_S[atom2_typeid] + DockConst_qasp * esa_fabs(IA_IE_atom_charges[atom2_id])) * IA_dspars_V[atom1_typeid]
+							 ) * DockConst_coeff_desolv;
+		float elec_const = DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id];
+
+
+
+	} // End for (uint contributor_counter = 0 ...)
+
 }
