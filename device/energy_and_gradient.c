@@ -426,25 +426,22 @@ void energy_and_gradient (
 			if (atomic_distance < 8.0f) {
 
 				partialE1 = vdW_const1 * inverse_smoothed_distance_pow_12; // TODO: do the same for Solis-Wets
+				float partialE1_times_12 = 12.0f * partialE1;
+
+				float gradient_numerator;
 
 				// Calculating van der Waals / hydrogen bond term
 				if (hbond) {	// H-bond
 					float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
 					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_10;
+					gradient_numerator = 10.0f * partialE2 - partialE1_times_12;
 				}
 				else {	// Van der Waals
 					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_6;
+					gradient_numerator =  6.0f * partialE2 - partialE1_times_12;
 				}
 
-				// Gradient
-				float numerator;
-				if (hbond) {	// H-bond
-					numerator = 10.0f * partialE2 - 12.0f * partialE1;
-				} else {
-					numerator = 6.0f *partialE2 - 12.0f * partialE1;
-				}
-
-				priv_gradient_per_intracontributor += numerator * inverse_smoothed_distance;
+				priv_gradient_per_intracontributor += gradient_numerator * inverse_smoothed_distance;
 
 
 			} // End if cuttoff1 - internuclear-distance at 8A
