@@ -504,6 +504,27 @@ void energy_and_gradient (
 		gradient_intra_z[atom1_id] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
 	} // End for (uint contributor_counter = 0 ...)
 
+	// ================================================
+	// ACCUMMULATING INTER & INTRAMOLECULAR GRADIENTS
+	// ================================================
+	for (uint atom_cnt = 0; atom_cnt < DockConst_num_of_atoms; atom_cnt++) {
+
+		// Grids were calculated in the grid space,
+		// so they have to be put back in Angstrom
+
+		// Intramolecular gradients were already in Angstrom,
+		// no scaling for them is required
+
+		 // TODO: compute ind in host and then pass it
+		gradient_inter_x[atom_id] = gradient_inter_x[atom_id] / DockConst_grid_spacing;
+		gradient_inter_y[atom_id] = gradient_inter_y[atom_id] / DockConst_grid_spacing;
+		gradient_inter_z[atom_id] = gradient_inter_z[atom_id] / DockConst_grid_spacing;
+
+		// Reusing  "gradient_inter_*" for total gradient (inter + intra)
+		gradient_inter_x[atom_id] += gradient_intra_x[atom_id];
+		gradient_inter_y[atom_id] += gradient_intra_y[atom_id];
+		gradient_inter_z[atom_id] += gradient_intra_z[atom_id];
+	}
 
 
 }
