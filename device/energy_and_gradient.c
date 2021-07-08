@@ -450,14 +450,17 @@ void energy_and_gradient (
 			// Cuttoff2: internuclear-distance at 20.48A only for el and sol.
 			if (atomic_distance < 20.48f) {
 				float term_partialE3 = atomic_distance *
-					(-8.5525f + (86.9525f / (1.0f + 7.7839f * esa_expf0(-0.3154f * atomic_distance))));
+					(DIEL_A + (DIEL_B / (1.0f + DIEL_K * esa_expf0(-DIEL_B_TIMES_H * atomic_distance))));
 				float term_inv_partialE3 = (1.0f / term_partialE3);
 
 				// Calculating electrostatic term
 				partialIAE3 = elec_const * term_inv_partialE3;
 
 				// Calculating desolvation term
-				partialIAE4 = desolv_const * esa_expf0(-0.0386f * distance_pow_2);
+				partialIAE4 = desolv_const * esa_expf0(-0.03858025f * distance_pow_2);
+
+				//priv_gradient_per_intracontributor += ;
+
 			} // End if cuttoff2 - internuclear-distance at 20.48A
 
 		//} // End for (uint j = 0 ...)
