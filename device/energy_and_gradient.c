@@ -2,6 +2,7 @@
 
 void energy_and_gradient (
 	const	uint 				DockConst_pop_size,
+			float*				final_interE,
 
 			float*				local_coords_x,
 			float*				local_coords_y,
@@ -331,6 +332,8 @@ void energy_and_gradient (
 													  dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
 		} // End if
+
+		*final_interE += partialE1 + partialE2 + partialE3; // TODO: eventually will use final_interE[j]
 
 	} // End for (uint atom_id = 0 ...)
 
