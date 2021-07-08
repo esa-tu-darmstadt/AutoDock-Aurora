@@ -378,6 +378,61 @@ void energy_and_gradient (
 							 ) * DockConst_coeff_desolv;
 		float elec_const = DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id];
 
+		// TODO: eventually add loop for vectorization
+		//for (uint j = 0; j < DockConst_pop_size; j++) {
+			float subx = local_coords_x[atom1_id] - local_coords_x[atom2_id];
+			float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
+			float subz = local_coords_z[atom1_id] - local_coords_z[atom2_id];
+
+			float atomic_distance = esa_sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
+
+#ifdef (PRINT_ALL)
+			printf("\nContrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
+#endif
+
+			float partialE1 = 0.0f;
+			float partialE2 = 0.0f;
+			float partialE3 = 0.0f;
+			float partialE4 = 0.0f;
+
+			// Getting smoothed_distance = function(atomic_distance, opt_distance)
+			float smoothed_distance;
+
+			if (atomic_distance <= (opt_distance - delta_distance)) {
+				smoothed_distance = atomic_distance + delta_distance;
+			}
+			else if (atomic_distance < (opt_distance + delta_distance)) {
+				smoothed_distance = opt_distance;
+			}
+			else { // else if (atomic_distance >= (opt_distance + delta_distance))
+				smoothed_distance = atomic_distance - delta_distance;
+			}
+
+			float distance_pow_2  = atomic_distance * atomic_distance;
+
+			float inverse_smoothed_distance_pow_2  = 1.0f / (smoothed_distance*smoothed_distance);
+			float inverse_smoothed_distance_pow_4  = inverse_smoothed_distance_pow_2 * inverse_smoothed_distance_pow_2;
+			float inverse_smoothed_distance_pow_6  = inverse_smoothed_distance_pow_4 * inverse_smoothed_distance_pow_2;
+			float inverse_smoothed_distance_pow_12 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_6;	// TODO: fix it in Solis-wets
+
+			// Calculating energy contributions
+			// Cuttoff1: internuclear-distance at 8A only for vdw and hbond.
+			if (atomic_distance < 8.0f) {
+
+				// Calculating van der Waals / hydrogen bond term
+				if (hbond) {	// H-bond
+					float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
+					partialE1 = vdW_const1 * inverse_smoothed_distance_pow_12;
+					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_10;
+				}
+				else {	// Van der Waals
+					partialE1 = vdW_const1 * inverse_smoothed_distance_pow_12;
+					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_6;
+				}
+
+			} // End if cuttoff1 - internuclear-distance at 8A
+
+		//} // End for (uint j = 0 ...)
 
 
 	} // End for (uint contributor_counter = 0 ...)
