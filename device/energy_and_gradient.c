@@ -493,7 +493,22 @@ void energy_and_gradient (
 		float suby_div_dist = -suby / dist;
 		float subz_div_dist = -subz / dist;
 
+		float priv_intra_gradient_x = priv_gradient_per_intracontributor * subx_div_dist;
+		float priv_intra_gradient_y = priv_gradient_per_intracontributor * suby_div_dist;
+		float priv_intra_gradient_z = priv_gradient_per_intracontributor * subz_div_dist;
 
+		// Calculating gradients in xyz components
+		// Gradients for both atoms in a single contributor pair
+		// have the same magnitude, but opposite directions
+
+		// TODO: confirm no need for atomic ops (because this is not SIMT as in AD-GPU)
+		gradient_intra_x[atom1_id] = gradient_intra_x[atom1_id] - priv_intra_gradient_x;
+		gradient_intra_y[atom1_id] = gradient_intra_y[atom1_id] - priv_intra_gradient_y;
+		gradient_intra_z[atom1_id] = gradient_intra_z[atom1_id] - priv_intra_gradient_z;
+
+		gradient_intra_x[atom1_id] = gradient_intra_x[atom2_id] + priv_intra_gradient_x;
+		gradient_intra_y[atom1_id] = gradient_intra_y[atom2_id] + priv_intra_gradient_y;
+		gradient_intra_z[atom1_id] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
 	} // End for (uint contributor_counter = 0 ...)
 
 }
