@@ -342,6 +342,9 @@ void energy_and_gradient (
 	// For each intramolecular atom contributor pair
 	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++)
 	{
+		// The gradient contribution of each contributing atomic pair
+		float priv_gradient_per_intracontributor = 0.0f;
+
 		int atom1_id = IA_intraE_contributors[3*contributor_counter];
 		int atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 		int is_H_bond = IA_intraE_contributors[3*contributor_counter + 2];
@@ -378,6 +381,8 @@ void energy_and_gradient (
 							 ) * DockConst_coeff_desolv;
 		float elec_const = DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id];
 
+		// TODO: add support for flexible rings
+
 		// TODO: eventually add loop for vectorization
 		//for (uint j = 0; j < DockConst_pop_size; j++) {
 			float subx = local_coords_x[atom1_id] - local_coords_x[atom2_id];
@@ -410,7 +415,8 @@ void energy_and_gradient (
 
 			float distance_pow_2  = atomic_distance * atomic_distance;
 
-			float inverse_smoothed_distance_pow_2  = 1.0f / (smoothed_distance*smoothed_distance);
+			float inverse_smoothed_distance = 1.0f / smoothed_distance;
+			float inverse_smoothed_distance_pow_2  = inverse_smoothed_distance * inverse_smoothed_distance;
 			float inverse_smoothed_distance_pow_4  = inverse_smoothed_distance_pow_2 * inverse_smoothed_distance_pow_2;
 			float inverse_smoothed_distance_pow_6  = inverse_smoothed_distance_pow_4 * inverse_smoothed_distance_pow_2;
 			float inverse_smoothed_distance_pow_12 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_6;	// TODO: fix it in Solis-wets
@@ -419,16 +425,27 @@ void energy_and_gradient (
 			// Cuttoff1: internuclear-distance at 8A only for vdw and hbond.
 			if (atomic_distance < 8.0f) {
 
+				partialE1 = vdW_const1 * inverse_smoothed_distance_pow_12; // TODO: do the same for Solis-Wets
+
 				// Calculating van der Waals / hydrogen bond term
 				if (hbond) {	// H-bond
 					float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
-					partialE1 = vdW_const1 * inverse_smoothed_distance_pow_12;
 					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_10;
 				}
 				else {	// Van der Waals
-					partialE1 = vdW_const1 * inverse_smoothed_distance_pow_12;
 					partialE2 = vdW_const2 * inverse_smoothed_distance_pow_6;
 				}
+
+				// Gradient
+				float numerator;
+				if (hbond) {	// H-bond
+					numerator = 10.0f * partialE2 - 12.0f * partialE1;
+				} else {
+					numerator = 6.0f *partialE2 - 12.0f * partialE1;
+				}
+
+				priv_gradient_per_intracontributor += numerator * inverse_smoothed_distance;
+
 
 			} // End if cuttoff1 - internuclear-distance at 8A
 
