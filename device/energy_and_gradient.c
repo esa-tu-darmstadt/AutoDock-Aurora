@@ -181,7 +181,41 @@ void energy_and_gradient (
 			printf("interpolated energy partialE1 = %f\n\n", partialE1);
 #endif
 
+			// -------------------------------------------------------------------
+			// TODO: Deltas dx, dy, dz are already normalized
+			// (in host/src/getparameters.cpp) in AD-GPU
+			// The correspondance between vertices in the xyz axes is:
+			// 0, 1, 2, 3, 4, 5, 6, 7 and 000, 100, 010, 001, 101, 110, 011, 111
+			// -------------------------------------------------------------------
+			/*
+				deltas: (x-x0)/(x1-x0), (y-y0...
+				vertices: (000, 100, 010, 001, 101, 110, 011, 111)
+			  Z
+			  '
+			  3 - - - - 6
+			 /.        /|
+			4 - - - - 7 |
+			| '       | |
+			| 0 - - - + 2 -- Y
+			'/        |/
+			1 - - - - 5
+		       /
+		      X
+			*/
 
+			// See detailed decomposition in original AD-GPU
+
+			// Vector in x-direction
+			gradient_inter_x[atom_id] += omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+										   dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011));
+
+			// Vector in y-direction
+			gradient_inter_y[atom_id] += omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+										   dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101));
+
+			// Vector in z-direction
+			gradient_inter_z[atom_id] += omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+										   dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110));
 
 
 
