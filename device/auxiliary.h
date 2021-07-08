@@ -228,4 +228,16 @@ float esa_expf(const float a){
   if (fabsf (a) >= 104.0f) r = __int_as_float ((__float_as_int (a) > 0) ? 0x7f800000 : 0);
   return r;
 }
+
+// -----------------------------------------------
+// Gradients
+// -----------------------------------------------
+
+static inline
+void esa_cross3_e_(float a1, float a2, float a3, float b1, float b2, float b3, float* c1, float* c2, float* c3) {
+	*c1 = (a2 * b3) - (a3 * b2);
+	*c2 = (a3 * b1) - (a1 * b3);
+	*c3 = (a1 * b2) - (a2 * b1);
+}
+
 #endif /* AUXILIARY_H_ */

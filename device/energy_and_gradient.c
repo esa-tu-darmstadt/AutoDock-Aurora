@@ -597,7 +597,12 @@ void energy_and_gradient (
 		float force_y = gradient_inter_y[atom_id];
 		float force_z = gradient_inter_z[atom_id];
 
-		// TODO: implement vector cross product 3x3
+		float tmp_x, tmp_y, tmp_z;
+		esa_cross3_e_(r_x, r_y, r_z, force_x, force_y, force_z, &tmp_x, &tmp_y, &tmp_z);
+		torque_x += tmp_x;
+		torque_y += tmp_y;
+		torque_z += tmp_z;
+
 	}
 
 
