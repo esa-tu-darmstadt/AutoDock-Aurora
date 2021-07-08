@@ -68,6 +68,9 @@ void energy_and_gradient (
 		(void*)(&IE_Fgrids[Host_mul_tmp3]);
 
 
+	// ================================================
+	// CALCULATING INTERMOLECULAR ENERGY & GRADIENTS
+	// ================================================
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
 
 		int atom_typeid = IA_IE_atom_types[atom_id];
@@ -144,9 +147,8 @@ void energy_and_gradient (
 #endif
 
 			// Energy contribution of the current grid type
-			float cub000, cub001, cub010;
-			float cub011, cub100, cub101;
-			float cub110, cub111;
+			float cub000, cub001, cub010, cub011;
+			float cub100, cub101, cub110, cub111;
 
 			cub000 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix  ];
 			cub100 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix+1];
@@ -170,14 +172,10 @@ void energy_and_gradient (
 #endif
 
 			// Calculating affinity energy
-			partialE1 = cub000 * weight000 +
-						cub100 * weight100 +
-						cub010 * weight010 +
-						cub110 * weight110 +
-						cub001 * weight001 +
-						cub101 * weight101 +
-						cub011 * weight011 +
-						cub111 * weight111;
+			partialE1 = cub000 * weight000 + cub100 * weight100 +
+						cub010 * weight010 + cub110 * weight110 +
+						cub001 * weight001 + cub101 * weight101 +
+						cub011 * weight011 + cub111 * weight111;
 
 #ifdef (PRINT_ALL)
 			printf("interpolated energy partialE1 = %f\n\n", partialE1);
@@ -192,17 +190,17 @@ void energy_and_gradient (
 			/*
 				deltas: (x-x0)/(x1-x0), (y-y0...
 				vertices: (000, 100, 010, 001, 101, 110, 011, 111)
-			  Z
-			  '
-			  3 - - - - 6
-			 /.        /|
-			4 - - - - 7 |
-			| '       | |
-			| 0 - - - + 2 -- Y
-			'/        |/
-			1 - - - - 5
-		       /
-		      X
+			  	  Z
+			  	  '
+				  3 - - - - 6
+				 /.        /|
+				4 - - - - 7 |
+				| '       | |
+				| 0 - - - + 2 -- Y
+				'/        |/
+				1 - - - - 5
+		       	/
+		      	X
 			*/
 
 			// See detailed decomposition in original AD-GPU
@@ -247,14 +245,10 @@ void energy_and_gradient (
 #endif
 
 			partialE2 = q * (
-						cub000 * weight000 +
-						cub100 * weight100 +
-						cub010 * weight010 +
-						cub110 * weight110 +
-						cub001 * weight001 +
-						cub101 * weight101 +
-						cub011 * weight011 +
-						cub111 * weight111);
+						cub000 * weight000 + cub100 * weight100 +
+						cub010 * weight010 + cub110 * weight110 +
+						cub001 * weight001 + cub101 * weight101 +
+						cub011 * weight011 + cub111 * weight111);
 
 #ifdef (PRINT_ALL)
 			printf("q =%f, interpolated energy partialE2 = %f\n\n", q, partialE2);
@@ -300,16 +294,11 @@ void energy_and_gradient (
 #endif
 
 			float fabsf_q = fabsf(q);
-
 			partialE3 = fabsf_q * (
-						cub000 * weight000 +
-						cub100 * weight100 +
-						cub010 * weight010 +
-						cub110 * weight110 +
-						cub001 * weight001 +
-						cub101 * weight101 +
-						cub011 * weight011 +
-						cub111 * weight111);
+						cub000 * weight000 + cub100 * weight100 +
+						cub010 * weight010 + cub110 * weight110 +
+						cub001 * weight001 + cub101 * weight101 +
+						cub011 * weight011 + cub111 * weight111);
 
 #ifdef (PRINT_ALL)
 			printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf_q, partialE3);
@@ -337,6 +326,10 @@ void energy_and_gradient (
 		*final_interE += partialE1 + partialE2 + partialE3; // TODO: eventually will use final_interE[j]
 
 	} // End for (uint atom_id = 0 ...)
+
+	// ================================================
+	// CALCULATING INTRAMOLECULAR ENERGY & GRADIENTS
+	// ================================================
 
 	float delta_distance = 0.5f*DockConst_smooth;
 
@@ -457,7 +450,7 @@ void energy_and_gradient (
 				float tmp_exp0 = esa_expf0(DIEL_B_TIMES_H * atomic_distance);
 				float inv_tmp_exp0 = 1.0f / tmp_exp0;
 
-				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * inv_tmp_exp0));
+				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * inv_tmp_exp0)));
 				float term_inv_partialE3 = (1.0f / term_partialE3);
 
 				// Calculating electrostatic term
@@ -510,5 +503,7 @@ void energy_and_gradient (
 		gradient_intra_y[atom1_id] = gradient_intra_y[atom2_id] + priv_intra_gradient_y;
 		gradient_intra_z[atom1_id] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
 	} // End for (uint contributor_counter = 0 ...)
+
+
 
 }
