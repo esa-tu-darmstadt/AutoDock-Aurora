@@ -456,6 +456,16 @@ void energy_and_gradient (
 				// Calculating electrostatic term
 				partialIAE3 = elec_const * term_inv_partialE3;
 
+				// http://www.wolframalpha.com/input/?i=1%2F(x*(A%2B(B%2F(1%2BK*exp(-h*B*x)))))
+				float tmp_exp1 = esa_expf0(DIEL_B_TIMES_H * atomic_distance) + DIEL_K;
+				float tmp_exp2 = esa_expf0(DIEL_B_TIMES_H * atomic_distance) * (DIEL_B_TIMES_H_TIMES_K * atomic_distance + esa_expf0(DIEL_B_TIMES_H * atomic_distance) + DIEL_K);
+				float upper = DIEL_A * tmp_exp1 * tmp_exp1 + DIEL_B * tmp_exp2;
+
+				float tmp_exp3 = DIEL_A * (esa_expf0(DIEL_B_TIMES_H * atomic_distance) + DIEL_K) + DIEL_B * esa_expf0(DIEL_B_TIMES_H * atomic_distance);
+				float lower = distance_pow_2 * tmp_exp3 * tmp_exp3;
+
+				priv_gradient_per_intracontributor += -elec_const * (upper/lower);
+
 				// Calculating desolvation term
 				partialIAE4 = desolv_const * esa_expf0(-0.03858025f * distance_pow_2);
 
