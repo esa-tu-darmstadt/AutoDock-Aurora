@@ -655,4 +655,11 @@ void energy_and_gradient (
 
 	// This is where we want to be in the quaternion space
 	float target_q_w, target_q_x, target_q_y, target_q_z;
+
+	// target_q = rotation.q_mult(q, current_q)
+	// In our terms it means: q_mult(quat_{w|x|y|z}, currrent_q{w|x|y|z})
+	target_q_w = quat_torque_w * current_q_w - quat_torque_x * current_q_x - quat_torque_y * current_q_y - quat_torque_z * current_q_z;
+	target_q_x = quat_torque_w * current_q_x + quat_torque_x * current_q_w + quat_torque_y * current_q_z - quat_torque_z * current_q_y;
+	target_q_y = quat_torque_w * current_q_y + quat_torque_y * current_q_w + quat_torque_z * current_q_x - quat_torque_x * current_q_z;
+	target_q_z = quat_torque_w * current_q_z + quat_torque_z * current_q_w + quat_torque_x * current_q_y - quat_torque_y * current_q_x;
 }
