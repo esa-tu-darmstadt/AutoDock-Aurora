@@ -77,5 +77,6 @@
 #define SIN_HALF_INFINITESIMAL_RADIAN 	sinf(HALF_INFINITESIMAL_RADIAN)
 
 #define PI_FLOAT						3.14159265f
+#define PI_TIMES_2						(2.0f * PI_FLOAT)
 
 #endif /* DEFINES_H_ */
