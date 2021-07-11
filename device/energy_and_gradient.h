@@ -2,6 +2,7 @@
 #define _INCLUDE_ENERGY_AND_GRADIENT_H
 
 void energy_and_gradient (
+			float*				genotype,
 	const	uchar               DockConst_num_of_genes, // ADGPU defines it as int
 	const	uint 				DockConst_pop_size,
 			float*				final_interE,

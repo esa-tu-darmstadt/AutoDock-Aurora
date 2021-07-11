@@ -1,6 +1,7 @@
 #include "auxiliary.h"
 
 void energy_and_gradient (
+			float*				genotype,
 	const	uchar               DockConst_num_of_genes, // ADGPU defines it as int
 	const	uint 				DockConst_pop_size,
 			float*				final_interE,
@@ -579,9 +580,9 @@ void energy_and_gradient (
 	// Variable holding the center of rotation
 	// In getparameters.cpp, it indicates translation genes are
 	// in grid spacing (instead of Angstrom)
-	float about_x = 0.0f;
-	float about_y = 0.0f;
-	float about_z = 0.0f;
+	float about_x = genotype[0];
+	float about_y = genotype[1];
+	float about_z = genotype[2];
 
 	// Temporal variable for calculating translation differences.
 	// They are converted back to Angstrom here
@@ -619,6 +620,14 @@ void energy_and_gradient (
 	quat_torque_y = tmp_normal_y * SIN_HALF_INFINITESIMAL_RADIAN;
 	quat_torque_z = tmp_normal_z * SIN_HALF_INFINITESIMAL_RADIAN;
 
+	// Converting quaternion gradients into orientation gradients
+
+	// This is where we are in the orientation axis-angle space
+	// TODO: check very initial input orientation genes
+	float current_phi, current_theta, current_rotangle;
+	current_phi 	 = genotype[3];	// phi		(in sexagesimal (DEG) unbounded)
+	current_theta 	 = genotype[4];	// theta	(in sexagesimal (DEG) unbounded)
+	current_rotangle = genotype[5];	// rotangle	(in sexagesimal (DEG) unbounded)
 
 	
 
