@@ -703,4 +703,29 @@ void energy_and_gradient (
 	float grad_theta = orientation_scaling * (fmodf(target_theta - current_theta + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
 	float grad_rotangle = orientation_scaling * (fmodf(target_rotangle - current_rotangle + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
 
+	// Derivatives corrections.
+	// Constant array have 1000 elements.
+	// Each array spans approximatedly from 0.0 to 2*PI.
+	// The distance between each x-point (angle_delta) is 2*PI/1000.
+	const float angle_delta = 0.00628353f;
+	const float inv_angle_delta = 159.154943;
+
+	// Correcting theta gradients interpolating
+	// values from correction lookup tables
+	// (X0, Y0) and (X1, Y1) are known points.
+	// How to find the Y value in the straight line between Y0 and Y1,
+	// corresponding to a certain X?
+	/*
+			| dependence_on_theta_const
+			| dependence_on_rotangle_const
+			|
+			|
+			|                        Y1
+			|
+			|             Y=?
+			|    Y0
+			|_________________________________ angle_const
+			     X0  		X	 	 X1
+	*/
+
 }
