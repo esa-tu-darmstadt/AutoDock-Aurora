@@ -658,8 +658,17 @@ void energy_and_gradient (
 
 	// target_q = rotation.q_mult(q, current_q)
 	// In our terms it means: q_mult(quat_{w|x|y|z}, currrent_q{w|x|y|z})
-	target_q_w = quat_torque_w * current_q_w - quat_torque_x * current_q_x - quat_torque_y * current_q_y - quat_torque_z * current_q_z;
-	target_q_x = quat_torque_w * current_q_x + quat_torque_x * current_q_w + quat_torque_y * current_q_z - quat_torque_z * current_q_y;
-	target_q_y = quat_torque_w * current_q_y + quat_torque_y * current_q_w + quat_torque_z * current_q_x - quat_torque_x * current_q_z;
-	target_q_z = quat_torque_w * current_q_z + quat_torque_z * current_q_w + quat_torque_x * current_q_y - quat_torque_y * current_q_x;
+	//target_q_w = quat_torque_w * current_q_w - quat_torque_x * current_q_x - quat_torque_y * current_q_y - quat_torque_z * current_q_z;
+	//target_q_x = quat_torque_w * current_q_x + quat_torque_x * current_q_w + quat_torque_y * current_q_z - quat_torque_z * current_q_y;
+	//target_q_y = quat_torque_w * current_q_y + quat_torque_y * current_q_w + quat_torque_z * current_q_x - quat_torque_x * current_q_z;
+	//target_q_z = quat_torque_w * current_q_z + quat_torque_z * current_q_w + quat_torque_x * current_q_y - quat_torque_y * current_q_x;
+
+	target_q_w = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+							current_q_w, -current_q_x, -current_q_y, -current_q_z);
+	target_q_x = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+							current_q_x, current_q_w, current_q_z, -current_q_y);
+	target_q_y = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+							current_q_y, -current_q_z, current_q_w, current_q_x);
+	target_q_z = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+							current_q_z, current_q_y, -current_q_x, current_q_w);
 }
