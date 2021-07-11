@@ -688,9 +688,9 @@ void energy_and_gradient (
 	target_theta = acosf(rotaxis_z); // TODO: make sure single precision function works!
 
 	if (is_theta_gt_pi == 0) { // false
-		target_phi = fmod((atan2(rotaxis_y, rotaxis_x) + PI_TIMES_2), PI_TIMES_2); // TODO: check if fmod is supported, https://sleef.org/purec.xhtml
+		target_phi = fmodf((atan2f(rotaxis_y, rotaxis_x) + PI_TIMES_2), PI_TIMES_2); // TODO: check if fmod is supported, https://sleef.org/purec.xhtml
 	} else {
-		target_phi = fmod((atan2(-rotaxis_y, -rotaxis_x) + PI_TIMES_2), PI_TIMES_2); // TODO: check if fmod is supported, https://sleef.org/purec.xhtml
+		target_phi = fmodf((atan2f(-rotaxis_y, -rotaxis_x) + PI_TIMES_2), PI_TIMES_2); // TODO: check if fmod is supported, https://sleef.org/purec.xhtml
 		target_theta = PI_TIMES_2 - target_theta;
 	}
 }
