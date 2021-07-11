@@ -693,4 +693,14 @@ void energy_and_gradient (
 		target_phi = fmodf((atan2f(-rotaxis_y, -rotaxis_x) + PI_TIMES_2), PI_TIMES_2); // TODO: check if fmod is supported, https://sleef.org/purec.xhtml
 		target_theta = PI_TIMES_2 - target_theta;
 	}
+
+	// The infinitesimal rotation produces an infinitesimal displacement.
+	// This is to guarantee that the direction of the displacement is not distorted.
+	float orientation_scaling = torque_length * INV_INFINITESIMAL_RADIAN;
+
+	// Derivatives (or gradients)
+	float grad_phi = orientation_scaling * (fmodf(target_phi - current_phi + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
+	float grad_theta = orientation_scaling * (fmodf(target_theta - current_theta + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
+	float grad_rotangle = orientation_scaling * (fmodf(target_rotangle - current_rotangle + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
+
 }
