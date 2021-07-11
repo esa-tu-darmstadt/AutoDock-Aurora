@@ -677,5 +677,13 @@ void energy_and_gradient (
 
 	// target_oclacube = quaternion_to_oclacube(target_q, theta_gt_pi)
 	// In our terms it means: quaternion_to_oclacube(target_q{w|x|y|z}, theta_gt_pi)
-	ang =
+	ang = acosf(target_q_w);	// TODO: make sure single precision function works!
+	target_rotangle = 2.0f * ang;
+
+	float inv_sin_ang = 1.0f / (sinf(ang));
+	rotaxis_x = target_q_x * inv_sin_ang;
+	rotaxis_y = target_q_y * inv_sin_ang;
+	rotaxis_z = target_q_z * inv_sin_ang;
+
+	target_theta = acosf(rotaxis_z); // TODO: make sure single precision function works!
 }
