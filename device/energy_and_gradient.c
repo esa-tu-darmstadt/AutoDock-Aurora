@@ -671,4 +671,11 @@ void energy_and_gradient (
 							current_q_y, -current_q_z, current_q_w, current_q_x);
 	target_q_z = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
 							current_q_z, current_q_y, -current_q_x, current_q_w);
+
+	// This is where we want to be in the orientation axis-angle space
+	float target_phi, target_theta, target_rotangle;
+
+	// target_oclacube = quaternion_to_oclacube(target_q, theta_gt_pi)
+	// In our terms it means: quaternion_to_oclacube(target_q{w|x|y|z}, theta_gt_pi)
+	ang =
 }
