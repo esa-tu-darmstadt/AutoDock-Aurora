@@ -637,4 +637,22 @@ void energy_and_gradient (
 	current_theta = current_theta * DEG_TO_RAD;	// theta (in GRAD)
 	current_rotangle = current_rotangle * DEG_TO_RAD;	// rotangle (in GRAD)
 
+	int is_theta_gt_pi = (current_theta > PI_FLOAT) ? 1 : 0;
+
+	// This is where we are in the quaternion space
+	float current_q_w, current_q_x, current_q_y, current_q_z;
+
+	// Axis of rotation
+	float rotaxis_x = sinf(current_theta) * cosf(current_phi);
+	float rotaxis_y = sinf(current_theta) * sinf(current_phi);
+	float rotaxis_z = cosf(current_theta);
+
+	float ang = current_rotangle * 0.5f;
+	current_q_w = cosf(ang);
+	current_q_x = rotaxis_x * sinf(ang);
+	current_q_y = rotaxis_y * sinf(ang);
+	current_q_z = rotaxis_z * sinf(ang);
+
+	// This is where we want to be in the quaternion space
+	float target_q_w, target_q_x, target_q_y, target_q_z;
 }
