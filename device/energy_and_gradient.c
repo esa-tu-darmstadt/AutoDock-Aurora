@@ -728,4 +728,42 @@ void energy_and_gradient (
 			     X0  		X	 	 X1
 	*/
 
+	// Finding the index position of "grad_delta" in the "angle_const" array
+	uint index_theta = floorf((current_theta - GRAD_angle[0]) * inv_angle_delta);
+	uint index_rotangle = floorf((current_rotangle - GRAD_angle[0]) * inv_angle_delta);
+
+	// Interpolating theta values
+	// X0 -> index - 1
+	// X1 -> index + 1
+	// Expressed as weighted average
+	// Y = [Y0 * ((X1 - X) / (X1-X0))] +  [Y1 * ((X - X0) / (X1-X0))]
+	// Simplified (fewer terms)
+	// Y = [Y0 * (X1 - X) + Y1 * (X - X0)] / (X1 - X0)
+	// Taking advantage of constants
+	// Y = [Y0 * (X1 - X) + Y1 * (X - X0)] * inv_angle_delta
+	float X0_theta, Y0_theta;
+	float X1_theta, Y1_theta;
+	float X_theta;
+	float dependance_on_theta;	// Y = dependance_on_theta
+	X_theta = current_theta;
+
+	// Using interpolation on out-of-bounds elements results in hang
+	if (index_theta <= 0) {
+		dependance_on_theta = GRAD_dependence_on_theta[0];
+
+	} else if (index_theta >= 999) {
+		dependance_on_theta = GRAD_dependence_on_theta[999];
+	}
+	else {
+		X0_theta = GRAD_angle[index_theta];
+		Y0_theta = GRAD_dependence_on_theta[index_theta];
+		X1_theta = GRAD_angle[index_theta + 1];
+		Y1_theta = GRAD_dependence_on_theta[index_theta + 1];
+		// TODO: make this statement is in the correct place
+		dependance_on_theta = (Y0_theta * (X1_theta - X_theta) + Y1_theta * (X_theta - X0_theta)) * inv_angle_delta;
+	}
+
+	// Interpolating rotangle values
+
+
 }
