@@ -1,5 +1,19 @@
 #include "auxiliary.h"
 
+// The following is a scaling of gradients.
+// Initially all genotypes and gradients
+// were expressed in grid-units (translations)
+// and sexagesimal degrees (rotation and torsion angles).
+// Expressing them using angstroms / radians
+// might help gradient-based minimizers.
+// This conversion is applied to final gradients.
+#define CONVERT_INTO_ANGSTROM_RADIAN
+
+// Scaling factor for the gradients of
+// the genes expressed in degrees (all genes except the first three)
+// (GRID-SPACING * GRID-SPACING) / (DEG_TO_RAD * DEG_TO_RAD) = 461.644
+#define SCFACTOR_ANGSTROM_RADIAN ((0.375 * 0.375)/(DEG_TO_RAD * DEG_TO_RAD))
+
 void energy_and_gradient (
 			float*				genotype,
 	const	uchar               DockConst_num_of_genes, // ADGPU defines it as int
@@ -840,7 +854,17 @@ void energy_and_gradient (
 			torque_tor_x += tmp_tor_x;
 			torque_tor_y += tmp_tor_y;
 			torque_tor_z += tmp_tor_z;
-		}
+		} // End for loop on "rotable_atom_cnt"
 
+		// Projecting torque on rotation axis
+		float torque_on_axis = esa_dot3_e(rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z, torque_tor_x, torque_tor_y, torque_tor_z);
+
+		// Assigning gene-based gradient
+		gradient_genotype[rotbond_id + 6] = torque_on_axis * DEG_TO_RAD;
+	} // End for loop on "rotbond_id"
+
+	// Extra conversion (see first index value = 3)
+	for (uint gene_cnt = 3; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
+		gradient_genotype[gene_cnt] *= SCFACTOR_ANGSTROM_RADIAN;
 	}
 }
