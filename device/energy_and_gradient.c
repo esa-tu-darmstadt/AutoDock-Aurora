@@ -784,6 +784,9 @@ void energy_and_gradient (
 		dependance_on_rotangle = (Y0_rotangle * (X1_rotangle - X_rotangle) + Y1_rotangle * (X_rotangle - X0_rotangle)) * inv_angle_delta;
 	}
 
-
-
+	// Setting gradient rotation-related genotypes in cube
+	// Multiplying by DEG_TO_RAD to make it uniform to  DEG (see torsion gradients)
+	gradient_genotype[3] = (grad_phi / (dependance_on_theta * dependance_on_rotangle)) * DEG_TO_RAD;
+	gradient_genotype[4] = (grad_theta / dependance_on_rotangle) * DEG_TO_RAD;
+	gradient_genotype[5] = grad_rotangle * DEG_TO_RAD;
 }
