@@ -622,7 +622,7 @@ void energy_and_gradient (
 	float quat_torque_x, quat_torque_y, quat_torque_z, quat_torque_w;
 
 	float tmp_normal_x, tmp_normal_y, tmp_normal_z;
-	esa_normalize3_e_(torque_rot_x, torque_rot_y, torque_rot_z, tmp_normal_x, tmp_normal_y, tmp_normal_z);
+	esa_normalize3_e_(torque_rot_x, torque_rot_y, torque_rot_z, &tmp_normal_x, &tmp_normal_y, &tmp_normal_z);
 
 	quat_torque_w = COS_HALF_INFINITESIMAL_RADIAN;
 	quat_torque_x = tmp_normal_x * SIN_HALF_INFINITESIMAL_RADIAN;
