@@ -80,20 +80,22 @@ void energy_and_gradient (
 	const float (*IE_Fg_3)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
 		(void*)(&IE_Fgrids[Host_mul_tmp3]);
 
-	// Initializing
+	// Initializing gradients (forces)
 	// TODO: make sure this is strictly necessary
 	// (caller may be doing the same, but maybe not redundant)
 	// TODO: merge with for-loop below
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
+		// Intermolecular gradients
 		gradient_inter_x[atom_id] = 0.0f;
 		gradient_inter_y[atom_id] = 0.0f;
 		gradient_inter_z[atom_id] = 0.0f;
-
+		// Intramolecular gradients
 		gradient_intra_x[atom_id] = 0.0f;
 		gradient_intra_y[atom_id] = 0.0f;
 		gradient_intra_z[atom_id] = 0.0f;
 	}
 
+	// Initializing gradient genotypes
 	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 		gradient_genotype[gene_cnt] = 0.0f;
 	}
@@ -123,15 +125,16 @@ void energy_and_gradient (
 			partialE2 = 0.0f;
 			partialE3 = 0.0f;
 
-			gradient_inter_x[atom_id] = 16777216.0f;
-			gradient_inter_y[atom_id] = 16777216.0f;
-			gradient_inter_z[atom_id] = 16777216.0f;
+			// Setting gradients (forces) penalties.
+			// These are valid as long as they are high
+			gradient_inter_x[atom_id] += 16777216.0f;
+			gradient_inter_y[atom_id] += 16777216.0f;
+			gradient_inter_z[atom_id] += 16777216.0f;
 		}
 		else {
 			float x_low = floorf(x);
 			float y_low = floorf(y);
 			float z_low = floorf(z);
-
 			int ix = (int)x_low;
 			int iy = (int)y_low;
 			int iz = (int)z_low;
