@@ -19,15 +19,10 @@ void energy_and_gradient (
 			float*				final_interE,
 			float*				final_intraE,
 
-			float*				local_coords_x,
-			float*				local_coords_y,
-			float* 				local_coords_z,
+			float*				local_coords_x,	// float				local_coords_x[][MAX_POPSIZE],
+			float*				local_coords_y, // float				local_coords_y[][MAX_POPSIZE],
+			float* 				local_coords_z, // float 				local_coords_z[][MAX_POPSIZE],
 
-/*
-			float				local_coords_x[][MAX_POPSIZE],
-			float				local_coords_y[][MAX_POPSIZE],
-			float 				local_coords_z[][MAX_POPSIZE],
-*/
 			float*				gradient_inter_x,
 			float*				gradient_inter_y,
 			float*				gradient_inter_z,
@@ -124,13 +119,9 @@ void energy_and_gradient (
 			(y < 0.0f) || (y >= DockConst_gridsize_y_minus1) ||
 			(z < 0.0f) || (z >= DockConst_gridsize_z_minus1)) {
 
-			x = x - 0.5f * DockConst_gridsize_x_minus1; // TODO: in ADGPU is just DockConst_gridsize_x
-			y = y - 0.5f * DockConst_gridsize_y_minus1;
-			z = z - 0.5f * DockConst_gridsize_z_minus1;
-
 			partialE1 = 16777216.0f;
 			partialE2 = 0.0f;
-			partialE3 + 0.0f;
+			partialE3 = 0.0f;
 
 			gradient_inter_x[atom_id] = 16777216.0f;
 			gradient_inter_y[atom_id] = 16777216.0f;
