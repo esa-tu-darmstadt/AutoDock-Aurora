@@ -595,7 +595,7 @@ void energy_and_gradient (
 
 	// Temporal variable for calculating translation differences.
 	// They are converted back to Angstrom here
-	float r_x, r_y; r_z;
+	float r_x, r_y, r_z;
 
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
 		r_x = (local_coords_x[atom_id] - about_x) * DockConst_grid_spacing;
