@@ -1,8 +1,7 @@
 #include "auxiliary.h"
 #include "rand_gen.h"
-#include "energy_ia.h"
-#include "energy_ie.h"
 #include "calc_pc.h"
+#include "energy_and_gradient.h"
 
 // Stopping criterion from Solis-Wets
 //#define ADADELTA_AUTOSTOP
