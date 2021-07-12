@@ -545,14 +545,14 @@ void energy_and_gradient (
 		// no scaling for them is required
 
 		 // TODO: compute ind in host and then pass it
-		gradient_inter_x[atom_id] = gradient_inter_x[atom_id] / DockConst_grid_spacing;
-		gradient_inter_y[atom_id] = gradient_inter_y[atom_id] / DockConst_grid_spacing;
-		gradient_inter_z[atom_id] = gradient_inter_z[atom_id] / DockConst_grid_spacing;
+		gradient_inter_x[atom_cnt] = gradient_inter_x[atom_cnt] / DockConst_grid_spacing;
+		gradient_inter_y[atom_cnt] = gradient_inter_y[atom_cnt] / DockConst_grid_spacing;
+		gradient_inter_z[atom_cnt] = gradient_inter_z[atom_cnt] / DockConst_grid_spacing;
 
 		// Reusing "gradient_inter_*" for total gradient (inter + intra)
-		gradient_inter_x[atom_id] += gradient_intra_x[atom_id];
-		gradient_inter_y[atom_id] += gradient_intra_y[atom_id];
-		gradient_inter_z[atom_id] += gradient_intra_z[atom_id];
+		gradient_inter_x[atom_cnt] += gradient_intra_x[atom_cnt];
+		gradient_inter_y[atom_cnt] += gradient_intra_y[atom_cnt];
+		gradient_inter_z[atom_cnt] += gradient_intra_z[atom_cnt];
 	}
 
 	// ================================================
