@@ -243,7 +243,7 @@ void esa_cross3_e_(float a1, float a2, float a3, float b1, float b2, float b3, f
 #define esa_length3_e(a1,a2,a3) esa_sqrt(a1*a1 + a2*a2 + a3*a3)
 
 static inline
-void esa_normalize3_e_(float a1, float a2, float a3, float b1, float b2, float b3) {
+void esa_normalize3_e_(float a1, float a2, float a3, float* b1, float* b2, float* b3) {
 	float inv_len = 1.0f / esa_length3_e(a1, a2, a3);
 	*b1 = a1 * inv_len;
 	*b2 = a2 * inv_len;
