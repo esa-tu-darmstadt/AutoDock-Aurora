@@ -830,6 +830,16 @@ void energy_and_gradient (
 			float r_y = (atom_coords_y - atomRef_coords_y) * DockConst_grid_spacing;
 			float r_z = (atom_coords_z - atomRef_coords_z) * DockConst_grid_spacing;
 
+			// Reusing "gradient_inter_*" for total gradient (inter+intra)
+			float atom_force_x = gradient_inter_x[lig_atom_id];
+			float atom_force_y = gradient_inter_y[lig_atom_id];
+			float atom_force_z = gradient_inter_z[lig_atom_id];
+
+			float tmp_tor_x, tmp_tor_y, tmp_tor_z;
+			esa_cross3_e_(r_x, r_y, r_z, atom_force_x, atom_force_y, atom_force_z, &tmp_tor_x, &tmp_tor_y, &tmp_tor_z);
+			torque_tor_x += tmp_tor_x;
+			torque_tor_y += tmp_tor_y;
+			torque_tor_z += tmp_tor_z;
 		}
 
 	}
