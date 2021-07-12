@@ -101,7 +101,6 @@ void ls_ad(
     float local_coords_x[MAX_NUM_OF_ATOMS]; //__local float4 calc_coords[MAX_NUM_OF_ATOMS];
     float local_coords_y[MAX_NUM_OF_ATOMS];
     float local_coords_z[MAX_NUM_OF_ATOMS];
-    float local_coords_w[MAX_NUM_OF_ATOMS];
 
 /*
 	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
