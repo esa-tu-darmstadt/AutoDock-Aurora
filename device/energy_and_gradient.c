@@ -811,5 +811,26 @@ void energy_and_gradient (
 		float torque_tor_y = 0.0f;
 		float torque_tor_z = 0.0f;
 
+		// Iterating over each ligand atom that rotates
+		// if the bond in question rotates
+		for (uint rotable_atom_cnt = 0;
+				  rotable_atom_cnt < GRAD_num_rotating_atoms_per_rotbond;
+				  rotable_atom_cnt++) {
+			uint lig_atom_id = GRAD_rotbonds_atoms[MAX_NUM_OF_ATOMS * rotbond_id + rotable_atom_cnt];
+
+			// Calculating torque on point "A"
+			// (could be any other point "B" along the rotation axis)
+			float atom_coords_x = local_coords_x[lig_atom_id];
+			float atom_coords_y = local_coords_y[lig_atom_id];
+			float atom_coords_z = local_coords_z[lig_atom_id];
+
+			// Temporary variable to calculate translation differences.
+			// They are converted back to Angstroms here
+			float r_x = (atom_coords_x - atomRef_coords_x) * DockConst_grid_spacing;
+			float r_y = (atom_coords_y - atomRef_coords_y) * DockConst_grid_spacing;
+			float r_z = (atom_coords_z - atomRef_coords_z) * DockConst_grid_spacing;
+
+		}
+
 	}
 }
