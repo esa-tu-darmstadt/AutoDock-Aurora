@@ -184,7 +184,7 @@ void energy_and_gradient (
 			cub010 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix  ];
 			cub110 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix+1];
 			cub001 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix  ];
-			cub100 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix+1];
+			cub101 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix+1];
 			cub011 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix  ];
 			cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
 
