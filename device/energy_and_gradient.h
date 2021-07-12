@@ -3,21 +3,17 @@
 
 void energy_and_gradient (
 			float*				genotype,
-	const	uchar               DockConst_num_of_genes, // ADGPU defines it as int
-	const	uint 				DockConst_pop_size,
 			float*				final_interE,
 			float*				final_intraE,
 
 			float*				local_coords_x,
 			float*				local_coords_y,
 			float* 				local_coords_z,
-
 /*
 			float				local_coords_x[][MAX_POPSIZE],
 			float				local_coords_y[][MAX_POPSIZE],
 			float 				local_coords_z[][MAX_POPSIZE],
 */
-
 			float*				gradient_inter_x,
 			float*				gradient_inter_y,
 			float*				gradient_inter_z,
@@ -25,6 +21,9 @@ void energy_and_gradient (
 			float*				gradient_intra_y,
 			float*				gradient_intra_z,
 			float*				gradient_genotype,
+
+	const	uchar               DockConst_num_of_genes, // TODO: ADGPU defines it as int
+	const	uint 				DockConst_pop_size,
 	// ie
 	const 	float* 	restrict	IE_Fgrids,
 	const 	float*	restrict	IA_IE_atom_charges,
