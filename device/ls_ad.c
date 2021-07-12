@@ -194,8 +194,8 @@ void ls_ad(
 			DockConst_rotbondlist_length,
 			DockConst_num_of_genes,
 			Host_RunId,
-			active_pop_size,    // TODO: FIXME
-			entity_possible_new_genotype,   // TODO: FIXME
+			pop_size /*active_pop_size*/,    // TODO: FIXME
+			genotype /*entity_possible_new_genotype*/,   // TODO: FIXME
 			local_coords_x,
 			local_coords_y,
 			local_coords_z
