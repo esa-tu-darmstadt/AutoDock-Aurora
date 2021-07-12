@@ -130,7 +130,7 @@ void ls_ad(
         gradient_intra_z[i] = 0.0f;
 	}
 
-    float partial_energies[NUM_OF_THREADS_PER_BLOCK]; // FIXME: remove it?
+    //float partial_energies[/*NUM_OF_THREADS_PER_BLOCK*/]; // TODO: remove it?
 
     // Squared gradients E[g^2]
     float square_gradient[ACTUAL_GENOTYPE_LENGTH];
