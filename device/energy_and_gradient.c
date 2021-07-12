@@ -789,4 +789,27 @@ void energy_and_gradient (
 	gradient_genotype[3] = (grad_phi / (dependance_on_theta * dependance_on_rotangle)) * DEG_TO_RAD;
 	gradient_genotype[4] = (grad_theta / dependance_on_rotangle) * DEG_TO_RAD;
 	gradient_genotype[5] = grad_rotangle * DEG_TO_RAD;
+
+	// ================================================
+	// OBTAINING TORSION-RELATED GRADIENTS
+	// ================================================
+	for (uint rotbond_id = 0; rotbond_id < DockConst_num_of_genes - 6; rotbond_id++) {
+		// Querying ids of atoms belonging to the rotatable bond in question
+		int atom1_id = GRAD_rotbonds[2 * rotbond_id];
+		int atom2_id = GRAD_rotbonds[2 * rotbond_id + 1];
+
+		float atomRef_coords_x = local_coords_x[atom1_id];
+		float atomRef_coords_y = local_coords_y[atom1_id];
+		float atomRef_coords_z = local_coords_z[atom1_id];
+
+		float rotation_unitvec_x = local_coords_x[atom2_id] - local_coords_x[atom1_id];
+		float rotation_unitvec_y = local_coords_y[atom2_id] - local_coords_y[atom1_id];
+		float rotation_unitvec_z = local_coords_z[atom2_id] - local_coords_z[atom1_id];
+
+		// Torque of torsions
+		float torque_tor_x = 0.0f;
+		float torque_tor_y = 0.0f;
+		float torque_tor_z = 0.0f;
+
+	}
 }
