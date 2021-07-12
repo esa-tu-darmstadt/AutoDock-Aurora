@@ -160,7 +160,7 @@ void energy_and_gradient (
 			weight011 = omdx * dy * dz;
 			weight111 = dx * dy * dz;
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("\n\nPartial results for atom with id %i:\n", atom_id);
 			printf("x_low = %f, x_frac = %f\n", x_low, dx);
 			printf("y_low = %f, y_frac = %f\n", y_low, dy);
@@ -188,7 +188,7 @@ void energy_and_gradient (
 			cub011 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix  ];
 			cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("Interpolation of van der Waals map:\n");
 			printf("cube(0,0,0) = %f\n". cub000);
 			printf("cube(1,0,0) = %f\n". cub100);
@@ -206,7 +206,7 @@ void energy_and_gradient (
 						cub001 * weight001 + cub101 * weight101 +
 						cub011 * weight011 + cub111 * weight111;
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("interpolated energy partialE1 = %f\n\n", partialE1);
 #endif
 
@@ -261,7 +261,7 @@ void energy_and_gradient (
 			cub011 = (*IE_Fg_2)[iz+1][iy+1][ix  ];
 			cub111 = (*IE_Fg_2)[iz+1][iy+1][ix+1];
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("Interpolation of electrostatic map:\n");
 			printf("cube(0,0,0) = %f\n". cub000);
 			printf("cube(1,0,0) = %f\n". cub100);
@@ -279,7 +279,7 @@ void energy_and_gradient (
 						cub001 * weight001 + cub101 * weight101 +
 						cub011 * weight011 + cub111 * weight111);
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("q =%f, interpolated energy partialE2 = %f\n\n", q, partialE2);
 #endif
 
@@ -310,7 +310,7 @@ void energy_and_gradient (
 			cub011 = (*IE_Fg_3)[iz+1][iy+1][ix  ];
 			cub111 = (*IE_Fg_3)[iz+1][iy+1][ix+1];
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("Interpolation of desolvation map:\n");
 			printf("cube(0,0,0) = %f\n". cub000);
 			printf("cube(1,0,0) = %f\n". cub100);
@@ -329,7 +329,7 @@ void energy_and_gradient (
 						cub001 * weight001 + cub101 * weight101 +
 						cub011 * weight011 + cub111 * weight111);
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf_q, partialE3);
 #endif
 
@@ -416,7 +416,7 @@ void energy_and_gradient (
 			float dist = esa_sqrt(subx*subx + suby*suby + subz*subz);
 			float atomic_distance = dist * DockConst_grid_spacing;
 
-#ifdef (PRINT_ALL)
+#ifdef PRINT_ALL
 			printf("\nContrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
 #endif
 
@@ -759,7 +759,6 @@ void energy_and_gradient (
 	// Using interpolation on out-of-bounds elements results in hang
 	if (index_theta <= 0) {
 		dependance_on_theta = GRAD_dependence_on_theta[0];
-
 	} else if (index_theta >= 999) {
 		dependance_on_theta = GRAD_dependence_on_theta[999];
 	} else {
@@ -781,7 +780,6 @@ void energy_and_gradient (
 	// Using interpolation on previous and/or next elements results in hang
 	if (index_rotangle <= 0) {
 		dependance_on_rotangle = GRAD_dependence_on_rotangle[0];
-
 	} else if (index_rotangle >= 999) {
 		dependance_on_rotangle = GRAD_dependence_on_rotangle[999];
 	} else {
