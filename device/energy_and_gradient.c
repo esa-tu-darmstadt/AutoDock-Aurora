@@ -753,8 +753,7 @@ void energy_and_gradient (
 
 	} else if (index_theta >= 999) {
 		dependance_on_theta = GRAD_dependence_on_theta[999];
-	}
-	else {
+	} else {
 		X0_theta = GRAD_angle[index_theta];
 		Y0_theta = GRAD_dependence_on_theta[index_theta];
 		X1_theta = GRAD_angle[index_theta + 1];
@@ -764,6 +763,27 @@ void energy_and_gradient (
 	}
 
 	// Interpolating rotangle values
+	float X0_rotangle, Y0_rotangle;
+	float X1_rotangle, Y1_rotangle;
+	float X_rotangle;
+	float dependance_on_rotangle; // Y = dependance_on_rotangle
+	X_rotangle = current_rotangle;
+
+	// Using interpolation on previous and/or next elements results in hang
+	if (index_rotangle <= 0) {
+		dependance_on_rotangle = GRAD_dependence_on_rotangle[0];
+
+	} else if (index_rotangle >= 999) {
+		dependance_on_rotangle = GRAD_dependence_on_rotangle[999];
+	} else {
+		X0_rotangle = GRAD_angle[index_rotangle];
+		Y0_rotangle = GRAD_dependence_on_rotangle[index_rotangle];
+		X1_rotangle = GRAD_angle[index_rotangle + 1];
+		Y1_rotangle = GRAD_dependence_on_rotangle[index_rotangle + 1];
+		// TODO: make this statement is in the correct place
+		dependance_on_rotangle = (Y0_rotangle * (X1_rotangle - X_rotangle) + Y1_rotangle * (X_rotangle - X0_rotangle)) * inv_angle_delta;
+	}
+
 
 
 }
