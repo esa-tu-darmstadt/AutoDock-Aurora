@@ -684,6 +684,10 @@ void energy_and_gradient (
 
 	int is_theta_gt_pi = (current_theta > PI_FLOAT) ? 1 : 0;
 
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s %-10.6f %-10.6f %-10.6f\n", "current_axisangle (1,2,3): ", current_phi, current_theta, current_rotangle);
+#endif
+
 	// This is where we are in the quaternion space
 	float current_q_w, current_q_x, current_q_y, current_q_z;
 
@@ -697,6 +701,10 @@ void energy_and_gradient (
 	current_q_x = rotaxis_x * sinf(ang);
 	current_q_y = rotaxis_y * sinf(ang);
 	current_q_z = rotaxis_z * sinf(ang);
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s %-10.6f %-10.6f %-10.6f %-10.6f\n", "current_q (w,x,y,z): ", current_q_w, current_q_x, current_q_y, current_q_z);
+#endif
 
 	// This is where we want to be in the quaternion space
 	float target_q_w, target_q_x, target_q_y, target_q_z;
@@ -716,6 +724,10 @@ void energy_and_gradient (
 							current_q_y, -current_q_z, current_q_w, current_q_x);
 	target_q_z = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
 							current_q_z, current_q_y, -current_q_x, current_q_w);
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s %-10.6f %-10.6f %-10.6f %-10.6f\n", "target_q (w,x,y,z): ", target_q_w, target_q_x, target_q_y, target_q_z);
+#endif
 
 	// This is where we want to be in the orientation axis-angle space
 	float target_phi, target_theta, target_rotangle;
@@ -739,6 +751,10 @@ void energy_and_gradient (
 		target_theta = PI_TIMES_2 - target_theta;
 	}
 
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s %-10.6f %-10.6f %-10.6f\n", "target_axisangle (1,2,3): ", target_phi, target_theta, target_rotangle);
+#endif
+
 	// The infinitesimal rotation produces an infinitesimal displacement.
 	// This is to guarantee that the direction of the displacement is not distorted.
 	float orientation_scaling = torque_length * INV_INFINITESIMAL_RADIAN;
@@ -747,6 +763,12 @@ void energy_and_gradient (
 	float grad_phi = orientation_scaling * (fmodf(target_phi - current_phi + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
 	float grad_theta = orientation_scaling * (fmodf(target_theta - current_theta + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
 	float grad_rotangle = orientation_scaling * (fmodf(target_rotangle - current_rotangle + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s \n", "grad_axisangle (1,2,3) - before empirical scaling: ");
+	printf("%-13s %-13s %-13s \n", "grad_phi", "grad_theta", "grad_rotangle");
+	printf("%-13.6f %-13.6f %-13.6f\n", grad_phi, grad_theta, grad_rotangle);
+#endif
 
 	// Derivatives corrections.
 	// Constant array have 1000 elements.
