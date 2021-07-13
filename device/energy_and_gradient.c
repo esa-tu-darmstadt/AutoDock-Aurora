@@ -187,7 +187,7 @@ void energy_and_gradient (
 			cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
 
 #ifdef PRINT_ALL
-			printf("Interpolation of van der Waals map:\n");
+			printf("Interpolation of Van der Waals map:\n");
 			printf("cube(0,0,0) = %f\n". cub000);
 			printf("cube(1,0,0) = %f\n". cub100);
 			printf("cube(0,1,0) = %f\n". cub010);
@@ -348,7 +348,6 @@ void energy_and_gradient (
 	// ================================================
 	// CALCULATING INTRAMOLECULAR ENERGY & GRADIENTS
 	// ================================================
-
 	float delta_distance = 0.5f * DockConst_smooth;
 
 	// For each intramolecular atom contributor pair
@@ -360,7 +359,9 @@ void energy_and_gradient (
 		int atom1_id = IA_intraE_contributors[3*contributor_counter];
 		int atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 		int is_H_bond = IA_intraE_contributors[3*contributor_counter + 2];
-		uint hbond = (is_H_bond == 1)? 1:0; // evaluates to 1 in case of H-bond, 0 otherwise	// TODO: apply to Solis-Wets
+
+		// Evaluating to 1 in case of H-bond, 0 otherwise // TODO: apply to Solis-Wets
+		uint hbond = (is_H_bond == 1)? 1 : 0;
 
 		// Getting types ids
 		int atom1_typeid = IA_IE_atom_types[atom1_id];
@@ -369,8 +370,7 @@ void energy_and_gradient (
 		int atom1_type_vdw_hb = IA_atom1_types_reqm[atom1_typeid];
 		int atom2_type_vdw_hb = IA_atom2_types_reqm[atom2_typeid];
 
-		// Calculation of delta distance moved outside this loop
-		// TODO: test the same for Solis-Wets
+		// Calculation of delta distance moved outside this loop // TODO: test the same for Solis-Wets
 
 		// Getting optimum pair distance (opt_distance) from reqm and reqm_hbond
 		// reqm: equilibrium internuclear separation
@@ -379,10 +379,10 @@ void energy_and_gradient (
 		// 	 (sum of the vdW radii of two like atoms (A)) in the case of hbond
 		float opt_distance;
 
-		if (hbond) {	// H-bond
+		if (hbond) { // H-bond
 			opt_distance = IA_reqm_hbond[atom1_type_vdw_hb] + IA_reqm_hbond[atom2_type_vdw_hb];
-		} else {	// Van der Waals
-			opt_distance = 0.5f*(IA_reqm[atom1_type_vdw_hb] + IA_reqm[atom2_type_vdw_hb]);
+		} else { // Van der Waals
+			opt_distance = 0.5f * (IA_reqm[atom1_type_vdw_hb] + IA_reqm[atom2_type_vdw_hb]);
 		}
 
 		float vdW_const1 = IA_VWpars_AC[atom1_typeid * DockConst_num_of_atypes + atom2_typeid];
@@ -439,7 +439,6 @@ void energy_and_gradient (
 			// Calculating energy contributions
 			// Cuttoff1: internuclear-distance at 8A only for vdw and hbond.
 			if (atomic_distance < 8.0f) {
-
 				partialIAE1 = vdW_const1 * inverse_smoothed_distance_pow_12; // TODO: do the same for Solis-Wets
 				float partialIAE1_times_12 = 12.0f * partialIAE1;
 
@@ -448,18 +447,17 @@ void energy_and_gradient (
 				float gradient_numerator;
 
 				// Calculating van der Waals / hydrogen bond term
-				if (hbond) {	// H-bond
+				if (hbond) { // H-bond
 					float inverse_smoothed_distance_pow_10 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_4;
 					partialIAE2 = vdW_const2 * inverse_smoothed_distance_pow_10;
 					gradient_numerator = 10.0f * partialIAE2 - partialIAE1_times_12;
 				}
-				else {	// Van der Waals
+				else { // Van der Waals
 					partialIAE2 = vdW_const2 * inverse_smoothed_distance_pow_6;
 					gradient_numerator =  6.0f * partialIAE2 - partialIAE1_times_12;
 				}
 
 				priv_gradient_per_intracontributor += gradient_numerator * inverse_smoothed_distance;
-
 			} // End if cuttoff1 - internuclear-distance at 8A
 
 			// Calculating energy contributions
@@ -489,7 +487,6 @@ void energy_and_gradient (
 				partialIAE4 = desolv_const * tmp_exp4;
 
 				priv_gradient_per_intracontributor += -0.077160f * atomic_distance * partialIAE4;
-
 			} // End if cuttoff2 - internuclear-distance at 20.48A
 
 		//} // End for (uint j = 0 ...)
