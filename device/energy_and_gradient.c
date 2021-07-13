@@ -565,42 +565,51 @@ void energy_and_gradient (
 	// OBTAINING TRANSLATION-RELATED GRADIENTS
 	// ================================================
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
-		// Accummulating "gradient_inter_*"
+		// Accummulating "gradient_inter_*" first ...
 		gradient_genotype[0] += gradient_inter_x[atom_id]; // gradient for gene 0: gene x
 		gradient_genotype[1] += gradient_inter_y[atom_id]; // gradient for gene 1: gene y
 		gradient_genotype[2] += gradient_inter_z[atom_id]; // gradient for gene 2: gene z
 	}
 
-	// Scaling gradient for translational genes as
+	// Then scaling gradient for translational genes as
 	// their corresponding gradients were calculated in the space
 	// where these genes are in Angstrom, but AD-GPU translational genes are in grids
 	gradient_genotype[0] *= DockConst_grid_spacing;
 	gradient_genotype[1] *= DockConst_grid_spacing;
 	gradient_genotype[2] *= DockConst_grid_spacing;
 
+#ifdef PRINT_GRAD_TRANSLATION_GENES
+	printf("gradient_x:%f\n", gradient_genotype[0]);
+	printf("gradient_y:%f\n", gradient_genotype[1]);
+	printf("gradient_z:%f\n", gradient_genotype[2]);
+#endif
+
 	// ================================================
 	// OBTAINING ROTATION-RELATED GRADIENTS
 
 	// Transform gradient_inter_{x|y|z}
-	// into local_gradients[i] (with four quaternion genes)
-
+	// into local_gradients[i] (with four quaternion genes).
 	// Transform local_gradients[i] (with four quaternion genes)
-	// into local_gradients[i] (with three genes)
+	// into local_gradients[i] (with three genes).
 	// ================================================
 
 	float torque_rot_x = 0.0f;
 	float torque_rot_y = 0.0f;
 	float torque_rot_z = 0.0f;
 
-	// Variable holding the center of rotation
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-20s %-10.6f %-10.6f %-10.6f\n", "initial torque: ", torque_rot_x, torque_rot_y, torque_rot_z);
+#endif
+
+	// Variable holding the center of rotation.
 	// In getparameters.cpp, it indicates translation genes are
-	// in grid spacing (instead of Angstrom)
+	// in grid spacing (instead of Angstrom).
 	float about_x = genotype[0];
 	float about_y = genotype[1];
 	float about_z = genotype[2];
 
 	// Temporal variable for calculating translation differences.
-	// They are converted back to Angstrom here
+	// They are converted back to Angstrom here.
 	float r_x, r_y, r_z;
 
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
@@ -618,6 +627,14 @@ void energy_and_gradient (
 		torque_rot_x += tmp_x;
 		torque_rot_y += tmp_y;
 		torque_rot_z += tmp_z;
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+		if (atom_id == 0) {
+			printf("%s\n", "Torque: atom-based accumulation of torque");
+			printf("%10s %10s %10s %10s %5s %12s %12s %12s %5s %11s %11s %11s\n", "atom_id", "r_x", "r_y", "r_z", "|", "force_x", "force_y", "force.z", "|", "torque_x", "torque_y", "torque_z");
+		}
+		printf("%10u %10.6f %10.6f %10.6f %5s %12.6f %12.6f %12.6f %5s %12.6f %12.6f %12.6f\n", atom_id, r_x, r_y, r_z, "|", force_x, force_y, force_z, "|", torque_rot_x, torque_rot_y, torque_rot_z);
+#endif
 	}
 
 	// genes[3:7] = rotation.axisangle_to_q(torque, rad)
