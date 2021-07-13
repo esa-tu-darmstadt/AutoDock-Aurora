@@ -637,8 +637,16 @@ void energy_and_gradient (
 #endif
 	}
 
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-20s %-10.6f %-10.6f %-10.6f\n", "final torque: ", torque_rot_x, torque_rot_y, torque_rot_z);
+#endif
+
 	// genes[3:7] = rotation.axisangle_to_q(torque, rad)
 	float torque_length = esa_length3_e(torque_rot_x, torque_rot_y, torque_rot_z);
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-20s %-10.6f\n", "torque length: ", torque_length);
+#endif
 
 	// Finding quaternion performing
 	// infinitesimal rotation around torque axis
@@ -651,6 +659,11 @@ void energy_and_gradient (
 	quat_torque_x = tmp_normal_x * SIN_HALF_INFINITESIMAL_RADIAN;
 	quat_torque_y = tmp_normal_y * SIN_HALF_INFINITESIMAL_RADIAN;
 	quat_torque_z = tmp_normal_z * SIN_HALF_INFINITESIMAL_RADIAN;
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-20s %-10.6f\n", "INFINITESIMAL_RADIAN: ", INFINITESIMAL_RADIAN);
+	printf("%-20s %-10.6f %-10.6f %-10.6f %-10.6f\n", "quat_torque (w,x,y,z): ", quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z);
+#endif
 
 	// Converting quaternion gradients into orientation gradients
 
