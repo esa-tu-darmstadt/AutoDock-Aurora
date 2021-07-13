@@ -885,7 +885,7 @@ void energy_and_gradient (
 		float tmp_rotation_unitvec_y = local_coords_y[atom2_id] - local_coords_y[atom1_id];
 		float tmp_rotation_unitvec_z = local_coords_z[atom2_id] - local_coords_z[atom1_id];
 		float rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z;
-		esa_normalize3_e_(tmp_rotation_unitvec_x, tmp_rotation_unitvec_y, tmp_rotation_unitvec_x, &rotation_unitvec_x, &rotation_unitvec_y, &rotation_unitvec_x);
+		esa_normalize3_e_(tmp_rotation_unitvec_x, tmp_rotation_unitvec_y, tmp_rotation_unitvec_x, &rotation_unitvec_x, &rotation_unitvec_y, &rotation_unitvec_z);
 
 #ifdef PRINT_GRAD_TORSION_GENES
 		printf("%-15s \n\t %-10.6f %-10.6f %-10.6f\n", "unitvec: ", rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z);
