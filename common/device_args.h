@@ -75,7 +75,12 @@ struct device_args {
 	float  DockConst_base_dang_mul_sqrt3;
 	uchar  DockConst_cons_limit;
 	// ADADELTA (LS-AD)
-
+	const int *GRAD_rotbonds;
+	const int *GRAD_rotbonds_atoms;
+	const int *GRAD_num_rotating_atoms_per_rotbond;
+	const float *GRAD_angle;
+	const float *GRAD_dependence_on_theta;
+	const float *GRAD_dependence_on_rotangle;
 	// Values changing every LGA run
 	uint   Host_num_of_runs;
 };
