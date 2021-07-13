@@ -925,6 +925,13 @@ void energy_and_gradient (
 			torque_tor_x += tmp_tor_x;
 			torque_tor_y += tmp_tor_y;
 			torque_tor_z += tmp_tor_z;
+
+#ifdef PRINT_GRAD_TORSION_GENES
+			if (rotable_atom_cnt == 0) {
+				printf("\n %-30s %3i\n", "contributor for gene : ", (rotbond_id+6));
+			}
+			printf("\t %-15s %-10.6f %-10.6f %-10.6f \t %-15s %-10.6f %-10.6f %-10.6f\n", "atom_coords: ", atom_coords_x, atom_coords_y, atom_coords_z, "atom_force: ", atom_force_x, atom_force_y, atom_force_z);
+#endif
 		} // End for loop on "rotable_atom_cnt"
 
 		// Projecting torque on rotation axis
@@ -932,6 +939,10 @@ void energy_and_gradient (
 
 		// Assigning gene-based gradient
 		gradient_genotype[rotbond_id + 6] = torque_on_axis * DEG_TO_RAD;
+
+#ifdef PRINT_GRAD_TORSION_GENES
+		printf("gradient_torsion [%u] :%f\n", rotbond_id+6, gradient_genotype[rotbond_id+6]);
+#endif
 	} // End for loop on "rotbond_id"
 
 	// Extra conversion (see first index value = 3)
