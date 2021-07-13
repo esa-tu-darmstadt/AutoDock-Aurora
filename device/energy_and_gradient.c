@@ -1,5 +1,9 @@
 #include "auxiliary.h"
 
+//#define PRINT_GRAD_TRANSLATION_GENES
+//#define PRINT_GRAD_ROTATION_GENES
+//#define PRINT_GRAD_TORSION_GENES
+
 // The following is a scaling of gradients.
 // Initially all genotypes and gradients
 // were expressed in grid-units (translations)
@@ -530,15 +534,31 @@ void energy_and_gradient (
 		// Intramolecular gradients were already in Angstrom,
 		// no scaling for them is required
 
-		 // TODO: compute ind in host and then pass it
+		 // TODO: consider computing inv(grid_spacing) in host and then pass to device
 		gradient_inter_x[atom_cnt] = gradient_inter_x[atom_cnt] / DockConst_grid_spacing;
 		gradient_inter_y[atom_cnt] = gradient_inter_y[atom_cnt] / DockConst_grid_spacing;
 		gradient_inter_z[atom_cnt] = gradient_inter_z[atom_cnt] / DockConst_grid_spacing;
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+		if (atom_cnt == 0) {
+			printf("%s\n", "Gradients: inter & intra");
+			printf("%10s %13s %13s %13s %5s %13s %13s %13s\n", "atom_id", "grad_intER.x", "grad_intER.y", "grad_intER.z", "|", "grad_intRA.x", "grad_intRA.y", "grad_intRA.z");
+		}
+		printf("%10u %13.6f %13.6f %13.6f %5s %13.6f %13.6f %13.6f\n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt], "|", gradient_intra_x[atom_cnt], gradient_intra_y[atom_cnt], gradient_intra_z[atom_cnt]);
+#endif
 
 		// Reusing "gradient_inter_*" for total gradient (inter + intra)
 		gradient_inter_x[atom_cnt] += gradient_intra_x[atom_cnt];
 		gradient_inter_y[atom_cnt] += gradient_intra_y[atom_cnt];
 		gradient_inter_z[atom_cnt] += gradient_intra_z[atom_cnt];
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+		if (atom_cnt == 0) {
+			printf("%s\n", "Gradients: total = inter + intra");
+			printf("%10s %13s %13s %13s\n", "atom_id", "grad.x", "grad.y", "grad.z");
+		}
+		printf("%10u %13.6f %13.6f %13.6f \n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt]);
+#endif
 	}
 
 	// ================================================
