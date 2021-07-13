@@ -810,9 +810,8 @@ void energy_and_gradient (
 	// Y = [Y0 * (X1 - X) + Y1 * (X - X0)] * inv_angle_delta
 	float X0_theta, Y0_theta;
 	float X1_theta, Y1_theta;
-	float X_theta;
+	float X_theta = current_theta;
 	float dependance_on_theta;	// Y = dependance_on_theta
-	X_theta = current_theta;
 
 	// Using interpolation on out-of-bounds elements results in hang
 	if (index_theta <= 0) {
@@ -824,16 +823,18 @@ void energy_and_gradient (
 		Y0_theta = GRAD_dependence_on_theta[index_theta];
 		X1_theta = GRAD_angle[index_theta + 1];
 		Y1_theta = GRAD_dependence_on_theta[index_theta + 1];
-		// TODO: make this statement is in the correct place
 		dependance_on_theta = (Y0_theta * (X1_theta - X_theta) + Y1_theta * (X_theta - X0_theta)) * inv_angle_delta;
 	}
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s %-10.6f\n", "dependence_on_theta: ", dependence_on_theta);
+#endif
 
 	// Interpolating rotangle values
 	float X0_rotangle, Y0_rotangle;
 	float X1_rotangle, Y1_rotangle;
-	float X_rotangle;
+	float X_rotangle = current_rotangle;
 	float dependance_on_rotangle; // Y = dependance_on_rotangle
-	X_rotangle = current_rotangle;
 
 	// Using interpolation on previous and/or next elements results in hang
 	if (index_rotangle <= 0) {
@@ -845,15 +846,24 @@ void energy_and_gradient (
 		Y0_rotangle = GRAD_dependence_on_rotangle[index_rotangle];
 		X1_rotangle = GRAD_angle[index_rotangle + 1];
 		Y1_rotangle = GRAD_dependence_on_rotangle[index_rotangle + 1];
-		// TODO: make this statement is in the correct place
 		dependance_on_rotangle = (Y0_rotangle * (X1_rotangle - X_rotangle) + Y1_rotangle * (X_rotangle - X0_rotangle)) * inv_angle_delta;
 	}
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s %-10.6f\n", "dependence_on_rotangle: ", dependence_on_rotangle);
+#endif
 
 	// Setting gradient rotation-related genotypes in cube
 	// Multiplying by DEG_TO_RAD to make it uniform to  DEG (see torsion gradients)
 	gradient_genotype[3] = (grad_phi / (dependance_on_theta * dependance_on_rotangle)) * DEG_TO_RAD;
 	gradient_genotype[4] = (grad_theta / dependance_on_rotangle) * DEG_TO_RAD;
 	gradient_genotype[5] = grad_rotangle * DEG_TO_RAD;
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+	printf("%-30s \n", "grad_axisangle (1,2,3) - after empirical scaling: ");
+	printf("%-13s %-13s %-13s \n", "grad_phi", "grad_theta", "grad_rotangle");
+	printf("%-13.6f %-13.6f %-13.6f\n", gradient_genotype[3], gradient_genotype[4], gradient_genotype[5]);
+#endif
 
 	// ================================================
 	// OBTAINING TORSION-RELATED GRADIENTS
