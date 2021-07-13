@@ -774,8 +774,6 @@ void energy_and_gradient (
 	// Constant array have 1000 elements.
 	// Each array spans approximatedly from 0.0 to 2*PI.
 	// The distance between each x-point (angle_delta) is 2*PI/1000.
-	const float angle_delta = 0.00628353f;
-	const float inv_angle_delta = 159.154943f;
 
 	// Correcting theta gradients interpolating
 	// values from correction lookup tables
