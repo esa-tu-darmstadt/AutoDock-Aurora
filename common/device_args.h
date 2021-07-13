@@ -68,12 +68,14 @@ struct device_args {
 	float DockConst_gridsize_z_minus1;
 	uint  Host_mul_tmp2;
 	uint  Host_mul_tmp3;
-	// LS
+	// Solis-Wets (LS-SW)
 	ushort DockConst_max_num_of_iters;
 	float  DockConst_rho_lower_bound;
 	float  DockConst_base_dmov_mul_sqrt3;
 	float  DockConst_base_dang_mul_sqrt3;
 	uchar  DockConst_cons_limit;
+	// ADADELTA (LS-AD)
+
 	// Values changing every LGA run
 	uint   Host_num_of_runs;
 };

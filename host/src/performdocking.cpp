@@ -184,8 +184,9 @@ filled with clock() */
 	// Preparing the constant data fields for the accelerator (calcenergy.cpp)
 	// -------------------------------------------------------------------------
 
-	kernelconstant_static  KerConstStatic;
-	if (prepare_conststatic_fields_for_aurora(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic) == 1)
+	kernelconstant_static KerConstStatic;
+	kernelconstant_grads KerConstGrads;
+	if (prepare_conststatic_fields_for_aurora(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic, &KerConstGrads) == 1)
 		return 1;
 
 	// Preparing parameter struct

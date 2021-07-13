@@ -69,11 +69,27 @@ typedef struct
 	float 			ref_orientation_quats_const  [4*MAX_NUM_OF_RUNS];
 } kernelconstant_static;
 
+typedef struct
+{
+	// Added for calculating torsion-related gradients.
+	// Passing list of rotbond-atoms ids to device.
+	// Contains the same information as processligand.h/Liganddata->rotbonds
+	int rotbonds [2*MAX_NUM_OF_ROTBONDS];
+
+	// Contains the same information as processligand.h/Liganddata->atom_rotbonds.
+	// "atom_rotbonds": array containing the rotatable bonds - atoms assignment.
+	// If the element atom_rotbonds[atom_index][rotatable_bond_index] is equal to 1,
+	// it means the atom must be rotated if the bond rotates. A 0 means the opposite.
+	int rotbonds_atoms [MAX_NUM_OF_ATOMS * MAX_NUM_OF_ROTBONDS];
+	int num_rotating_atoms_per_rotbond [MAX_NUM_OF_ROTBONDS];
+} kernelconstant_grads;
+
 int prepare_conststatic_fields_for_aurora(
 	Liganddata*	myligand_reference,
-	Dockpars*	mypars,
-	float*	cpu_ref_ori_angles,
-	kernelconstant_static*	KerConstStatic
+	Dockpars* mypars,
+	float* cpu_ref_ori_angles,
+	kernelconstant_static*	KerConstStatic,
+	kernelconstant_grads* KerConstGrads
 );
 
 void make_reqrot_ordering(
