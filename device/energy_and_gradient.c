@@ -877,6 +877,10 @@ void energy_and_gradient (
 		float atomRef_coords_y = local_coords_y[atom1_id];
 		float atomRef_coords_z = local_coords_z[atom1_id];
 
+#ifdef PRINT_GRAD_TORSION_GENES
+		printf("%-5s %3u \n\t %-5s %3i \n\t %-5s %3i\n", "gene: ", (rotbond_id+6), "atom1: ", atom1_id, "atom2: ", atom2_id);
+#endif
+
 		float rotation_unitvec_x = local_coords_x[atom2_id] - local_coords_x[atom1_id];
 		float rotation_unitvec_y = local_coords_y[atom2_id] - local_coords_y[atom1_id];
 		float rotation_unitvec_z = local_coords_z[atom2_id] - local_coords_z[atom1_id];
