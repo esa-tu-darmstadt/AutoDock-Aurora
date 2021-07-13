@@ -495,21 +495,21 @@ void energy_and_gradient (
 
 		// Decomposing "priv_gradient_per_intracontributor"
 		// into the contribution of each atom of the pair.
-		// Distances in Ansgtroms of vector that goes from "atom1_id"-to-"atom2_id".
-		// Therefore, -subx, -suby. -subz are used.
-		float subx_div_dist = -subx / dist;
-		float suby_div_dist = -suby / dist;
-		float subz_div_dist = -subz / dist;
+		// Distances in Ansgtroms of vector go from "atom1_id"-to-"atom2_id".
+		// Therefore, (-subx), (-suby), and (-subz) are used.
+		float inv_dist = 1.0f / dist;
+		float subx_div_dist = -subx * inv_dist;
+		float suby_div_dist = -suby * inv_dist;
+		float subz_div_dist = -subz * inv_dist;
 
 		float priv_intra_gradient_x = priv_gradient_per_intracontributor * subx_div_dist;
 		float priv_intra_gradient_y = priv_gradient_per_intracontributor * suby_div_dist;
 		float priv_intra_gradient_z = priv_gradient_per_intracontributor * subz_div_dist;
 
-		// Calculating gradients in xyz components
+		// Calculating gradients in xyz components.
 		// Gradients for both atoms in a single contributor pair
-		// have the same magnitude, but opposite directions
-
-		// TODO: confirm no need for atomic ops (because this is not SIMT as in AD-GPU)
+		// have the same magnitude, but opposite directions.
+		// IMPORTANT: no need for atomic ops because this is not SIMT as in AD-GPU.
 		gradient_intra_x[atom1_id] = gradient_intra_x[atom1_id] - priv_intra_gradient_x;
 		gradient_intra_y[atom1_id] = gradient_intra_y[atom1_id] - priv_intra_gradient_y;
 		gradient_intra_z[atom1_id] = gradient_intra_z[atom1_id] - priv_intra_gradient_z;
