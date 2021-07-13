@@ -148,9 +148,8 @@ void energy_and_gradient (
 			float omdz = 1.0f - dz;
 
 			// Calculating interpolation weights
-			float weight000, weight001, weight010;
-			float weight011, weight100, weight101;
-			float weight110, weight111;
+			float weight000, weight001, weight010, weight011;
+			float weight100, weight101, weight110, weight111;
 			weight000 = omdx * omdy * omdz;
 			weight100 = dx * omdy * omdz;
 			weight010 = omdx * dy * omdz;
@@ -162,9 +161,9 @@ void energy_and_gradient (
 
 #ifdef PRINT_ALL
 			printf("\n\nPartial results for atom with id %i:\n", atom_id);
-			printf("x_low = %f, x_frac = %f\n", x_low, dx);
-			printf("y_low = %f, y_frac = %f\n", y_low, dy);
-			printf("z_low = %f, z_frac = %f\n", z_low, dz);
+			printf("x_low = %f, dx = %f\n", x_low, dx);
+			printf("y_low = %f, dy = %f\n", y_low, dy);
+			printf("z_low = %f, dz = %f\n", z_low, dz);
 			printf("weight(0,0,0) = %f\n", weight000);
 			printf("weight(1,0,0) = %f\n", weight100);
 			printf("weight(0,1,0) = %f\n", weight010);
