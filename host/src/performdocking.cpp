@@ -235,6 +235,14 @@ filled with clock() */
 	const unsigned int mul_tmp3 = (dockpars.num_of_atypes + 1) * dockpars.g3;
 
 	// -------------------------------------------------------------------------
+	std::cout << "Local-search chosen method is: " << (
+		(strcmp(mypars->ls_method, "sw") == 0) ? "Solis-Wets (sw)" :
+		(strcmp(mypars->ls_method, "sd") == 0) ? "Steepest-Descent (sd)" :
+		(strcmp(mypars->ls_method, "fire") == 0) ? "FIRE (fire)" :
+		(strcmp(mypars->ls_method, "ad") == 0) ? "ADADELTA (ad)" : "Unknown"
+		) << std::endl;
+
+	// -------------------------------------------------------------------------
 	// Defining kernel buffers
 	// -------------------------------------------------------------------------
 
