@@ -105,7 +105,7 @@ filled with clock() */
 		veo_thread_context[i] = wrapper_veo_context_open(ve_process[i]);
 	}
 
-	// maximum number of runs per VE proc
+	// Maximum number of runs per VE proc
 	int ve_num_of_runs = (mypars->num_of_runs + ve_num_procs - 1) / ve_num_procs;
 
 	// End of Host Setup
@@ -372,7 +372,7 @@ filled with clock() */
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
 
-	// the device_args structure contains the arguments for the kernel function
+	// The device_args structure contains the arguments for the kernel function
 	device_args da;
 	// VE virtual address of da structure, passed to kernel
 	uint64_t da_VEMVA;
@@ -380,7 +380,8 @@ filled with clock() */
 	// VE proc ID, is changed for each new proc in multi-proc runs
 	da.ve_proc_id = 0;
 	da.ve_num_procs = ve_num_procs;
-	// fill scalar values into device_args structure
+
+	// Filling scalar values into device_args structure
 	// GA
 	da.DockConst_pop_size            = dockpars.pop_size;
 	da.DockConst_num_of_energy_evals = dockpars.num_of_energy_evals;
@@ -423,11 +424,11 @@ filled with clock() */
 	// Values changing every LGA run
 	da.Host_num_of_runs = mypars->num_of_runs;
 	
-	// packed buffer with all arguments to be passed, alloc chunksize = 32MB
+	// Packed buffer with all arguments to be passed, alloc chunksize = 32MB
 	auto pb = PackBuff(32*1024*1024);
 	
-	// pack the device_args struct as first element into the packed buffer
-	// this way we know how to find it easily
+	// Pack the device_args struct as first element into the packed buffer.
+	// This way we know how to find it easily
 	pb.pack((void *)&da, sizeof(da), (uint64_t)&da_VEMVA);
 
 #define DA_IN_PB_PTR(ELEMENT) ((uint64_t)pb.data() + offsetof(device_args, ELEMENT))
@@ -465,7 +466,7 @@ filled with clock() */
 	// IE
 	pb.pack(cpu_floatgrids, size_floatgrids_nbytes, DA_IN_PB_PTR(Fgrids));
 
-	// we keep a copy of each proc's device_args structure
+	// We keep a copy of each proc's device_args structure
 	device_args *da_copy[ve_num_procs];
 	
 	uint64_t kernel_ga_id[ve_num_procs];
@@ -475,28 +476,28 @@ filled with clock() */
 #define PADDING 0
 #endif
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
-		// allocate memory for entire packed buffer on VE
+		// Allocating memory for entire packed buffer on VE
 		uint64_t mem_kernel_args_packbuff;
 		wrapper_veo_alloc_mem(ve_process[ve_id], &mem_kernel_args_packbuff, pb.size() + 128 * ve_num_procs);
 
 		//// save data buffer
 		//pb.save("packbuff_save.dat");
 
-		// set VE proc ID in packbuff
+		// Setting VE proc ID in packbuff
 		device_args *pb_da = (device_args *)pb.data();
 		pb_da->ve_proc_id = ve_id;
 
-		// padding
+		// Padding
 		padding[ve_id] = PADDING * ve_id;
 		
-		// fix "relocation" addresses to point to VE virtual addresses
+		// Fixing "relocation" addresses to point to VE virtual addresses
 		pb.fixup(mem_kernel_args_packbuff + padding[ve_id]);
 
-		// update local device_args structure (copy) such that we can free the packbuff later
+		// Updating local device_args structure (copy) such that we can free the packbuff later
 		da_copy[ve_id] = new device_args;
 		memcpy(da_copy[ve_id], pb.data(), sizeof(da));
 
-		// transfer packbuff to device
+		// Transferring packbuff to device
 		wrapper_veo_write_mem(ve_process[ve_id], mem_kernel_args_packbuff + padding[ve_id], pb.data(), pb.size());
 
 		// TODO: this is a memory leak because there is no free
@@ -636,8 +637,8 @@ filled with clock() */
 				      (uint64_t)da_copy[ve_id]->Gens_performed + size_evals_of_runs_offs, size_evals_of_runs_nbytes);
 	}
 
+	// Destroying the VEO process early in order to get a more accurate PROGINF
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
-		/* destroy the VEO process early in order to get a more accurate PROGINF */
 		veo_proc_destroy(ve_process[ve_id]);
 	}
 
