@@ -177,7 +177,6 @@ void energy_and_gradient (
 			// Energy contribution of the current grid type
 			float cub000, cub001, cub010, cub011;
 			float cub100, cub101, cub110, cub111;
-
 			cub000 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix  ];
 			cub100 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix+1];
 			cub010 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix  ];
@@ -237,15 +236,12 @@ void energy_and_gradient (
 			// Calculating gradients (forces) corresponding to
 			// "atype" intermolecular energy
 			// -------------------------------------------------------------------
-
 			// Vector in x-direction
 			gradient_inter_x[atom_id] += omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
 										   dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011));
-
 			// Vector in y-direction
 			gradient_inter_y[atom_id] += omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
 										   dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101));
-
 			// Vector in z-direction
 			gradient_inter_z[atom_id] += omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 										   dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110));
@@ -279,22 +275,19 @@ void energy_and_gradient (
 						cub011 * weight011 + cub111 * weight111);
 
 #ifdef PRINT_ALL
-			printf("q =%f, interpolated energy partialE2 = %f\n\n", q, partialE2);
+			printf("q = %f, interpolated energy partialE2 = %f\n\n", q, partialE2);
 #endif
 
 			// -------------------------------------------------------------------
 			// Calculating gradients (forces) corresponding to
 			// "elec" intermolecular energy
 			// -------------------------------------------------------------------
-
 			// Vector in x-direction
 			gradient_inter_x[atom_id] += q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
 										        dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
-
 			// Vector in y-direction
 			gradient_inter_y[atom_id] += q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
 										        dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
-
 			// Vector in z-direction
 			gradient_inter_z[atom_id] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 										        dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
@@ -336,15 +329,12 @@ void energy_and_gradient (
 			// Calculating gradients (forces) corresponding to
 			// "dsol" intermolecular energy
 			// -------------------------------------------------------------------
-
 			// Vector in x-direction
 			gradient_inter_x[atom_id] += fabsf_q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
 													  dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
-
 			// Vector in y-direction
 			gradient_inter_y[atom_id] += fabsf_q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
 													  dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
-
 			// Vector in z-direction
 			gradient_inter_z[atom_id] += fabsf_q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 													  dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
@@ -359,7 +349,7 @@ void energy_and_gradient (
 	// CALCULATING INTRAMOLECULAR ENERGY & GRADIENTS
 	// ================================================
 
-	float delta_distance = 0.5f*DockConst_smooth;
+	float delta_distance = 0.5f * DockConst_smooth;
 
 	// For each intramolecular atom contributor pair
 	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++)
