@@ -899,7 +899,7 @@ void energy_and_gradient (
 		// Iterating over each ligand atom that rotates
 		// if the bond in question rotates
 		for (uint rotable_atom_cnt = 0;
-				  rotable_atom_cnt < GRAD_num_rotating_atoms_per_rotbond;
+				  rotable_atom_cnt < GRAD_num_rotating_atoms_per_rotbond[rotbond_id];
 				  rotable_atom_cnt++) {
 			uint lig_atom_id = GRAD_rotbonds_atoms[MAX_NUM_OF_ATOMS * rotbond_id + rotable_atom_cnt];
 
