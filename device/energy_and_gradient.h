@@ -9,13 +9,7 @@ void energy_and_gradient (
 			float				local_coords_x[][MAX_POPSIZE],
 			float				local_coords_y[][MAX_POPSIZE],
 			float 				local_coords_z[][MAX_POPSIZE],
-			
-			float*				gradient_inter_x,
-			float*				gradient_inter_y,
-			float*				gradient_inter_z,
-			float*				gradient_intra_x,
-			float*				gradient_intra_y,
-			float*				gradient_intra_z,
+
 			float				gradient_genotype[][MAX_POPSIZE],
 
 	const	uchar               DockConst_num_of_genes, // TODO: ADGPU defines it as int

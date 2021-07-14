@@ -93,17 +93,6 @@ void ls_ad(
     float best_energy[MAX_POPSIZE];
     float best_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-    // Gradient of the intermolecular energy per each ligand atom
-    // Also used to store the accummulated gradient per each ligand atom
-    float gradient_inter_x[MAX_NUM_OF_ATOMS];
-    float gradient_inter_y[MAX_NUM_OF_ATOMS];
-    float gradient_inter_z[MAX_NUM_OF_ATOMS];
-
-    // Gradient of the intramolecular energy per each ligand atom
-    float gradient_intra_x[MAX_NUM_OF_ATOMS];
-    float gradient_intra_y[MAX_NUM_OF_ATOMS];
-    float gradient_intra_z[MAX_NUM_OF_ATOMS];
-
     // Ligand-atom position and partial energies
 	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
@@ -115,15 +104,6 @@ void ls_ad(
 			local_coords_y[i][j] = 0.0f;
 			local_coords_z[i][j] = 0.0f;
 		}
-
-        // TODO: convert to 2dim
-        gradient_inter_x[i] = 0.0f;
-        gradient_inter_y[i] = 0.0f;
-        gradient_inter_z[i] = 0.0f;
-
-        gradient_intra_x[i] = 0.0f;
-        gradient_intra_y[i] = 0.0f;
-        gradient_intra_z[i] = 0.0f;
 	}
 
     // Squared gradients E[g^2]
@@ -206,12 +186,6 @@ void ls_ad(
             local_coords_x,
             local_coords_y,
             local_coords_z,
-            gradient_inter_x,
-            gradient_inter_y,
-            gradient_inter_z,
-            gradient_intra_x,
-            gradient_intra_y,
-            gradient_intra_z,
             gradient,
             DockConst_num_of_genes,
             pop_size,

@@ -27,12 +27,6 @@ void energy_and_gradient (
 			float				local_coords_y[][MAX_POPSIZE],
 			float 				local_coords_z[][MAX_POPSIZE],
 
-			float*				gradient_inter_x,
-			float*				gradient_inter_y,
-			float*				gradient_inter_z,
-			float*				gradient_intra_x,
-			float*				gradient_intra_y,
-			float*				gradient_intra_z,
 			float				gradient_genotype[][MAX_POPSIZE],
 
 	const	uchar               DockConst_num_of_genes, // TODO: ADGPU defines it as int
@@ -83,6 +77,17 @@ void energy_and_gradient (
 		(void*)(&IE_Fgrids[Host_mul_tmp2]);
 	const float (*IE_Fg_3)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
 		(void*)(&IE_Fgrids[Host_mul_tmp3]);
+
+    // Gradient of the intermolecular energy per each ligand atom
+    // Also used to store the accummulated gradient per each ligand atom
+    float gradient_inter_x[MAX_NUM_OF_ATOMS];
+    float gradient_inter_y[MAX_NUM_OF_ATOMS];
+    float gradient_inter_z[MAX_NUM_OF_ATOMS];
+
+    // Gradient of the intramolecular energy per each ligand atom
+    float gradient_intra_x[MAX_NUM_OF_ATOMS];
+    float gradient_intra_y[MAX_NUM_OF_ATOMS];
+    float gradient_intra_z[MAX_NUM_OF_ATOMS];
 
 	// Initializing gradients (forces)
 	// TODO: make sure this is strictly necessary
