@@ -81,7 +81,7 @@ void ls_ad(
 #endif
 
 	// Genotype and its energy
-	float genotype[ACTUAL_GENOTYPE_LENGTH];
+	float genotype[ACTUAL_GENOTYPE_LENGTH][ACTUAL_GENOTYPE_LENGTH];
 	float energy;
 
     // Partial results of the gradient step
@@ -138,12 +138,16 @@ void ls_ad(
     float square_delta[ACTUAL_GENOTYPE_LENGTH];
 
     // Initializing vectors
-    for (uint i= 0; i < DockConst_num_of_genes; i++) {
+    for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		gradient[i] = 0.0f;
         square_gradient[i] = 0.0f;
         delta[i] = 0.0f;
         square_delta[i] = 0.0f;
-		genotype[i] = in_out_genotype[i]; // TODO: add 2dimension
+
+        for (uint j = 0; j < pop_size; j++) {
+	        genotype[i][j] = in_out_genotype[i][j];
+        }
+
         best_genotype[i] = in_out_genotype[i]; // TODO: add 2dimension
     }
 
