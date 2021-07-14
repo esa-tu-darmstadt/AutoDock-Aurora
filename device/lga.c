@@ -644,9 +644,9 @@ void lga (
 				Host_mul_tmp3
 			);
 		} else if (lsmet == 1) { // Steepest-Descent
-
+			// TODO
 		} else if (lsmet == 2) { // FIRE
-
+			// TODO
 		} else if (lsmet == 3) { // ADADELTA
 			ls_ad(
 				DockConst_max_num_of_iters,
@@ -704,9 +704,6 @@ void lga (
 				GRAD_dependence_on_rotangle
 			);
 		}
-
-		// Accumulating number of evals
-		//ls_eval_cnt += ls_eval_cnt_per_iter; // done inside perform_ls
 
 #if defined (PRINT_ALL_KRNL)
 		//printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
