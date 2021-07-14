@@ -96,23 +96,23 @@ void perform_ls(
 		current_energy[j] = in_out_energy[j];
 	}
 
-        float rho[MAX_POPSIZE];
-        uint iteration_cnt[MAX_POPSIZE];
-        uint cons_succ[MAX_POPSIZE];
-        uint cons_fail[MAX_POPSIZE];
-        uint LS_eval;
-        int positive_direction[MAX_POPSIZE];  // converted from boolean to int
-	int ls_is_active[MAX_POPSIZE];  // filter for individuals that are still being iterated
+	float rho[MAX_POPSIZE];
+	uint iteration_cnt[MAX_POPSIZE];
+	uint cons_succ[MAX_POPSIZE];
+	uint cons_fail[MAX_POPSIZE];
+	uint LS_eval;
+	int positive_direction[MAX_POPSIZE];  // Converted from boolean to int
+	int ls_is_active[MAX_POPSIZE];  // Filter for individuals that are still being iterated
 	uint num_active_ls = pop_size;
 	float genotype_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-	int positive_dir_compr[MAX_POPSIZE];  // compressed array for positive direction
-        float rho_compr[MAX_POPSIZE];
-        uint iteration_compr[MAX_POPSIZE];
-        uint cons_succ_compr[MAX_POPSIZE];
-        uint cons_fail_compr[MAX_POPSIZE];
+	int positive_dir_compr[MAX_POPSIZE];  // Compressed array for positive direction
+	float rho_compr[MAX_POPSIZE];\
+	uint iteration_compr[MAX_POPSIZE];
+	uint cons_succ_compr[MAX_POPSIZE];
+	uint cons_fail_compr[MAX_POPSIZE];
 
-	int active_pop_size; // counts compressed list of genomes
+	int active_pop_size; // Counts compressed list of genomes
 	uint active_idx[MAX_POPSIZE]; // j index that corresponds to slot in compressed list
 
 	LS_eval = 0;
@@ -136,7 +136,7 @@ void perform_ls(
 	//while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > DockConst_rho_lower_bound)) {
 	while (num_active_ls > 0) {
 
-		// compressed list of active indices
+		// Compressed list of active indices
 		active_pop_size = 0;
 #pragma _NEC packed_vector
 		for (int j = 0; j < pop_size; j++) {
@@ -263,7 +263,7 @@ void perform_ls(
 			IA_VWpars_BD,
 			IA_dspars_S,
 			IA_dspars_V,
-                        //DockConst_num_of_atoms,
+            //DockConst_num_of_atoms,
 			DockConst_smooth,
 			DockConst_num_of_intraE_contributors,
 			DockConst_grid_spacing,
@@ -364,7 +364,7 @@ void perform_ls(
 			cons_fail[j] = cons_fail_compr[jj];
 		}
 
-	} // end of while (iteration_cnt) && (rho)
+	} // End of while (iteration_cnt) && (rho)
 
 	// Writing resulting number of energy evals performed in LS
 	*out_eval = LS_eval;
