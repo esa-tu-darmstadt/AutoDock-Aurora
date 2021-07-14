@@ -15,22 +15,22 @@ LS:  local search
 // --------------------------------------------------------------------------
 void lga (
 	const 	float*		PopulationCurrentInitial,
-		float*  	PopulationCurrentFinal,
-		float*  	EnergyCurrent,
-		uint*		Evals_performed,
-		uint*		Gens_performed,
-		uint		DockConst_pop_size,
-		uint            DockConst_num_of_energy_evals,
-		uint            DockConst_num_of_generations,
-		float           DockConst_tournament_rate,
-		float           DockConst_mutation_rate,
-		float           DockConst_abs_max_dmov,
-		float           DockConst_abs_max_dang,
-		float           Host_two_absmaxdmov,
-		float           Host_two_absmaxdang,
-		float           DockConst_crossover_rate,
-		uchar           DockConst_num_of_genes,
-	// pc
+			float*  	PopulationCurrentFinal,
+			float*  	EnergyCurrent,
+			uint*		Evals_performed,
+			uint*		Gens_performed,
+			uint		DockConst_pop_size,
+			uint		DockConst_num_of_energy_evals,
+			uint		DockConst_num_of_generations,
+			float		DockConst_tournament_rate,
+			float		DockConst_mutation_rate,
+			float		DockConst_abs_max_dmov,
+			float		DockConst_abs_max_dang,
+			float		Host_two_absmaxdmov,
+			float		Host_two_absmaxdang,
+			float		DockConst_crossover_rate,
+			uchar		DockConst_num_of_genes,
+	// PC
 	const	int* 		PC_rotlist,
 	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
 	const	float*		PC_ref_coords_y,
@@ -39,7 +39,7 @@ void lga (
 	const	float*		PC_rotbonds_unit_vectors,
 	const	float*		PC_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
-	// ia
+	// IA
 	const 	float*		IA_IE_atom_charges,
 	const	int*		IA_IE_atom_types,
 	const	int*		IA_intraE_contributors,
@@ -58,8 +58,8 @@ void lga (
 			float		DockConst_coeff_elec,
 			float		DockConst_qasp,
 			float		DockConst_coeff_desolv,
-	// ie
-	const	float*			Fgrids,
+	// IE
+	const	float*		Fgrids,
 			uchar		DockConst_xsz,
 			uint		DockConst_ysz,
 			uint		DockConst_zsz,
@@ -69,7 +69,7 @@ void lga (
 			float		DockConst_gridsize_z_minus1,
 			uint		Host_mul_tmp2,
 			uint		Host_mul_tmp3,
-	// ls
+	// LS-SW
 			ushort		DockConst_max_num_of_iters,
 			float		DockConst_rho_lower_bound,
 			float		DockConst_base_dmov_mul_sqrt3,
@@ -128,16 +128,16 @@ void lga (
 #endif
 
 	// --------------------------------------------------------------------------
-	// ga
+	// GA
 	float* GlobPopCurrFinal   = PopulationCurrentFinal;
 	float* GlobEneCurr        = EnergyCurrent;
 	uint* GlobEvals_performed = Evals_performed;
 	uint* GlobGens_performed  = Gens_performed;
-	// pc
+	// PC
 
-	// ia
+	// IA
 
-	// ie
+	// IE
 	const	float*	IE_Fgrids = Fgrids;
 
 	// --------------------------------------------------------------------------
