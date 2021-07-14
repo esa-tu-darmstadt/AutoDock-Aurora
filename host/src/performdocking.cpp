@@ -316,8 +316,8 @@ filled with clock() */
 	// Printing sizes
 	// -------------------------------------------------------------------------
 
-	// LGA
 #ifdef DOCK_DEBUG
+	// LGA
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << std::left << std::setw(SPACE_L) << "Memory sizes" << std::right << std::setw(SPACE_M) << "Bytes" << std::right << std::setw(SPACE_S) << "KB" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
@@ -368,6 +368,8 @@ filled with clock() */
 	std::cout << std::left << std::setw(SPACE_L) << "size_floatgrids_nbytes" << std::right << std::setw(SPACE_M) << size_floatgrids_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_floatgrids_nbytes) << std::endl;
 
 	size_t size_ie = size_floatgrids_nbytes;
+
+
 
 	// Total amount memory
 	size_t size_total_mem = size_ga + size_pc + size_ia + size_ie;
