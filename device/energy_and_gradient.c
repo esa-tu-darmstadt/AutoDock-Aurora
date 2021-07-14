@@ -721,14 +721,13 @@ void energy_and_gradient (
 
 		// This is where we are in the orientation axis-angle space
 		// TODO: check very initial input orientation genes
-		float current_phi, current_theta, current_rotangle;
-		current_phi 	 = genotype[3][j];	// phi		(in sexagesimal (DEG) unbounded)
-		current_theta 	 = genotype[4][j];	// theta	(in sexagesimal (DEG) unbounded)
-		current_rotangle = genotype[5][j];	// rotangle	(in sexagesimal (DEG) unbounded)
+		float current_phi = genotype[3][j];	// phi (in sexagesimal (DEG) unbounded)
+		float current_theta = genotype[4][j]; // theta (in sexagesimal (DEG) unbounded)
+		float current_rotangle = genotype[5][j]; // rotangle (in sexagesimal (DEG) unbounded)
 
-		current_phi   = map_angle_360 (current_phi);	// phi (in DEG bounded [0, 360])
-		current_theta = map_angle_180 (current_theta);	// theta (in DEG bounded [0, 180]) // TODO: should it bounded to [0, 180] ??
-		current_rotangle = map_angle_360 (current_rotangle);	// rotangle (in DEG bounded [0, 360])
+		current_phi = map_angle_360 (current_phi); // phi (in DEG bounded [0, 360])
+		current_theta = map_angle_180 (current_theta); // theta (in DEG bounded [0, 180]) // TODO: should it bounded to [0, 180] ??
+		current_rotangle = map_angle_360 (current_rotangle); // rotangle (in DEG bounded [0, 360])
 
 		current_phi = current_phi * DEG_TO_RAD;	// phi (in GRAD)
 		current_theta = current_theta * DEG_TO_RAD;	// theta (in GRAD)
