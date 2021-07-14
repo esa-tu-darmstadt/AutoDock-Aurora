@@ -202,7 +202,7 @@ void ls_ad(
         float energy_ia = 0; // TODO: will use eventually: float energy_ia[MAX_POPSIZE];
 
 		energy_and_gradient(
-            genotype,           // TODO: verify it is correct!
+            genotype,
             &energy_ie,
             &energy_ia,
             local_coords_x,

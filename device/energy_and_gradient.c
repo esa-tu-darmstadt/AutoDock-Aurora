@@ -19,7 +19,7 @@
 #define SCFACTOR_ANGSTROM_RADIAN ((0.375 * 0.375)/(DEG_TO_RAD * DEG_TO_RAD))
 
 void energy_and_gradient (
-			float*				genotype,
+			float				genotype[][MAX_POPSIZE],
 			float*				final_interE,
 			float*				final_intraE,
 

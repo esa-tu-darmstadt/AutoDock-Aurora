@@ -2,7 +2,7 @@
 #define _INCLUDE_ENERGY_AND_GRADIENT_H
 
 void energy_and_gradient (
-			float*				genotype,
+			float				genotype[][MAX_POPSIZE],
 			float*				final_interE,
 			float*				final_intraE,
 
