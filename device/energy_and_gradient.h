@@ -16,7 +16,7 @@ void energy_and_gradient (
 			float*				gradient_intra_x,
 			float*				gradient_intra_y,
 			float*				gradient_intra_z,
-			float*				gradient_genotype,
+			float				gradient_genotype[][MAX_POPSIZE],
 
 	const	uchar               DockConst_num_of_genes, // TODO: ADGPU defines it as int
 	const	uint 				DockConst_pop_size,
