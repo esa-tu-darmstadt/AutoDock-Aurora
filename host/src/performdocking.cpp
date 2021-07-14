@@ -502,12 +502,14 @@ filled with clock() */
 	pb.pack(cpu_floatgrids, size_floatgrids_nbytes, DA_IN_PB_PTR(Fgrids));
 
 	// Gradients
-	pb.pack(&KerConstGrads.rotbonds[0], size_grad_rotbonds_nbytes, DA_IN_PB_PTR(GRAD_rotbonds));
-	pb.pack(&KerConstGrads.rotbonds_atoms[0], size_grad_rotbonds_atoms_nbytes, DA_IN_PB_PTR(GRAD_rotbonds_atoms));
-	pb.pack(&KerConstGrads.num_rotating_atoms_per_rotbond[0], size_grad_num_rotating_atoms_per_rotbond_nbytes, DA_IN_PB_PTR(GRAD_num_rotating_atoms_per_rotbond));
-	pb.pack(&angle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_angle));
-	pb.pack(&dependence_on_theta[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_theta));
-	pb.pack(&dependence_on_rotangle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_rotangle));
+	if ((strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "ad") == 0)) {
+		pb.pack(&KerConstGrads.rotbonds[0], size_grad_rotbonds_nbytes, DA_IN_PB_PTR(GRAD_rotbonds));
+		pb.pack(&KerConstGrads.rotbonds_atoms[0], size_grad_rotbonds_atoms_nbytes, DA_IN_PB_PTR(GRAD_rotbonds_atoms));
+		pb.pack(&KerConstGrads.num_rotating_atoms_per_rotbond[0], size_grad_num_rotating_atoms_per_rotbond_nbytes, DA_IN_PB_PTR(GRAD_num_rotating_atoms_per_rotbond));
+		pb.pack(&angle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_angle));
+		pb.pack(&dependence_on_theta[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_theta));
+		pb.pack(&dependence_on_rotangle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_rotangle));
+	}
 
 	// We keep a copy of each proc's device_args structure
 	device_args *da_copy[ve_num_procs];
