@@ -8,7 +8,7 @@
 
 // ADADELTA parameters
 #define RHO 0.8f
-#define EPSILON 1e-2 // TODO: make sure it is in SP FP
+#define EPSILON 1e-2f
 
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
