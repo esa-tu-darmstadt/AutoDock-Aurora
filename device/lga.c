@@ -644,7 +644,6 @@ void lga (
 			ls_ad();
 		}
 
-
 		// Accumulating number of evals
 		//ls_eval_cnt += ls_eval_cnt_per_iter; // done inside perform_ls
 
