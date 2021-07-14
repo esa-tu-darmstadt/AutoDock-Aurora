@@ -80,28 +80,30 @@ void energy_and_gradient (
 
     // Gradient of the intermolecular energy per each ligand atom
     // Also used to store the accummulated gradient per each ligand atom
-    float gradient_inter_x[MAX_NUM_OF_ATOMS];
-    float gradient_inter_y[MAX_NUM_OF_ATOMS];
-    float gradient_inter_z[MAX_NUM_OF_ATOMS];
+    float gradient_inter_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+    float gradient_inter_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+    float gradient_inter_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 
     // Gradient of the intramolecular energy per each ligand atom
-    float gradient_intra_x[MAX_NUM_OF_ATOMS];
-    float gradient_intra_y[MAX_NUM_OF_ATOMS];
-    float gradient_intra_z[MAX_NUM_OF_ATOMS];
+    float gradient_intra_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+    float gradient_intra_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
+    float gradient_intra_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 
 	// Initializing gradients (forces)
 	// TODO: make sure this is strictly necessary
 	// (caller may be doing the same, but maybe not redundant)
 	// TODO: merge with for-loop below
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
-		// Intermolecular gradients
-		gradient_inter_x[atom_id] = 0.0f;
-		gradient_inter_y[atom_id] = 0.0f;
-		gradient_inter_z[atom_id] = 0.0f;
-		// Intramolecular gradients
-		gradient_intra_x[atom_id] = 0.0f;
-		gradient_intra_y[atom_id] = 0.0f;
-		gradient_intra_z[atom_id] = 0.0f;
+		for (int j = 0; j < DockConst_pop_size; j++) {
+			// Intermolecular gradients
+			gradient_inter_x[atom_id][j] = 0.0f;
+			gradient_inter_y[atom_id][j] = 0.0f;
+			gradient_inter_z[atom_id][j] = 0.0f;
+			// Intramolecular gradients
+			gradient_intra_x[atom_id][j] = 0.0f;
+			gradient_intra_y[atom_id][j] = 0.0f;
+			gradient_intra_z[atom_id][j] = 0.0f;
+		} // End j Loop (over individuals)
 	}
 
 	// Initializing gradient genotypes
@@ -110,7 +112,7 @@ void energy_and_gradient (
 	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 		for (int j = 0; j < DockConst_pop_size; j++) {
 			gradient_genotype[gene_cnt][j] = 0.0f;
-		}
+		} // End j Loop (over individuals)
 	}
 
 	// Initializing intermolecular energies
@@ -147,9 +149,9 @@ void energy_and_gradient (
 
 				// Setting gradients (forces) penalties.
 				// These are valid as long as they are high
-				gradient_inter_x[atom_id] += 16777216.0f;
-				gradient_inter_y[atom_id] += 16777216.0f;
-				gradient_inter_z[atom_id] += 16777216.0f;
+				gradient_inter_x[atom_id][j] += 16777216.0f;
+				gradient_inter_y[atom_id][j] += 16777216.0f;
+				gradient_inter_z[atom_id][j] += 16777216.0f;
 			}
 			else {
 				float x_low = floorf(x);
@@ -257,13 +259,13 @@ void energy_and_gradient (
 				// "atype" intermolecular energy
 				// -------------------------------------------------------------------
 				// Vector in x-direction
-				gradient_inter_x[atom_id] += omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+				gradient_inter_x[atom_id][j] += omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
 											dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011));
 				// Vector in y-direction
-				gradient_inter_y[atom_id] += omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+				gradient_inter_y[atom_id][j] += omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
 											dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101));
 				// Vector in z-direction
-				gradient_inter_z[atom_id] += omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+				gradient_inter_z[atom_id][j] += omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 											dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110));
 
 				// Energy contribution of the electrostatic grid
@@ -303,13 +305,13 @@ void energy_and_gradient (
 				// "elec" intermolecular energy
 				// -------------------------------------------------------------------
 				// Vector in x-direction
-				gradient_inter_x[atom_id] += q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+				gradient_inter_x[atom_id][j] += q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
 													dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
 				// Vector in y-direction
-				gradient_inter_y[atom_id] += q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+				gradient_inter_y[atom_id][j] += q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
 													dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
 				// Vector in z-direction
-				gradient_inter_z[atom_id] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+				gradient_inter_z[atom_id][j] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 													dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
 				// Energy contribution of the desolvation grid
@@ -350,13 +352,13 @@ void energy_and_gradient (
 				// "dsol" intermolecular energy
 				// -------------------------------------------------------------------
 				// Vector in x-direction
-				gradient_inter_x[atom_id] += fabsf_q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+				gradient_inter_x[atom_id][j] += fabsf_q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
 														dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
 				// Vector in y-direction
-				gradient_inter_y[atom_id] += fabsf_q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+				gradient_inter_y[atom_id][j] += fabsf_q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
 														dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
 				// Vector in z-direction
-				gradient_inter_z[atom_id] += fabsf_q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+				gradient_inter_z[atom_id][j] += fabsf_q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 														dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
 			} // End if
@@ -535,13 +537,13 @@ void energy_and_gradient (
 			// Gradients for both atoms in a single contributor pair
 			// have the same magnitude, but opposite directions.
 			// IMPORTANT: no need for atomic ops because this is not SIMT as in AD-GPU.
-			gradient_intra_x[atom1_id] = gradient_intra_x[atom1_id] - priv_intra_gradient_x;
-			gradient_intra_y[atom1_id] = gradient_intra_y[atom1_id] - priv_intra_gradient_y;
-			gradient_intra_z[atom1_id] = gradient_intra_z[atom1_id] - priv_intra_gradient_z;
+			gradient_intra_x[atom1_id][j] = gradient_intra_x[atom1_id] - priv_intra_gradient_x;
+			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom1_id] - priv_intra_gradient_y;
+			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom1_id] - priv_intra_gradient_z;
 
-			gradient_intra_x[atom1_id] = gradient_intra_x[atom2_id] + priv_intra_gradient_x;
-			gradient_intra_y[atom1_id] = gradient_intra_y[atom2_id] + priv_intra_gradient_y;
-			gradient_intra_z[atom1_id] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
+			gradient_intra_x[atom1_id][j] = gradient_intra_x[atom2_id] + priv_intra_gradient_x;
+			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom2_id] + priv_intra_gradient_y;
+			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
 
 		} // End j Loop (over individuals)
 
@@ -559,9 +561,9 @@ void energy_and_gradient (
 		// no scaling for them is required
 
 		 // TODO: consider computing inv(grid_spacing) in host and then pass to device
-		gradient_inter_x[atom_cnt] = gradient_inter_x[atom_cnt] / DockConst_grid_spacing;
-		gradient_inter_y[atom_cnt] = gradient_inter_y[atom_cnt] / DockConst_grid_spacing;
-		gradient_inter_z[atom_cnt] = gradient_inter_z[atom_cnt] / DockConst_grid_spacing;
+		gradient_inter_x[atom_cnt][j] = gradient_inter_x[atom_cnt][j] / DockConst_grid_spacing;
+		gradient_inter_y[atom_cnt][j] = gradient_inter_y[atom_cnt][j] / DockConst_grid_spacing;
+		gradient_inter_z[atom_cnt][j] = gradient_inter_z[atom_cnt][j] / DockConst_grid_spacing;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
 		if (atom_cnt == 0) {
@@ -572,9 +574,9 @@ void energy_and_gradient (
 #endif
 
 		// Reusing "gradient_inter_*" for total gradient (inter + intra)
-		gradient_inter_x[atom_cnt] += gradient_intra_x[atom_cnt];
-		gradient_inter_y[atom_cnt] += gradient_intra_y[atom_cnt];
-		gradient_inter_z[atom_cnt] += gradient_intra_z[atom_cnt];
+		gradient_inter_x[atom_cnt][j] += gradient_intra_x[atom_cnt];
+		gradient_inter_y[atom_cnt][j] += gradient_intra_y[atom_cnt];
+		gradient_inter_z[atom_cnt][j] += gradient_intra_z[atom_cnt];
 
 #ifdef PRINT_GRAD_ROTATION_GENES
 		if (atom_cnt == 0) {
@@ -593,9 +595,9 @@ void energy_and_gradient (
 		// TODO: fix usage of j
 		for (int j = 0; j < DockConst_pop_size; j++) {
 			// Accummulating "gradient_inter_*" first ...
-			gradient_genotype[0][j] += gradient_inter_x[atom_id]; // gradient for gene 0: gene x
-			gradient_genotype[1][j] += gradient_inter_y[atom_id]; // gradient for gene 1: gene y
-			gradient_genotype[2][j] += gradient_inter_z[atom_id]; // gradient for gene 2: gene z
+			gradient_genotype[0][j] += gradient_inter_x[atom_id][j]; // gradient for gene 0: gene x
+			gradient_genotype[1][j] += gradient_inter_y[atom_id][j]; // gradient for gene 1: gene y
+			gradient_genotype[2][j] += gradient_inter_z[atom_id][j]; // gradient for gene 2: gene z
 		}
 	}
 
@@ -667,9 +669,9 @@ void energy_and_gradient (
 			r_z = (local_coords_z[atom_id][j] - about_z[j]) * DockConst_grid_spacing;
 
 			// Reusing "gradient_inter_*" for total gradient (inter + intra)
-			float force_x = gradient_inter_x[atom_id];
-			float force_y = gradient_inter_y[atom_id];
-			float force_z = gradient_inter_z[atom_id];
+			float force_x = gradient_inter_x[atom_id][j];
+			float force_y = gradient_inter_y[atom_id][j];
+			float force_z = gradient_inter_z[atom_id][j];
 
 			float tmp_x, tmp_y, tmp_z;
 			esa_cross3_e_(r_x, r_y, r_z, force_x, force_y, force_z, &tmp_x, &tmp_y, &tmp_z);
@@ -974,9 +976,9 @@ void energy_and_gradient (
 				float r_z = (atom_coords_z - atomRef_coords_z) * DockConst_grid_spacing;
 
 				// Reusing "gradient_inter_*" for total gradient (inter+intra)
-				float atom_force_x = gradient_inter_x[lig_atom_id];
-				float atom_force_y = gradient_inter_y[lig_atom_id];
-				float atom_force_z = gradient_inter_z[lig_atom_id];
+				float atom_force_x = gradient_inter_x[lig_atom_id][j];
+				float atom_force_y = gradient_inter_y[lig_atom_id][j];
+				float atom_force_z = gradient_inter_z[lig_atom_id][j];
 
 				float tmp_tor_x, tmp_tor_y, tmp_tor_z;
 				esa_cross3_e_(r_x, r_y, r_z, atom_force_x, atom_force_y, atom_force_z, &tmp_tor_x, &tmp_tor_y, &tmp_tor_z);
