@@ -1,10 +1,11 @@
 #include "getparameters.h"
 
-int get_filenames_and_ADcoeffs(const int* argc,
-			       char** argv,
-			       Dockpars* mypars)
-//The function fills the file name and coeffs fields of mypars parameter
-//according to the proper command line arguments.
+// The function fills the file name and coeffs fields of mypars parameter
+// according to the proper command line arguments.
+int get_filenames_and_ADcoeffs(
+	const int* argc,
+	char** argv,
+	Dockpars* mypars)
 {
 	int i;
 	int ffile_given, lfile_given;
@@ -115,38 +116,41 @@ void get_commandpars(const int* argc,
 	//default values
 	mypars->num_of_energy_evals = 2500000;
 	mypars->num_of_generations  = 27000;
-	mypars->abs_max_dmov        = 6.0/(*spacing); 	// +/-6A
-	mypars->abs_max_dang        = 90; 		// +/- 90�
+	mypars->abs_max_dmov        = 6.0 / (*spacing);	// +/-6A
+	mypars->abs_max_dang        = 90; 		// +/-90 (sexagesimal degrees)
 	mypars->mutation_rate 	    = 2; 		// 2%
 	mypars->crossover_rate 	    = 80;		// 80%
 	mypars->lsearch_rate 	    = 6;		// 6%
-				    // unsigned long num_of_ls
+				    			// unsigned long num_of_ls
+	strcpy(mypars->ls_method, "sw");	// "sw": Solis-Wets
+										// "sd": Steepest-Descent
+										// "fire": FIRE, https://www.math.uni-bielefeld.de/~gaehler/papers/fire.pdf
+										// "ad": ADADELTA, https://arxiv.org/abs/1212.5701
 	mypars->smooth              = 0.5f;
-
 	mypars->tournament_rate     = 60;		// 60%
 	mypars->rho_lower_bound     = 0.01;		// 0.01
-	mypars->base_dmov_mul_sqrt3 = 2.0/(*spacing)*sqrt(3.0);	// 2 A
-	mypars->base_dang_mul_sqrt3 = 75.0*sqrt(3.0);		// 75�
-	mypars->cons_limit 	    = 4;			// 4
+	mypars->base_dmov_mul_sqrt3 = 2.0 / (*spacing)*sqrt(3.0);	// 2 A
+	mypars->base_dang_mul_sqrt3 = 75.0 * sqrt(3.0);		// 75 (sexagesimal degrees)
+	mypars->cons_limit 	    	= 4;			// 4
 	mypars->max_num_of_iters    = 300;
 	mypars->pop_size            = 256; // 150;
 	mypars->initpop_gen_or_loadfile = 0;
 	mypars->gen_pdbs 	    = 0;
-				    // char fldfile [128]
-		                    // char ligandfile [128]
-			            // float ref_ori_angles [3]
-	mypars->num_of_runs 	    = 1;
-	mypars->reflig_en_reqired   = 0;
-				    // char unbound_model
-				    // AD4_free_energy_coeffs coeffs
-	mypars->handle_symmetry     = 1;
-	mypars->gen_finalpop        = 0;
-	mypars->gen_best            = 0;
+							// char fldfile [128]
+							// char ligandfile [128]
+							// float ref_ori_angles [3]
+	mypars->num_of_runs = 1;
+	mypars->reflig_en_reqired = 0;
+				    			// char unbound_model
+				    			// AD4_free_energy_coeffs coeffs
+	mypars->handle_symmetry = 1;
+	mypars->gen_finalpop = 0;
+	mypars->gen_best = 0;
 	strcpy(mypars->resname, "docking");
-	mypars->qasp 		    = 0.01097f;
-	mypars->rmsd_tolerance      = 2.0;		//2 Angstr�m
+	mypars->qasp = 0.01097f;
+	mypars->rmsd_tolerance = 2.0; //2 Angstrom
 	strcpy(mypars->xrayligandfile, mypars->ligandfile);	// By default xray-ligand file is the same as the randomized input ligand
-	mypars->given_xrayligandfile      = false;		// That is, not given (explicitly by the user)
+	mypars->given_xrayligandfile = false; // That is, not given (explicitly by the user)
 
 	// ------------------------------------------
 
@@ -266,6 +270,31 @@ void get_commandpars(const int* argc,
 				printf("Warning: value of -smooth argument ignored. Value must be a float between 0 and 0.5.\n");
 		}
 		// -------------------------------------------
+		//Argument: local search method
+		// "sw": Solis-Wets
+		// "sd": Steepest-Descent
+		// "fire": FIRE
+		// "ad": ADADELTA
+		if (strcmp("-lsmet", argv [i]) == 0)
+		{
+			arg_recognized = 1;
+
+			char temp[128];
+
+			strcpy(temp, argv [i+1]);
+
+			if (strcmp(temp, "sw") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else if (strcmp(temp, "sd") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else if (strcmp(temp, "fire") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else if (strcmp(temp, "ad") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else {
+				printf("Warning: value of -lsmet argument ignored. Value must be a valid string: \"sw\", \"sd\", \"fire\", \"ad\".\n");
+			}
+		}
 
 		//Argument: tournament rate. Must be a float between 50 and 100.
 		//Means the probability that the better entity wins the tournament round during selectin

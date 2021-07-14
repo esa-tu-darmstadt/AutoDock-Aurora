@@ -29,7 +29,7 @@ struct device_args {
 	float DockConst_crossover_rate;
 	uint  DockConst_num_of_lsentities;
 	uchar DockConst_num_of_genes;
-	// pc
+	// PC
 	const int   *PC_rotlist;
 	const float *PC_ref_coords_x;// TODO: merge them into a single one?
 	const float *PC_ref_coords_y;
@@ -37,8 +37,8 @@ struct device_args {
 	const float *PC_rotbonds_moving_vectors;
 	const float *PC_rotbonds_unit_vectors;
 	const float *PC_ref_orientation_quats;
-        uint  DockConst_rotbondlist_length;
-	// ia
+          uint  DockConst_rotbondlist_length;
+	// IA
 	const float *IA_IE_atom_charges;
 	const int   *IA_IE_atom_types;
 	const int   *IA_intraE_contributors;
@@ -57,7 +57,7 @@ struct device_args {
 	float DockConst_coeff_elec;
 	float DockConst_qasp;
 	float DockConst_coeff_desolv;
-	// ie
+	// IE
 	const float *Fgrids;
 	uchar DockConst_xsz;
 	uchar DockConst_ysz;
@@ -68,12 +68,21 @@ struct device_args {
 	float DockConst_gridsize_z_minus1;
 	uint  Host_mul_tmp2;
 	uint  Host_mul_tmp3;
-	// ls
+	// LS method
+	uchar lsmet; // 0: sw, 1: sd, 2: fire, 3: ad
+	// Solis-Wets (LS-SW)
 	ushort DockConst_max_num_of_iters;
 	float  DockConst_rho_lower_bound;
 	float  DockConst_base_dmov_mul_sqrt3;
 	float  DockConst_base_dang_mul_sqrt3;
 	uchar  DockConst_cons_limit;
+	// ADADELTA (LS-AD)
+	const int *GRAD_rotbonds;
+	const int *GRAD_rotbonds_atoms;
+	const int *GRAD_num_rotating_atoms_per_rotbond;
+	const float *GRAD_angle;
+	const float *GRAD_dependence_on_theta;
+	const float *GRAD_dependence_on_rotangle;
 	// Values changing every LGA run
 	uint   Host_num_of_runs;
 };
