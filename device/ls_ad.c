@@ -81,7 +81,7 @@ void ls_ad(
 #endif
 
 	// Genotype and its energy
-	float genotype[ACTUAL_GENOTYPE_LENGTH][ACTUAL_GENOTYPE_LENGTH];
+	float genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 	float energy;
 
     // Partial results of the gradient step
@@ -91,7 +91,7 @@ void ls_ad(
 	// Then, we return the genotype corresponding to the best
 	// observed energy, i.e., "best genotype"
     float best_energy;
-    float best_genotype[ACTUAL_GENOTYPE_LENGTH];
+    float best_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
     // Gradient of the intermolecular energy per each ligand atom
     // Also used to store the accummulated gradient per each ligand atom
@@ -145,10 +145,9 @@ void ls_ad(
         square_delta[i] = 0.0f;
 
         for (uint j = 0; j < pop_size; j++) {
-	        genotype[i][j] = in_out_genotype[i][j];
+            genotype[i][j] = in_out_genotype[i][j];
+            best_genotype[i][j] = in_out_genotype[i][j];
         }
-
-        best_genotype[i] = in_out_genotype[i]; // TODO: add 2dimension
     }
 
 	// Initializing energy
