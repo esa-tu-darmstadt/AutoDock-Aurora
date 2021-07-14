@@ -554,37 +554,39 @@ void energy_and_gradient (
 	// ================================================
 	for (uint atom_cnt = 0; atom_cnt < DockConst_num_of_atoms; atom_cnt++) {
 
-		// Grids were calculated in the grid space,
-		// so they have to be put back in Angstrom
+		for (int j = 0; j < DockConst_pop_size; j++) {
+			// Grids were calculated in the grid space,
+			// so they have to be put back in Angstrom
 
-		// Intramolecular gradients were already in Angstrom,
-		// no scaling for them is required
+			// Intramolecular gradients were already in Angstrom,
+			// no scaling for them is required
 
-		 // TODO: consider computing inv(grid_spacing) in host and then pass to device
-		gradient_inter_x[atom_cnt][j] = gradient_inter_x[atom_cnt][j] / DockConst_grid_spacing;
-		gradient_inter_y[atom_cnt][j] = gradient_inter_y[atom_cnt][j] / DockConst_grid_spacing;
-		gradient_inter_z[atom_cnt][j] = gradient_inter_z[atom_cnt][j] / DockConst_grid_spacing;
+			// TODO: consider computing inv(grid_spacing) in host and then pass to device
+			gradient_inter_x[atom_cnt][j] = gradient_inter_x[atom_cnt][j] / DockConst_grid_spacing;
+			gradient_inter_y[atom_cnt][j] = gradient_inter_y[atom_cnt][j] / DockConst_grid_spacing;
+			gradient_inter_z[atom_cnt][j] = gradient_inter_z[atom_cnt][j] / DockConst_grid_spacing;
 
-#ifdef PRINT_GRAD_ROTATION_GENES
-		if (atom_cnt == 0) {
-			printf("%s\n", "Gradients: inter & intra");
-			printf("%10s %13s %13s %13s %5s %13s %13s %13s\n", "atom_id", "grad_intER.x", "grad_intER.y", "grad_intER.z", "|", "grad_intRA.x", "grad_intRA.y", "grad_intRA.z");
-		}
-		printf("%10u %13.6f %13.6f %13.6f %5s %13.6f %13.6f %13.6f\n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt], "|", gradient_intra_x[atom_cnt], gradient_intra_y[atom_cnt], gradient_intra_z[atom_cnt]);
-#endif
+	#ifdef PRINT_GRAD_ROTATION_GENES
+			if (atom_cnt == 0) {
+				printf("%s\n", "Gradients: inter & intra");
+				printf("%10s %13s %13s %13s %5s %13s %13s %13s\n", "atom_id", "grad_intER.x", "grad_intER.y", "grad_intER.z", "|", "grad_intRA.x", "grad_intRA.y", "grad_intRA.z");
+			}
+			printf("%10u %13.6f %13.6f %13.6f %5s %13.6f %13.6f %13.6f\n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt], "|", gradient_intra_x[atom_cnt], gradient_intra_y[atom_cnt], gradient_intra_z[atom_cnt]);
+	#endif
 
-		// Reusing "gradient_inter_*" for total gradient (inter + intra)
-		gradient_inter_x[atom_cnt][j] += gradient_intra_x[atom_cnt];
-		gradient_inter_y[atom_cnt][j] += gradient_intra_y[atom_cnt];
-		gradient_inter_z[atom_cnt][j] += gradient_intra_z[atom_cnt];
+			// Reusing "gradient_inter_*" for total gradient (inter + intra)
+			gradient_inter_x[atom_cnt][j] += gradient_intra_x[atom_cnt][j];
+			gradient_inter_y[atom_cnt][j] += gradient_intra_y[atom_cnt][j];
+			gradient_inter_z[atom_cnt][j] += gradient_intra_z[atom_cnt][j];
 
-#ifdef PRINT_GRAD_ROTATION_GENES
-		if (atom_cnt == 0) {
-			printf("%s\n", "Gradients: total = inter + intra");
-			printf("%10s %13s %13s %13s\n", "atom_id", "grad.x", "grad.y", "grad.z");
-		}
-		printf("%10u %13.6f %13.6f %13.6f \n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt]);
-#endif
+	#ifdef PRINT_GRAD_ROTATION_GENES
+			if (atom_cnt == 0) {
+				printf("%s\n", "Gradients: total = inter + intra");
+				printf("%10s %13s %13s %13s\n", "atom_id", "grad.x", "grad.y", "grad.z");
+			}
+			printf("%10u %13.6f %13.6f %13.6f \n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt]);
+	#endif
+		} // End j Loop (over individuals)
 	}
 
 	// ================================================
