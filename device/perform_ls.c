@@ -13,9 +13,8 @@ void perform_ls(
 			uchar				DockConst_num_of_genes,
 			float				DockConst_base_dang_mul_sqrt3,
 			uchar				DockConst_cons_limit,
-
-                        uint			pop_size,
-			float			in_out_genotype[][MAX_POPSIZE],
+			uint				pop_size,
+			float				in_out_genotype[][MAX_POPSIZE],
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
 	// PC
