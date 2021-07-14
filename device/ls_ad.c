@@ -82,7 +82,7 @@ void ls_ad(
 
 	// Genotype and its energy
 	float genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
-	float energy;
+	float energy[MAX_POPSIZE];
 
     // Partial results of the gradient step
 	float gradient[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
@@ -90,7 +90,7 @@ void ls_ad(
 	// Energy may go up, so we keep track of the best energy ever calculated.
 	// Then, we return the genotype corresponding to the best
 	// observed energy, i.e., "best genotype"
-    float best_energy;
+    float best_energy[MAX_POPSIZE];
     float best_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
     // Gradient of the intermolecular energy per each ligand atom
@@ -149,11 +149,11 @@ void ls_ad(
         } // End j Loop (over individuals)
     }
 
-	// Initializing energy
-	energy = *in_out_energy; // TODO: make sure this read is correct
-
-    // Initializing best_energy
-    best_energy = INFINITY; // TODO: check correctness
+	// Initializing energy & best_energy
+    for (uint j = 0; j < pop_size; j++) {
+        energy[j] = in_out_energy[j];
+        best_energy[j] = INFINITY;
+    } // End j Loop (over individuals)
 
 #ifdef ADADELTA_AUTOSTOP
 	float rho = 1.0f;
@@ -179,6 +179,9 @@ void ls_ad(
 #endif
 		// TODO
 		// Calculating energy and gradients
+        float energy_ie[MAX_POPSIZE];
+        float energy_ia[MAX_POPSIZE];
+
         calc_pc (
             PC_rotlist,
 			PC_ref_coords_x,
@@ -196,10 +199,6 @@ void ls_ad(
 			local_coords_y,
 			local_coords_z
 		);
-
-        float energy_ie = 0; // TODO: will use eventually: float energy_ie[MAX_POPSIZE];
-        float energy_ia = 0; // TODO: will use eventually: float energy_ia[MAX_POPSIZE];
-
 		energy_and_gradient(
             genotype,
             &energy_ie,
@@ -255,11 +254,16 @@ void ls_ad(
             GRAD_dependence_on_rotangle
         );
 
+        // TODO: fix usage of j
+        for (uint j = 0; j < pop_size; j++) {
+            energy[j] = energy_ia_ls[j] + energy_ie_ls[j];
+        }
+
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
 
             // TODO: fix usage of j
             for (uint j = 0; j < pop_size; j++) {
-                if (energy < best_energy) {
+                if (energy[j] < best_energy[j]) {
                     best_genotype[i][j] = genotype[i][j];
                 }
 
@@ -281,43 +285,46 @@ void ls_ad(
 		}
 
 #ifdef PRINT_ALL_LS_AD
-	printf("\n%s\n", "----------------------------------------------------------");
-	printf("%13s %20s %15s %15s %15s\n", "gene", "sq_grad", "delta", "sq_delta", "new.genotype");
-	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		printf("%13u %20.6f %15.6f %15.6f %15.6f\n", i, square_gradient[i], delta[i], square_delta[i], genotype[i]);
-	}
+	    printf("\n%s\n", "----------------------------------------------------------");
+	    printf("%13s %20s %15s %15s %15s\n", "gene", "sq_grad", "delta", "sq_delta", "new.genotype");
+	    for (uint i = 0; i < DockConst_num_of_genes; i++) {
+		    printf("%13u %20.6f %15.6f %15.6f %15.6f\n", i, square_gradient[i], delta[i], square_delta[i], genotype[i]);
+        }
 #endif
 
-	// Updating number of ADADELTA iterations (energy evaluations)
-	if (energy < best_energy) {
-		best_energy = energy;
+        // TODO: fix usage of j
+        for (uint j = 0; j < pop_size; j++) {
+            // Updating number of ADADELTA iterations (energy evaluations)
+            if (energy[j] < best_energy[j]) {
+                best_energy[j] = energy[j];
 
-#ifdef ADADELTA_AUTOSTOP
-		cons_succ++;
-		cons_fail = 0;
-#endif
-	}
-#ifdef ADADELTA_AUTOSTOP
-	else {
-		cons_succ = 0;
-		cons_fail++;
-	}
-#endif
+        #ifdef ADADELTA_AUTOSTOP
+                cons_succ++;
+                cons_fail = 0;
+        #endif
+            }
+        #ifdef ADADELTA_AUTOSTOP
+            else {
+                cons_succ = 0;
+                cons_fail++;
+            }
+        #endif
 
-	iteration_cnt = iteration_cnt + 1;
+            iteration_cnt = iteration_cnt + 1;
 
-#ifdef ADADELTA_AUTOSTOP
-	if (cons_succ >=4) {
-		rho *= LS_EXP_FACTOR;
-		cons_succ = 0;
-	}
-	else {
-		if (cons_fail >= 4) {
-			rho *= LS_CONT_FACTOR;
-			cons_fail = 0;
-		}
-	}
-#endif
+        #ifdef ADADELTA_AUTOSTOP
+            if (cons_succ >=4) {
+                rho *= LS_EXP_FACTOR;
+                cons_succ = 0;
+            }
+            else {
+                if (cons_fail >= 4) {
+                    rho *= LS_CONT_FACTOR;
+                    cons_fail = 0;
+                }
+            }
+        #endif
+        } // End j Loop (over individuals)
 
 #ifdef ADADELTA_AUTOSTOP
 	} while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > 0.01f));
@@ -341,7 +348,6 @@ void ls_ad(
         } // End j Loop (over individuals)
 	}
 
-	// TODO: vectorize it
 	// Updating old offspring in population
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
         // TODO: fix usage of j
@@ -350,9 +356,10 @@ void ls_ad(
         } // End j Loop (over individuals)
 	}
 
-	// TODO: vectorize it
 	// Updating energy
-	in_out_energy = best_energy;
+    for (uint j = 0; j < pop_size; j++) {
+	    in_out_energy[j] = best_energy[j];
+    } // End j Loop (over individuals)
 
 	// Updating evals
 	*out_eval = iteration_cnt;
