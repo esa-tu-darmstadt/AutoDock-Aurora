@@ -100,8 +100,12 @@ void energy_and_gradient (
 	}
 
 	// Initializing gradient genotypes
+	// TODO: make sure this is strictly necessary
+	// (caller may be doing the same, but maybe not redundant)
 	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-		gradient_genotype[gene_cnt] = 0.0f;
+		for (int j = 0; j < DockConst_pop_size; j++) {
+			gradient_genotype[gene_cnt][j] = 0.0f;
+		}
 	}
 
 	// Initializing intermolecular energies
@@ -584,9 +588,9 @@ void energy_and_gradient (
 		// TODO: fix usage of j
 		for (int j = 0; j < DockConst_pop_size; j++) {
 			// Accummulating "gradient_inter_*" first ...
-			gradient_genotype[0] += gradient_inter_x[atom_id]; // gradient for gene 0: gene x
-			gradient_genotype[1] += gradient_inter_y[atom_id]; // gradient for gene 1: gene y
-			gradient_genotype[2] += gradient_inter_z[atom_id]; // gradient for gene 2: gene z
+			gradient_genotype[0][j] += gradient_inter_x[atom_id]; // gradient for gene 0: gene x
+			gradient_genotype[1][j] += gradient_inter_y[atom_id]; // gradient for gene 1: gene y
+			gradient_genotype[2][j] += gradient_inter_z[atom_id]; // gradient for gene 2: gene z
 		}
 	}
 
@@ -596,14 +600,14 @@ void energy_and_gradient (
 
 	// TODO: fix usage of j
 	for (int j = 0; j < DockConst_pop_size; j++) {
-		gradient_genotype[0] *= DockConst_grid_spacing;
-		gradient_genotype[1] *= DockConst_grid_spacing;
-		gradient_genotype[2] *= DockConst_grid_spacing;
+		gradient_genotype[0][j] *= DockConst_grid_spacing;
+		gradient_genotype[1][j] *= DockConst_grid_spacing;
+		gradient_genotype[2][j] *= DockConst_grid_spacing;
 
 #ifdef PRINT_GRAD_TRANSLATION_GENES
-		printf("gradient_x:%f\n", gradient_genotype[0]);
-		printf("gradient_y:%f\n", gradient_genotype[1]);
-		printf("gradient_z:%f\n", gradient_genotype[2]);
+		printf("gradient_x:%f\n", gradient_genotype[0][j]);
+		printf("gradient_y:%f\n", gradient_genotype[1][j]);
+		printf("gradient_z:%f\n", gradient_genotype[2][j]);
 #endif
 	}
 
@@ -902,14 +906,14 @@ void energy_and_gradient (
 
 		// Setting gradient rotation-related genotypes in cube
 		// Multiplying by DEG_TO_RAD to make it uniform to  DEG (see torsion gradients)
-		gradient_genotype[3] = (grad_phi / (dependance_on_theta * dependance_on_rotangle)) * DEG_TO_RAD;
-		gradient_genotype[4] = (grad_theta / dependance_on_rotangle) * DEG_TO_RAD;
-		gradient_genotype[5] = grad_rotangle * DEG_TO_RAD;
+		gradient_genotype[3][j] = (grad_phi / (dependance_on_theta * dependance_on_rotangle)) * DEG_TO_RAD;
+		gradient_genotype[4][j] = (grad_theta / dependance_on_rotangle) * DEG_TO_RAD;
+		gradient_genotype[5][j] = grad_rotangle * DEG_TO_RAD;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
 		printf("%-30s \n", "grad_axisangle (1,2,3) - after empirical scaling: ");
 		printf("%-13s %-13s %-13s \n", "grad_phi", "grad_theta", "grad_rotangle");
-		printf("%-13.6f %-13.6f %-13.6f\n", gradient_genotype[3], gradient_genotype[4], gradient_genotype[5]);
+		printf("%-13.6f %-13.6f %-13.6f\n", gradient_genotype[3][j], gradient_genotype[4][j], gradient_genotype[5][j]);
 #endif
 	}
 
@@ -923,7 +927,6 @@ void energy_and_gradient (
 
 		// TODO: fix usage of j
 		for (int j = 0; j < DockConst_pop_size; j++) {
-
 			float atomRef_coords_x = local_coords_x[atom1_id][j];
 			float atomRef_coords_y = local_coords_y[atom1_id][j];
 			float atomRef_coords_z = local_coords_z[atom1_id][j];
@@ -989,10 +992,10 @@ void energy_and_gradient (
 			float torque_on_axis = esa_dot3_e(rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z, torque_tor_x, torque_tor_y, torque_tor_z);
 
 			// Assigning gene-based gradient
-			gradient_genotype[rotbond_id + 6] = torque_on_axis * DEG_TO_RAD;
+			gradient_genotype[rotbond_id + 6][j] = torque_on_axis * DEG_TO_RAD;
 
 	#ifdef PRINT_GRAD_TORSION_GENES
-			printf("gradient_torsion [%u] :%f\n", rotbond_id+6, gradient_genotype[rotbond_id+6]);
+			printf("gradient_torsion [%u] :%f\n", rotbond_id+6, gradient_genotype[rotbond_id+6][j]);
 	#endif
 
 		} // End j Loop (over individuals)
@@ -1001,6 +1004,9 @@ void energy_and_gradient (
 
 	// Extra conversion (see first index value = 3)
 	for (uint gene_cnt = 3; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-		gradient_genotype[gene_cnt] *= SCFACTOR_ANGSTROM_RADIAN;
+		// TODO: fix usage of j
+		for (int j = 0; j < DockConst_pop_size; j++) {
+			gradient_genotype[gene_cnt][j] *= SCFACTOR_ANGSTROM_RADIAN;
+		} // End j Loop (over individuals)
 	}
 }
