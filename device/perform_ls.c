@@ -171,10 +171,10 @@ void perform_ls(
 			}
 		}
 
-		#if defined (PRINT_ALL)
+#ifdef PRINT_ALL_LS_SW
 		//printf("LS positive?: %u, iteration_cnt: %u, rho: %f, limit rho: %f\n",
 		//positive_direction, iteration_cnt, rho, DockConst_rho_lower_bound);
-		#endif
+#endif
 		// -----------------------------------------------
 
 		float entity_possible_new_genotype[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
