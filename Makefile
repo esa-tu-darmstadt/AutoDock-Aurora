@@ -184,7 +184,7 @@ test: all
 
 eval: all
 	$(ENVSET) $(BIN_DIR)/$(TARGET) \
-	-lsmet sw \
+	-lsmet ${TESTLS} \
 	-lsit 300 -lsrat 100.000000 -smooth 0.500 \
 	-nev ${NEV} -ngen $(NGEN) -nrun $(NRUN) -psize $(POPSIZE) \
 	-lfile $(EVAL_INPUTS_DIR)/$(PDB)/rand-2.pdbqt \
