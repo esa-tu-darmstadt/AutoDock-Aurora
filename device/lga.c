@@ -77,6 +77,13 @@ void lga (
 			float		DockConst_base_dmov_mul_sqrt3,
 			float		DockConst_base_dang_mul_sqrt3,
 			uchar		DockConst_cons_limit,
+	// LS-AD
+	const 	int*		GRAD_rotbonds,
+	const 	int*		GRAD_rotbonds_atoms,
+	const 	int*		GRAD_num_rotating_atoms_per_rotbond,
+	const 	float*		GRAD_angle,
+	const 	float*		GRAD_dependence_on_theta,
+	const 	float*		GRAD_dependence_on_rotangle,
 	// Values changing every LGA run
 			uint		Host_RunId,
 			uint		Host_Offset_Pop,
@@ -641,7 +648,10 @@ void lga (
 		} else if (lsmet == 2) { // FIRE
 
 		} else if (lsmet == 3) { // ADADELTA
-			ls_ad();
+			ls_ad(
+
+
+			);
 		}
 
 		// Accumulating number of evals

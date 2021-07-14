@@ -93,7 +93,7 @@ uint64_t libkernel_ga(
 			da->DockConst_gridsize_z_minus1,
 			da->Host_mul_tmp2,
 			da->Host_mul_tmp3,
-			//LS
+			// LS
 			da->lsmet,
 			// LS-SW
 			da->DockConst_max_num_of_iters,
@@ -101,6 +101,13 @@ uint64_t libkernel_ga(
 			da->DockConst_base_dmov_mul_sqrt3,
 			da->DockConst_base_dang_mul_sqrt3,
 			da->DockConst_cons_limit,
+			// LS-AD
+			da->GRAD_rotbonds,
+			da->GRAD_rotbonds_atoms,
+			da->GRAD_num_rotating_atoms_per_rotbond,
+			da->GRAD_angle,
+			da->GRAD_dependence_on_theta,
+			da->GRAD_dependence_on_rotangle,
 			// Values changing every LGA run
 			uint_run_cnt,
 			Host_Offset_Pop,
