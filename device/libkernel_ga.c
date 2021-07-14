@@ -93,6 +93,8 @@ uint64_t libkernel_ga(
 			da->DockConst_gridsize_z_minus1,
 			da->Host_mul_tmp2,
 			da->Host_mul_tmp3,
+			//LS
+			da->lsmet,
 			// LS-SW
 			da->DockConst_max_num_of_iters,
 			da->DockConst_rho_lower_bound,

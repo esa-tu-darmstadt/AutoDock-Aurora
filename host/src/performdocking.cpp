@@ -450,7 +450,14 @@ filled with clock() */
 	da.DockConst_gridsize_z_minus1 = fgridsizez_minus1;
 	da.Host_mul_tmp2               = mul_tmp2;
 	da.Host_mul_tmp3               = mul_tmp3;
-	// LS
+	// LS method
+	// See host/inc/device_args.h
+	// 0: sw, 1: sd, 2: fire, 3: ad
+	da.lsmet					   = (strcmp(mypars->ls_method, "sw") == 0) ? 0 :
+									 (strcmp(mypars->ls_method, "sd") == 0) ? 1 :
+									 (strcmp(mypars->ls_method, "fire") == 0) ? 2 :
+									 (strcmp(mypars->ls_method, "ad") == 0) ? 3 : 0;
+	// LS-SW
 	da.DockConst_max_num_of_iters    = Host_max_num_of_iters;
 	da.DockConst_rho_lower_bound     = dockpars.rho_lower_bound; 
 	da.DockConst_base_dmov_mul_sqrt3 = dockpars.base_dmov_mul_sqrt3;
@@ -502,14 +509,12 @@ filled with clock() */
 	pb.pack(cpu_floatgrids, size_floatgrids_nbytes, DA_IN_PB_PTR(Fgrids));
 
 	// Gradients
-	if ((strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "ad") == 0)) {
-		pb.pack(&KerConstGrads.rotbonds[0], size_grad_rotbonds_nbytes, DA_IN_PB_PTR(GRAD_rotbonds));
-		pb.pack(&KerConstGrads.rotbonds_atoms[0], size_grad_rotbonds_atoms_nbytes, DA_IN_PB_PTR(GRAD_rotbonds_atoms));
-		pb.pack(&KerConstGrads.num_rotating_atoms_per_rotbond[0], size_grad_num_rotating_atoms_per_rotbond_nbytes, DA_IN_PB_PTR(GRAD_num_rotating_atoms_per_rotbond));
-		pb.pack(&angle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_angle));
-		pb.pack(&dependence_on_theta[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_theta));
-		pb.pack(&dependence_on_rotangle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_rotangle));
-	}
+	pb.pack(&KerConstGrads.rotbonds[0], size_grad_rotbonds_nbytes, DA_IN_PB_PTR(GRAD_rotbonds));
+	pb.pack(&KerConstGrads.rotbonds_atoms[0], size_grad_rotbonds_atoms_nbytes, DA_IN_PB_PTR(GRAD_rotbonds_atoms));
+	pb.pack(&KerConstGrads.num_rotating_atoms_per_rotbond[0], size_grad_num_rotating_atoms_per_rotbond_nbytes, DA_IN_PB_PTR(GRAD_num_rotating_atoms_per_rotbond));
+	pb.pack(&angle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_angle));
+	pb.pack(&dependence_on_theta[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_theta));
+	pb.pack(&dependence_on_rotangle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_rotangle));
 
 	// We keep a copy of each proc's device_args structure
 	device_args *da_copy[ve_num_procs];
@@ -606,6 +611,9 @@ filled with clock() */
 			std::cout << std::endl;
 
 			// LS
+			std::cout << std::left << std::setw(SPACE_L) << "lsmet" << std::right << std::setw(SPACE_M) << int { da.lsmet } << "\n";
+
+			// LS-SW
 			std::cout << std::left << std::setw(SPACE_L) << "Host_max_num_of_iters" << std::right << std::setw(SPACE_M) << Host_max_num_of_iters << "\n";
 			std::cout << std::left << std::setw(SPACE_L) << "dockpars.rho_lower_bound" << std::right << std::setw(SPACE_M) << dockpars.rho_lower_bound << "\n";
 			std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dmov_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dmov_mul_sqrt3 << "\n";

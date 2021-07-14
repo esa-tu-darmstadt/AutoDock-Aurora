@@ -68,6 +68,8 @@ struct device_args {
 	float DockConst_gridsize_z_minus1;
 	uint  Host_mul_tmp2;
 	uint  Host_mul_tmp3;
+	// LS method
+	uchar lsmet; // 0: sw, 1: sd, 2: fire, 3: ad
 	// Solis-Wets (LS-SW)
 	ushort DockConst_max_num_of_iters;
 	float  DockConst_rho_lower_bound;
