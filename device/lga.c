@@ -602,7 +602,7 @@ void lga (
 				LocalPopNext,
 				LocalEneNext,
 				&ls_eval_cnt,
-
+				// PC
 				PC_rotlist,
 				PC_ref_coords_x,
 				PC_ref_coords_y,
@@ -612,7 +612,7 @@ void lga (
 				PC_ref_orientation_quats,
 				DockConst_rotbondlist_length,
 				Host_RunId,
-
+				// IA
 				IA_IE_atom_charges,
 				IA_IE_atom_types,
 				IA_intraE_contributors,
@@ -631,7 +631,7 @@ void lga (
 				DockConst_coeff_elec,
 				DockConst_qasp,
 				DockConst_coeff_desolv,
-
+				// IE
 				IE_Fgrids,
 				DockConst_xsz,
 				DockConst_ysz,
@@ -649,8 +649,59 @@ void lga (
 
 		} else if (lsmet == 3) { // ADADELTA
 			ls_ad(
-
-
+				DockConst_max_num_of_iters,
+				DockConst_num_of_genes,
+				DockConst_pop_size,
+				LocalPopNext,
+				LocalEneNext,
+				&ls_eval_cnt,
+				// PC
+				PC_rotlist,
+				PC_ref_coords_x,
+				PC_ref_coords_y,
+				PC_ref_coords_z,
+				PC_rotbonds_moving_vectors,
+				PC_rotbonds_unit_vectors,
+				PC_ref_orientation_quats,
+				DockConst_rotbondlist_length,
+				Host_RunId,
+				// IA
+				IA_IE_atom_charges,
+				IA_IE_atom_types,
+				IA_intraE_contributors,
+				IA_reqm,
+				IA_reqm_hbond,
+				IA_atom1_types_reqm,
+				IA_atom2_types_reqm,
+				IA_VWpars_AC,
+				IA_VWpars_BD,
+				IA_dspars_S,
+				IA_dspars_V,
+				DockConst_smooth,
+				DockConst_num_of_intraE_contributors,
+				DockConst_grid_spacing,
+				DockConst_num_of_atypes,
+				DockConst_coeff_elec,
+				DockConst_qasp,
+				DockConst_coeff_desolv,
+				// IE
+				IE_Fgrids,
+				DockConst_xsz,
+				DockConst_ysz,
+				DockConst_zsz,
+				DockConst_num_of_atoms,
+				DockConst_gridsize_x_minus1,
+				DockConst_gridsize_y_minus1,
+				DockConst_gridsize_z_minus1,
+				Host_mul_tmp2,
+				Host_mul_tmp3,
+				// Gradients
+				GRAD_rotbonds,
+				GRAD_rotbonds_atoms,
+				GRAD_num_rotating_atoms_per_rotbond,
+				GRAD_angle,
+				GRAD_dependence_on_theta,
+				GRAD_dependence_on_rotangle
 			);
 		}
 

@@ -24,7 +24,7 @@ void ls_ad(
     //uint DockConst_gridsize_x_times_y, // FIXME: present in ADPGU, but not in SW
     //uint DockConst_gridsize_x_times_y_times_z, // FIXME: present in ADGPU, but not in SW
 
-    // pc
+    // PC
     const   int*    restrict    PC_rotlist,
     const   float*  restrict    PC_ref_coords_x,
     const   float*  restrict    PC_ref_coords_y,
@@ -34,7 +34,7 @@ void ls_ad(
     const   float*  restrict    PC_ref_orientation_quats,
             uint                DockConst_rotbondlist_length,
             uint                Host_RunId,
-    // ia
+    // IA
     const   float*  restrict    IA_IE_atom_charges,
     const   int*    restrict    IA_IE_atom_types,
     const   int*    restrict    IA_intraE_contributors,
@@ -53,7 +53,7 @@ void ls_ad(
             float               DockConst_coeff_elec,
             float               DockConst_qasp,
             float               DockConst_coeff_desolv,
-    // ie
+    // IE
     const   float*  restrict    IE_Fgrids,
             uchar               DockConst_xsz,
             uchar               DockConst_ysz,
@@ -64,7 +64,7 @@ void ls_ad(
             float               DockConst_gridsize_z_minus1,
             uint                Host_mul_tmp2,
             uint                Host_mul_tmp3,
-    // gradients
+    // Gradients
     const   int*    restrict    GRAD_rotbonds,
     const   int*    restrict    GRAD_rotbonds_atoms,
     const   int*    restrict    GRAD_num_rotating_atoms_per_rotbond,
