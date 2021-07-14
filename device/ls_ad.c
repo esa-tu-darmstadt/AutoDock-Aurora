@@ -105,27 +105,18 @@ void ls_ad(
     float gradient_intra_z[MAX_NUM_OF_ATOMS];
 
     // Ligand-atom position and partial energies
-    float local_coords_x[MAX_NUM_OF_ATOMS]; //__local float4 calc_coords[MAX_NUM_OF_ATOMS];
-    float local_coords_y[MAX_NUM_OF_ATOMS];
-    float local_coords_z[MAX_NUM_OF_ATOMS];
-
-/*
 	float local_coords_x[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 	float local_coords_y[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 	float local_coords_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
-*/
+
 	for (uint i = 0; i < DockConst_num_of_atoms; i++) {
-/*
 		for (uint j = 0; j < pop_size; j++) {
 			local_coords_x[i][j] = 0.0f;
 			local_coords_y[i][j] = 0.0f;
 			local_coords_z[i][j] = 0.0f;
 		}
-*/
-        local_coords_x[i] = 0.0f;
-        local_coords_y[i] = 0.0f;
-        local_coords_z[i] = 0.0f;
 
+        // TODO: convert to 2dim
         gradient_inter_x[i] = 0.0f;
         gradient_inter_y[i] = 0.0f;
         gradient_inter_z[i] = 0.0f;
@@ -134,8 +125,6 @@ void ls_ad(
         gradient_intra_y[i] = 0.0f;
         gradient_intra_z[i] = 0.0f;
 	}
-
-    //float partial_energies[/*NUM_OF_THREADS_PER_BLOCK*/]; // TODO: remove it?
 
     // Squared gradients E[g^2]
     float square_gradient[ACTUAL_GENOTYPE_LENGTH];
