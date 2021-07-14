@@ -107,7 +107,7 @@ void perform_ls(
 	float genotype_bias[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
 	int positive_dir_compr[MAX_POPSIZE];  // Compressed array for positive direction
-	float rho_compr[MAX_POPSIZE];\
+	float rho_compr[MAX_POPSIZE];
 	uint iteration_compr[MAX_POPSIZE];
 	uint cons_succ_compr[MAX_POPSIZE];
 	uint cons_fail_compr[MAX_POPSIZE];
