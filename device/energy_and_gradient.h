@@ -20,7 +20,7 @@ void energy_and_gradient (
 
 	const	uchar               DockConst_num_of_genes, // TODO: ADGPU defines it as int
 	const	uint 				DockConst_pop_size,
-	// ie
+	// IE
 	const 	float* 	restrict	IE_Fgrids,
 	const 	float*	restrict	IA_IE_atom_charges,
 	const	int*	restrict	IA_IE_atom_types,
@@ -33,7 +33,7 @@ void energy_and_gradient (
 			float 				DockConst_gridsize_z_minus1,
 			uint 				Host_mul_tmp2,
 			uint 				Host_mul_tmp3,
-	// ia
+	// IA
 	const 	int*	restrict	IA_intraE_contributors,
 	const	float*	restrict	IA_reqm,
 	const 	float*	restrict	IA_reqm_hbond,
@@ -50,7 +50,7 @@ void energy_and_gradient (
 			float				DockConst_coeff_elec,
 			float				DockConst_qasp,
 			float				DockConst_coeff_desolv,
-    // gradients
+    // Gradients
     const   int*    restrict    GRAD_rotbonds,
     const   int*    restrict    GRAD_rotbonds_atoms,
     const   int*    restrict    GRAD_num_rotating_atoms_per_rotbond,

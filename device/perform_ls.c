@@ -59,9 +59,9 @@ void perform_ls(
 			uint				Host_mul_tmp3
 )
 {
-#if defined (PRINT_ALL_LS) 
+#ifdef PRINT_ALL_LS_SW
 	printf("\n");
-	printf("Starting <local search> ... \n");
+	printf("Starting <local search>: <Solis-Wets> ... \n");
 	printf("\n");
 	printf("LS: DockConst_max_num_of_iters: %u\n",		DockConst_max_num_of_iters);
 	printf("LS: DockConst_rho_lower_bound: %f\n",      	DockConst_rho_lower_bound);
@@ -379,11 +379,11 @@ void perform_ls(
 		in_out_energy[j] = current_energy[j];
 	}
 	
-	#if defined (PRINT_ALL_IE) 
+#ifdef PRINT_ALL_LS_SW
 	printf("\n");
-	printf("Finishing <local search>\n");
+	printf("Finishing <local search>: <Solis-Wets>\n");
 	printf("\n");
-	#endif
+#endif
 }
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------

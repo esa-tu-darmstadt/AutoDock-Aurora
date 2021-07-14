@@ -15,14 +15,14 @@
 
 void ls_ad(
 			uint				DockConst_max_num_of_iters,
-            uchar               DockConst_num_of_genes, // ADGPU defines it as int
+            uchar               DockConst_num_of_genes, // TODO: ADGPU defines it as int
             uint                pop_size,
-            float               in_out_genotype[][MAX_POPSIZE], // ADGPU: __global float* restrict dockpars_conformations_next,
-            float*  restrict    in_out_energy, // ADGPU: __global float* restrict dockpars_energies_next,
-            uint*   restrict    out_eval, // ADGPU: __global int* restrict dockpars_evals_of_new_entities,
+            float               in_out_genotype[][MAX_POPSIZE], // TODO: ADGPU: __global float* restrict dockpars_conformations_next,
+            float*  restrict    in_out_energy, // TODO: ADGPU: __global float* restrict dockpars_energies_next,
+            uint*   restrict    out_eval, // TODO: ADGPU: __global int* restrict dockpars_evals_of_new_entities,
 
-    //uint DockConst_gridsize_x_times_y, // FIXME: present in ADPGU, but not in SW
-    //uint DockConst_gridsize_x_times_y_times_z, // FIXME: present in ADGPU, but not in SW
+    //uint DockConst_gridsize_x_times_y, // TODO: present in ADPGU, but not in SW
+    //uint DockConst_gridsize_x_times_y_times_z, // TODO: present in ADGPU, but not in SW
 
     // PC
     const   int*    restrict    PC_rotlist,
@@ -72,6 +72,14 @@ void ls_ad(
     const   float*  restrict    GRAD_dependence_on_theta,
     const   float*  restrict    GRAD_dependence_on_rotangle
 ) {
+#ifdef PRINT_ALL_LS_AD
+    printf("\n");
+    printf("Starting <local search>: <ADADELTA> ... \n");
+    printf("\n");
+    printf("LS: DockConst_max_num_of_iters: %u\n",		DockConst_max_num_of_iters);
+    printf("LS: DockConst_num_of_genes: %u\n",		    DockConst_num_of_genes);
+#endif
+
 	// Genotype and its energy
 	float genotype[ACTUAL_GENOTYPE_LENGTH];
 	float energy;
@@ -349,6 +357,12 @@ void ls_ad(
 
 	// Updating evals
 	*out_eval = iteration_cnt;
+
+#ifdef PRINT_ALL_LS_AD
+	printf("\n");
+	printf("Finishing <local search>: <ADADELTA>\n");
+	printf("\n");
+#endif
 }
 
 // --------------------------------------------------------------------------
