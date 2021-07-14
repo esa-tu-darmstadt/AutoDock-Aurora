@@ -88,7 +88,7 @@ int prepare_conststatic_fields_for_aurora(
 	Liganddata*	myligand_reference,
 	Dockpars* mypars,
 	float* cpu_ref_ori_angles,
-	kernelconstant_static*	KerConstStatic,
+	kernelconstant_static* KerConstStatic,
 	kernelconstant_grads* KerConstGrads
 );
 
@@ -100,7 +100,7 @@ void make_reqrot_ordering(
 
 int gen_rotlist(
 	Liganddata*	myligand,
-	int		rotlist[MAX_NUM_OF_ROTATIONS]
+	int rotlist[MAX_NUM_OF_ROTATIONS]
 );
 
 #endif /* CALCENERGY_H_ */
