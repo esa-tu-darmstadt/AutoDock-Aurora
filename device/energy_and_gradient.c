@@ -537,13 +537,13 @@ void energy_and_gradient (
 			// Gradients for both atoms in a single contributor pair
 			// have the same magnitude, but opposite directions.
 			// IMPORTANT: no need for atomic ops because this is not SIMT as in AD-GPU.
-			gradient_intra_x[atom1_id][j] = gradient_intra_x[atom1_id] - priv_intra_gradient_x;
-			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom1_id] - priv_intra_gradient_y;
-			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom1_id] - priv_intra_gradient_z;
+			gradient_intra_x[atom1_id][j] = gradient_intra_x[atom1_id][j] - priv_intra_gradient_x;
+			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom1_id][j] - priv_intra_gradient_y;
+			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom1_id][j] - priv_intra_gradient_z;
 
-			gradient_intra_x[atom1_id][j] = gradient_intra_x[atom2_id] + priv_intra_gradient_x;
-			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom2_id] + priv_intra_gradient_y;
-			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
+			gradient_intra_x[atom1_id][j] = gradient_intra_x[atom2_id][j] + priv_intra_gradient_x;
+			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom2_id][j] + priv_intra_gradient_y;
+			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom2_id][j] + priv_intra_gradient_z;
 
 		} // End j Loop (over individuals)
 
