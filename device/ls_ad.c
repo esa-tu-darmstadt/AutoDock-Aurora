@@ -146,7 +146,7 @@ void ls_ad(
             square_delta[i][j]      = 0.0f;
             genotype[i][j]          = in_out_genotype[i][j];
             best_genotype[i][j]     = in_out_genotype[i][j];
-        }
+        } // End j Loop (over individuals)
     }
 
 	// Initializing energy
@@ -277,8 +277,7 @@ void ls_ad(
 
                 // Applying update
                 genotype[i][j] = genotype[i][j] + delta[i][j];
-            }
-
+            } // End j Loop (over individuals)
 		}
 
 #ifdef PRINT_ALL_LS_AD
@@ -330,19 +329,25 @@ void ls_ad(
 	// TODO: double check if ADGPU uses two types of mapping functions
 	// Mapping angles
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		if (i > 2) {
-			if (i == 4) {
-				best_genotype[i] = map_angle_180(best_genotype[i]);
-			} else {
-				best_genotype[i] = map_angle_360(best_genotype[i]);
-			}
-		}
+        // TODO: fix usage of j
+        for (uint j = 0; j < pop_size; j++) {
+            if (i > 2) {
+                if (i == 4) {
+                    best_genotype[i][j] = map_angle_180(best_genotype[i][j]);
+                } else {
+                    best_genotype[i][j] = map_angle_360(best_genotype[i][j]);
+                }
+            }
+        } // End j Loop (over individuals)
 	}
 
 	// TODO: vectorize it
 	// Updating old offspring in population
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		in_out_genotype[i] = best_genotype[i];
+        // TODO: fix usage of j
+        for (uint j = 0; j < pop_size; j++) {
+		    in_out_genotype[i][j] = best_genotype[i][j];
+        } // End j Loop (over individuals)
 	}
 
 	// TODO: vectorize it
