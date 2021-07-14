@@ -23,9 +23,9 @@ void energy_and_gradient (
 			float*				final_interE,
 			float*				final_intraE,
 
-			float*				local_coords_x,	// float				local_coords_x[][MAX_POPSIZE],
-			float*				local_coords_y, // float				local_coords_y[][MAX_POPSIZE],
-			float* 				local_coords_z, // float 				local_coords_z[][MAX_POPSIZE],
+			float				local_coords_x[][MAX_POPSIZE],
+			float				local_coords_y[][MAX_POPSIZE],
+			float 				local_coords_z[][MAX_POPSIZE],
 
 			float*				gradient_inter_x,
 			float*				gradient_inter_y,
@@ -104,6 +104,11 @@ void energy_and_gradient (
 		gradient_genotype[gene_cnt] = 0.0f;
 	}
 
+	// Initializing intermolecular energies
+	for (int j = 0; j < DockConst_pop_size; j++) {
+		final_interE[j] = 0.0f;
+	}
+
 	// ================================================
 	// CALCULATING INTERMOLECULAR ENERGY & GRADIENTS
 	// ================================================
@@ -112,242 +117,251 @@ void energy_and_gradient (
 		int atom_typeid = IA_IE_atom_types[atom_id];
 		float q = IA_IE_atom_charges[atom_id];
 
-		float x = local_coords_x[atom_id];
-		float y = local_coords_y[atom_id];
-		float z = local_coords_z[atom_id];
+		// TODO: fix usage of j
+		for (int j = 0; j < DockConst_pop_size; j++) {
+			float x = local_coords_x[atom_id][j];
+			float y = local_coords_y[atom_id][j];
+			float z = local_coords_z[atom_id][j];
 
-		float partialE1;
-		float partialE2;
-		float partialE3;
+			float partialE1;
+			float partialE2;
+			float partialE3;
 
-		// If atom is outside of the grid
-		if ((x < 0.0f) || (x >= DockConst_gridsize_x_minus1) ||
-			(y < 0.0f) || (y >= DockConst_gridsize_y_minus1) ||
-			(z < 0.0f) || (z >= DockConst_gridsize_z_minus1)) {
+			// If atom is outside of the grid
+			if ((x < 0.0f) || (x >= DockConst_gridsize_x_minus1) ||
+				(y < 0.0f) || (y >= DockConst_gridsize_y_minus1) ||
+				(z < 0.0f) || (z >= DockConst_gridsize_z_minus1)) {
 
-			partialE1 = 16777216.0f;
-			partialE2 = 0.0f;
-			partialE3 = 0.0f;
+				partialE1 = 16777216.0f;
+				partialE2 = 0.0f;
+				partialE3 = 0.0f;
 
-			// Setting gradients (forces) penalties.
-			// These are valid as long as they are high
-			gradient_inter_x[atom_id] += 16777216.0f;
-			gradient_inter_y[atom_id] += 16777216.0f;
-			gradient_inter_z[atom_id] += 16777216.0f;
-		}
-		else {
-			float x_low = floorf(x);
-			float y_low = floorf(y);
-			float z_low = floorf(z);
-			int ix = (int)x_low;
-			int iy = (int)y_low;
-			int iz = (int)z_low;
+				// Setting gradients (forces) penalties.
+				// These are valid as long as they are high
+				gradient_inter_x[atom_id] += 16777216.0f;
+				gradient_inter_y[atom_id] += 16777216.0f;
+				gradient_inter_z[atom_id] += 16777216.0f;
+			}
+			else {
+				float x_low = floorf(x);
+				float y_low = floorf(y);
+				float z_low = floorf(z);
+				int ix = (int)x_low;
+				int iy = (int)y_low;
+				int iz = (int)z_low;
 
-			float dx = x - x_low;
-			float dy = y - y_low;
-			float dz = z - z_low;
+				float dx = x - x_low;
+				float dy = y - y_low;
+				float dz = z - z_low;
 
-			float omdx = 1.0f - dx;
-			float omdy = 1.0f - dy;
-			float omdz = 1.0f - dz;
+				float omdx = 1.0f - dx;
+				float omdy = 1.0f - dy;
+				float omdz = 1.0f - dz;
 
-			// Calculating interpolation weights
-			float weight000, weight001, weight010, weight011;
-			float weight100, weight101, weight110, weight111;
-			weight000 = omdx * omdy * omdz;
-			weight100 = dx * omdy * omdz;
-			weight010 = omdx * dy * omdz;
-			weight110 = dx * dy * omdz;
-			weight001 = omdx * omdy * dz;
-			weight101 = dx * omdy * dz;
-			weight011 = omdx * dy * dz;
-			weight111 = dx * dy * dz;
+				// Calculating interpolation weights
+				float weight000, weight001, weight010, weight011;
+				float weight100, weight101, weight110, weight111;
+				weight000 = omdx * omdy * omdz;
+				weight100 = dx * omdy * omdz;
+				weight010 = omdx * dy * omdz;
+				weight110 = dx * dy * omdz;
+				weight001 = omdx * omdy * dz;
+				weight101 = dx * omdy * dz;
+				weight011 = omdx * dy * dz;
+				weight111 = dx * dy * dz;
 
-#ifdef PRINT_ALL
-			printf("\n\nPartial results for atom with id %i:\n", atom_id);
-			printf("x_low = %f, dx = %f\n", x_low, dx);
-			printf("y_low = %f, dy = %f\n", y_low, dy);
-			printf("z_low = %f, dz = %f\n", z_low, dz);
-			printf("weight(0,0,0) = %f\n", weight000);
-			printf("weight(1,0,0) = %f\n", weight100);
-			printf("weight(0,1,0) = %f\n", weight010);
-			printf("weight(1,1,0) = %f\n", weight110);
-			printf("weight(0,0,1) = %f\n", weight001);
-			printf("weight(1,0,1) = %f\n", weight101);
-			printf("weight(0,1,1) = %f\n", weight011);
-			printf("weight(1,1,1) = %f\n", weight111);
-#endif
+	#ifdef PRINT_ALL
+				printf("\n\nPartial results for atom with id %i:\n", atom_id);
+				printf("x_low = %f, dx = %f\n", x_low, dx);
+				printf("y_low = %f, dy = %f\n", y_low, dy);
+				printf("z_low = %f, dz = %f\n", z_low, dz);
+				printf("weight(0,0,0) = %f\n", weight000);
+				printf("weight(1,0,0) = %f\n", weight100);
+				printf("weight(0,1,0) = %f\n", weight010);
+				printf("weight(1,1,0) = %f\n", weight110);
+				printf("weight(0,0,1) = %f\n", weight001);
+				printf("weight(1,0,1) = %f\n", weight101);
+				printf("weight(0,1,1) = %f\n", weight011);
+				printf("weight(1,1,1) = %f\n", weight111);
+	#endif
 
-			// Energy contribution of the current grid type
-			float cub000, cub001, cub010, cub011;
-			float cub100, cub101, cub110, cub111;
-			cub000 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix  ];
-			cub100 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix+1];
-			cub010 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix  ];
-			cub110 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix+1];
-			cub001 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix  ];
-			cub101 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix+1];
-			cub011 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix  ];
-			cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
+				// Energy contribution of the current grid type
+				float cub000, cub001, cub010, cub011;
+				float cub100, cub101, cub110, cub111;
+				cub000 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix  ];
+				cub100 = (*IE_Fg)[atom_typeid][iz  ][iy  ][ix+1];
+				cub010 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix  ];
+				cub110 = (*IE_Fg)[atom_typeid][iz  ][iy+1][ix+1];
+				cub001 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix  ];
+				cub101 = (*IE_Fg)[atom_typeid][iz+1][iy  ][ix+1];
+				cub011 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix  ];
+				cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
 
-#ifdef PRINT_ALL
-			printf("Interpolation of Van der Waals map:\n");
-			printf("cube(0,0,0) = %f\n". cub000);
-			printf("cube(1,0,0) = %f\n". cub100);
-			printf("cube(0,1,0) = %f\n". cub010);
-			printf("cube(1,1,0) = %f\n". cub110);
-			printf("cube(0,0,1) = %f\n". cub001);
-			printf("cube(1,0,1) = %f\n". cub101);
-			printf("cube(0,1,1) = %f\n". cub011);
-			printf("cube(1,1,1) = %f\n". cub111);
-#endif
+	#ifdef PRINT_ALL
+				printf("Interpolation of Van der Waals map:\n");
+				printf("cube(0,0,0) = %f\n". cub000);
+				printf("cube(1,0,0) = %f\n". cub100);
+				printf("cube(0,1,0) = %f\n". cub010);
+				printf("cube(1,1,0) = %f\n". cub110);
+				printf("cube(0,0,1) = %f\n". cub001);
+				printf("cube(1,0,1) = %f\n". cub101);
+				printf("cube(0,1,1) = %f\n". cub011);
+				printf("cube(1,1,1) = %f\n". cub111);
+	#endif
 
-			// Calculating affinity energy
-			partialE1 = cub000 * weight000 + cub100 * weight100 +
-						cub010 * weight010 + cub110 * weight110 +
-						cub001 * weight001 + cub101 * weight101 +
-						cub011 * weight011 + cub111 * weight111;
+				// Calculating affinity energy
+				partialE1 = cub000 * weight000 + cub100 * weight100 +
+							cub010 * weight010 + cub110 * weight110 +
+							cub001 * weight001 + cub101 * weight101 +
+							cub011 * weight011 + cub111 * weight111;
 
-#ifdef PRINT_ALL
-			printf("interpolated energy partialE1 = %f\n\n", partialE1);
-#endif
+	#ifdef PRINT_ALL
+				printf("interpolated energy partialE1 = %f\n\n", partialE1);
+	#endif
 
-			// -------------------------------------------------------------------
-			// TODO: Deltas dx, dy, dz are already normalized
-			// (in host/src/getparameters.cpp) in AD-GPU
-			// The correspondance between vertices in the xyz axes is:
-			// 0, 1, 2, 3, 4, 5, 6, 7 and 000, 100, 010, 001, 101, 110, 011, 111
-			// -------------------------------------------------------------------
-			/*
-				deltas: (x-x0)/(x1-x0), (y-y0...
-				vertices: (000, 100, 010, 001, 101, 110, 011, 111)
-			  	  Z
-			  	  '
-				  3 - - - - 6
-				 /.        /|
-				4 - - - - 7 |
-				| '       | |
-				| 0 - - - + 2 -- Y
-				'/        |/
-				1 - - - - 5
-		       	/
-		      	X
-			*/
+				// -------------------------------------------------------------------
+				// TODO: Deltas dx, dy, dz are already normalized
+				// (in host/src/getparameters.cpp) in AD-GPU
+				// The correspondance between vertices in the xyz axes is:
+				// 0, 1, 2, 3, 4, 5, 6, 7 and 000, 100, 010, 001, 101, 110, 011, 111
+				// -------------------------------------------------------------------
+				/*
+					deltas: (x-x0)/(x1-x0), (y-y0...
+					vertices: (000, 100, 010, 001, 101, 110, 011, 111)
+					Z
+					'
+					3 - - - - 6
+					/.        /|
+					4 - - - - 7 |
+					| '       | |
+					| 0 - - - + 2 -- Y
+					'/        |/
+					1 - - - - 5
+					/
+					X
+				*/
 
-			// See detailed decomposition in original AD-GPU
+				// See detailed decomposition in original AD-GPU
 
-			// -------------------------------------------------------------------
-			// Calculating gradients (forces) corresponding to
-			// "atype" intermolecular energy
-			// -------------------------------------------------------------------
-			// Vector in x-direction
-			gradient_inter_x[atom_id] += omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
-										   dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011));
-			// Vector in y-direction
-			gradient_inter_y[atom_id] += omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
-										   dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101));
-			// Vector in z-direction
-			gradient_inter_z[atom_id] += omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
-										   dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110));
+				// -------------------------------------------------------------------
+				// Calculating gradients (forces) corresponding to
+				// "atype" intermolecular energy
+				// -------------------------------------------------------------------
+				// Vector in x-direction
+				gradient_inter_x[atom_id] += omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+											dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011));
+				// Vector in y-direction
+				gradient_inter_y[atom_id] += omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+											dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101));
+				// Vector in z-direction
+				gradient_inter_z[atom_id] += omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+											dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110));
 
-			// Energy contribution of the electrostatic grid
-			cub000 = (*IE_Fg_2)[iz  ][iy  ][ix  ];
-			cub100 = (*IE_Fg_2)[iz  ][iy  ][ix+1];
-			cub010 = (*IE_Fg_2)[iz  ][iy+1][ix  ];
-			cub110 = (*IE_Fg_2)[iz  ][iy+1][ix+1];
-			cub001 = (*IE_Fg_2)[iz+1][iy  ][ix  ];
-			cub101 = (*IE_Fg_2)[iz+1][iy  ][ix+1];
-			cub011 = (*IE_Fg_2)[iz+1][iy+1][ix  ];
-			cub111 = (*IE_Fg_2)[iz+1][iy+1][ix+1];
+				// Energy contribution of the electrostatic grid
+				cub000 = (*IE_Fg_2)[iz  ][iy  ][ix  ];
+				cub100 = (*IE_Fg_2)[iz  ][iy  ][ix+1];
+				cub010 = (*IE_Fg_2)[iz  ][iy+1][ix  ];
+				cub110 = (*IE_Fg_2)[iz  ][iy+1][ix+1];
+				cub001 = (*IE_Fg_2)[iz+1][iy  ][ix  ];
+				cub101 = (*IE_Fg_2)[iz+1][iy  ][ix+1];
+				cub011 = (*IE_Fg_2)[iz+1][iy+1][ix  ];
+				cub111 = (*IE_Fg_2)[iz+1][iy+1][ix+1];
 
-#ifdef PRINT_ALL
-			printf("Interpolation of electrostatic map:\n");
-			printf("cube(0,0,0) = %f\n". cub000);
-			printf("cube(1,0,0) = %f\n". cub100);
-			printf("cube(0,1,0) = %f\n". cub010);
-			printf("cube(1,1,0) = %f\n". cub110);
-			printf("cube(0,0,1) = %f\n". cub001);
-			printf("cube(1,0,1) = %f\n". cub101);
-			printf("cube(0,1,1) = %f\n". cub011);
-			printf("cube(1,1,1) = %f\n". cub111);
-#endif
+	#ifdef PRINT_ALL
+				printf("Interpolation of electrostatic map:\n");
+				printf("cube(0,0,0) = %f\n". cub000);
+				printf("cube(1,0,0) = %f\n". cub100);
+				printf("cube(0,1,0) = %f\n". cub010);
+				printf("cube(1,1,0) = %f\n". cub110);
+				printf("cube(0,0,1) = %f\n". cub001);
+				printf("cube(1,0,1) = %f\n". cub101);
+				printf("cube(0,1,1) = %f\n". cub011);
+				printf("cube(1,1,1) = %f\n". cub111);
+	#endif
 
-			partialE2 = q * (
-						cub000 * weight000 + cub100 * weight100 +
-						cub010 * weight010 + cub110 * weight110 +
-						cub001 * weight001 + cub101 * weight101 +
-						cub011 * weight011 + cub111 * weight111);
+				partialE2 = q * (
+							cub000 * weight000 + cub100 * weight100 +
+							cub010 * weight010 + cub110 * weight110 +
+							cub001 * weight001 + cub101 * weight101 +
+							cub011 * weight011 + cub111 * weight111);
 
-#ifdef PRINT_ALL
-			printf("q = %f, interpolated energy partialE2 = %f\n\n", q, partialE2);
-#endif
+	#ifdef PRINT_ALL
+				printf("q = %f, interpolated energy partialE2 = %f\n\n", q, partialE2);
+	#endif
 
-			// -------------------------------------------------------------------
-			// Calculating gradients (forces) corresponding to
-			// "elec" intermolecular energy
-			// -------------------------------------------------------------------
-			// Vector in x-direction
-			gradient_inter_x[atom_id] += q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
-										        dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
-			// Vector in y-direction
-			gradient_inter_y[atom_id] += q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
-										        dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
-			// Vector in z-direction
-			gradient_inter_z[atom_id] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
-										        dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
+				// -------------------------------------------------------------------
+				// Calculating gradients (forces) corresponding to
+				// "elec" intermolecular energy
+				// -------------------------------------------------------------------
+				// Vector in x-direction
+				gradient_inter_x[atom_id] += q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+													dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
+				// Vector in y-direction
+				gradient_inter_y[atom_id] += q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+													dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
+				// Vector in z-direction
+				gradient_inter_z[atom_id] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+													dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
-			// Energy contribution of the desolvation grid
-			cub000 = (*IE_Fg_3)[iz  ][iy  ][ix  ];
-			cub100 = (*IE_Fg_3)[iz  ][iy  ][ix+1];
-			cub010 = (*IE_Fg_3)[iz  ][iy+1][ix  ];
-			cub110 = (*IE_Fg_3)[iz  ][iy+1][ix+1];
-			cub001 = (*IE_Fg_3)[iz+1][iy  ][ix  ];
-			cub101 = (*IE_Fg_3)[iz+1][iy  ][ix+1];
-			cub011 = (*IE_Fg_3)[iz+1][iy+1][ix  ];
-			cub111 = (*IE_Fg_3)[iz+1][iy+1][ix+1];
+				// Energy contribution of the desolvation grid
+				cub000 = (*IE_Fg_3)[iz  ][iy  ][ix  ];
+				cub100 = (*IE_Fg_3)[iz  ][iy  ][ix+1];
+				cub010 = (*IE_Fg_3)[iz  ][iy+1][ix  ];
+				cub110 = (*IE_Fg_3)[iz  ][iy+1][ix+1];
+				cub001 = (*IE_Fg_3)[iz+1][iy  ][ix  ];
+				cub101 = (*IE_Fg_3)[iz+1][iy  ][ix+1];
+				cub011 = (*IE_Fg_3)[iz+1][iy+1][ix  ];
+				cub111 = (*IE_Fg_3)[iz+1][iy+1][ix+1];
 
-#ifdef PRINT_ALL
-			printf("Interpolation of desolvation map:\n");
-			printf("cube(0,0,0) = %f\n". cub000);
-			printf("cube(1,0,0) = %f\n". cub100);
-			printf("cube(0,1,0) = %f\n". cub010);
-			printf("cube(1,1,0) = %f\n". cub110);
-			printf("cube(0,0,1) = %f\n". cub001);
-			printf("cube(1,0,1) = %f\n". cub101);
-			printf("cube(0,1,1) = %f\n". cub011);
-			printf("cube(1,1,1) = %f\n". cub111);
-#endif
+	#ifdef PRINT_ALL
+				printf("Interpolation of desolvation map:\n");
+				printf("cube(0,0,0) = %f\n". cub000);
+				printf("cube(1,0,0) = %f\n". cub100);
+				printf("cube(0,1,0) = %f\n". cub010);
+				printf("cube(1,1,0) = %f\n". cub110);
+				printf("cube(0,0,1) = %f\n". cub001);
+				printf("cube(1,0,1) = %f\n". cub101);
+				printf("cube(0,1,1) = %f\n". cub011);
+				printf("cube(1,1,1) = %f\n". cub111);
+	#endif
 
-			float fabsf_q = fabsf(q);
-			partialE3 = fabsf_q * (
-						cub000 * weight000 + cub100 * weight100 +
-						cub010 * weight010 + cub110 * weight110 +
-						cub001 * weight001 + cub101 * weight101 +
-						cub011 * weight011 + cub111 * weight111);
+				float fabsf_q = fabsf(q);
+				partialE3 = fabsf_q * (
+							cub000 * weight000 + cub100 * weight100 +
+							cub010 * weight010 + cub110 * weight110 +
+							cub001 * weight001 + cub101 * weight101 +
+							cub011 * weight011 + cub111 * weight111);
 
-#ifdef PRINT_ALL
-			printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf_q, partialE3);
-#endif
+	#ifdef PRINT_ALL
+				printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf_q, partialE3);
+	#endif
 
-			// -------------------------------------------------------------------
-			// Calculating gradients (forces) corresponding to
-			// "dsol" intermolecular energy
-			// -------------------------------------------------------------------
-			// Vector in x-direction
-			gradient_inter_x[atom_id] += fabsf_q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
-													  dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
-			// Vector in y-direction
-			gradient_inter_y[atom_id] += fabsf_q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
-													  dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
-			// Vector in z-direction
-			gradient_inter_z[atom_id] += fabsf_q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
-													  dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
+				// -------------------------------------------------------------------
+				// Calculating gradients (forces) corresponding to
+				// "dsol" intermolecular energy
+				// -------------------------------------------------------------------
+				// Vector in x-direction
+				gradient_inter_x[atom_id] += fabsf_q * (omdz * (omdy * (cub100 - cub000) + dy * (cub110 - cub010)) +
+														dz * (omdy * (cub101 - cub001) + dy * (cub111 - cub011)));
+				// Vector in y-direction
+				gradient_inter_y[atom_id] += fabsf_q * (omdz * (omdx * (cub010 - cub000) + dx * (cub110 - cub100)) +
+														dz * (omdx * (cub011 - cub001) + dx * (cub111 - cub101)));
+				// Vector in z-direction
+				gradient_inter_z[atom_id] += fabsf_q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
+														dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
 
-		} // End if
+			} // End if
 
-		*final_interE += partialE1 + partialE2 + partialE3; // TODO: eventually will use final_interE[j]
+			final_interE[j] += partialE1 + partialE2 + partialE3;
+
+		} // End j Loop (over individuals)
 
 	} // End for (uint atom_id = 0 ...)
+
+	// Initializing intramolecular energies
+	for (int j = 0; j < DockConst_pop_size; j++) {
+		final_intraE[j] = 0.0f;
+	}
 
 	// ================================================
 	// CALCULATING INTRAMOLECULAR ENERGY & GRADIENTS
@@ -399,18 +413,18 @@ void energy_and_gradient (
 
 		// TODO: add support for flexible rings
 
-		// TODO: eventually add loop for vectorization
-		//for (uint j = 0; j < DockConst_pop_size; j++) {
-			float subx = local_coords_x[atom1_id] - local_coords_x[atom2_id];
-			float suby = local_coords_y[atom1_id] - local_coords_y[atom2_id];
-			float subz = local_coords_z[atom1_id] - local_coords_z[atom2_id];
+		// TODO: fix usage of j
+		for (uint j = 0; j < DockConst_pop_size; j++) {
+			float subx = local_coords_x[atom1_id][j] - local_coords_x[atom2_id][j];
+			float suby = local_coords_y[atom1_id][j] - local_coords_y[atom2_id][j];
+			float subz = local_coords_z[atom1_id][j] - local_coords_z[atom2_id][j];
 
 			// Calculating atomic distance
 			float dist = esa_sqrt(subx*subx + suby*suby + subz*subz);
 			float atomic_distance = dist * DockConst_grid_spacing;
 
 #ifdef PRINT_ALL
-			printf("\nContrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
+			printf("\nContrib %u: pop %3d, atoms %u and %u, distance: %f\n", contributor_counter, j, atom1_id+1, atom2_id+1, atomic_distance);
 #endif
 
 			float partialIAE1 = 0.0f;
@@ -493,34 +507,35 @@ void energy_and_gradient (
 				priv_gradient_per_intracontributor += -0.077160f * atomic_distance * partialIAE4;
 			} // End if cuttoff2 - internuclear-distance at 20.48A
 
-		//} // End for (uint j = 0 ...)
+			final_intraE[j] += partialIAE1 - partialIAE2 + partialIAE3 + partialIAE4;
 
-		*final_intraE += partialIAE1 - partialIAE2 + partialIAE3 + partialIAE4;
+			// Decomposing "priv_gradient_per_intracontributor"
+			// into the contribution of each atom of the pair.
+			// Distances in Ansgtroms of vector go from "atom1_id"-to-"atom2_id".
+			// Therefore, (-subx), (-suby), and (-subz) are used.
+			float inv_dist = 1.0f / dist;
+			float subx_div_dist = -subx * inv_dist;
+			float suby_div_dist = -suby * inv_dist;
+			float subz_div_dist = -subz * inv_dist;
 
-		// Decomposing "priv_gradient_per_intracontributor"
-		// into the contribution of each atom of the pair.
-		// Distances in Ansgtroms of vector go from "atom1_id"-to-"atom2_id".
-		// Therefore, (-subx), (-suby), and (-subz) are used.
-		float inv_dist = 1.0f / dist;
-		float subx_div_dist = -subx * inv_dist;
-		float suby_div_dist = -suby * inv_dist;
-		float subz_div_dist = -subz * inv_dist;
+			float priv_intra_gradient_x = priv_gradient_per_intracontributor * subx_div_dist;
+			float priv_intra_gradient_y = priv_gradient_per_intracontributor * suby_div_dist;
+			float priv_intra_gradient_z = priv_gradient_per_intracontributor * subz_div_dist;
 
-		float priv_intra_gradient_x = priv_gradient_per_intracontributor * subx_div_dist;
-		float priv_intra_gradient_y = priv_gradient_per_intracontributor * suby_div_dist;
-		float priv_intra_gradient_z = priv_gradient_per_intracontributor * subz_div_dist;
+			// Calculating gradients in xyz components.
+			// Gradients for both atoms in a single contributor pair
+			// have the same magnitude, but opposite directions.
+			// IMPORTANT: no need for atomic ops because this is not SIMT as in AD-GPU.
+			gradient_intra_x[atom1_id] = gradient_intra_x[atom1_id] - priv_intra_gradient_x;
+			gradient_intra_y[atom1_id] = gradient_intra_y[atom1_id] - priv_intra_gradient_y;
+			gradient_intra_z[atom1_id] = gradient_intra_z[atom1_id] - priv_intra_gradient_z;
 
-		// Calculating gradients in xyz components.
-		// Gradients for both atoms in a single contributor pair
-		// have the same magnitude, but opposite directions.
-		// IMPORTANT: no need for atomic ops because this is not SIMT as in AD-GPU.
-		gradient_intra_x[atom1_id] = gradient_intra_x[atom1_id] - priv_intra_gradient_x;
-		gradient_intra_y[atom1_id] = gradient_intra_y[atom1_id] - priv_intra_gradient_y;
-		gradient_intra_z[atom1_id] = gradient_intra_z[atom1_id] - priv_intra_gradient_z;
+			gradient_intra_x[atom1_id] = gradient_intra_x[atom2_id] + priv_intra_gradient_x;
+			gradient_intra_y[atom1_id] = gradient_intra_y[atom2_id] + priv_intra_gradient_y;
+			gradient_intra_z[atom1_id] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
 
-		gradient_intra_x[atom1_id] = gradient_intra_x[atom2_id] + priv_intra_gradient_x;
-		gradient_intra_y[atom1_id] = gradient_intra_y[atom2_id] + priv_intra_gradient_y;
-		gradient_intra_z[atom1_id] = gradient_intra_z[atom2_id] + priv_intra_gradient_z;
+		} // End j Loop (over individuals)
+
 	} // End for (uint contributor_counter = 0 ...)
 
 	// ================================================
@@ -638,9 +653,9 @@ void energy_and_gradient (
 
 		// TODO: fix usage of j
 		for (int j = 0; j < DockConst_pop_size; j++) {
-			r_x = (local_coords_x[atom_id] - about_x[j]) * DockConst_grid_spacing;
-			r_y = (local_coords_y[atom_id] - about_y[j]) * DockConst_grid_spacing;
-			r_z = (local_coords_z[atom_id] - about_z[j]) * DockConst_grid_spacing;
+			r_x = (local_coords_x[atom_id][j] - about_x[j]) * DockConst_grid_spacing;
+			r_y = (local_coords_y[atom_id][j] - about_y[j]) * DockConst_grid_spacing;
+			r_z = (local_coords_z[atom_id][j] - about_z[j]) * DockConst_grid_spacing;
 
 			// Reusing "gradient_inter_*" for total gradient (inter + intra)
 			float force_x = gradient_inter_x[atom_id];
@@ -906,76 +921,82 @@ void energy_and_gradient (
 		int atom1_id = GRAD_rotbonds[2 * rotbond_id];
 		int atom2_id = GRAD_rotbonds[2 * rotbond_id + 1];
 
-		float atomRef_coords_x = local_coords_x[atom1_id];
-		float atomRef_coords_y = local_coords_y[atom1_id];
-		float atomRef_coords_z = local_coords_z[atom1_id];
+		// TODO: fix usage of j
+		for (int j = 0; j < DockConst_pop_size; j++) {
 
-#ifdef PRINT_GRAD_TORSION_GENES
-		printf("%-5s %3u \n\t %-5s %3i \n\t %-5s %3i\n", "gene: ", (rotbond_id+6), "atom1: ", atom1_id, "atom2: ", atom2_id);
-#endif
+			float atomRef_coords_x = local_coords_x[atom1_id][j];
+			float atomRef_coords_y = local_coords_y[atom1_id][j];
+			float atomRef_coords_z = local_coords_z[atom1_id][j];
 
-		float tmp_rotation_unitvec_x = local_coords_x[atom2_id] - local_coords_x[atom1_id];
-		float tmp_rotation_unitvec_y = local_coords_y[atom2_id] - local_coords_y[atom1_id];
-		float tmp_rotation_unitvec_z = local_coords_z[atom2_id] - local_coords_z[atom1_id];
-		float rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z;
-		esa_normalize3_e_(tmp_rotation_unitvec_x, tmp_rotation_unitvec_y, tmp_rotation_unitvec_z, &rotation_unitvec_x, &rotation_unitvec_y, &rotation_unitvec_z);
+	#ifdef PRINT_GRAD_TORSION_GENES
+			printf("%-5s %3u \n\t %-5s %3i \n\t %-5s %3i\n", "gene: ", (rotbond_id+6), "atom1: ", atom1_id, "atom2: ", atom2_id);
+	#endif
 
-#ifdef PRINT_GRAD_TORSION_GENES
-		printf("%-15s \n\t %-10.6f %-10.6f %-10.6f\n", "unitvec: ", rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z);
-#endif
+			float tmp_rotation_unitvec_x = local_coords_x[atom2_id][j] - local_coords_x[atom1_id][j];
+			float tmp_rotation_unitvec_y = local_coords_y[atom2_id][j] - local_coords_y[atom1_id][j];
+			float tmp_rotation_unitvec_z = local_coords_z[atom2_id][j] - local_coords_z[atom1_id][j];
+			float rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z;
+			esa_normalize3_e_(tmp_rotation_unitvec_x, tmp_rotation_unitvec_y, tmp_rotation_unitvec_z, &rotation_unitvec_x, &rotation_unitvec_y, &rotation_unitvec_z);
 
-		// Torque of torsions
-		float torque_tor_x = 0.0f;
-		float torque_tor_y = 0.0f;
-		float torque_tor_z = 0.0f;
+	#ifdef PRINT_GRAD_TORSION_GENES
+			printf("%-15s \n\t %-10.6f %-10.6f %-10.6f\n", "unitvec: ", rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z);
+	#endif
 
-		// Iterating over each ligand atom that rotates
-		// if the bond in question rotates
-		for (uint rotable_atom_cnt = 0;
-				  rotable_atom_cnt < GRAD_num_rotating_atoms_per_rotbond[rotbond_id];
-				  rotable_atom_cnt++) {
-			uint lig_atom_id = GRAD_rotbonds_atoms[MAX_NUM_OF_ATOMS * rotbond_id + rotable_atom_cnt];
+			// Torque of torsions
+			float torque_tor_x = 0.0f;
+			float torque_tor_y = 0.0f;
+			float torque_tor_z = 0.0f;
 
-			// Calculating torque on point "A"
-			// (could be any other point "B" along the rotation axis)
-			float atom_coords_x = local_coords_x[lig_atom_id];
-			float atom_coords_y = local_coords_y[lig_atom_id];
-			float atom_coords_z = local_coords_z[lig_atom_id];
+			// Iterating over each ligand atom that rotates
+			// if the bond in question rotates
+			for (uint rotable_atom_cnt = 0;
+					rotable_atom_cnt < GRAD_num_rotating_atoms_per_rotbond[rotbond_id];
+					rotable_atom_cnt++) {
+				uint lig_atom_id = GRAD_rotbonds_atoms[MAX_NUM_OF_ATOMS * rotbond_id + rotable_atom_cnt];
 
-			// Temporary variable to calculate translation differences.
-			// They are converted back to Angstroms here
-			float r_x = (atom_coords_x - atomRef_coords_x) * DockConst_grid_spacing;
-			float r_y = (atom_coords_y - atomRef_coords_y) * DockConst_grid_spacing;
-			float r_z = (atom_coords_z - atomRef_coords_z) * DockConst_grid_spacing;
+				// Calculating torque on point "A"
+				// (could be any other point "B" along the rotation axis)
+				float atom_coords_x = local_coords_x[lig_atom_id][j];
+				float atom_coords_y = local_coords_y[lig_atom_id][j];
+				float atom_coords_z = local_coords_z[lig_atom_id][j];
 
-			// Reusing "gradient_inter_*" for total gradient (inter+intra)
-			float atom_force_x = gradient_inter_x[lig_atom_id];
-			float atom_force_y = gradient_inter_y[lig_atom_id];
-			float atom_force_z = gradient_inter_z[lig_atom_id];
+				// Temporary variable to calculate translation differences.
+				// They are converted back to Angstroms here
+				float r_x = (atom_coords_x - atomRef_coords_x) * DockConst_grid_spacing;
+				float r_y = (atom_coords_y - atomRef_coords_y) * DockConst_grid_spacing;
+				float r_z = (atom_coords_z - atomRef_coords_z) * DockConst_grid_spacing;
 
-			float tmp_tor_x, tmp_tor_y, tmp_tor_z;
-			esa_cross3_e_(r_x, r_y, r_z, atom_force_x, atom_force_y, atom_force_z, &tmp_tor_x, &tmp_tor_y, &tmp_tor_z);
-			torque_tor_x += tmp_tor_x;
-			torque_tor_y += tmp_tor_y;
-			torque_tor_z += tmp_tor_z;
+				// Reusing "gradient_inter_*" for total gradient (inter+intra)
+				float atom_force_x = gradient_inter_x[lig_atom_id];
+				float atom_force_y = gradient_inter_y[lig_atom_id];
+				float atom_force_z = gradient_inter_z[lig_atom_id];
 
-#ifdef PRINT_GRAD_TORSION_GENES
-			if (rotable_atom_cnt == 0) {
-				printf("\n %-30s %3i\n", "contributor for gene : ", (rotbond_id+6));
-			}
-			printf("\t %-15s %-10.6f %-10.6f %-10.6f \t %-15s %-10.6f %-10.6f %-10.6f\n", "atom_coords: ", atom_coords_x, atom_coords_y, atom_coords_z, "atom_force: ", atom_force_x, atom_force_y, atom_force_z);
-#endif
-		} // End for loop on "rotable_atom_cnt"
+				float tmp_tor_x, tmp_tor_y, tmp_tor_z;
+				esa_cross3_e_(r_x, r_y, r_z, atom_force_x, atom_force_y, atom_force_z, &tmp_tor_x, &tmp_tor_y, &tmp_tor_z);
+				torque_tor_x += tmp_tor_x;
+				torque_tor_y += tmp_tor_y;
+				torque_tor_z += tmp_tor_z;
 
-		// Projecting torque on rotation axis
-		float torque_on_axis = esa_dot3_e(rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z, torque_tor_x, torque_tor_y, torque_tor_z);
+	#ifdef PRINT_GRAD_TORSION_GENES
+				if (rotable_atom_cnt == 0) {
+					printf("\n %-30s %3i\n", "contributor for gene : ", (rotbond_id+6));
+				}
+				printf("\t %-15s %-10.6f %-10.6f %-10.6f \t %-15s %-10.6f %-10.6f %-10.6f\n", "atom_coords: ", atom_coords_x, atom_coords_y, atom_coords_z, "atom_force: ", atom_force_x, atom_force_y, atom_force_z);
+	#endif
+			} // End for loop on "rotable_atom_cnt"
 
-		// Assigning gene-based gradient
-		gradient_genotype[rotbond_id + 6] = torque_on_axis * DEG_TO_RAD;
+			// Projecting torque on rotation axis
+			float torque_on_axis = esa_dot3_e(rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z, torque_tor_x, torque_tor_y, torque_tor_z);
 
-#ifdef PRINT_GRAD_TORSION_GENES
-		printf("gradient_torsion [%u] :%f\n", rotbond_id+6, gradient_genotype[rotbond_id+6]);
-#endif
+			// Assigning gene-based gradient
+			gradient_genotype[rotbond_id + 6] = torque_on_axis * DEG_TO_RAD;
+
+	#ifdef PRINT_GRAD_TORSION_GENES
+			printf("gradient_torsion [%u] :%f\n", rotbond_id+6, gradient_genotype[rotbond_id+6]);
+	#endif
+
+		} // End j Loop (over individuals)
+
 	} // End for loop on "rotbond_id"
 
 	// Extra conversion (see first index value = 3)
