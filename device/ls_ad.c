@@ -201,8 +201,8 @@ void ls_ad(
 		);
 		energy_and_gradient(
             genotype,
-            &energy_ie,
-            &energy_ia,
+            energy_ie,
+            energy_ia,
             local_coords_x,
             local_coords_y,
             local_coords_z,
@@ -256,7 +256,7 @@ void ls_ad(
 
         // TODO: fix usage of j
         for (uint j = 0; j < pop_size; j++) {
-            energy[j] = energy_ia_ls[j] + energy_ie_ls[j];
+            energy[j] = energy_ia[j] + energy_ie[j];
         }
 
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
