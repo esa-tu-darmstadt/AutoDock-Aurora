@@ -369,10 +369,20 @@ filled with clock() */
 
 	size_t size_ie = size_floatgrids_nbytes;
 
+	// Gradients
+	size_t size_grad = 0;
 
+	if ((strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "ad") == 0)) {
+		std::cout << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_rotbonds_nbytes" << std::right << std::setw(SPACE_M) << size_grad_rotbonds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_rotbonds_nbytes) << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_rotbonds_atoms_nbytes" << std::right << std::setw(SPACE_M) << size_grad_rotbonds_atoms_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_rotbonds_atoms_nbytes) << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_num_rotating_atoms_per_rotbond_nbytes" << std::right << std::setw(SPACE_M) << size_grad_num_rotating_atoms_per_rotbond_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_num_rotating_atoms_per_rotbond_nbytes) << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_dependence_nbytes" << std::right << std::setw(SPACE_M) << size_grad_dependence_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_dependence_nbytes) << std::endl;
+		size_grad += size_grad_rotbonds_nbytes + size_grad_rotbonds_atoms_nbytes + size_grad_num_rotating_atoms_per_rotbond_nbytes + (3 * size_grad_dependence_nbytes);
+	}
 
 	// Total amount memory
-	size_t size_total_mem = size_ga + size_pc + size_ia + size_ie;
+	size_t size_total_mem = size_ga + size_pc + size_ia + size_ie + size_grad;
 
 	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) << size_total_mem << std::right << std::setw(SPACE_S) << sizeKB(size_total_mem) << std::endl;
