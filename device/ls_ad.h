@@ -9,7 +9,7 @@
  */
 
 void ls_ad(
-			uint				DockConst_max_num_of_iters,
+			ushort				DockConst_max_num_of_iters,
             uchar               DockConst_num_of_genes, // ADGPU defines it as int
             uint                pop_size,
             float               in_out_genotype[][MAX_POPSIZE], // ADGPU: __global float* restrict dockpars_conformations_next,
