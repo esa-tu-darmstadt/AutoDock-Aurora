@@ -78,6 +78,25 @@ void ls_ad(
     printf("\n");
     printf("LS: DockConst_max_num_of_iters: %u\n",		DockConst_max_num_of_iters);
     printf("LS: DockConst_num_of_genes: %u\n",		    DockConst_num_of_genes);
+    printf("LS: pop_size: %u\n",		                pop_size);
+    printf("LS: DockConst_rotbondlist_length: %u\n",    DockConst_rotbondlist_length);
+    printf("LS: Host_RunId: %u\n",                      Host_RunId);
+    printf("LS: DockConst_smooth: %f\n",                DockConst_smooth);
+    printf("LS: DockConst_num_of_intraE_contributors: %u\n",    DockConst_num_of_intraE_contributors);
+    printf("LS: DockConst_grid_spacing: %f\n",          DockConst_grid_spacing);
+    printf("LS: DockConst_num_of_atypes: %u\n",         DockConst_num_of_atypes);
+    printf("LS: DockConst_coeff_elec: %f\n",            DockConst_coeff_elec);
+    printf("LS: DockConst_qasp: %f\n",                  DockConst_qasp);
+    printf("LS: DockConst_coeff_desolv: %f\n",          DockConst_coeff_desolv);
+    printf("LS: DockConst_xsz: %u\n",                   DockConst_xsz);
+    printf("LS: DockConst_ysz: %u\n",                   DockConst_ysz);
+    printf("LS: DockConst_zsz: %u\n",                   DockConst_zsz);
+    printf("LS: DockConst_num_of_atoms: %u\n",          DockConst_num_of_atoms);
+    printf("LS: DockConst_gridsize_x_minus1: %f\n",     DockConst_gridsize_x_minus1);
+    printf("LS: DockConst_gridsize_y_minus1: %f\n",     DockConst_gridsize_y_minus1);
+    printf("LS: DockConst_gridsize_z_minus1: %f\n",     DockConst_gridsize_z_minus1);
+    printf("LS: Host_mul_tmp2: %u\n",                   Host_mul_tmp2);
+    printf("LS: Host_mul_tmp3: %u\n",                   Host_mul_tmp3);
 #endif
 
 	// Genotype and its energy
@@ -179,7 +198,7 @@ void ls_ad(
 			local_coords_y,
 			local_coords_z
 		);
-		energy_and_gradient(
+        energy_and_gradient(
             genotype,
             energy_ie,
             energy_ia,
@@ -231,6 +250,11 @@ void ls_ad(
         // TODO: fix usage of j
         for (uint j = 0; j < pop_size; j++) {
             energy[j] = energy_ia[j] + energy_ie[j];
+
+#ifdef PRINT_ALL_LS_AD
+            printf("energy[%i]: %f\n", j, energy[j]);
+#endif
+
         }
 
 		for (uint i = 0; i < DockConst_num_of_genes; i++) {
