@@ -53,12 +53,12 @@ void ls_ad(
             uchar               DockConst_xsz,
             uchar               DockConst_ysz,
             uchar               DockConst_zsz,
-            uint                DockConst_num_of_atoms,    // FIXME: SW defines it as uchar
+            uchar               DockConst_num_of_atoms,
             float               DockConst_gridsize_x_minus1, // FIXME: ADGPU defines it as int
             float               DockConst_gridsize_y_minus1,
             float               DockConst_gridsize_z_minus1,
             uint                Host_mul_tmp2,
-            uint                Host_mul_tmp3
+            uint                Host_mul_tmp3,
     // gradients
     const   int*    restrict    GRAD_rotbonds,
     const   int*    restrict    GRAD_rotbonds_atoms,

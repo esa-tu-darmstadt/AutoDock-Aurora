@@ -58,7 +58,7 @@ void ls_ad(
             uchar               DockConst_xsz,
             uchar               DockConst_ysz,
             uchar               DockConst_zsz,
-            uint                DockConst_num_of_atoms,    // TODO FIXME: SW defines it as uchar
+            uchar               DockConst_num_of_atoms,
             float               DockConst_gridsize_x_minus1, // TODO FIXME: ADGPU defines it as int
             float               DockConst_gridsize_y_minus1,
             float               DockConst_gridsize_z_minus1,
