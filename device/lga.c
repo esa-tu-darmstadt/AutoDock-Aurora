@@ -653,7 +653,7 @@ void lga (
 			printf("\n");
 			printf("%-50s %u\n", "b4 AD / DockConst_max_num_of_iters: ",      DockConst_max_num_of_iters);
 			printf("%-50s %u\n", "b4 AD / DockConst_num_of_genes: ",          DockConst_num_of_genes);
-			printf("%-50s %u\n", "b4 AD / pop_size: ",		                   pop_size);
+			printf("%-50s %u\n", "b4 AD / pop_size: ",		                  DockConst_pop_size);
 			printf("%-50s %u\n", "b4 AD / DockConst_rotbondlist_length: ",    DockConst_rotbondlist_length);
 			printf("%-50s %u\n", "b4 AD / Host_RunId: ",                      Host_RunId);
 			printf("%-50s %f\n", "b4 AD / DockConst_smooth: ",                DockConst_smooth);
@@ -734,7 +734,7 @@ void lga (
 			printf("\n");
 			printf("%-50s %u\n", "after AD / DockConst_max_num_of_iters: ",      DockConst_max_num_of_iters);
 			printf("%-50s %u\n", "after AD / DockConst_num_of_genes: ",          DockConst_num_of_genes);
-			printf("%-50s %u\n", "after AD / pop_size: ",		                   pop_size);
+			printf("%-50s %u\n", "after AD / pop_size: ",		                 DockConst_pop_size);
 			printf("%-50s %u\n", "after AD / DockConst_rotbondlist_length: ",    DockConst_rotbondlist_length);
 			printf("%-50s %u\n", "after AD / Host_RunId: ",                      Host_RunId);
 			printf("%-50s %f\n", "after AD / DockConst_smooth: ",                DockConst_smooth);
