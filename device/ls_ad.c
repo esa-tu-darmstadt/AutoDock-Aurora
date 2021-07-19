@@ -76,27 +76,27 @@ void ls_ad(
     printf("\n");
     printf("Starting <local search>: <ADADELTA> ... \n");
     printf("\n");
-    printf("LS: DockConst_max_num_of_iters: %u\n",		DockConst_max_num_of_iters);
-    printf("LS: DockConst_num_of_genes: %u\n",		    DockConst_num_of_genes);
-    printf("LS: pop_size: %u\n",		                pop_size);
-    printf("LS: DockConst_rotbondlist_length: %u\n",    DockConst_rotbondlist_length);
-    printf("LS: Host_RunId: %u\n",                      Host_RunId);
-    printf("LS: DockConst_smooth: %f\n",                DockConst_smooth);
-    printf("LS: DockConst_num_of_intraE_contributors: %u\n",    DockConst_num_of_intraE_contributors);
-    printf("LS: DockConst_grid_spacing: %f\n",          DockConst_grid_spacing);
-    printf("LS: DockConst_num_of_atypes: %u\n",         DockConst_num_of_atypes);
-    printf("LS: DockConst_coeff_elec: %f\n",            DockConst_coeff_elec);
-    printf("LS: DockConst_qasp: %f\n",                  DockConst_qasp);
-    printf("LS: DockConst_coeff_desolv: %f\n",          DockConst_coeff_desolv);
-    printf("LS: DockConst_xsz: %u\n",                   DockConst_xsz);
-    printf("LS: DockConst_ysz: %u\n",                   DockConst_ysz);
-    printf("LS: DockConst_zsz: %u\n",                   DockConst_zsz);
-    printf("LS: DockConst_num_of_atoms: %u\n",          DockConst_num_of_atoms);
-    printf("LS: DockConst_gridsize_x_minus1: %f\n",     DockConst_gridsize_x_minus1);
-    printf("LS: DockConst_gridsize_y_minus1: %f\n",     DockConst_gridsize_y_minus1);
-    printf("LS: DockConst_gridsize_z_minus1: %f\n",     DockConst_gridsize_z_minus1);
-    printf("LS: Host_mul_tmp2: %u\n",                   Host_mul_tmp2);
-    printf("LS: Host_mul_tmp3: %u\n",                   Host_mul_tmp3);
+    printf("%-40s %u\n", "LS: DockConst_max_num_of_iters: ",      DockConst_max_num_of_iters);
+    printf("%-40s %u\n", "LS: DockConst_num_of_genes: ",          DockConst_num_of_genes);
+    printf("%-40s %u\n", "LS: pop_size: ",		                  pop_size);
+    printf("%-40s %u\n", "LS: DockConst_rotbondlist_length: ",    DockConst_rotbondlist_length);
+    printf("%-40s %u\n", "LS: Host_RunId: ",                      Host_RunId);
+    printf("%-40s %f\n", "LS: DockConst_smooth: ",                DockConst_smooth);
+    printf("%-40s %u\n", "LS: DockConst_num_of_intraE_contributors: ",    DockConst_num_of_intraE_contributors);
+    printf("%-40s %f\n", "LS: DockConst_grid_spacing: ",          DockConst_grid_spacing);
+    printf("%-40s %u\n", "LS: DockConst_num_of_atypes: ",         DockConst_num_of_atypes);
+    printf("%-40s %f\n", "LS: DockConst_coeff_elec: ",            DockConst_coeff_elec);
+    printf("%-40s %f\n", "LS: DockConst_qasp: ",                  DockConst_qasp);
+    printf("%-40s %f\n", "LS: DockConst_coeff_desolv: ",          DockConst_coeff_desolv);
+    printf("%-40s %u\n", "LS: DockConst_xsz: ",                   DockConst_xsz);
+    printf("%-40s %u\n", "LS: DockConst_ysz: ",                   DockConst_ysz);
+    printf("%-40s %u\n", "LS: DockConst_zsz: ",                   DockConst_zsz);
+    printf("%-40s %u\n", "LS: DockConst_num_of_atoms: ",          DockConst_num_of_atoms);
+    printf("%-40s %f\n", "LS: DockConst_gridsize_x_minus1: ",     DockConst_gridsize_x_minus1);
+    printf("%-40s %f\n", "LS: DockConst_gridsize_y_minus1: ",     DockConst_gridsize_y_minus1);
+    printf("%-40s %f\n", "LS: DockConst_gridsize_z_minus1: ",     DockConst_gridsize_z_minus1);
+    printf("%-40s %u\n", "LS: Host_mul_tmp2: ",                   Host_mul_tmp2);
+    printf("%-40s %u\n", "LS: Host_mul_tmp3: ",                   Host_mul_tmp3);
 #endif
 
 	// Genotype and its energy
