@@ -4,7 +4,7 @@
 #include "calc_pc.h"
 #include "perform_ls.h"
 #include "ls_ad.h"
-#include "dummy_ada.h"
+//#include "dummy_ada.h"
 
 /*
 IC:  initial calculation of energy of populations
@@ -676,7 +676,6 @@ void lga (
 			printf("%-50s %u\n", "b4 AD / Host_mul_tmp3: ",                   Host_mul_tmp3);
 #endif
 
-/*
 			ls_ad(
 				DockConst_max_num_of_iters,
 				DockConst_num_of_genes,
@@ -732,8 +731,8 @@ void lga (
 				GRAD_dependence_on_theta,
 				GRAD_dependence_on_rotangle
 			);
-*/
 
+/*
 			dummy_ada(
 				DockConst_max_num_of_iters,
 				DockConst_rho_lower_bound,
@@ -741,6 +740,7 @@ void lga (
 				DockConst_gridsize_x_minus1,
 				DockConst_pop_size
 			);
+*/
 
 #if defined (PRINT_ALL_KRNL)
 			printf("\n");
