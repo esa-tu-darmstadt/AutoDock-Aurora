@@ -4,6 +4,7 @@
 #include "calc_pc.h"
 #include "perform_ls.h"
 #include "ls_ad.h"
+#include "dummy_ada.h"
 
 /*
 IC:  initial calculation of energy of populations
