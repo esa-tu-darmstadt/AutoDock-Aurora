@@ -6,6 +6,6 @@ void dummy_ada(
 			float				DockConst_rho_lower_bound,
 			uchar				DockConst_num_of_genes,
 			float				DockConst_gridsize_x_minus1,
-			uint				pop_size,
+			uint				pop_size
 );
 #endif
