@@ -739,7 +739,7 @@ void lga (
 				DockConst_rho_lower_bound,
 				DockConst_num_of_genes,
 				DockConst_gridsize_x_minus1,
-				DockConst_pop_size,
+				DockConst_pop_size
 			);
 
 #if defined (PRINT_ALL_KRNL)
