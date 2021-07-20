@@ -90,9 +90,6 @@ void energy_and_gradient (
     float gradient_intra_z[MAX_NUM_OF_ATOMS][MAX_POPSIZE];
 
 	// Initializing gradients (forces)
-	// TODO: make sure this is strictly necessary
-	// (caller may be doing the same, but maybe not redundant)
-	// TODO: merge with for-loop below
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
 		for (int j = 0; j < DockConst_pop_size; j++) {
 			// Intermolecular gradients
