@@ -299,13 +299,11 @@ void ls_ad(
 
             // Updating number of ADADELTA iterations (energy evaluations)
             if (energy[j] < best_energy[j]) {
-                best_energy[j] = energy[j];
 
 #ifdef PRINT_ALL_LS_AD
-                if (j == 0) {
-                    printf("\t Improvement: energy[%i]: %.3f, best_energy[%i]: %.3f\n", j, energy[j], j, best_energy[j]);
-                }
+                printf("\t Improvement: energy[%i]: %.3f, best_energy[%i]: %.3f\n", j, energy[j], j, best_energy[j]);
 #endif
+                best_energy[j] = energy[j];
 
 #ifdef ADADELTA_AUTOSTOP
                 cons_succ++;
