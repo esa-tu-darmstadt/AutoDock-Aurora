@@ -174,7 +174,7 @@ void ls_ad(
     do {
 
 #ifdef PRINT_ALL_LS_AD
-	printf("LS_ADADELTA: iteration_cnt: %u\n", iteration-cnt);
+	printf("LS_ADADELTA: iteration_cnt: %u\n", iteration_cnt);
 #endif
 		// TODO
 		// Calculating energy and gradients
