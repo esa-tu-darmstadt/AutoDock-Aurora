@@ -44,7 +44,7 @@ void energy_ie (
 	printf("\t%-40s %u\n", "Host_mul_tmp3: ",				Host_mul_tmp3);
 #endif
 
-	// interpret IE_Fgrids as multidimensional static array
+	// Interpreting IE_Fgrids as multidimensional static array
 	const float (*IE_Fg)[MAX_NUM_OF_ATYPES+2][DockConst_zsz][DockConst_ysz][DockConst_xsz] =
 		(void *)(IE_Fgrids);
 	const float (*IE_Fg_2)[DockConst_zsz][DockConst_ysz][DockConst_xsz] =
@@ -90,9 +90,6 @@ void energy_ie (
 			    (z < 0.0f) || (z >= DockConst_gridsize_z_minus1))	{
 
 				// Penalty is 2^24 for each atom outside the grid
-				/*
-				  interE += 16777216.0f; 
-				*/
 				partialE1 = 16777216.0f; 
 				partialE2 = 0.0f;
 				partialE3 = 0.0f;
@@ -110,12 +107,10 @@ void energy_ie (
 				float dy = y - y_low;
 				float dz = z - z_low;
 
-				// Calculates the weights for trilinear interpolation
+				// Calculating the weights for trilinear interpolation
 				// based on the location of the point inside
-				//float weights [2][2][2];
-                                float weight000, weight001, weight010;
-                                float weight011, weight100, weight101;
-                                float weight110, weight111;
+				float weight000, weight001, weight010, weight011;
+				float weight100, weight101, weight110, weight111;
 				weight000 = (1.0f-dx)*(1.0f-dy)*(1.0f-dz);
 				weight100 = dx*(1.0f-dy)*(1.0f-dz);
 				weight010 = (1.0f-dx)*dy*(1.0f-dz);
@@ -140,10 +135,8 @@ void energy_ie (
 				printf("coeff(1,1,1) = %f\n", weight111);
 #endif
 				// Energy contribution of the current grid type
-				//float cube [2][2][2];
-                                float cub000, cub001, cub010;
-                                float cub011, cub100, cub101;
-                                float cub110, cub111;
+				float cub000, cub001, cub010, cub011;
+				float cub100, cub101, cub110, cub111;
 				cub000 = (*IE_Fg)[atom1_typeid][iz  ][iy  ][ix  ];
 				cub100 = (*IE_Fg)[atom1_typeid][iz  ][iy  ][ix+1];
 				cub010 = (*IE_Fg)[atom1_typeid][iz  ][iy+1][ix  ];
@@ -154,7 +147,7 @@ void energy_ie (
 				cub111 = (*IE_Fg)[atom1_typeid][iz+1][iy+1][ix+1];
 				
 #if defined (PRINT_ALL)
-				printf("Interpolation of van der Waals map:\n");
+				printf("Interpolation of Van der Waals map:\n");
 				printf("cube(0,0,0) = %f\n", cub000);
 				printf("cube(1,0,0) = %f\n", cub100);
 				printf("cube(0,1,0) = %f\n", cub010);
@@ -165,19 +158,13 @@ void energy_ie (
 				printf("cube(1,1,1) = %f\n", cub111);
 #endif
 
-				//partialE1 = TRILININTERPOL(cube, weights);
-                                partialE1 =
-					cub000 * weight000 +
-					cub100 * weight100 +
-					cub010 * weight010 +
-					cub110 * weight110 +
-					cub001 * weight001 +
-					cub101 * weight101 +
-					cub011 * weight011 +
-					cub111 * weight111;
+				partialE1 = cub000 * weight000 + cub100 * weight100 +
+							cub010 * weight010 + cub110 * weight110 +
+							cub001 * weight001 + cub101 * weight101 +
+							cub011 * weight011 + cub111 * weight111;
 
 #if defined (PRINT_ALL)
-				printf("interpolated value = %f\n\n", TRILININTERPOL(cube, weights));
+				printf("interpolated energy partialE1 = %f\n\n", partialE1);
 #endif
 
 				// Energy contribution of the electrostatic grid
@@ -202,19 +189,14 @@ void energy_ie (
 				printf("cube(1,1,1) = %f\n", cub111);
 #endif
 
-				//partialE2 = q * TRILININTERPOL(cube, weights);
-                                partialE2 = q * (
-					cub000 * weight000 +
-					cub100 * weight100 +
-					cub010 * weight010 +
-					cub110 * weight110 +
-					cub001 * weight001 +
-					cub101 * weight101 +
-					cub011 * weight011 +
-					cub111 * weight111);
+                partialE2 = q * (
+							cub000 * weight000 + cub100 * weight100 +
+							cub010 * weight010 + cub110 * weight110 +
+							cub001 * weight001 + cub101 * weight101 +
+							cub011 * weight011 + cub111 * weight111);
 
 #if defined (PRINT_ALL)
-				printf("interpolated value = %f, multiplied by q = %f\n\n", TRILININTERPOL(cube, weights), q*TRILININTERPOL(cube, weights));
+				printf("q = %f, interpolated energy partialE2 = %f\n\n", q, partialE2);
 #endif
 
 				// Energy contribution of the desolvation grid
@@ -239,28 +221,25 @@ void energy_ie (
 				printf("cube(1,1,1) = %f\n", cub111);
 #endif
 
-				//partialE3 = fabsf(q) * TRILININTERPOL(cube, weights);
-                                partialE3 = fabsf(q) * (
-					cub000 * weight000 +
-					cub100 * weight100 +
-					cub010 * weight010 +
-					cub110 * weight110 +
-					cub001 * weight001 +
-					cub101 * weight101 +
-					cub011 * weight011 +
-					cub111 * weight111);
+                partialE3 = fabsf(q) * (
+							cub000 * weight000 + cub100 * weight100 +
+							cub010 * weight010 + cub110 * weight110 +
+							cub001 * weight001 + cub101 * weight101 +
+							cub011 * weight011 + cub111 * weight111);
 
 #if defined (PRINT_ALL)
-				printf("interpolated value = %f, multiplied by abs(q) = %f\n\n", TRILININTERPOL(cube, weights), esa_fabs(q) * trilin_interpol(cube, weights));
-				printf("Current value of intermolecular energy = %f\n\n\n", interE);
+				printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf_q, partialE3);
 #endif
-			}
+			} // End if
 
 			final_interE[j] += partialE1 + partialE2 + partialE3;
+
+#if defined (PRINT_ALL)
+			printf("final_interE[%u] = %f\n\n\n", j, final_interE[j]);
+#endif
 	
 		} // End j Loop (over individuals)
 
-                
 	} // End of atom1_id for-loop
 
 #if defined (ENABLE_TRACE)

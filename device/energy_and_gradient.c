@@ -111,9 +111,10 @@ void energy_and_gradient (
 		} // End j Loop (over individuals)
 	}
 
-	// Initializing intermolecular energies
+	// Initializing inter- & intra-molecular energies
 	for (int j = 0; j < DockConst_pop_size; j++) {
 		final_interE[j] = 0.0f;
+		final_intraE[j] = 0.0f;
 	}
 
 	// ================================================
@@ -139,6 +140,7 @@ void energy_and_gradient (
 				(y < 0.0f) || (y >= DockConst_gridsize_y_minus1) ||
 				(z < 0.0f) || (z >= DockConst_gridsize_z_minus1)) {
 
+				// Penalty is 2^24 for each atom outside the grid
 				partialE1 = 16777216.0f;
 				partialE2 = 0.0f;
 				partialE3 = 0.0f;
@@ -165,7 +167,8 @@ void energy_and_gradient (
 				float omdy = 1.0f - dy;
 				float omdz = 1.0f - dz;
 
-				// Calculating interpolation weights
+				// Calculating the weights for trilinear interpolation
+				// based on the location of the point inside
 				float weight000, weight001, weight010, weight011;
 				float weight100, weight101, weight110, weight111;
 				weight000 = omdx * omdy * omdz;
@@ -177,7 +180,7 @@ void energy_and_gradient (
 				weight011 = omdx * dy * dz;
 				weight111 = dx * dy * dz;
 
-	#ifdef PRINT_ALL
+#ifdef PRINT_ALL
 				printf("\n\nPartial results for atom with id %i:\n", atom_id);
 				printf("x_low = %f, dx = %f\n", x_low, dx);
 				printf("y_low = %f, dy = %f\n", y_low, dy);
@@ -190,7 +193,7 @@ void energy_and_gradient (
 				printf("weight(1,0,1) = %f\n", weight101);
 				printf("weight(0,1,1) = %f\n", weight011);
 				printf("weight(1,1,1) = %f\n", weight111);
-	#endif
+#endif
 
 				// Energy contribution of the current grid type
 				float cub000, cub001, cub010, cub011;
@@ -204,7 +207,7 @@ void energy_and_gradient (
 				cub011 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix  ];
 				cub111 = (*IE_Fg)[atom_typeid][iz+1][iy+1][ix+1];
 
-	#ifdef PRINT_ALL
+#ifdef PRINT_ALL
 				printf("Interpolation of Van der Waals map:\n");
 				printf("cube(0,0,0) = %f\n". cub000);
 				printf("cube(1,0,0) = %f\n". cub100);
@@ -214,7 +217,7 @@ void energy_and_gradient (
 				printf("cube(1,0,1) = %f\n". cub101);
 				printf("cube(0,1,1) = %f\n". cub011);
 				printf("cube(1,1,1) = %f\n". cub111);
-	#endif
+#endif
 
 				// Calculating affinity energy
 				partialE1 = cub000 * weight000 + cub100 * weight100 +
@@ -222,9 +225,9 @@ void energy_and_gradient (
 							cub001 * weight001 + cub101 * weight101 +
 							cub011 * weight011 + cub111 * weight111;
 
-	#ifdef PRINT_ALL
+#ifdef PRINT_ALL
 				printf("interpolated energy partialE1 = %f\n\n", partialE1);
-	#endif
+#endif
 
 				// -------------------------------------------------------------------
 				// TODO: Deltas dx, dy, dz are already normalized
@@ -235,10 +238,10 @@ void energy_and_gradient (
 				/*
 					deltas: (x-x0)/(x1-x0), (y-y0...
 					vertices: (000, 100, 010, 001, 101, 110, 011, 111)
-					Z
-					'
-					3 - - - - 6
-					/.        /|
+					  Z
+					  '
+					  3 - - - - 6
+					 /.        /|
 					4 - - - - 7 |
 					| '       | |
 					| 0 - - - + 2 -- Y
@@ -274,7 +277,7 @@ void energy_and_gradient (
 				cub011 = (*IE_Fg_2)[iz+1][iy+1][ix  ];
 				cub111 = (*IE_Fg_2)[iz+1][iy+1][ix+1];
 
-	#ifdef PRINT_ALL
+#ifdef PRINT_ALL
 				printf("Interpolation of electrostatic map:\n");
 				printf("cube(0,0,0) = %f\n". cub000);
 				printf("cube(1,0,0) = %f\n". cub100);
@@ -284,7 +287,7 @@ void energy_and_gradient (
 				printf("cube(1,0,1) = %f\n". cub101);
 				printf("cube(0,1,1) = %f\n". cub011);
 				printf("cube(1,1,1) = %f\n". cub111);
-	#endif
+#endif
 
 				partialE2 = q * (
 							cub000 * weight000 + cub100 * weight100 +
@@ -292,9 +295,9 @@ void energy_and_gradient (
 							cub001 * weight001 + cub101 * weight101 +
 							cub011 * weight011 + cub111 * weight111);
 
-	#ifdef PRINT_ALL
+#ifdef PRINT_ALL
 				printf("q = %f, interpolated energy partialE2 = %f\n\n", q, partialE2);
-	#endif
+#endif
 
 				// -------------------------------------------------------------------
 				// Calculating gradients (forces) corresponding to
@@ -320,7 +323,7 @@ void energy_and_gradient (
 				cub011 = (*IE_Fg_3)[iz+1][iy+1][ix  ];
 				cub111 = (*IE_Fg_3)[iz+1][iy+1][ix+1];
 
-	#ifdef PRINT_ALL
+#ifdef PRINT_ALL
 				printf("Interpolation of desolvation map:\n");
 				printf("cube(0,0,0) = %f\n". cub000);
 				printf("cube(1,0,0) = %f\n". cub100);
@@ -330,7 +333,7 @@ void energy_and_gradient (
 				printf("cube(1,0,1) = %f\n". cub101);
 				printf("cube(0,1,1) = %f\n". cub011);
 				printf("cube(1,1,1) = %f\n". cub111);
-	#endif
+#endif
 
 				float fabsf_q = fabsf(q);
 				partialE3 = fabsf_q * (
@@ -339,9 +342,9 @@ void energy_and_gradient (
 							cub001 * weight001 + cub101 * weight101 +
 							cub011 * weight011 + cub111 * weight111);
 
-	#ifdef PRINT_ALL
+#ifdef PRINT_ALL
 				printf("fabsf(q) =%f, interpolated energy partialE3 = %f\n\n", fabsf_q, partialE3);
-	#endif
+#endif
 
 				// -------------------------------------------------------------------
 				// Calculating gradients (forces) corresponding to
@@ -361,14 +364,13 @@ void energy_and_gradient (
 
 			final_interE[j] += partialE1 + partialE2 + partialE3;
 
+#ifdef PRINT_ALL
+			printf("final_interE[%u] = %f\n\n\n", j, final_interE[j]);
+#endif
+
 		} // End j Loop (over individuals)
 
-	} // End for (uint atom_id = 0 ...)
-
-	// Initializing intramolecular energies
-	for (int j = 0; j < DockConst_pop_size; j++) {
-		final_intraE[j] = 0.0f;
-	}
+	} // End of atom1_id for-loop
 
 	// ================================================
 	// CALCULATING INTRAMOLECULAR ENERGY & GRADIENTS
