@@ -691,7 +691,6 @@ void energy_and_gradient (
 #endif
 	}
 
-	// TODO: fix usage of j
 	for (uint j = 0; j < DockConst_pop_size; j++) {
 		// genes[3:7] = rotation.axisangle_to_q(torque, rad)
 		float torque_length = esa_length3_e(torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
@@ -920,15 +919,15 @@ void energy_and_gradient (
 		int atom1_id = GRAD_rotbonds[2 * rotbond_id];
 		int atom2_id = GRAD_rotbonds[2 * rotbond_id + 1];
 
-		// TODO: fix usage of j
 		for (uint j = 0; j < DockConst_pop_size; j++) {
 			float atomRef_coords_x = local_coords_x[atom1_id][j];
 			float atomRef_coords_y = local_coords_y[atom1_id][j];
 			float atomRef_coords_z = local_coords_z[atom1_id][j];
 
-	#ifdef PRINT_GRAD_TORSION_GENES
+#ifdef PRINT_GRAD_TORSION_GENES
+			printf("ind: %u\n", j);
 			printf("%-5s %3u \n\t %-5s %3i \n\t %-5s %3i\n", "gene: ", (rotbond_id+6), "atom1: ", atom1_id, "atom2: ", atom2_id);
-	#endif
+#endif
 
 			float tmp_rotation_unitvec_x = local_coords_x[atom2_id][j] - local_coords_x[atom1_id][j];
 			float tmp_rotation_unitvec_y = local_coords_y[atom2_id][j] - local_coords_y[atom1_id][j];
@@ -936,9 +935,9 @@ void energy_and_gradient (
 			float rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z;
 			esa_normalize3_e_(tmp_rotation_unitvec_x, tmp_rotation_unitvec_y, tmp_rotation_unitvec_z, &rotation_unitvec_x, &rotation_unitvec_y, &rotation_unitvec_z);
 
-	#ifdef PRINT_GRAD_TORSION_GENES
+#ifdef PRINT_GRAD_TORSION_GENES
 			printf("%-15s \n\t %-10.6f %-10.6f %-10.6f\n", "unitvec: ", rotation_unitvec_x, rotation_unitvec_y, rotation_unitvec_z);
-	#endif
+#endif
 
 			// Torque of torsions
 			float torque_tor_x = 0.0f;
@@ -975,12 +974,12 @@ void energy_and_gradient (
 				torque_tor_y += tmp_tor_y;
 				torque_tor_z += tmp_tor_z;
 
-	#ifdef PRINT_GRAD_TORSION_GENES
+#ifdef PRINT_GRAD_TORSION_GENES
 				if (rotable_atom_cnt == 0) {
 					printf("\n %-30s %3i\n", "contributor for gene : ", (rotbond_id+6));
 				}
 				printf("\t %-15s %-10.6f %-10.6f %-10.6f \t %-15s %-10.6f %-10.6f %-10.6f\n", "atom_coords: ", atom_coords_x, atom_coords_y, atom_coords_z, "atom_force: ", atom_force_x, atom_force_y, atom_force_z);
-	#endif
+#endif
 			} // End for loop on "rotable_atom_cnt"
 
 			// Projecting torque on rotation axis
@@ -989,9 +988,9 @@ void energy_and_gradient (
 			// Assigning gene-based gradient
 			gradient_genotype[rotbond_id + 6][j] = torque_on_axis * DEG_TO_RAD;
 
-	#ifdef PRINT_GRAD_TORSION_GENES
+#ifdef PRINT_GRAD_TORSION_GENES
 			printf("gradient_torsion [%u] :%f\n", rotbond_id+6, gradient_genotype[rotbond_id+6][j]);
-	#endif
+#endif
 
 		} // End j Loop (over individuals)
 
@@ -999,7 +998,6 @@ void energy_and_gradient (
 
 	// Extra conversion (see first index value = 3)
 	for (uint gene_cnt = 3; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-		// TODO: fix usage of j
 		for (uint j = 0; j < DockConst_pop_size; j++) {
 			gradient_genotype[gene_cnt][j] *= SCFACTOR_ANGSTROM_RADIAN;
 		} // End j Loop (over individuals)
