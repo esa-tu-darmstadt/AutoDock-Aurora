@@ -294,36 +294,40 @@ void ls_ad(
 
         // TODO: fix usage of j
         for (uint j = 0; j < pop_size; j++) {
+
+            iteration_cnt = iteration_cnt + 1;
+
             // Updating number of ADADELTA iterations (energy evaluations)
             if (energy[j] < best_energy[j]) {
                 best_energy[j] = energy[j];
 
-        #ifdef ADADELTA_AUTOSTOP
+#ifdef PRINT_ALL_LS_AD
+                if (j == 0) {
+                    printf("\t Improvement: energy[%i]: %.3f, best_energy[%i]: %.3f\n", j, energy[j], j, best_energy[j]);
+                }
+#endif
+
+#ifdef ADADELTA_AUTOSTOP
                 cons_succ++;
                 cons_fail = 0;
-        #endif
-            }
-        #ifdef ADADELTA_AUTOSTOP
+#endif
+
+            } // First end: if (energy comparison)
+
+#ifdef ADADELTA_AUTOSTOP
             else {
                 cons_succ = 0;
                 cons_fail++;
-            }
-        #endif
+            } // Second end: if (energy comparison)
 
-            iteration_cnt = iteration_cnt + 1;
-
-        #ifdef ADADELTA_AUTOSTOP
-            if (cons_succ >=4) {
+            if (cons_succ >= 4) {
                 rho *= LS_EXP_FACTOR;
                 cons_succ = 0;
+            } else if (cons_fail >= 4) {
+                rho *= LS_CONT_FACTOR;
+                cons_fail = 0;
             }
-            else {
-                if (cons_fail >= 4) {
-                    rho *= LS_CONT_FACTOR;
-                    cons_fail = 0;
-                }
-            }
-        #endif
+#endif
         } // End j Loop (over individuals)
 
 #ifdef ADADELTA_AUTOSTOP
