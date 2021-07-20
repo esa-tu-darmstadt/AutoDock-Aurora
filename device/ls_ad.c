@@ -301,7 +301,7 @@ void ls_ad(
             if (energy[j] < best_energy[j]) {
 
 #ifdef PRINT_ALL_LS_AD
-                printf("\t Improvement: energy[%i]: %.3f, best_energy[%i]: %.3f\n", j, energy[j], j, best_energy[j]);
+                printf("\t Improved ind %i: energy: %.3f, best_energy: %.3f\n", j, energy[j], best_energy[j]);
 #endif
                 best_energy[j] = energy[j];
 
