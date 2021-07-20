@@ -375,14 +375,14 @@ void energy_and_gradient (
 	// ================================================
 	// CALCULATING INTRAMOLECULAR ENERGY & GRADIENTS
 	// ================================================
+
+	// Calculation of delta distance moved outside next loop
+	// TODO: test the same for Solis-Wets
 	float delta_distance = 0.5f * DockConst_smooth;
 
 	// For each intramolecular atom contributor pair
 	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++)
 	{
-		// The gradient contribution of each contributing atomic pair
-		float priv_gradient_per_intracontributor = 0.0f;
-
 		int atom1_id = IA_intraE_contributors[3*contributor_counter];
 		int atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 		int is_H_bond = IA_intraE_contributors[3*contributor_counter + 2];
@@ -396,8 +396,6 @@ void energy_and_gradient (
 
 		int atom1_type_vdw_hb = IA_atom1_types_reqm[atom1_typeid];
 		int atom2_type_vdw_hb = IA_atom2_types_reqm[atom2_typeid];
-
-		// Calculation of delta distance moved outside this loop // TODO: test the same for Solis-Wets
 
 		// Getting optimum pair distance (opt_distance) from reqm and reqm_hbond
 		// reqm: equilibrium internuclear separation
@@ -420,6 +418,9 @@ void energy_and_gradient (
 							 ) * DockConst_coeff_desolv;
 		float elec_const = DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id];
 
+		// The gradient contribution of each contributing atomic pair
+		float priv_gradient_per_intracontributor = 0.0f;
+
 		// TODO: add support for flexible rings
 
 		// TODO: fix usage of j
@@ -433,7 +434,7 @@ void energy_and_gradient (
 			float atomic_distance = dist * DockConst_grid_spacing;
 
 #ifdef PRINT_ALL
-			printf("\nContrib %u: pop %3d, atoms %u and %u, distance: %f\n", contributor_counter, j, atom1_id+1, atom2_id+1, atomic_distance);
+			printf("\nContrib %u: pop %3d, atoms %u and %u, distance: %f\n", contributor_counter, j, (atom1_id+1), (atom2_id+1), atomic_distance);
 #endif
 
 			float partialIAE1 = 0.0f;
@@ -489,11 +490,12 @@ void energy_and_gradient (
 
 			// Calculating energy contributions
 			// Cuttoff2: internuclear-distance at 20.48A only for el and sol.
+			// TODO: use literal constants for Solis-Wets
 			if (atomic_distance < 20.48f) {
 				float tmp_exp0 = esa_expf0(DIEL_B_TIMES_H * atomic_distance);
-				float inv_tmp_exp0 = 1.0f / tmp_exp0;
+				//float inv_tmp_exp0 = 1.0f / tmp_exp0;
 
-				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * inv_tmp_exp0)));
+				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * tmp_exp0)));
 				float term_inv_partialE3 = (1.0f / term_partialE3);
 
 				// Calculating electrostatic term
