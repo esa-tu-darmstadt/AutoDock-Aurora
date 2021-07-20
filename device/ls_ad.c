@@ -340,7 +340,6 @@ void ls_ad(
 	// TODO: double check if ADGPU uses two types of mapping functions
 	// Mapping angles
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-        // TODO: fix usage of j
         for (uint j = 0; j < pop_size; j++) {
             if (i > 2) {
                 if (i == 4) {
@@ -354,7 +353,6 @@ void ls_ad(
 
 	// Updating old offspring in population
 	for (uint i = 0; i < DockConst_num_of_genes; i++) {
-        // TODO: fix usage of j
         for (uint j = 0; j < pop_size; j++) {
 		    in_out_genotype[i][j] = best_genotype[i][j];
         } // End j Loop (over individuals)
