@@ -173,9 +173,6 @@ void ls_ad(
     // (IEEE-754 single float has a precision of about 6 decimal digits)
     do {
 
-#ifdef PRINT_ALL_LS_AD
-	printf("LS_ADADELTA: iteration_cnt: %u\n", iteration_cnt);
-#endif
 		// TODO
 		// Calculating energy and gradients
         float energy_ie[MAX_POPSIZE];
@@ -290,6 +287,10 @@ void ls_ad(
 	    for (uint i = 0; i < DockConst_num_of_genes; i++) {
 		    printf("%13u %20.6f %15.6f %15.6f %15.6f\n", i, square_gradient[i], delta[i], square_delta[i], genotype[i]);
         }
+#endif
+
+#ifdef PRINT_ALL_LS_AD
+	    printf("LS_ADADELTA: iteration_cnt: %u\n", iteration_cnt);
 #endif
 
         // TODO: fix usage of j
