@@ -633,17 +633,6 @@ void energy_and_gradient (
 	float torque_rot_y[MAX_POPSIZE];
 	float torque_rot_z[MAX_POPSIZE];
 
-	// TODO: fix usage of j
-	for (uint j = 0; j < DockConst_pop_size; j++) {
-		torque_rot_x[j] = 0.0f;
-		torque_rot_y[j] = 0.0f;
-		torque_rot_z[j] = 0.0f;
-
-#ifdef PRINT_GRAD_ROTATION_GENES
-		printf("%-20s %3d %-10.6f %-10.6f %-10.6f\n", "initial torque: ", j, torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
-#endif
-	}
-
 	// Variable holding the center of rotation.
 	// In getparameters.cpp, it indicates translation genes are
 	// in grid spacing (instead of Angstrom).
@@ -651,8 +640,16 @@ void energy_and_gradient (
 	float about_y[MAX_POPSIZE];
 	float about_z[MAX_POPSIZE];
 
-	// TODO: fix usage of j
 	for (uint j = 0; j < DockConst_pop_size; j++) {
+		torque_rot_x[j] = 0.0f;
+		torque_rot_y[j] = 0.0f;
+		torque_rot_z[j] = 0.0f;
+
+#ifdef PRINT_GRAD_ROTATION_GENES
+		printf("ind: %u\n", j);
+		printf("%-20s %3d %-10.6f %-10.6f %-10.6f\n", "initial torque: ", j, torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
+#endif
+
 		about_x[j] = genotype[0][j];
 		about_y[j] = genotype[1][j];
 		about_z[j] = genotype[2][j];
