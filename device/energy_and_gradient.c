@@ -91,7 +91,7 @@ void energy_and_gradient (
 
 	// Initializing gradients (forces)
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			// Intermolecular gradients
 			gradient_inter_x[atom_id][j] = 0.0f;
 			gradient_inter_y[atom_id][j] = 0.0f;
@@ -106,13 +106,13 @@ void energy_and_gradient (
 	// Initializing gradient genotypes
 	// Caller <ls_ad()> does not initialize them
 	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			gradient_genotype[gene_cnt][j] = 0.0f;
 		} // End j Loop (over individuals)
 	}
 
 	// Initializing inter- & intra-molecular energies
-	for (int j = 0; j < DockConst_pop_size; j++) {
+	for (uint j = 0; j < DockConst_pop_size; j++) {
 		final_interE[j] = 0.0f;
 		final_intraE[j] = 0.0f;
 	}
@@ -126,7 +126,7 @@ void energy_and_gradient (
 		float q = IA_IE_atom_charges[atom_id];
 
 		// TODO: fix usage of j
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			float x = local_coords_x[atom_id][j];
 			float y = local_coords_y[atom_id][j];
 			float z = local_coords_z[atom_id][j];
@@ -558,7 +558,7 @@ void energy_and_gradient (
 	// ================================================
 	for (uint atom_cnt = 0; atom_cnt < DockConst_num_of_atoms; atom_cnt++) {
 
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			// Grids were calculated in the grid space,
 			// so they have to be put back in Angstrom
 
@@ -570,26 +570,26 @@ void energy_and_gradient (
 			gradient_inter_y[atom_cnt][j] = gradient_inter_y[atom_cnt][j] / DockConst_grid_spacing;
 			gradient_inter_z[atom_cnt][j] = gradient_inter_z[atom_cnt][j] / DockConst_grid_spacing;
 
-	#ifdef PRINT_GRAD_ROTATION_GENES
+#ifdef PRINT_GRAD_ROTATION_GENES
 			if (atom_cnt == 0) {
 				printf("%s\n", "Gradients: inter & intra");
-				printf("%10s %13s %13s %13s %5s %13s %13s %13s\n", "atom_id", "grad_intER.x", "grad_intER.y", "grad_intER.z", "|", "grad_intRA.x", "grad_intRA.y", "grad_intRA.z");
+				printf("%5s %10s %13s %13s %13s %5s %13s %13s %13s\n", "ind", "atom_id", "grad_intER.x", "grad_intER.y", "grad_intER.z", "|", "grad_intRA.x", "grad_intRA.y", "grad_intRA.z");
 			}
-			printf("%10u %13.6f %13.6f %13.6f %5s %13.6f %13.6f %13.6f\n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt], "|", gradient_intra_x[atom_cnt], gradient_intra_y[atom_cnt], gradient_intra_z[atom_cnt]);
-	#endif
+			printf("%5u %10u %13.6f %13.6f %13.6f %5s %13.6f %13.6f %13.6f\n", j, atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt], "|", gradient_intra_x[atom_cnt], gradient_intra_y[atom_cnt], gradient_intra_z[atom_cnt]);
+#endif
 
 			// Reusing "gradient_inter_*" for total gradient (inter + intra)
 			gradient_inter_x[atom_cnt][j] += gradient_intra_x[atom_cnt][j];
 			gradient_inter_y[atom_cnt][j] += gradient_intra_y[atom_cnt][j];
 			gradient_inter_z[atom_cnt][j] += gradient_intra_z[atom_cnt][j];
 
-	#ifdef PRINT_GRAD_ROTATION_GENES
+#ifdef PRINT_GRAD_ROTATION_GENES
 			if (atom_cnt == 0) {
 				printf("%s\n", "Gradients: total = inter + intra");
-				printf("%10s %13s %13s %13s\n", "atom_id", "grad.x", "grad.y", "grad.z");
+				printf("%5s %10s %13s %13s %13s\n", "ind", "atom_id", "grad.x", "grad.y", "grad.z");
 			}
-			printf("%10u %13.6f %13.6f %13.6f \n", atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt]);
-	#endif
+			printf("%5u %10u %13.6f %13.6f %13.6f \n", j, atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt]);
+#endif
 		} // End j Loop (over individuals)
 	}
 
@@ -597,9 +597,7 @@ void energy_and_gradient (
 	// OBTAINING TRANSLATION-RELATED GRADIENTS
 	// ================================================
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
-
-		// TODO: fix usage of j
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			// Accummulating "gradient_inter_*" first ...
 			gradient_genotype[0][j] += gradient_inter_x[atom_id][j]; // gradient for gene 0: gene x
 			gradient_genotype[1][j] += gradient_inter_y[atom_id][j]; // gradient for gene 1: gene y
@@ -610,23 +608,21 @@ void energy_and_gradient (
 	// Then scaling gradient for translational genes as
 	// their corresponding gradients were calculated in the space
 	// where these genes are in Angstrom, but AD-GPU translational genes are in grids
-
-	// TODO: fix usage of j
-	for (int j = 0; j < DockConst_pop_size; j++) {
+	for (uint j = 0; j < DockConst_pop_size; j++) {
 		gradient_genotype[0][j] *= DockConst_grid_spacing;
 		gradient_genotype[1][j] *= DockConst_grid_spacing;
 		gradient_genotype[2][j] *= DockConst_grid_spacing;
 
 #ifdef PRINT_GRAD_TRANSLATION_GENES
-		printf("gradient_x:%f\n", gradient_genotype[0][j]);
-		printf("gradient_y:%f\n", gradient_genotype[1][j]);
-		printf("gradient_z:%f\n", gradient_genotype[2][j]);
+		printf("ind: %u\n", j);
+		printf("gradient_x: %f\n", gradient_genotype[0][j]);
+		printf("gradient_y: %f\n", gradient_genotype[1][j]);
+		printf("gradient_z: %f\n", gradient_genotype[2][j]);
 #endif
 	}
 
 	// ================================================
 	// OBTAINING ROTATION-RELATED GRADIENTS
-
 	// Transform gradient_inter_{x|y|z}
 	// into local_gradients[i] (with four quaternion genes).
 	// Transform local_gradients[i] (with four quaternion genes)
@@ -638,7 +634,7 @@ void energy_and_gradient (
 	float torque_rot_z[MAX_POPSIZE];
 
 	// TODO: fix usage of j
-	for (int j = 0; j < DockConst_pop_size; j++) {
+	for (uint j = 0; j < DockConst_pop_size; j++) {
 		torque_rot_x[j] = 0.0f;
 		torque_rot_y[j] = 0.0f;
 		torque_rot_z[j] = 0.0f;
@@ -656,7 +652,7 @@ void energy_and_gradient (
 	float about_z[MAX_POPSIZE];
 
 	// TODO: fix usage of j
-	for (int j = 0; j < DockConst_pop_size; j++) {
+	for (uint j = 0; j < DockConst_pop_size; j++) {
 		about_x[j] = genotype[0][j];
 		about_y[j] = genotype[1][j];
 		about_z[j] = genotype[2][j];
@@ -669,7 +665,7 @@ void energy_and_gradient (
 	for (uint atom_id = 0; atom_id < DockConst_num_of_atoms; atom_id++) {
 
 		// TODO: fix usage of j
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			r_x = (local_coords_x[atom_id][j] - about_x[j]) * DockConst_grid_spacing;
 			r_y = (local_coords_y[atom_id][j] - about_y[j]) * DockConst_grid_spacing;
 			r_z = (local_coords_z[atom_id][j] - about_z[j]) * DockConst_grid_spacing;
@@ -700,7 +696,7 @@ void energy_and_gradient (
 	}
 
 	// TODO: fix usage of j
-	for (int j = 0; j < DockConst_pop_size; j++) {
+	for (uint j = 0; j < DockConst_pop_size; j++) {
 
 		// genes[3:7] = rotation.axisangle_to_q(torque, rad)
 		float torque_length = esa_length3_e(torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
@@ -938,7 +934,7 @@ void energy_and_gradient (
 		int atom2_id = GRAD_rotbonds[2 * rotbond_id + 1];
 
 		// TODO: fix usage of j
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			float atomRef_coords_x = local_coords_x[atom1_id][j];
 			float atomRef_coords_y = local_coords_y[atom1_id][j];
 			float atomRef_coords_z = local_coords_z[atom1_id][j];
@@ -1017,7 +1013,7 @@ void energy_and_gradient (
 	// Extra conversion (see first index value = 3)
 	for (uint gene_cnt = 3; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 		// TODO: fix usage of j
-		for (int j = 0; j < DockConst_pop_size; j++) {
+		for (uint j = 0; j < DockConst_pop_size; j++) {
 			gradient_genotype[gene_cnt][j] *= SCFACTOR_ANGSTROM_RADIAN;
 		} // End j Loop (over individuals)
 	}
