@@ -693,33 +693,30 @@ void energy_and_gradient (
 
 	// TODO: fix usage of j
 	for (uint j = 0; j < DockConst_pop_size; j++) {
-
 		// genes[3:7] = rotation.axisangle_to_q(torque, rad)
 		float torque_length = esa_length3_e(torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("ind: %u\n", j);
 		printf("%-20s %-10.6f\n", "torque length: ", torque_length);
 #endif
 
 		// Finding quaternion performing
 		// infinitesimal rotation around torque axis
-		float quat_torque_x[MAX_POPSIZE];
-		float quat_torque_y[MAX_POPSIZE];
-		float quat_torque_z[MAX_POPSIZE];
-		float quat_torque_w[MAX_POPSIZE];
-		float tmp_normal_x[MAX_POPSIZE];
-		float tmp_normal_y[MAX_POPSIZE];
-		float tmp_normal_z[MAX_POPSIZE];
-		esa_normalize3_e_(torque_rot_x[j], torque_rot_y[j], torque_rot_z[j], &tmp_normal_x[j], &tmp_normal_y[j], &tmp_normal_z[j]);
+		float quat_torque_x, quat_torque_y, quat_torque_z, quat_torque_w;
 
-		quat_torque_w[j] = COS_HALF_INFINITESIMAL_RADIAN;
-		quat_torque_x[j] = tmp_normal_x[j] * SIN_HALF_INFINITESIMAL_RADIAN;
-		quat_torque_y[j] = tmp_normal_y[j] * SIN_HALF_INFINITESIMAL_RADIAN;
-		quat_torque_z[j] = tmp_normal_z[j] * SIN_HALF_INFINITESIMAL_RADIAN;
+		float tmp_normal_x, tmp_normal_y, tmp_normal_z;
+
+		esa_normalize3_e_(torque_rot_x[j], torque_rot_y[j], torque_rot_z[j], &tmp_normal_x, &tmp_normal_y, &tmp_normal_z);
+
+		quat_torque_w = COS_HALF_INFINITESIMAL_RADIAN;
+		quat_torque_x = tmp_normal_x * SIN_HALF_INFINITESIMAL_RADIAN;
+		quat_torque_y = tmp_normal_y * SIN_HALF_INFINITESIMAL_RADIAN;
+		quat_torque_z = tmp_normal_z * SIN_HALF_INFINITESIMAL_RADIAN;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
 		printf("%-20s %-10.6f\n", "INFINITESIMAL_RADIAN: ", INFINITESIMAL_RADIAN);
-		printf("%-20s %3d %-10.6f %-10.6f %-10.6f %-10.6f\n", "quat_torque (w,x,y,z): ", j, quat_torque_w[j], quat_torque_x[j], quat_torque_y[j], quat_torque_z[j]);
+		printf("%-20s %-10.6f %-10.6f %-10.6f %-10.6f\n", "quat_torque (w,x,y,z): ", quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z);
 #endif
 
 		// Converting quaternion gradients into orientation gradients
@@ -745,10 +742,7 @@ void energy_and_gradient (
 #endif
 
 		// This is where we are in the quaternion space
-		float current_q_w[MAX_POPSIZE];
-		float current_q_x[MAX_POPSIZE];
-		float current_q_y[MAX_POPSIZE];
-		float current_q_z[MAX_POPSIZE];
+		float current_q_w, current_q_x, current_q_y, current_q_z;
 
 		// Axis of rotation
 		float rotaxis_x = sinf(current_theta) * cosf(current_phi);
@@ -756,31 +750,28 @@ void energy_and_gradient (
 		float rotaxis_z = cosf(current_theta);
 
 		float ang = current_rotangle * 0.5f;
-		current_q_w[j] = cosf(ang);
-		current_q_x[j] = rotaxis_x * sinf(ang);
-		current_q_y[j] = rotaxis_y * sinf(ang);
-		current_q_z[j] = rotaxis_z * sinf(ang);
+		current_q_w = cosf(ang);
+		current_q_x = rotaxis_x * sinf(ang);
+		current_q_y = rotaxis_y * sinf(ang);
+		current_q_z = rotaxis_z * sinf(ang);
 
 #ifdef PRINT_GRAD_ROTATION_GENES
-		printf("%-30s %3d %-10.6f %-10.6f %-10.6f %-10.6f\n", "current_q (w,x,y,z): ", j, current_q_w, current_q_x, current_q_y, current_q_z);
+		printf("%-30s %-10.6f %-10.6f %-10.6f %-10.6f\n", "current_q (w,x,y,z): ", current_q_w, current_q_x, current_q_y, current_q_z);
 #endif
 
 		// This is where we want to be in the quaternion space
-		float target_q_w[MAX_POPSIZE];
-		float target_q_x[MAX_POPSIZE];
-		float target_q_y[MAX_POPSIZE];
-		float target_q_z[MAX_POPSIZE];
+		float target_q_w, target_q_x, target_q_y, target_q_z;
 
 		// target_q = rotation.q_mult(q, current_q)
 		// In our terms it means: q_mult(quat_{w|x|y|z}, currrent_q{w|x|y|z})
-		target_q_w[j] = esa_dot4_e(quat_torque_w[j], quat_torque_x[j], quat_torque_y[j], quat_torque_z[j],
-								   current_q_w[j], -current_q_x[j], -current_q_y[j], -current_q_z[j]);
-		target_q_x[j] = esa_dot4_e(quat_torque_w[j], quat_torque_x[j], quat_torque_y[j], quat_torque_z[j],
-								   current_q_x[j], current_q_w[j], current_q_z[j], -current_q_y[j]);
-		target_q_y[j] = esa_dot4_e(quat_torque_w[j], quat_torque_x[j], quat_torque_y[j], quat_torque_z[j],
-								   current_q_y[j], -current_q_z[j], current_q_w[j], current_q_x[j]);
-		target_q_z[j] = esa_dot4_e(quat_torque_w[j], quat_torque_x[j], quat_torque_y[j], quat_torque_z[j],
-								   current_q_z[j], current_q_y[j], -current_q_x[j], current_q_w[j]);
+		target_q_w = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+								   current_q_w, -current_q_x, -current_q_y, -current_q_z);
+		target_q_x = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+								   current_q_x, current_q_w, current_q_z, -current_q_y);
+		target_q_y = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+								   current_q_y, -current_q_z, current_q_w, current_q_x);
+		target_q_z = esa_dot4_e(quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z,
+								   current_q_z, current_q_y, -current_q_x, current_q_w);
 
 #ifdef PRINT_GRAD_ROTATION_GENES
 		printf("%-30s %-10.6f %-10.6f %-10.6f %-10.6f\n", "target_q (w,x,y,z): ", target_q_w, target_q_x, target_q_y, target_q_z);
@@ -791,13 +782,13 @@ void energy_and_gradient (
 
 		// target_oclacube = quaternion_to_oclacube(target_q, theta_gt_pi)
 		// In our terms it means: quaternion_to_oclacube(target_q{w|x|y|z}, theta_gt_pi)
-		ang = acosf(target_q_w[j]);	// TODO: make sure single precision function works!
+		ang = acosf(target_q_w);	// TODO: make sure single precision function works!
 		target_rotangle = 2.0f * ang;
 
 		float inv_sin_ang = 1.0f / (sinf(ang));
-		rotaxis_x = target_q_x[j] * inv_sin_ang;
-		rotaxis_y = target_q_y[j] * inv_sin_ang;
-		rotaxis_z = target_q_z[j] * inv_sin_ang;
+		rotaxis_x = target_q_x * inv_sin_ang;
+		rotaxis_y = target_q_y * inv_sin_ang;
+		rotaxis_z = target_q_z * inv_sin_ang;
 
 		target_theta = acosf(rotaxis_z); // TODO: make sure single precision function works!
 
