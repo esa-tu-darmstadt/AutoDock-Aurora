@@ -139,7 +139,7 @@ void ls_ad(
     // Initializing vectors
     for (uint i = 0; i < DockConst_num_of_genes; i++) {
         for (uint j = 0; j < pop_size; j++) {
-            gradient[i][j]          = 0.0f;
+            // gradient[i][j]          = 0.0f; // Initialized in <energy_and_gradient()>
             square_gradient[i][j]   = 0.0f;
             delta[i][j]             = 0.0f;
             square_delta[i][j]      = 0.0f;

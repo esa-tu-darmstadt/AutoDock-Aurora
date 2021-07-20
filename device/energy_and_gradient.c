@@ -107,8 +107,7 @@ void energy_and_gradient (
 	}
 
 	// Initializing gradient genotypes
-	// TODO: make sure this is strictly necessary
-	// (caller may be doing the same, but maybe not redundant)
+	// Caller <ls_ad()> does not initialize them
 	for (uint gene_cnt = 0; gene_cnt < DockConst_num_of_genes; gene_cnt++) {
 		for (int j = 0; j < DockConst_pop_size; j++) {
 			gradient_genotype[gene_cnt][j] = 0.0f;
