@@ -418,9 +418,6 @@ void energy_and_gradient (
 							 ) * DockConst_coeff_desolv;
 		float elec_const = DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id];
 
-		// The gradient contribution of each contributing atomic pair
-		float priv_gradient_per_intracontributor = 0.0f;
-
 		// TODO: add support for flexible rings
 
 		// TODO: fix usage of j
@@ -432,6 +429,9 @@ void energy_and_gradient (
 			// Calculating atomic distance
 			float dist = esa_sqrt(subx*subx + suby*suby + subz*subz);
 			float atomic_distance = dist * DockConst_grid_spacing;
+
+			// The gradient contribution of each contributing atomic pair
+			float priv_gradient_per_intracontributor = 0.0f;
 
 #ifdef PRINT_ALL
 			printf("\nContrib %u: pop %3d, atoms %u and %u, distance: %f\n", contributor_counter, j, (atom1_id+1), (atom2_id+1), atomic_distance);
@@ -512,13 +512,17 @@ void energy_and_gradient (
 				priv_gradient_per_intracontributor += -elec_const * (upper/lower);
 
 				// Calculating desolvation term
-				float tmp_exp4 = esa_expf0(-0.03858025f * distance_pow_2);
+				float tmp_exp4 = esa_expf0(-0.03858025f * distance_pow_2); // TODO: use constant & update Solis-Wets
 				partialIAE4 = desolv_const * tmp_exp4;
 
 				priv_gradient_per_intracontributor += -0.077160f * atomic_distance * partialIAE4;
 			} // End if cuttoff2 - internuclear-distance at 20.48A
 
 			final_intraE[j] += partialIAE1 - partialIAE2 + partialIAE3 + partialIAE4;
+
+#ifdef PRINT_ALL
+			printf("final_intraE[%u] = %f\n\n\n", j, final_intraE[j]);
+#endif
 
 			// Decomposing "priv_gradient_per_intracontributor"
 			// into the contribution of each atom of the pair.
