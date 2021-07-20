@@ -252,8 +252,8 @@ void ls_ad(
             energy[j] = energy_ia[j] + energy_ie[j];
 
 #ifdef PRINT_ALL_LS_AD
-            if (j==0) {
-                printf("energy[%i]: %.3f\n", j, energy[j]);
+            if (j == 0) {
+                printf("\t energy[%i]: %.3f\n", j, energy[j]);
             }
 #endif
 
