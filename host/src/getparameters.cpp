@@ -256,7 +256,6 @@ void get_commandpars(const int* argc,
 		// -------------------------------------------
 		// Smoothed pairwise potentials
 		// -------------------------------------------
-		mypars->smooth              = 0.5f;
 
 		if (strcmp("-smooth", argv [i]) == 0)
 		{
