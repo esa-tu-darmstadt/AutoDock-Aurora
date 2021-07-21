@@ -10,6 +10,14 @@
 #define RHO 0.8f
 #define EPSILON 1e-2f
 
+// Enable for debugging ADADELTA using a defined initial genotype
+//#define DEBUG_ADADELTA_INITIAL_2BRT
+
+#ifdef DEBUG_ADADELTA_INITIAL_2BRT
+#include "energy_ia.h"
+#include "energy_ie.h"
+#endif
+
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 
@@ -145,6 +153,111 @@ void ls_ad(
         best_energy[j] = INFINITY;
     } // End j Loop (over individuals)
 
+    float energy_ie[MAX_POPSIZE];
+    float energy_ia[MAX_POPSIZE];
+
+    // WARNING: hardcoded definitions overwrite assignments from LGA.
+    // This means that when <DEBUG_ADADELTA_INITIAL_2BRT> is defined,
+	// then, the LGA genotype is not used (only for debugging purposes!)
+#ifdef DEBUG_ADADELTA_INITIAL_2BRT
+    for (uint i = 0; i < DockConst_num_of_genes; i++) {
+        for (uint j = 0; j < pop_size; j++) {
+            // 2brt
+            genotype[0][j]  = 24.093334f;
+            genotype[1][j]  = 24.658667f;
+            genotype[2][j]  = 24.210667f;
+            genotype[3][j]  = 50.0f;
+            genotype[4][j]  = 50.0f;
+            genotype[5][j]  = 50.0f;
+            genotype[6][j]  = 0.0f;
+            genotype[7][j]  = 0.0f;
+            genotype[8][j]  = 0.0f;
+            genotype[9][j]  = 0.0f;
+            genotype[10][j] = 0.0f;
+            genotype[11][j] = 0.0f;
+            genotype[12][j] = 0.0f;
+            genotype[13][j] = 0.0f;
+            genotype[14][j] = 0.0f;
+            genotype[15][j] = 0.0f;
+            genotype[16][j] = 0.0f;
+            genotype[17][j] = 0.0f;
+            genotype[18][j] = 0.0f;
+            genotype[19][j] = 0.0f;
+            genotype[20][j] = 0.0f;
+        }
+    }
+
+    calc_pc(
+		PC_rotlist,
+        PC_ref_coords_x,
+        PC_ref_coords_y,
+        PC_ref_coords_z,
+        PC_rotbonds_moving_vectors,
+        PC_rotbonds_unit_vectors,
+        PC_ref_orientation_quats,
+        DockConst_rotbondlist_length,
+        DockConst_num_of_genes,
+        Host_RunId,
+        pop_size,
+        genotype,
+        local_coords_x,
+        local_coords_y,
+        local_coords_z
+	);
+	energy_ia(
+        IA_IE_atom_charges,
+        IA_IE_atom_types,
+        IA_intraE_contributors,
+        IA_reqm,
+        IA_reqm_hbond,
+        IA_atom1_types_reqm,
+        IA_atom2_types_reqm,
+        IA_VWpars_AC,
+        IA_VWpars_BD,
+        IA_dspars_S,
+        IA_dspars_V,
+        DockConst_smooth,
+        DockConst_num_of_intraE_contributors,
+        DockConst_grid_spacing,
+        DockConst_num_of_atypes,
+        DockConst_coeff_elec,
+        DockConst_qasp,
+        DockConst_coeff_desolv,
+        pop_size,
+        energy_ia_ls, // TODO: fixme
+        local_coords_x,
+        local_coords_y,
+        local_coords_z
+	);
+	energy_ie(
+        IE_Fgrids,
+        IA_IE_atom_charges,
+        IA_IE_atom_types,
+        DockConst_xsz,
+        DockConst_ysz,
+        DockConst_zsz,
+        DockConst_num_of_atoms,
+        DockConst_gridsize_x_minus1,
+        DockConst_gridsize_y_minus1,
+        DockConst_gridsize_z_minus1,
+        Host_mul_tmp2,
+        Host_mul_tmp3,
+        pop_size,
+        energy_ie_ls,
+        local_coords_x,
+        local_coords_y,
+        local_coords_z
+	);
+
+    for (uint j = 0; j < pop_size; j++) {
+		energy[j] = energy_ia[j] + energy_ie[j];
+	}
+
+	printf("\n");
+	printf("%20s %u \n", "hardcoded genotype: ", 0);
+	printf("%20s %.6f\n", "initial energy: ", energy[0]);
+#endif
+
 #ifdef ADADELTA_AUTOSTOP
 	float rho = 1.0f;
 	uint cons_succ = 0;
@@ -164,11 +277,7 @@ void ls_ad(
     // (IEEE-754 single float has a precision of about 6 decimal digits)
     do {
 
-		// TODO
-		// Calculating energy and gradients
-        float energy_ie[MAX_POPSIZE];
-        float energy_ia[MAX_POPSIZE];
-
+        // Calculating energy and gradients
         calc_pc (
             PC_rotlist,
 			PC_ref_coords_x,
