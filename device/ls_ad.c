@@ -125,9 +125,6 @@ void ls_ad(
 		}
 	}
 
-    // Squared gradients E[g^2]
-//    float square_gradient[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
-
     // Update vector, i.e., "delta"
     // It is added to the genotype to create the next genotype.
     // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
@@ -140,7 +137,6 @@ void ls_ad(
     for (uint i = 0; i < DockConst_num_of_genes; i++) {
         for (uint j = 0; j < pop_size; j++) {
             // gradient[i][j]          = 0.0f; // Initialized in <energy_and_gradient()>
-//            square_gradient[i][j]   = 0.0f;
             delta[i][j]             = 0.0f;
             square_delta[i][j]      = 0.0f;
             genotype[i][j]          = in_out_genotype[i][j];
@@ -265,7 +261,7 @@ void ls_ad(
                 }
 
                 // Squared gradients E[g^2]
-                float square_gradient = 0;
+                float square_gradient = 0.0f;
 
                 // Accummulating gradient^2 (Eq.8 in paper)
                 // square_gradient corresponds to E[g^2]
