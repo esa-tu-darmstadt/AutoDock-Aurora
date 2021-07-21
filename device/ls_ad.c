@@ -125,6 +125,7 @@ void ls_ad(
 		}
 	}
 
+    // TODO: convert to scalar
     // Squared updates E[dx^2]
     float square_delta[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
