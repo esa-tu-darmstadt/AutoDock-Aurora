@@ -153,8 +153,8 @@ void ls_ad(
         best_energy[j] = INFINITY;
     } // End j Loop (over individuals)
 
-    float energy_ie[MAX_POPSIZE];
-    float energy_ia[MAX_POPSIZE];
+    float energy_ie_ad[MAX_POPSIZE];
+    float energy_ia_ad[MAX_POPSIZE];
 
     // WARNING: hardcoded definitions overwrite assignments from LGA.
     // This means that when <DEBUG_ADADELTA_INITIAL_2BRT> is defined,
@@ -224,7 +224,7 @@ void ls_ad(
         DockConst_qasp,
         DockConst_coeff_desolv,
         pop_size,
-        energy_ia,
+        energy_ia_ad,
         local_coords_x,
         local_coords_y,
         local_coords_z
@@ -243,14 +243,14 @@ void ls_ad(
         Host_mul_tmp2,
         Host_mul_tmp3,
         pop_size,
-        energy_ie,
+        energy_ie_ad,
         local_coords_x,
         local_coords_y,
         local_coords_z
 	);
 
     for (uint j = 0; j < pop_size; j++) {
-		energy[j] = energy_ia[j] + energy_ie[j];
+		energy[j] = energy_ia_ad[j] + energy_ie_ad[j];
 	}
 
 	printf("\n");
@@ -297,8 +297,8 @@ void ls_ad(
 		);
         energy_and_gradient(
             genotype,
-            energy_ie,
-            energy_ia,
+            energy_ie_ad,
+            energy_ia_ad,
             local_coords_x,
             local_coords_y,
             local_coords_z,
@@ -346,7 +346,7 @@ void ls_ad(
 
         // TODO: fix usage of j
         for (uint j = 0; j < pop_size; j++) {
-            energy[j] = energy_ia[j] + energy_ie[j];
+            energy[j] = energy_ia_ad[j] + energy_ie_ad[j];
 
 #ifdef PRINT_ALL_LS_AD
             if (j == 0) {
