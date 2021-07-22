@@ -224,7 +224,7 @@ void ls_ad(
         DockConst_qasp,
         DockConst_coeff_desolv,
         pop_size,
-        energy_ia_ls, // TODO: fixme
+        energy_ia,
         local_coords_x,
         local_coords_y,
         local_coords_z
@@ -243,7 +243,7 @@ void ls_ad(
         Host_mul_tmp2,
         Host_mul_tmp3,
         pop_size,
-        energy_ie_ls,
+        energy_ie,
         local_coords_x,
         local_coords_y,
         local_coords_z
