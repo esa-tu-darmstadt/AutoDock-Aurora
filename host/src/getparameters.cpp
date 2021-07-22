@@ -597,6 +597,11 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 
 	unsigned int pop_size = mypars->pop_size;
 
+	float u1, u2, u3; // Generating random quaternion
+	float qw, qx, qy, qz; // Random quaternion
+	float x, y, z, s; // Converting quaternion to angles
+	float phi, theta, rotangle;
+
 	// Initial population
 	gen_pop = 0;
 
@@ -646,12 +651,41 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 #endif
 			}
 
-			for (unsigned char gene_id=3; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++) {
-				if (gene_id == 4) {
-					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*180;
-				} else {
-					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*360;
-				}
+			// Generating random quaternion
+			u1 = (float) myrand();
+			u2 = (float) myrand();
+			u3 = (float) myrand();
+			qw = sqrt(1.0 - u1) * sin(PI_TIMES_2 * u2);
+			qx = sqrt(1.0 - u1) * cos(PI_TIMES_2 * u2);
+			qy = sqrt(      u1) * sin(PI_TIMES_2 * u3);
+			qz = sqrt(      u1) * cos(PI_TIMES_2 * u3);
+
+			// Converting into angle representation
+			s = sqrt(1.0 - (qw * qw));
+			if (s < 0.001) { // rotangle too small
+				x = qx;
+				y = qy;
+				z = qz;
+			} else {
+				x = qx / s;
+				y = qy / s;
+				z = qz / s;
+			}
+
+			phi = atan2(y, x);
+			theta = acos(z);
+			rotangle = 2.0 * acos(qw);
+
+			init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+3] = phi / DEG_TO_RAD;
+			init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+4] = theta / DEG_TO_RAD;
+			init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+5] = rotangle / DEG_TO_RAD;
+
+			for (unsigned char gene_id=6; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++) {
+#ifdef REPRO
+				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = 22.0452;
+#else
+				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*360;
+#endif
 			}
 		}
 
