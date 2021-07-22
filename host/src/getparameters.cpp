@@ -690,11 +690,14 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 		}
 
 		// Generating reference orientation angles
-/*
-		mypars->ref_ori_angles[0] = (float) floor(myrand()*360*100)/100.0;
-		mypars->ref_ori_angles[1] = (float) floor(myrand()*360*100)/100.0;
-		mypars->ref_ori_angles[2] = (float) floor(myrand()*360*100)/100.0;
-*/
+#ifdef REPRO
+		mypars->ref_ori_angles[0] = 190.279;
+		mypars->ref_ori_angles[1] = 190.279;
+		mypars->ref_ori_angles[2] = 190.279;
+#else
+
+#endif
+
 		// Writing first initial population to initpop.txt
 		fp = fopen("initpop.txt", "w");
 		if (fp == NULL)
