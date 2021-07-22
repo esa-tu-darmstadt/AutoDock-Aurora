@@ -637,17 +637,23 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 	// Generating initial population
 	if (gen_pop == 1)
 	{
-		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++)
+		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++) {
 			for (unsigned char gene_id=0; gene_id<3; gene_id++) {
+#ifdef REPRO
+				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = 30.1186;
+#else
 				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = (float) myrand()*(mygrid->size_xyz_angstr[gene_id]);
+#endif
 			}
 
-		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++)
-			for (unsigned char gene_id=3; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++)
-				if (gene_id == 4)
+			for (unsigned char gene_id=3; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++) {
+				if (gene_id == 4) {
 					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*180;
-				else
+				} else {
 					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*360;
+				}
+			}
+		}
 
 		// Generating reference orientation angles
 /*
