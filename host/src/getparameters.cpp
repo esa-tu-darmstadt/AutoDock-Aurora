@@ -741,14 +741,58 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 	change_conform_f(myligand, init_orientation, ref_ori_angles, 0);
 	*/
 
-	//initial orientation will be calculated during docking,
-	//only the required angles are generated here,
-	//but the angles possibly read from file are ignored
-	for (unsigned int i=0; i<mypars->num_of_runs; i++)
-	{
-		ref_ori_angles[3*i]   = (float) (myrand()*360.0); 	//phi
-		ref_ori_angles[3*i+1] = (float) (myrand()*180.0);	//theta
-		ref_ori_angles[3*i+2] = (float) (myrand()*360.0);	//angle
+	// Initial orientation will be calculated during docking,
+	// only the required angles are generated here,
+	// but the angles possibly read from file are ignored
+	for (unsigned int i=0; i<mypars->num_of_runs; i++) {
+#ifdef REPRO
+		ref_ori_angles[3*i]   = 190.279; //phi
+		ref_ori_angles[3*i+1] = 190.279; //theta
+		ref_ori_angles[3*i+2] = 190.279; //angle
+#else
+		// Enable only for debugging.
+		// These specific values of rotational genes (in axis-angle space)
+		// correspond to a quaternion for NO rotation.
+
+		// ref_ori_angles[3*i]   = 0.0f;
+		// ref_ori_angles[3*i+1] = 0.0f;
+		// ref_ori_angles[3*i+2] = 0.0f;
+
+		// Enable for release
+		//ref_ori_angles[3*i]   = (float) (myrand()*360.0); //phi
+		//ref_ori_angles[3*i+1] = (float) (myrand()*180.0); //theta
+		//ref_ori_angles[3*i+2] = (float) (myrand()*360.0); //angle
+
+		// Uniform distribution
+		// Generating random quaternion
+		u1 = (float) myrand();
+		u2 = (float) myrand();
+		u3 = (float) myrand();
+		qw = sqrt(1.0 - u1) * sin(PI_TIMES_2 * u2);
+		qx = sqrt(1.0 - u1) * cos(PI_TIMES_2 * u2);
+		qy = sqrt(      u1) * sin(PI_TIMES_2 * u3);
+		qz = sqrt(      u1) * cos(PI_TIMES_2 * u3);
+
+		// Converting to angle representation
+		s = sqrt(1.0 - (qw * qw));
+		if (s < 0.001) { // rotangle too small
+			x = qx;
+			y = qy;
+			z = qz;
+		} else {
+			x = qx / s;
+			y = qy / s;
+			z = qz / s;
+		}
+
+		phi = atan2(y, x);
+		theta = acos(z);
+		rotangle = 2.0 * acos(qw);
+
+		ref_ori_angles[3*i]   = phi / DEG_TO_RAD;
+		ref_ori_angles[3*i+1] = theta / DEG_TO_RAD;
+		ref_ori_angles[3*i+2] = rotangle / DEG_TO_RAD;
+#endif
 	}
 
 	get_movvec_to_origo(myligand, movvec_to_origo);
