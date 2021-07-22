@@ -162,13 +162,14 @@ filled with clock() */
 
 	// Generating seeds (for each thread during GA)
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
-#ifdef REPRO
-		// each VE process gets the same seeds in reproducibility mode
-		// this only makes sense for testing and debugging!
-		genseed(1234567u);
-#endif
 		for (int i = 0; i < mypars->pop_size; i++) {
+#ifdef REPRO
+			// Each VE process gets the same seeds in reproducibility mode
+			// this only makes sense for testing and debugging!
+			cpu_prng_seeds[ve_id * mypars->pop_size + i] = 1u;
+#else
 			cpu_prng_seeds[ve_id * mypars->pop_size + i] = genseed(0u);
+#endif
 		}
 	}
 
