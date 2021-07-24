@@ -350,7 +350,11 @@ void ls_ad(
 
 #ifdef PRINT_ALL_LS_AD
             if (j == 0) {
-                printf("\t energy[%i]: %.3f\n", j, energy[j]);
+                printf("\n");
+                printf("%-10s %-10.6f \n", "intra: ",  energy_ia_ad[j]);
+                printf("%-10s %-10.6f \n", "grids: ",  energy_ie_ad[j]);
+                printf("%-10s %-10.6f \n", "Energy: ", energy[j]);
+                //printf("\t energy[%i]: %.3f\n", j, energy[j]);
             }
 #endif
 
