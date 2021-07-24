@@ -363,6 +363,17 @@ void ls_ad(
                     }
                     printf("%13u %13.6f %5s %15.6f %15.6f\n", i, genotype[i][j], "|", gradient[i][j], (i<3)? (gradient[i][j]/0.375f):(gradient[i][j]*180.0f/PI_FLOAT));
                 }
+
+                for(uint i = 0; i < DockConst_num_of_atoms; i++) {
+                    if (i == 0) {
+                        printf("\n%s\n", "----------------------------------------------------------");
+                        printf("%s\n", "Coordinates calculated by calcenergy.cl");
+                        printf("%12s %12s %12s %12s\n", "atom_id", "coords.x", "coords.y", "coords.z");
+                    }
+                    printf("%12u %12.6f %12.6f %12.6f\n", i, local_coords_x[i][j], local_coords_y[i][j], local_coords_z[i][j]);
+                }
+                printf("\n");
+
             }
 #endif
 
