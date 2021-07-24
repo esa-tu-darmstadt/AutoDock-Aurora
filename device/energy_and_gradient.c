@@ -583,9 +583,9 @@ void energy_and_gradient (
 			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom1_id][j] - priv_intra_gradient_y;
 			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom1_id][j] - priv_intra_gradient_z;
 
-			gradient_intra_x[atom1_id][j] = gradient_intra_x[atom2_id][j] + priv_intra_gradient_x;
-			gradient_intra_y[atom1_id][j] = gradient_intra_y[atom2_id][j] + priv_intra_gradient_y;
-			gradient_intra_z[atom1_id][j] = gradient_intra_z[atom2_id][j] + priv_intra_gradient_z;
+			gradient_intra_x[atom2_id][j] = gradient_intra_x[atom2_id][j] + priv_intra_gradient_x;
+			gradient_intra_y[atom2_id][j] = gradient_intra_y[atom2_id][j] + priv_intra_gradient_y;
+			gradient_intra_z[atom2_id][j] = gradient_intra_z[atom2_id][j] + priv_intra_gradient_z;
 
 		} // End j Loop (over individuals)
 
