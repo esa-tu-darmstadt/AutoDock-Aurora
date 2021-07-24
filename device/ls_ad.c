@@ -133,6 +133,14 @@ void ls_ad(
 		}
 	}
 
+    // Squared gradients E[g^2]
+    float square_gradient[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+
+    // Update vector, i.e., "delta"
+    // It is added to the genotype to create the next genotype.
+    // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
+    float delta[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+
     // TODO: convert to scalar
     // Squared updates E[dx^2]
     float square_delta[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
@@ -141,6 +149,8 @@ void ls_ad(
     for (uint i = 0; i < DockConst_num_of_genes; i++) {
         for (uint j = 0; j < pop_size; j++) {
             // gradient[i][j]          = 0.0f; // Initialized in <energy_and_gradient()>
+            square_gradient[i][j]   = 0.0f;
+            delta[i][j]             = 0.0f;
             square_delta[i][j]      = 0.0f;
             genotype[i][j]          = in_out_genotype[i][j];
             best_genotype[i][j]     = in_out_genotype[i][j];
@@ -387,28 +397,20 @@ void ls_ad(
                     best_genotype[i][j] = genotype[i][j];
                 }
 
-                // Squared gradients E[g^2]
-                float square_gradient = 0.0f;
-
-                // Update vector, i.e., "delta"
-                // It is added to the genotype to create the next genotype.
-                // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
-                float delta = 0.0f;
-
                 // Accummulating gradient^2 (Eq.8 in paper)
                 // square_gradient corresponds to E[g^2]
-                square_gradient = RHO * square_gradient + (1.0f - RHO) * gradient[i][j] * gradient[i][j];
+                square_gradient[i][j] = RHO * square_gradient[i][j] + (1.0f - RHO) * gradient[i][j] * gradient[i][j];
 
                 // Computing update (Eq.9 in paper)
-                float tmp_div = (square_delta[i][j] + EPSILON) / (square_gradient + EPSILON);
-                delta = -1.0f * gradient[i][j] * esa_sqrt(tmp_div);
+                float tmp_div = (square_delta[i][j] + EPSILON) / (square_gradient[i][j] + EPSILON);
+                delta[i][j] = -1.0f * gradient[i][j] * esa_sqrt(tmp_div);
 
                 // Accummulating update^2
                 // square_delta corresponds to E[dx^2]
-                square_delta[i][j] = RHO * square_delta[i][j] + (1.0f - RHO) * delta * delta;
+                square_delta[i][j] = RHO * square_delta[i][j] + (1.0f - RHO) * delta[i][j] * delta[i][j];
 
                 // Applying update
-                genotype[i][j] = genotype[i][j] + delta;
+                genotype[i][j] = genotype[i][j] + delta[i][j];
             } // End j Loop (over individuals)
 
 #ifdef PRINT_ALL_LS_AD
@@ -416,7 +418,7 @@ void ls_ad(
                 printf("\n%s\n", "----------------------------------------------------------");
                 printf("%13s %20s %15s %15s %15s\n", "gene", "sq_grad", "delta", "sq_delta", "new.genotype");
             }
-            printf("%13u %15.6f %15.6f\n", i, /*square_gradient, delta,*/ square_delta[i][0], genotype[i][0]);
+            printf("%13u %15.6f %15.6f %15.6f %15.6f\n", i, square_gradient[i][0], delta[i][0], square_delta[i][0], genotype[i][0]);
 #endif
 		}
 
