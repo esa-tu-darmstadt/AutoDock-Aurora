@@ -267,6 +267,19 @@ void energy_and_gradient (
 				gradient_inter_z[atom_id][j] += omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 											dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110));
 
+#ifdef PRINT_ALL
+				// Pay attention, some variables are defined here!
+				float vx_z0 = omdy * (cub100 - cub000) + dy * (cub110 - cub010);
+				float vx_z1 = omdy * (cub101 - cub001) + dy * (cub111 - cub011);
+				float vy_z0 = omdx * (cub010 - cub000) + dx * (cub110 - cub100);
+				float vy_z1 = omdx * (cub011 - cub001) + dx * (cub111 - cub101);
+				float vz_y0 = omdx * (cub001 - cub000) + dx * (cub101 - cub100);
+				float vz_y1 = omdx * (cub011 - cub010) + dx * (cub111 - cub110);
+                if (j == 0) {
+					printf("%-15s %-3u %-10.8f %-10.8f %-10.8f %-10.8f %-10.8f %-10.8f\n", "atom aff", atom_id, vx_z0, vx_z1, vy_z0, vy_z1, vz_y0, vz_y1);
+                }
+#endif
+
 				// Energy contribution of the electrostatic grid
 				cub000 = (*IE_Fg_2)[iz  ][iy  ][ix  ];
 				cub100 = (*IE_Fg_2)[iz  ][iy  ][ix+1];
@@ -312,6 +325,20 @@ void energy_and_gradient (
 				// Vector in z-direction
 				gradient_inter_z[atom_id][j] += q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 													dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
+
+#ifdef PRINT_ALL
+				// Pay attention, some variables are defined here!
+				float vx_z0 = omdy * (cub100 - cub000) + dy * (cub110 - cub010);
+				float vx_z1 = omdy * (cub101 - cub001) + dy * (cub111 - cub011);
+				float vy_z0 = omdx * (cub010 - cub000) + dx * (cub110 - cub100);
+				float vy_z1 = omdx * (cub011 - cub001) + dx * (cub111 - cub101);
+				float vz_y0 = omdx * (cub001 - cub000) + dx * (cub101 - cub100);
+				float vz_y1 = omdx * (cub011 - cub010) + dx * (cub111 - cub110);
+				if (j == 0) {
+					printf("%-15s %-3u %-10.8f %-10.8f %-10.8f %-10.8f %-10.8f %-10.8f\n", "elec", atom_id, vx_z0, vx_z1, vy_z0, vy_z1, vz_y0, vz_y1);
+                }
+#endif
+
 
 				// Energy contribution of the desolvation grid
 				cub000 = (*IE_Fg_3)[iz  ][iy  ][ix  ];
@@ -359,7 +386,18 @@ void energy_and_gradient (
 				// Vector in z-direction
 				gradient_inter_z[atom_id][j] += fabsf_q * (omdy * (omdx * (cub001 - cub000) + dx * (cub101 - cub100)) +
 														dy * (omdx * (cub011 - cub010) + dx * (cub111 - cub110)));
-
+#ifdef PRINT_ALL
+				// Pay attention, some variables are defined here!
+				float vx_z0 = omdy * (cub100 - cub000) + dy * (cub110 - cub010);
+				float vx_z1 = omdy * (cub101 - cub001) + dy * (cub111 - cub011);
+				float vy_z0 = omdx * (cub010 - cub000) + dx * (cub110 - cub100);
+				float vy_z1 = omdx * (cub011 - cub001) + dx * (cub111 - cub101);
+				float vz_y0 = omdx * (cub001 - cub000) + dx * (cub101 - cub100);
+				float vz_y1 = omdx * (cub011 - cub010) + dx * (cub111 - cub110);
+				if (j == 0) {
+					printf("%-15s %-3u %-10.8f %-10.8f %-10.8f %-10.8f %-10.8f %-10.8f\n", "desol", atom_id, vx_z0, vx_z1, vy_z0, vy_z1, vz_y0, vz_y1);
+				}
+#endif
 			} // End if
 
 			final_interE[j] += partialE1 + partialE2 + partialE3;
