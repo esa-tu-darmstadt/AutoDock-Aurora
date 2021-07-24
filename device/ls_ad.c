@@ -355,6 +355,14 @@ void ls_ad(
                 printf("%-10s %-10.6f \n", "grids: ",  energy_ie_ad[j]);
                 printf("%-10s %-10.6f \n", "Energy: ", energy[j]);
                 //printf("\t energy[%i]: %.3f\n", j, energy[j]);
+
+                for(uint i = 0; i < DockConst_num_of_genes; i++) {
+                    if (i == 0) {
+                        printf("\n%s\n", "----------------------------------------------------------");
+                        printf("%13s %13s %5s %15s %15s\n", "gene_id", "gene.value", "|", "gene.grad", "(autodockdevpy units)");
+                    }
+                    printf("%13u %13.6f %5s %15.6f %15.6f\n", i, genotype[i][j], "|", gradient[i][j], (i<3)? (gradient[i][j]/0.375f):(gradient[i][j]*180.0f/PI_FLOAT));
+                }
             }
 #endif
 
