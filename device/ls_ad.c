@@ -367,7 +367,7 @@ void ls_ad(
                 for(uint i = 0; i < DockConst_num_of_atoms; i++) {
                     if (i == 0) {
                         printf("\n%s\n", "----------------------------------------------------------");
-                        printf("%s\n", "Coordinates calculated by calcenergy.cl");
+                        printf("%s\n", "Coordinates");
                         printf("%12s %12s %12s %12s\n", "atom_id", "coords.x", "coords.y", "coords.z");
                     }
                     printf("%12u %12.6f %12.6f %12.6f\n", i, local_coords_x[i][j], local_coords_y[i][j], local_coords_z[i][j]);
@@ -410,15 +410,15 @@ void ls_ad(
                 // Applying update
                 genotype[i][j] = genotype[i][j] + delta;
             } // End j Loop (over individuals)
-		}
 
 #ifdef PRINT_ALL_LS_AD
-	    printf("\n%s\n", "----------------------------------------------------------");
-	    printf("%13s %20s %15s %15s %15s\n", "gene", "sq_grad", "delta", "sq_delta", "new.genotype");
-	    for (uint i = 0; i < DockConst_num_of_genes; i++) {
-		    printf("%13u %20.6f %15.6f %15.6f %15.6f\n", i, square_gradient, delta, square_delta[i], genotype[i]);
-        }
+            if (i == 0) {
+                printf("\n%s\n", "----------------------------------------------------------");
+                printf("%13s %20s %15s %15s %15s\n", "gene", "sq_grad", "delta", "sq_delta", "new.genotype");
+            }
+            printf("%13u %15.6f %15.6f\n", i, /*square_gradient, delta,*/ square_delta[i][0], genotype[i][0]);
 #endif
+		}
 
 #ifdef PRINT_ALL_LS_AD
 	    printf("LS_ADADELTA: iteration_cnt: %u\n", iteration_cnt);
