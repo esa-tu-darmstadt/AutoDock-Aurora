@@ -609,11 +609,13 @@ void energy_and_gradient (
 			gradient_inter_z[atom_cnt][j] = gradient_inter_z[atom_cnt][j] / DockConst_grid_spacing;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
-			if (atom_cnt == 0) {
-				printf("%s\n", "Gradients: inter & intra");
-				printf("%5s %10s %13s %13s %13s %5s %13s %13s %13s\n", "ind", "atom_id", "grad_intER.x", "grad_intER.y", "grad_intER.z", "|", "grad_intRA.x", "grad_intRA.y", "grad_intRA.z");
+			if (j == 0) {
+				if (atom_cnt == 0) {
+					printf("%s\n", "Gradients: inter & intra");
+					printf("%5s %10s %13s %13s %13s %5s %13s %13s %13s\n", "ind", "atom_id", "grad_intER.x", "grad_intER.y", "grad_intER.z", "|", "grad_intRA.x", "grad_intRA.y", "grad_intRA.z");
+				}
+				printf("%5u %10u %13.6f %13.6f %13.6f %5s %13.6f %13.6f %13.6f\n", j, atom_cnt, gradient_inter_x[atom_cnt][j], gradient_inter_y[atom_cnt][j], gradient_inter_z[atom_cnt][j], "|", gradient_intra_x[atom_cnt][j], gradient_intra_y[atom_cnt][j], gradient_intra_z[atom_cnt][j]);
 			}
-			printf("%5u %10u %13.6f %13.6f %13.6f %5s %13.6f %13.6f %13.6f\n", j, atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt], "|", gradient_intra_x[atom_cnt], gradient_intra_y[atom_cnt], gradient_intra_z[atom_cnt]);
 #endif
 
 			// Reusing "gradient_inter_*" for total gradient (inter + intra)
@@ -622,11 +624,13 @@ void energy_and_gradient (
 			gradient_inter_z[atom_cnt][j] += gradient_intra_z[atom_cnt][j];
 
 #ifdef PRINT_GRAD_ROTATION_GENES
-			if (atom_cnt == 0) {
-				printf("%s\n", "Gradients: total = inter + intra");
-				printf("%5s %10s %13s %13s %13s\n", "ind", "atom_id", "grad.x", "grad.y", "grad.z");
+			if (j == 0) {
+				if (atom_cnt == 0) {
+					printf("%s\n", "Gradients: total = inter + intra");
+					printf("%5s %10s %13s %13s %13s\n", "ind", "atom_id", "grad.x", "grad.y", "grad.z");
+				}
+				printf("%5u %10u %13.6f %13.6f %13.6f \n", j, atom_cnt, gradient_inter_x[atom_cnt][j], gradient_inter_y[atom_cnt][j], gradient_inter_z[atom_cnt][j]);
 			}
-			printf("%5u %10u %13.6f %13.6f %13.6f \n", j, atom_cnt, gradient_inter_x[atom_cnt], gradient_inter_y[atom_cnt], gradient_inter_z[atom_cnt]);
 #endif
 		} // End j Loop (over individuals)
 	}
