@@ -747,7 +747,7 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 	for (unsigned int i=0; i<mypars->num_of_runs; i++) {
 #ifdef REPRO
 		ref_ori_angles[3*i]   = 190.279; //phi
-		ref_ori_angles[3*i+1] = 190.279; //theta
+		ref_ori_angles[3*i+1] =  90.279; //theta
 		ref_ori_angles[3*i+2] = 190.279; //angle
 #else
 		// Enable only for debugging.
