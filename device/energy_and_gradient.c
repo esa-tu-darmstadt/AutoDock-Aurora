@@ -740,6 +740,7 @@ void energy_and_gradient (
 		float torque_length = esa_length3_e(torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("ind: %u\n", j);
 		printf("%-20s %-10.6f\n", "torque length: ", torque_length);
 #endif
@@ -758,6 +759,7 @@ void energy_and_gradient (
 		quat_torque_z = tmp_normal_z * SIN_HALF_INFINITESIMAL_RADIAN;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-20s %-10.6f\n", "INFINITESIMAL_RADIAN: ", INFINITESIMAL_RADIAN);
 		printf("%-20s %-10.6f %-10.6f %-10.6f %-10.6f\n", "quat_torque (w,x,y,z): ", quat_torque_w, quat_torque_x, quat_torque_y, quat_torque_z);
 #endif
@@ -781,6 +783,7 @@ void energy_and_gradient (
 		int is_theta_gt_pi = (current_theta > PI_FLOAT) ? 1 : 0;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s %-10.6f %-10.6f %-10.6f\n", "current_axisangle (1,2,3): ", current_phi, current_theta, current_rotangle);
 #endif
 
@@ -799,6 +802,7 @@ void energy_and_gradient (
 		current_q_z = rotaxis_z * sinf(ang);
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s %-10.6f %-10.6f %-10.6f %-10.6f\n", "current_q (w,x,y,z): ", current_q_w, current_q_x, current_q_y, current_q_z);
 #endif
 
@@ -817,6 +821,7 @@ void energy_and_gradient (
 								   current_q_z, current_q_y, -current_q_x, current_q_w);
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s %-10.6f %-10.6f %-10.6f %-10.6f\n", "target_q (w,x,y,z): ", target_q_w, target_q_x, target_q_y, target_q_z);
 #endif
 
@@ -923,6 +928,7 @@ void energy_and_gradient (
 		}
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s %-10.6f\n", "dependence_on_theta: ", dependence_on_theta);
 #endif
 
@@ -946,6 +952,7 @@ void energy_and_gradient (
 		}
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s %-10.6f\n", "dependence_on_rotangle: ", dependence_on_rotangle);
 #endif
 
@@ -956,6 +963,7 @@ void energy_and_gradient (
 		gradient_genotype[5][j] = grad_rotangle * DEG_TO_RAD;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s \n", "grad_axisangle (1,2,3) - after empirical scaling: ");
 		printf("%-13s %-13s %-13s \n", "grad_phi", "grad_theta", "grad_rotangle");
 		printf("%-13.6f %-13.6f %-13.6f\n", gradient_genotype[3][j], gradient_genotype[4][j], gradient_genotype[5][j]);
