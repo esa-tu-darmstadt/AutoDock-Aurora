@@ -717,11 +717,13 @@ void energy_and_gradient (
 			torque_rot_z[j] += tmp_z;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
-			if (atom_id == 0) {
-				printf("%s\n", "Torque: atom-based accumulation of torque");
-				printf("%5s %10s %3s %10s %10s %10s %5s %12s %12s %12s %5s %11s %11s %11s\n", "ind", "atom_id", "j", "r_x", "r_y", "r_z", "|", "force_x", "force_y", "force.z", "|", "torque_x", "torque_y", "torque_z");
+			if (j == 0) {
+				if (atom_id == 0) {
+					printf("%s\n", "Torque: atom-based accumulation of torque");
+					printf("%5s %10s %3s %10s %10s %10s %5s %12s %12s %12s %5s %11s %11s %11s\n", "ind", "atom_id", "j", "r_x", "r_y", "r_z", "|", "force_x", "force_y", "force.z", "|", "torque_x", "torque_y", "torque_z");
+				}
+				printf("%5u %10u %3d %10.6f %10.6f %10.6f %5s %12.6f %12.6f %12.6f %5s %12.6f %12.6f %12.6f\n", j, atom_id, j, r_x, r_y, r_z, "|", force_x, force_y, force_z, "|", torque_rot_x, torque_rot_y, torque_rot_z);
 			}
-			printf("%5u %10u %3d %10.6f %10.6f %10.6f %5s %12.6f %12.6f %12.6f %5s %12.6f %12.6f %12.6f\n", j, atom_id, j, r_x, r_y, r_z, "|", force_x, force_y, force_z, "|", torque_rot_x, torque_rot_y, torque_rot_z);
 #endif
 		}
 
