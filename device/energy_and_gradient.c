@@ -850,6 +850,10 @@ void energy_and_gradient (
 		// This is to guarantee that the direction of the displacement is not distorted.
 		float orientation_scaling = torque_length * INV_INFINITESIMAL_RADIAN;
 
+#ifdef PRINT_GRAD_ROTATION_GENES
+		printf("%-30s %-10.6f\n", "orientation_scaling: ", orientation_scaling);
+#endif
+
 		// Derivatives (or gradients)
 		float grad_phi = orientation_scaling * (fmodf(target_phi - current_phi + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
 		float grad_theta = orientation_scaling * (fmodf(target_theta - current_theta + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
