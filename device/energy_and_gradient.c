@@ -722,18 +722,18 @@ void energy_and_gradient (
 					printf("%s\n", "Torque: atom-based accumulation of torque");
 					printf("%5s %10s %3s %10s %10s %10s %5s %12s %12s %12s %5s %11s %11s %11s\n", "ind", "atom_id", "j", "r_x", "r_y", "r_z", "|", "force_x", "force_y", "force.z", "|", "torque_x", "torque_y", "torque_z");
 				}
-				printf("%5u %10u %3d %10.6f %10.6f %10.6f %5s %12.6f %12.6f %12.6f %5s %12.6f %12.6f %12.6f\n", j, atom_id, j, r_x, r_y, r_z, "|", force_x, force_y, force_z, "|", torque_rot_x, torque_rot_y, torque_rot_z);
+				printf("%5u %10u %3d %10.6f %10.6f %10.6f %5s %12.6f %12.6f %12.6f %5s %12.6f %12.6f %12.6f\n", j, atom_id, j, r_x, r_y, r_z, "|", force_x, force_y, force_z, "|", torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
 			}
 #endif
-		}
+		} // End j Loop (over individuals)
+	}
 
 #ifdef PRINT_GRAD_ROTATION_GENES
-		for (uint j = 0; j < DockConst_pop_size; j++) {
-			printf("ind: %u\n", j);
-			printf("%-20s %-10.6f %-10.6f %-10.6f\n", "final torque: ", torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
-		}
-#endif
+	for (uint j = 0; j < DockConst_pop_size; j++) {
+		printf("ind: %u\n", j);
+		printf("%-20s %-10.6f %-10.6f %-10.6f\n", "final torque: ", torque_rot_x[j], torque_rot_y[j], torque_rot_z[j]);
 	}
+#endif
 
 	for (uint j = 0; j < DockConst_pop_size; j++) {
 		// genes[3:7] = rotation.axisangle_to_q(torque, rad)
