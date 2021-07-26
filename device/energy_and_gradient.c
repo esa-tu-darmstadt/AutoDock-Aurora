@@ -843,6 +843,7 @@ void energy_and_gradient (
 		}
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s %-10.6f %-10.6f %-10.6f\n", "target_axisangle (1,2,3): ", target_phi, target_theta, target_rotangle);
 #endif
 
@@ -851,6 +852,7 @@ void energy_and_gradient (
 		float orientation_scaling = torque_length * INV_INFINITESIMAL_RADIAN;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s %-10.6f\n", "orientation_scaling: ", orientation_scaling);
 #endif
 
@@ -860,6 +862,7 @@ void energy_and_gradient (
 		float grad_rotangle = orientation_scaling * (fmodf(target_rotangle - current_rotangle + PI_FLOAT, PI_TIMES_2) - PI_FLOAT);
 
 #ifdef PRINT_GRAD_ROTATION_GENES
+		printf("\n%s\n", "----------------------------------------------------------");
 		printf("%-30s \n", "grad_axisangle (1,2,3) - before empirical scaling: ");
 		printf("%-13s %-13s %-13s \n", "grad_phi", "grad_theta", "grad_rotangle");
 		printf("%-13.6f %-13.6f %-13.6f\n", grad_phi, grad_theta, grad_rotangle);
