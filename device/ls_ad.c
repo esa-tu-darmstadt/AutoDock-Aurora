@@ -403,7 +403,7 @@ void ls_ad(
 
                 // Computing update (Eq.9 in paper)
                 float tmp_div = (square_delta[i][j] + EPSILON) / (square_gradient[i][j] + EPSILON);
-                delta[i][j] = -1.0f * gradient[i][j] * esa_sqrt(tmp_div);
+                delta[i][j] = -1.0f * gradient[i][j] * /*esa_sqrt*/sqrtf(tmp_div);
 
                 // Accummulating update^2
                 // square_delta corresponds to E[dx^2]

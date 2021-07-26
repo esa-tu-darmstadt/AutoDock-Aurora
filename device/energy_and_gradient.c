@@ -465,7 +465,7 @@ void energy_and_gradient (
 			float subz = local_coords_z[atom1_id][j] - local_coords_z[atom2_id][j];
 
 			// Calculating atomic distance
-			float dist = /*esa_sqrt*/sqrt(subx*subx + suby*suby + subz*subz);
+			float dist = /*esa_sqrt*/sqrtf(subx*subx + suby*suby + subz*subz);
 			float atomic_distance = dist * DockConst_grid_spacing;
 
 			// The gradient contribution of each contributing atomic pair
