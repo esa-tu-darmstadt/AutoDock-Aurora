@@ -898,19 +898,19 @@ void energy_and_gradient (
 		float X0_theta, Y0_theta;
 		float X1_theta, Y1_theta;
 		float X_theta = current_theta;
-		float dependance_on_theta;	// Y = dependance_on_theta
+		float dependence_on_theta;	// Y = dependence_on_theta
 
 		// Using interpolation on out-of-bounds elements results in hang
 		if (index_theta <= 0) {
-			dependance_on_theta = GRAD_dependence_on_theta[0];
+			dependence_on_theta = GRAD_dependence_on_theta[0];
 		} else if (index_theta >= 999) {
-			dependance_on_theta = GRAD_dependence_on_theta[999];
+			dependence_on_theta = GRAD_dependence_on_theta[999];
 		} else {
 			X0_theta = GRAD_angle[index_theta];
 			Y0_theta = GRAD_dependence_on_theta[index_theta];
 			X1_theta = GRAD_angle[index_theta + 1];
 			Y1_theta = GRAD_dependence_on_theta[index_theta + 1];
-			dependance_on_theta = (Y0_theta * (X1_theta - X_theta) + Y1_theta * (X_theta - X0_theta)) * inv_angle_delta;
+			dependence_on_theta = (Y0_theta * (X1_theta - X_theta) + Y1_theta * (X_theta - X0_theta)) * inv_angle_delta;
 		}
 
 #ifdef PRINT_GRAD_ROTATION_GENES
@@ -921,19 +921,19 @@ void energy_and_gradient (
 		float X0_rotangle, Y0_rotangle;
 		float X1_rotangle, Y1_rotangle;
 		float X_rotangle = current_rotangle;
-		float dependance_on_rotangle; // Y = dependance_on_rotangle
+		float dependence_on_rotangle; // Y = dependence_on_rotangle
 
 		// Using interpolation on previous and/or next elements results in hang
 		if (index_rotangle <= 0) {
-			dependance_on_rotangle = GRAD_dependence_on_rotangle[0];
+			dependence_on_rotangle = GRAD_dependence_on_rotangle[0];
 		} else if (index_rotangle >= 999) {
-			dependance_on_rotangle = GRAD_dependence_on_rotangle[999];
+			dependence_on_rotangle = GRAD_dependence_on_rotangle[999];
 		} else {
 			X0_rotangle = GRAD_angle[index_rotangle];
 			Y0_rotangle = GRAD_dependence_on_rotangle[index_rotangle];
 			X1_rotangle = GRAD_angle[index_rotangle + 1];
 			Y1_rotangle = GRAD_dependence_on_rotangle[index_rotangle + 1];
-			dependance_on_rotangle = (Y0_rotangle * (X1_rotangle - X_rotangle) + Y1_rotangle * (X_rotangle - X0_rotangle)) * inv_angle_delta;
+			dependence_on_rotangle = (Y0_rotangle * (X1_rotangle - X_rotangle) + Y1_rotangle * (X_rotangle - X0_rotangle)) * inv_angle_delta;
 		}
 
 #ifdef PRINT_GRAD_ROTATION_GENES
@@ -942,8 +942,8 @@ void energy_and_gradient (
 
 		// Setting gradient rotation-related genotypes in cube
 		// Multiplying by DEG_TO_RAD to make it uniform to  DEG (see torsion gradients)
-		gradient_genotype[3][j] = (grad_phi / (dependance_on_theta * dependance_on_rotangle)) * DEG_TO_RAD;
-		gradient_genotype[4][j] = (grad_theta / dependance_on_rotangle) * DEG_TO_RAD;
+		gradient_genotype[3][j] = (grad_phi / (dependence_on_theta * dependence_on_rotangle)) * DEG_TO_RAD;
+		gradient_genotype[4][j] = (grad_theta / dependence_on_rotangle) * DEG_TO_RAD;
 		gradient_genotype[5][j] = grad_rotangle * DEG_TO_RAD;
 
 #ifdef PRINT_GRAD_ROTATION_GENES
