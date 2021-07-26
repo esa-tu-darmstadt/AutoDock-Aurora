@@ -451,8 +451,8 @@ void energy_and_gradient (
 		float vdW_const1 = IA_VWpars_AC[atom1_typeid * DockConst_num_of_atypes + atom2_typeid];
 		float vdW_const2 = IA_VWpars_BD[atom1_typeid * DockConst_num_of_atypes + atom2_typeid];
 
-		float desolv_const = ((IA_dspars_S[atom1_typeid] + DockConst_qasp * esa_fabs(IA_IE_atom_charges[atom1_id])) * IA_dspars_V[atom2_typeid] +
-				      		  (IA_dspars_S[atom2_typeid] + DockConst_qasp * esa_fabs(IA_IE_atom_charges[atom2_id])) * IA_dspars_V[atom1_typeid]
+		float desolv_const = ((IA_dspars_S[atom1_typeid] + DockConst_qasp * /*esa_fabs*/fabsf(IA_IE_atom_charges[atom1_id])) * IA_dspars_V[atom2_typeid] +
+				      		  (IA_dspars_S[atom2_typeid] + DockConst_qasp * /*esa_fabs*/fabsf(IA_IE_atom_charges[atom2_id])) * IA_dspars_V[atom1_typeid]
 							 ) * DockConst_coeff_desolv;
 		float elec_const = DockConst_coeff_elec * IA_IE_atom_charges[atom1_id] * IA_IE_atom_charges[atom2_id];
 
@@ -465,7 +465,7 @@ void energy_and_gradient (
 			float subz = local_coords_z[atom1_id][j] - local_coords_z[atom2_id][j];
 
 			// Calculating atomic distance
-			float dist = esa_sqrt(subx*subx + suby*suby + subz*subz);
+			float dist = /*esa_sqrt*/sqrt(subx*subx + suby*suby + subz*subz);
 			float atomic_distance = dist * DockConst_grid_spacing;
 
 			// The gradient contribution of each contributing atomic pair
@@ -530,7 +530,7 @@ void energy_and_gradient (
 			// Cuttoff2: internuclear-distance at 20.48A only for el and sol.
 			// TODO: use literal constants for Solis-Wets
 			if (atomic_distance < 20.48f) {
-				float tmp_exp0 = esa_expf0(DIEL_B_TIMES_H * atomic_distance);
+				float tmp_exp0 = /*esa_expf0*/expf(DIEL_B_TIMES_H * atomic_distance);
 				//float inv_tmp_exp0 = 1.0f / tmp_exp0;
 
 				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * tmp_exp0)));
@@ -550,7 +550,7 @@ void energy_and_gradient (
 				priv_gradient_per_intracontributor += -elec_const * (upper/lower);
 
 				// Calculating desolvation term
-				float tmp_exp4 = esa_expf0(-0.03858025f * distance_pow_2); // TODO: use constant & update Solis-Wets
+				float tmp_exp4 = /*esa_expf0*/expf(-0.03858025f * distance_pow_2); // TODO: use constant & update Solis-Wets
 				partialIAE4 = desolv_const * tmp_exp4;
 
 				priv_gradient_per_intracontributor += -0.077160f * atomic_distance * partialIAE4;
