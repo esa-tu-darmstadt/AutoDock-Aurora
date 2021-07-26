@@ -508,7 +508,7 @@ void energy_and_gradient (
 				partialIAE1 = vdW_const1 * inverse_smoothed_distance_pow_12; // TODO: do the same for Solis-Wets
 				float partialIAE1_times_12 = 12.0f * partialIAE1;
 
-				priv_gradient_per_intracontributor += (-12.0f * vdW_const1) * inverse_smoothed_distance_pow_13;
+				//priv_gradient_per_intracontributor += (-12.0f * vdW_const1) * inverse_smoothed_distance_pow_13;
 
 				float gradient_numerator;
 
