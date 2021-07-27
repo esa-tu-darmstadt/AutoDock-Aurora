@@ -500,7 +500,7 @@ void energy_and_gradient (
 			float inverse_smoothed_distance_pow_4  = inverse_smoothed_distance_pow_2 * inverse_smoothed_distance_pow_2;
 			float inverse_smoothed_distance_pow_6  = inverse_smoothed_distance_pow_4 * inverse_smoothed_distance_pow_2;
 			float inverse_smoothed_distance_pow_12 = inverse_smoothed_distance_pow_6 * inverse_smoothed_distance_pow_6;	// TODO: fix it in Solis-wets
-			float inverse_smoothed_distance_pow_13 = inverse_smoothed_distance_pow_12 * inverse_smoothed_distance;
+			//float inverse_smoothed_distance_pow_13 = inverse_smoothed_distance_pow_12 * inverse_smoothed_distance;
 
 			// Calculating energy contributions
 			// Cuttoff1: internuclear-distance at 8A only for vdw and hbond.
