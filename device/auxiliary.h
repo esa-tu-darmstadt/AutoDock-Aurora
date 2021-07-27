@@ -181,6 +181,7 @@ static inline float esa_expf0(const float x)
 	return __int_as_float(__float_as_int(a * x) + b);
 }
 
+/*
 static float fastExp3(const float x)  // cubic spline approximation
 {
 	int32_t i = (int32_t)(12102203.0f*x) + 127*(1 << 23);
@@ -198,6 +199,7 @@ static float fastExp4(const float x)  // quartic spline approximation
 	i += (((((((((((3537*m) >> 16) + 13668)*m) >> 18) + 15817)*m) >> 14) - 80470)*m) >> 11);
 	return __int_as_float(i);
 }
+*/
 
 // https://forums.developer.nvidia.com/t/a-more-accurate-performance-competitive-implementation-of-expf/47528
 static inline
