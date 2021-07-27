@@ -531,9 +531,9 @@ void energy_and_gradient (
 			// TODO: use literal constants for Solis-Wets
 			if (atomic_distance < 20.48f) {
 				float tmp_exp0 = /*esa_expf0*/expf(DIEL_B_TIMES_H * atomic_distance);
-				//float inv_tmp_exp0 = 1.0f / tmp_exp0;
+				float inv_tmp_exp0 = 1.0f / tmp_exp0;
 
-				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * tmp_exp0)));
+				float term_partialE3 = atomic_distance * (DIEL_A + (DIEL_B / (1.0f + DIEL_K * inv_tmp_exp0)));
 				float term_inv_partialE3 = (1.0f / term_partialE3);
 
 				// Calculating electrostatic term
@@ -559,6 +559,12 @@ void energy_and_gradient (
 			final_intraE[j] += partialIAE1 - partialIAE2 + partialIAE3 + partialIAE4;
 
 #ifdef PRINT_ALL
+			if (j == 0) {
+				printf("%-20s %-10u %-20s %-10.8f\n", "contributor_counter: ", contributor_counter, "partialIAE1: ", partialIAE1);
+				printf("%-20s %-10u %-20s %-10.8f\n", "contributor_counter: ", contributor_counter, "partialIAE2: ", partialIAE2);
+				printf("%-20s %-10u %-20s %-10.8f\n", "contributor_counter: ", contributor_counter, "partialIAE3: ", partialIAE3);
+				printf("%-20s %-10u %-20s %-10.8f\n", "contributor_counter: ", contributor_counter, "partialIAE4: ", partialIAE4);
+			}
 			printf("final_intraE[%u] = %f\n\n\n", j, final_intraE[j]);
 #endif
 
