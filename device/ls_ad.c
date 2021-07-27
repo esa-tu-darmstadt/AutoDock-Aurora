@@ -513,7 +513,7 @@ void ls_ad(
 	} while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > 0.01f));
 #else
     //} while (iteration_cnt < DockConst_max_num_of_iters);
-    while (num_active_ls > 0)
+    while (num_active_ls > 0);
 #endif
 	// --------------------------------------------------------------------------
 
