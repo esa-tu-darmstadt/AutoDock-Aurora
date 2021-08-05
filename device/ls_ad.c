@@ -454,7 +454,7 @@ void ls_ad(
                 square_delta[i][j] = RHO * square_delta[i][j] + (1.0f - RHO) * delta[i][j] * delta[i][j];
 
                 // Applying update
-                genotype[i][j] = genotype[i][j] + delta[i][j];
+                genotype[i][jj] = genotype[i][jj] + delta[i][j];
             } // End jj Loop (over active individuals)
 
 #ifdef PRINT_ALL_LS_AD
