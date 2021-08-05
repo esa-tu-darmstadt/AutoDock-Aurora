@@ -136,10 +136,8 @@ void ls_ad(
     // Squared gradients E[g^2]
     float square_gradient[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-    // Update vector, i.e., "delta"
-    // It is added to the genotype to create the next genotype.
-    // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
-    float delta[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+    // Transformed into scalar
+    // float delta[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
     // TODO: convert to scalar
     // Squared updates E[dx^2]
@@ -150,7 +148,6 @@ void ls_ad(
         for (uint j = 0; j < pop_size; j++) {
             // gradient[i][j]          = 0.0f; // Initialized in <energy_and_gradient()>
             square_gradient[i][j]   = 0.0f;
-            delta[i][j]             = 0.0f;
             square_delta[i][j]      = 0.0f;
             genotype[i][j]          = in_out_genotype[i][j];
             best_genotype[i][j]     = in_out_genotype[i][j];
@@ -447,14 +444,18 @@ void ls_ad(
 
                 // Computing update (Eq.9 in paper)
                 float tmp_div = (square_delta[i][j] + EPSILON) / (square_gradient[i][j] + EPSILON);
-                delta[i][j] = -1.0f * gradient[i][j] * /*esa_sqrt*/sqrtf(tmp_div);
+
+                // Update or "delta"
+                // It is added to the genotype to create the next genotype.
+                // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
+                float delta = -1.0f * gradient[i][j] * /*esa_sqrt*/sqrtf(tmp_div);
 
                 // Accummulating update^2
                 // square_delta corresponds to E[dx^2]
-                square_delta[i][j] = RHO * square_delta[i][j] + (1.0f - RHO) * delta[i][j] * delta[i][j];
+                square_delta[i][j] = RHO * square_delta[i][j] + (1.0f - RHO) * delta * delta;
 
                 // Applying update
-                genotype[i][jj] = genotype[i][jj] + delta[i][j];
+                genotype[i][jj] = genotype[i][jj] + delta;
             } // End jj Loop (over active individuals)
 
 #ifdef PRINT_ALL_LS_AD
