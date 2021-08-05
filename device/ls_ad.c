@@ -136,10 +136,8 @@ void ls_ad(
     // Squared gradients E[g^2]
     float square_gradient[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
-    // Update vector, i.e., "delta"
-    // It is added to the genotype to create the next genotype.
-    // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
-    float delta[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
+    // Transformed into scalar
+    // float delta[ACTUAL_GENOTYPE_LENGTH][MAX_POPSIZE];
 
     // TODO: convert to scalar
     // Squared updates E[dx^2]
@@ -150,7 +148,6 @@ void ls_ad(
         for (uint j = 0; j < pop_size; j++) {
             // gradient[i][j]          = 0.0f; // Initialized in <energy_and_gradient()>
             square_gradient[i][j]   = 0.0f;
-            delta[i][j]             = 0.0f;
             square_delta[i][j]      = 0.0f;
             genotype[i][j]          = in_out_genotype[i][j];
             best_genotype[i][j]     = in_out_genotype[i][j];
@@ -279,13 +276,41 @@ void ls_ad(
     // Perfoming ADADELTA iterations
 
 	// Iteration counter for the ADADELTA minimizer
-	uint iteration_cnt = 0;
+	//uint iteration_cnt = 0;
+    uint iteration_cnt[MAX_POPSIZE];
+    uint iteration_compr[MAX_POPSIZE];
+
+    uint active_pop_size; // Counts compressed list of genotypes
+    uint active_idx[MAX_POPSIZE]; // Index that corresponds to slot in compressed list
+
+    uint LS_eval = 0;
+
+    uint ls_is_active[MAX_POPSIZE]; // Filter for individuals that are still being iterated
+    uint num_active_ls = pop_size;
+
+    for (uint j = 0; j < pop_size; j++) {
+        iteration_cnt[j] = 0;
+        ls_is_active[j] = 1;
+    }
 
 	// --------------------------------------------------------------------------
     // The termination criteria is based on a maximum number of iterations,
     // and the minimum step size allowed for single-precision FP numbers
     // (IEEE-754 single float has a precision of about 6 decimal digits)
     do {
+        // Compressed list of active indexes
+        active_pop_size = 0;
+        for (uint j = 0; j < pop_size; j++) {
+            if (ls_is_active[j]) {
+                active_idx[active_pop_size] = j;
+                iteration_compr[active_pop_size] = iteration_cnt[j];
+                active_pop_size++;
+            }
+        }
+
+        for (uint jj = 0; jj < active_pop_size; jj++) {
+            iteration_compr[jj]++;
+        }
 
         // Calculating energy and gradients
         calc_pc (
@@ -299,7 +324,7 @@ void ls_ad(
 			DockConst_rotbondlist_length,
 			DockConst_num_of_genes,
 			Host_RunId,
-			pop_size /*active_pop_size*/,    // TODO: FIXME
+			active_pop_size,
 			genotype /*entity_possible_new_genotype*/,   // TODO: FIXME
 			local_coords_x,
 			local_coords_y,
@@ -314,7 +339,7 @@ void ls_ad(
             local_coords_z,
             gradient,
             DockConst_num_of_genes,
-            pop_size,
+            active_pop_size,
             //ie
             IE_Fgrids,
             IA_IE_atom_charges,
@@ -354,24 +379,23 @@ void ls_ad(
             GRAD_dependence_on_rotangle
         );
 
-        // TODO: fix usage of j
-        for (uint j = 0; j < pop_size; j++) {
-            energy[j] = energy_ia_ad[j] + energy_ie_ad[j];
+        for (uint jj = 0; jj < active_pop_size; jj++) {
+            energy[jj] = energy_ia_ad[jj] + energy_ie_ad[jj];
 
 #ifdef PRINT_ALL_LS_AD
-            if (j == 0) {
+            if (jj == 0) {
                 printf("\n");
-                printf("%-10s %-10.6f \n", "intra: ",  energy_ia_ad[j]);
-                printf("%-10s %-10.6f \n", "grids: ",  energy_ie_ad[j]);
-                printf("%-10s %-10.6f \n", "Energy: ", energy[j]);
-                //printf("\t energy[%i]: %.3f\n", j, energy[j]);
+                printf("%-10s %-10.6f \n", "intra: ",  energy_ia_ad[jj]);
+                printf("%-10s %-10.6f \n", "grids: ",  energy_ie_ad[jj]);
+                printf("%-10s %-10.6f \n", "Energy: ", energy[jj]);
+                //printf("\t energy[%i]: %.3f\n", jj, energy[jj]);
 
                 for(uint i = 0; i < DockConst_num_of_genes; i++) {
                     if (i == 0) {
                         printf("\n%s\n", "----------------------------------------------------------");
                         printf("%13s %13s %5s %15s %15s\n", "gene_id", "gene.value", "|", "gene.grad", "(autodockdevpy units)");
                     }
-                    printf("%13u %13.6f %5s %15.6f %15.6f\n", i, genotype[i][j], "|", gradient[i][j], (i<3)? (gradient[i][j]/0.375f):(gradient[i][j]*180.0f/PI_FLOAT));
+                    printf("%13u %13.6f %5s %15.6f %15.6f\n", i, genotype[i][jj], "|", gradient[i][jj], (i<3)? (gradient[i][jj]/0.375f):(gradient[i][jj]*180.0f/PI_FLOAT));
                 }
 
                 for(uint i = 0; i < DockConst_num_of_atoms; i++) {
@@ -380,38 +404,59 @@ void ls_ad(
                         printf("%s\n", "Coordinates");
                         printf("%12s %12s %12s %12s\n", "atom_id", "coords.x", "coords.y", "coords.z");
                     }
-                    printf("%12u %12.6f %12.6f %12.6f\n", i, local_coords_x[i][j], local_coords_y[i][j], local_coords_z[i][j]);
+                    printf("%12u %12.6f %12.6f %12.6f\n", i, local_coords_x[i][jj], local_coords_y[i][jj], local_coords_z[i][jj]);
                 }
                 printf("\n");
 
             }
 #endif
+        } // End jj Loop (over active individuals)
 
+        // Updating LS energy-evaluation count
+		LS_eval += active_pop_size;
+
+        uint energy_lower[MAX_POPSIZE];
+        for (uint jj = 0; jj < active_pop_size; jj++) {
+            uint j = active_idx[jj];
+            if (energy[jj] < best_energy[j]) {
+                energy_lower[jj] = 1;
+            } else {
+                energy_lower[jj] = 0;
+            }
+        } // End jj Loop (over active individuals)
+
+        for (uint i = 0; i < DockConst_num_of_genes; i++) {
+            for (uint jj = 0; jj < active_pop_size; jj++) {
+                uint j = active_idx[jj];
+                if (energy_lower[jj]) {
+                    best_genotype[i][j] = genotype[i][jj];
+                }
+            } // End jj Loop (over active individuals)
         }
 
-		for (uint i = 0; i < DockConst_num_of_genes; i++) {
-
-            // TODO: fix usage of j
-            for (uint j = 0; j < pop_size; j++) {
-                if (energy[j] < best_energy[j]) {
-                    best_genotype[i][j] = genotype[i][j];
-                }
+        for (uint i = 0; i < DockConst_num_of_genes; i++) {
+            for (uint jj = 0; jj < active_pop_size; jj++) {
+                uint j = active_idx[jj];
 
                 // Accummulating gradient^2 (Eq.8 in paper)
                 // square_gradient corresponds to E[g^2]
-                square_gradient[i][j] = RHO * square_gradient[i][j] + (1.0f - RHO) * gradient[i][j] * gradient[i][j];
+                square_gradient[i][j] = RHO * square_gradient[i][j] + (1.0f - RHO) * gradient[i][jj] * gradient[i][jj];
 
                 // Computing update (Eq.9 in paper)
                 float tmp_div = (square_delta[i][j] + EPSILON) / (square_gradient[i][j] + EPSILON);
-                delta[i][j] = -1.0f * gradient[i][j] * /*esa_sqrt*/sqrtf(tmp_div);
+
+                // Update or "delta"
+                // It is added to the genotype to create the next genotype.
+                // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
+                float delta = -1.0f * gradient[i][jj] * /*esa_sqrt*/sqrtf(tmp_div);
 
                 // Accummulating update^2
                 // square_delta corresponds to E[dx^2]
-                square_delta[i][j] = RHO * square_delta[i][j] + (1.0f - RHO) * delta[i][j] * delta[i][j];
+                square_delta[i][j] = RHO * square_delta[i][j] + (1.0f - RHO) * delta * delta;
 
                 // Applying update
-                genotype[i][j] = genotype[i][j] + delta[i][j];
-            } // End j Loop (over individuals)
+                genotype[i][jj] = genotype[i][jj] + delta;
+            } // End jj Loop (over active individuals)
 
 #ifdef PRINT_ALL_LS_AD
             if (i == 0) {
@@ -420,25 +465,23 @@ void ls_ad(
             }
             printf("%13u %15.6f %15.6f %15.6f %15.6f\n", i, square_gradient[i][0], delta[i][0], square_delta[i][0], genotype[i][0]);
 #endif
-		}
+		} // End Loop (over DockConst_num_of_genes)
 
 #ifdef PRINT_ALL_LS_AD
 	    printf("LS_ADADELTA: iteration_cnt: %u\n", iteration_cnt);
 #endif
 
-        // TODO: fix usage of j
-        for (uint j = 0; j < pop_size; j++) {
-
-            iteration_cnt = iteration_cnt + 1;
+        for (uint jj = 0; jj < active_pop_size; jj++) {
+            uint j = active_idx[jj];
 
             // Updating number of ADADELTA iterations (energy evaluations)
-            if (energy[j] < best_energy[j]) {
+            if (energy_lower[jj]) {
 
 #ifdef PRINT_ALL_LS_AD
                 //printf("\t Improved ind %i: energy: %.3f, best_energy: %.3f\n", j, energy[j], best_energy[j]);
                 printf("\t %-10s %i \t %-10s %15.3f \t %-10s %15.3f \t %-10s\n", "Ind ", j, "E: ", energy[j], "BE: ", best_energy[j], "(Improved!)");
 #endif
-                best_energy[j] = energy[j];
+                best_energy[j] = energy[jj];
 
 #ifdef ADADELTA_AUTOSTOP
                 cons_succ++;
@@ -461,12 +504,23 @@ void ls_ad(
                 cons_fail = 0;
             }
 #endif
-        } // End j Loop (over individuals)
+        } // End jj Loop (over active individuals)
+
+        num_active_ls = active_pop_size;
+        for (uint jj = 0; jj < active_pop_size; jj++) {
+            uint j = active_idx[jj];
+            if (iteration_compr[jj] > DockConst_max_num_of_iters) {
+                ls_is_active[j] = 0;
+                num_active_ls--;
+            }
+            iteration_cnt[j] = iteration_compr[jj];
+        } // End jj Loop (over active individuals)
 
 #ifdef ADADELTA_AUTOSTOP
 	} while ((iteration_cnt < DockConst_max_num_of_iters) && (rho > 0.01f));
 #else
-    } while (iteration_cnt < DockConst_max_num_of_iters);
+    //} while (iteration_cnt < DockConst_max_num_of_iters);
+    } while (num_active_ls > 0);
 #endif
 	// --------------------------------------------------------------------------
 
@@ -497,7 +551,7 @@ void ls_ad(
     } // End j Loop (over individuals)
 
 	// Updating evals
-	*out_eval = iteration_cnt;
+	*out_eval = LS_eval;
 
 #ifdef PRINT_ALL_LS_AD
 	printf("\n");
