@@ -428,12 +428,18 @@ void ls_ad(
             }
         } // End jj Loop (over active individuals)
 
-		for (uint i = 0; i < DockConst_num_of_genes; i++) {
+        for (uint i = 0; i < DockConst_num_of_genes; i++) {
             for (uint jj = 0; jj < active_pop_size; jj++) {
                 uint j = active_idx[jj];
                 if (energy_lower[jj]) {
                     best_genotype[i][j] = genotype[i][jj];
                 }
+            } // End jj Loop (over active individuals)
+        }
+
+        for (uint i = 0; i < DockConst_num_of_genes; i++) {
+            for (uint jj = 0; jj < active_pop_size; jj++) {
+                uint j = active_idx[jj];
 
                 // Accummulating gradient^2 (Eq.8 in paper)
                 // square_gradient corresponds to E[g^2]
