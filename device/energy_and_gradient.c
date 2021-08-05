@@ -155,9 +155,9 @@ void energy_and_gradient (
 				float x_low = floorf(x);
 				float y_low = floorf(y);
 				float z_low = floorf(z);
-				int ix = (int)x_low;
-				int iy = (int)y_low;
-				int iz = (int)z_low;
+				uint ix = (uint)x_low;
+				uint iy = (uint)y_low;
+				uint iz = (uint)z_low;
 
 				float dx = x - x_low;
 				float dy = y - y_low;
