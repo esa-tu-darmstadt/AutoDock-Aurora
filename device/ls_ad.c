@@ -440,7 +440,7 @@ void ls_ad(
 
                 // Accummulating gradient^2 (Eq.8 in paper)
                 // square_gradient corresponds to E[g^2]
-                square_gradient[i][j] = RHO * square_gradient[i][j] + (1.0f - RHO) * gradient[i][j] * gradient[i][j];
+                square_gradient[i][j] = RHO * square_gradient[i][j] + (1.0f - RHO) * gradient[i][jj] * gradient[i][jj];
 
                 // Computing update (Eq.9 in paper)
                 float tmp_div = (square_delta[i][j] + EPSILON) / (square_gradient[i][j] + EPSILON);
@@ -448,7 +448,7 @@ void ls_ad(
                 // Update or "delta"
                 // It is added to the genotype to create the next genotype.
                 // E.g., in steepest descent,: delta = -1.0 * stepsize * gradient
-                float delta = -1.0f * gradient[i][j] * /*esa_sqrt*/sqrtf(tmp_div);
+                float delta = -1.0f * gradient[i][jj] * /*esa_sqrt*/sqrtf(tmp_div);
 
                 // Accummulating update^2
                 // square_delta corresponds to E[dx^2]
