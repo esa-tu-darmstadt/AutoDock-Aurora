@@ -435,6 +435,10 @@ void ls_ad(
         }
 
         for (uint i = 0; i < DockConst_num_of_genes; i++) {
+#pragma _NEC ivdep
+#pragma _NEC vovertake
+#pragma _NEC advance_gather
+#pragma _NEC gather_reorder
             for (uint jj = 0; jj < active_pop_size; jj++) {
                 uint j = active_idx[jj];
 
