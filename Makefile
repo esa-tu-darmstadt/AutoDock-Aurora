@@ -161,8 +161,9 @@ inputs:
 	git submodule update --init --recursive
 	for dir in $(EVAL_INPUTS_DIR)/* ; do (cd $$dir && gunzip protein.*.map.gz); done
 
-# The miniset of 20 inputs is already extracted,
-# so no further processing is required.
+# The miniset of 20 inputs is already extracted.
+# However, when using it the first time, the submodule
+# has to be cloned beforehand (see above): "make inputs"
 EVAL_INPUTS_20_DIR=./ad-gpu_miniset_20/data
 
 # ------------------------------------------------------
