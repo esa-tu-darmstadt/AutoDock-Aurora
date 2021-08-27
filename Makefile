@@ -178,7 +178,7 @@ test: all
 	-nrun $(NRUN) \
 	-ngen $(NGEN) \
 	-psize $(POPSIZE) \
-	-resnam $(TESTNAME) \
+	-resnam $(TESTNAME)-$(PDB)-$(TESTLS) \
 	-gfpop $(GFPOP) \
 	-lsmet $(TESTLS)
 
@@ -190,7 +190,7 @@ eval: all
 	-lfile $(EVAL_INPUTS_DIR)/$(PDB)/rand-0.pdbqt \
 	-xraylfile $(EVAL_INPUTS_DIR)/$(PDB)/flex-xray.pdbqt \
 	-ffile $(EVAL_INPUTS_DIR)/$(PDB)/protein.maps.fld \
-	-resnam $(PDB)-"`date +"%Y-%m-%d-%H:%M"`"
+	-resnam $(PDB)-$(TESTLS)-"`date +"%Y-%m-%d-%H:%M"`"
 	$(POSTRUN)
 
 clean:
