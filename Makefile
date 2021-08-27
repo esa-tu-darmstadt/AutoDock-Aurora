@@ -179,8 +179,8 @@ TESTLS   := sw
 
 test: all
 	$(BIN_DIR)/$(TARGET) \
-	-ffile ./input/$(PDB)/derived/$(PDB)_protein.maps.fld \
-	-lfile ./input/$(PDB)/derived/$(PDB)_ligand.pdbqt \
+	-lfile $(EVAL_INPUTS_20_DIR)/$(PDB)/rand-0.pdbqt \
+	-ffile $(EVAL_INPUTS_20_DIR)/$(PDB)/protein.maps.fld \
 	-nev ${NEV} \
 	-nrun $(NRUN) \
 	-ngen $(NGEN) \
