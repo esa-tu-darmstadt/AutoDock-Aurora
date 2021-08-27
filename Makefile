@@ -161,6 +161,12 @@ inputs:
 	git submodule update --init --recursive
 	for dir in $(EVAL_INPUTS_DIR)/* ; do (cd $$dir && gunzip protein.*.map.gz); done
 
+# The miniset of 20 inputs is already extracted,
+# so no further processing is required.
+EVAL_INPUTS_20_DIR=./ad-gpu_miniset_20/data
+
+# ------------------------------------------------------
+
 PDB      := 3ce3
 NEV      := 2048000
 NRUN     := 100
@@ -190,6 +196,17 @@ eval: all
 	-lfile $(EVAL_INPUTS_DIR)/$(PDB)/rand-0.pdbqt \
 	-xraylfile $(EVAL_INPUTS_DIR)/$(PDB)/flex-xray.pdbqt \
 	-ffile $(EVAL_INPUTS_DIR)/$(PDB)/protein.maps.fld \
+	-resnam $(PDB)-$(TESTLS)-"`date +"%Y-%m-%d-%H:%M"`"
+	$(POSTRUN)
+
+eval20: all
+	$(ENVSET) $(BIN_DIR)/$(TARGET) \
+	-lsmet ${TESTLS} \
+	-lsit 300 -lsrat 100.000000 -smooth 0.500 \
+	-nev ${NEV} -ngen $(NGEN) -nrun $(NRUN) -psize $(POPSIZE) \
+	-lfile $(EVAL_INPUTS_20_DIR)/$(PDB)/rand-0.pdbqt \
+	-xraylfile $(EVAL_INPUTS_20_DIR)/$(PDB)/flex-xray.pdbqt \
+	-ffile $(EVAL_INPUTS_20_DIR)/$(PDB)/protein.maps.fld \
 	-resnam $(PDB)-$(TESTLS)-"`date +"%Y-%m-%d-%H:%M"`"
 	$(POSTRUN)
 
