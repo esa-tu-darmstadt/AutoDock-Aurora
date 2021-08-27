@@ -125,7 +125,6 @@ void energy_and_gradient (
 		int atom_typeid = IA_IE_atom_types[atom_id];
 		float q = IA_IE_atom_charges[atom_id];
 
-		// TODO: fix usage of j
 		for (uint j = 0; j < DockConst_pop_size; j++) {
 			float x = local_coords_x[atom_id][j];
 			float y = local_coords_y[atom_id][j];
@@ -458,7 +457,6 @@ void energy_and_gradient (
 
 		// TODO: add support for flexible rings
 
-		// TODO: fix usage of j
 		for (uint j = 0; j < DockConst_pop_size; j++) {
 			float subx = local_coords_x[atom1_id][j] - local_coords_x[atom2_id][j];
 			float suby = local_coords_y[atom1_id][j] - local_coords_y[atom2_id][j];
@@ -836,7 +834,7 @@ void energy_and_gradient (
 
 		// target_oclacube = quaternion_to_oclacube(target_q, theta_gt_pi)
 		// In our terms it means: quaternion_to_oclacube(target_q{w|x|y|z}, theta_gt_pi)
-		ang = acosf(target_q_w);	// TODO: make sure single precision function works!
+		ang = acosf(target_q_w);
 		target_rotangle = 2.0f * ang;
 
 		float inv_sin_ang = 1.0f / (sinf(ang));
@@ -844,12 +842,12 @@ void energy_and_gradient (
 		rotaxis_y = target_q_y * inv_sin_ang;
 		rotaxis_z = target_q_z * inv_sin_ang;
 
-		target_theta = acosf(rotaxis_z); // TODO: make sure single precision function works!
+		target_theta = acosf(rotaxis_z);
 
 		if (is_theta_gt_pi == 0) { // false
 			target_phi = fmodf((atan2f(rotaxis_y, rotaxis_x) + PI_TIMES_2), PI_TIMES_2); // TODO: check if fmod is supported, https://sleef.org/purec.xhtml
 		} else {
-			target_phi = fmodf((atan2f(-rotaxis_y, -rotaxis_x) + PI_TIMES_2), PI_TIMES_2); // TODO: check if fmod is supported, https://sleef.org/purec.xhtml
+			target_phi = fmodf((atan2f(-rotaxis_y, -rotaxis_x) + PI_TIMES_2), PI_TIMES_2);
 			target_theta = PI_TIMES_2 - target_theta;
 		}
 

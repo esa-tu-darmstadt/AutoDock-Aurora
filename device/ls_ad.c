@@ -325,7 +325,7 @@ void ls_ad(
 			DockConst_num_of_genes,
 			Host_RunId,
 			active_pop_size,
-			genotype /*entity_possible_new_genotype*/,   // TODO: FIXME
+			genotype,
 			local_coords_x,
 			local_coords_y,
 			local_coords_z
