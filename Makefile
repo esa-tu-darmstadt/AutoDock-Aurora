@@ -208,7 +208,7 @@ eval20: all
 	-lfile $(EVAL_INPUTS_20_DIR)/$(PDB)/rand-0.pdbqt \
 	-xraylfile $(EVAL_INPUTS_20_DIR)/$(PDB)/flex-xray.pdbqt \
 	-ffile $(EVAL_INPUTS_20_DIR)/$(PDB)/protein.maps.fld \
-	-resnam $(PDB)-$(TESTLS)-"`date +"%Y-%m-%d-%H:%M"`"
+	-resnam $(PDB)-$(TESTLS)-$(NRUN)-$(POPSIZE)-"`date +"%Y-%m-%d-%H:%M"`"
 	$(POSTRUN)
 
 clean:
