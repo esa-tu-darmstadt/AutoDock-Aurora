@@ -26,6 +26,7 @@ typedef struct
 	float lsearch_rate;
 	float smooth;
 	unsigned long num_of_ls;
+	char ls_method[128];
 	float tournament_rate;
 	float rho_lower_bound;
 	float base_dmov_mul_sqrt3;
@@ -52,19 +53,22 @@ typedef struct
 	float rmsd_tolerance;
 } Dockpars;
 
-int get_filenames_and_ADcoeffs(const int*,
-			           char**,
-				Dockpars*);
+int get_filenames_and_ADcoeffs(
+	const int*,
+	char**,
+	Dockpars*);
 
-void get_commandpars(const int*,
-		         char**,
-			double*,
-		      Dockpars*);
+void get_commandpars(
+	const int*,
+	char**,
+	double*,
+	Dockpars*);
 
-void gen_initpop_and_reflig(Dockpars*       mypars,
-			    float*          init_populations,
-			    float*          ref_ori_angles,
-			    Liganddata*     myligand,
-			    const Gridinfo* mygrid);
+void gen_initpop_and_reflig(
+	Dockpars* mypars,
+	float* init_populations,
+	float* ref_ori_angles,
+	Liganddata* myligand,
+	const Gridinfo* mygrid);
 
 #endif /* GETPARAMETERS_H_ */

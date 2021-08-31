@@ -1,6 +1,7 @@
 #include "performdocking.h"
 #include "device_args.h"
 #include "packbuff.hpp"
+#include "correct_grad_axisangle.h"
 #include <stddef.h>
 #include <sys/time.h>
 #include <algorithm>
@@ -105,7 +106,7 @@ filled with clock() */
 		veo_thread_context[i] = wrapper_veo_context_open(ve_process[i]);
 	}
 
-	// maximum number of runs per VE proc
+	// Maximum number of runs per VE proc
 	int ve_num_of_runs = (mypars->num_of_runs + ve_num_procs - 1) / ve_num_procs;
 
 	// End of Host Setup
@@ -161,13 +162,14 @@ filled with clock() */
 
 	// Generating seeds (for each thread during GA)
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
-#ifdef REPRO
-		// each VE process gets the same seeds in reproducibility mode
-		// this only makes sense for testing and debugging!
-		genseed(1234567u);
-#endif
 		for (int i = 0; i < mypars->pop_size; i++) {
+#ifdef REPRO
+			// Each VE process gets the same seeds in reproducibility mode
+			// this only makes sense for testing and debugging!
+			cpu_prng_seeds[ve_id * mypars->pop_size + i] = 1u;
+#else
 			cpu_prng_seeds[ve_id * mypars->pop_size + i] = genseed(0u);
+#endif
 		}
 	}
 
@@ -184,8 +186,9 @@ filled with clock() */
 	// Preparing the constant data fields for the accelerator (calcenergy.cpp)
 	// -------------------------------------------------------------------------
 
-	kernelconstant_static  KerConstStatic;
-	if (prepare_conststatic_fields_for_aurora(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic) == 1)
+	kernelconstant_static KerConstStatic;
+	kernelconstant_grads KerConstGrads;
+	if (prepare_conststatic_fields_for_aurora(&myligand_reference, mypars, cpu_ref_ori_angles.data(), &KerConstStatic, &KerConstGrads) == 1)
 		return 1;
 
 	// Preparing parameter struct
@@ -231,6 +234,14 @@ filled with clock() */
 	// better calculate them here and then pass them to Krnl_InterE and Krnl_InterE2
 	const unsigned int mul_tmp2 = dockpars.num_of_atypes * dockpars.g3;
 	const unsigned int mul_tmp3 = (dockpars.num_of_atypes + 1) * dockpars.g3;
+
+	// -------------------------------------------------------------------------
+	std::cout << "Local-search chosen method is: " << (
+		(strcmp(mypars->ls_method, "sw") == 0) ? "Solis-Wets (sw)" :
+		(strcmp(mypars->ls_method, "sd") == 0) ? "Steepest-Descent (sd)" :
+		(strcmp(mypars->ls_method, "fire") == 0) ? "FIRE (fire)" :
+		(strcmp(mypars->ls_method, "ad") == 0) ? "ADADELTA (ad)" : "Unknown"
+		) << std::endl;
 
 	// -------------------------------------------------------------------------
 	// Defining kernel buffers
@@ -289,12 +300,25 @@ filled with clock() */
 	size_t size_dspars_V_nelems = MAX_NUM_OF_ATYPES;
 	size_t size_dspars_V_nbytes = size_dspars_V_nelems * sizeof(float);
 
+	// Gradient buffers
+	size_t size_grad_rotbonds_nelems = 2 * MAX_NUM_OF_ROTBONDS;
+	size_t size_grad_rotbonds_nbytes = size_grad_rotbonds_nelems * sizeof(int);
+
+	size_t size_grad_rotbonds_atoms_nelems = MAX_NUM_OF_ATOMS * MAX_NUM_OF_ROTBONDS;
+	size_t size_grad_rotbonds_atoms_nbytes = size_grad_rotbonds_atoms_nelems * sizeof(int);
+
+	size_t size_grad_num_rotating_atoms_per_rotbond_nelems = MAX_NUM_OF_ROTBONDS;
+	size_t size_grad_num_rotating_atoms_per_rotbond_nbytes = size_grad_num_rotating_atoms_per_rotbond_nelems * sizeof(int);
+
+	size_t size_grad_dependence_nelems = 1000; // host/inc/correct_grad_axisangle.h
+	size_t size_grad_dependence_nbytes = size_grad_dependence_nelems * sizeof(float);
+
 	// -------------------------------------------------------------------------
 	// Printing sizes
 	// -------------------------------------------------------------------------
 
-	// LGA
 #ifdef DOCK_DEBUG
+	// LGA
 	std::cout << "\n---------------------------------------------------------------------------------\n";
 	std::cout << std::left << std::setw(SPACE_L) << "Memory sizes" << std::right << std::setw(SPACE_M) << "Bytes" << std::right << std::setw(SPACE_S) << "KB" << std::endl;
 	std::cout << "---------------------------------------------------------------------------------\n";
@@ -346,8 +370,20 @@ filled with clock() */
 
 	size_t size_ie = size_floatgrids_nbytes;
 
+	// Gradients
+	size_t size_grad = 0;
+
+	if ((strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "sd") == 0) || (strcmp(mypars->ls_method, "ad") == 0)) {
+		std::cout << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_rotbonds_nbytes" << std::right << std::setw(SPACE_M) << size_grad_rotbonds_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_rotbonds_nbytes) << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_rotbonds_atoms_nbytes" << std::right << std::setw(SPACE_M) << size_grad_rotbonds_atoms_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_rotbonds_atoms_nbytes) << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_num_rotating_atoms_per_rotbond_nbytes" << std::right << std::setw(SPACE_M) << size_grad_num_rotating_atoms_per_rotbond_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_num_rotating_atoms_per_rotbond_nbytes) << std::endl;
+		std::cout << std::left << std::setw(SPACE_L) << "size_grad_dependence_nbytes" << std::right << std::setw(SPACE_M) << size_grad_dependence_nbytes << std::right << std::setw(SPACE_S) << sizeKB(size_grad_dependence_nbytes) << std::endl;
+		size_grad += size_grad_rotbonds_nbytes + size_grad_rotbonds_atoms_nbytes + size_grad_num_rotating_atoms_per_rotbond_nbytes + (3 * size_grad_dependence_nbytes);
+	}
+
 	// Total amount memory
-	size_t size_total_mem = size_ga + size_pc + size_ia + size_ie;
+	size_t size_total_mem = size_ga + size_pc + size_ia + size_ie + size_grad;
 
 	std::cout << std::endl;
 	std::cout << std::left << std::setw(SPACE_L) << "Total memory" << std::right << std::setw(SPACE_M) << size_total_mem << std::right << std::setw(SPACE_S) << sizeKB(size_total_mem) << std::endl;
@@ -372,7 +408,7 @@ filled with clock() */
 	unsigned short Host_max_num_of_iters = (unsigned short)dockpars.max_num_of_iters;
 	unsigned char  Host_cons_limit       = (unsigned char) dockpars.cons_limit;
 
-	// the device_args structure contains the arguments for the kernel function
+	// The device_args structure contains the arguments for the kernel function
 	device_args da;
 	// VE virtual address of da structure, passed to kernel
 	uint64_t da_VEMVA;
@@ -380,7 +416,8 @@ filled with clock() */
 	// VE proc ID, is changed for each new proc in multi-proc runs
 	da.ve_proc_id = 0;
 	da.ve_num_procs = ve_num_procs;
-	// fill scalar values into device_args structure
+
+	// Filling scalar values into device_args structure
 	// GA
 	da.DockConst_pop_size            = dockpars.pop_size;
 	da.DockConst_num_of_energy_evals = dockpars.num_of_energy_evals;
@@ -414,7 +451,14 @@ filled with clock() */
 	da.DockConst_gridsize_z_minus1 = fgridsizez_minus1;
 	da.Host_mul_tmp2               = mul_tmp2;
 	da.Host_mul_tmp3               = mul_tmp3;
-	// LS
+	// LS method
+	// See host/inc/device_args.h
+	// 0: sw, 1: sd, 2: fire, 3: ad
+	da.lsmet					   = (strcmp(mypars->ls_method, "sw") == 0) ? 0 :
+									 (strcmp(mypars->ls_method, "sd") == 0) ? 1 :
+									 (strcmp(mypars->ls_method, "fire") == 0) ? 2 :
+									 (strcmp(mypars->ls_method, "ad") == 0) ? 3 : 0;
+	// LS-SW
 	da.DockConst_max_num_of_iters    = Host_max_num_of_iters;
 	da.DockConst_rho_lower_bound     = dockpars.rho_lower_bound; 
 	da.DockConst_base_dmov_mul_sqrt3 = dockpars.base_dmov_mul_sqrt3;
@@ -423,11 +467,11 @@ filled with clock() */
 	// Values changing every LGA run
 	da.Host_num_of_runs = mypars->num_of_runs;
 	
-	// packed buffer with all arguments to be passed, alloc chunksize = 32MB
+	// Packed buffer with all arguments to be passed, alloc chunksize = 32MB
 	auto pb = PackBuff(32*1024*1024);
 	
-	// pack the device_args struct as first element into the packed buffer
-	// this way we know how to find it easily
+	// Pack the device_args struct as first element into the packed buffer.
+	// This way we know how to find it easily
 	pb.pack((void *)&da, sizeof(da), (uint64_t)&da_VEMVA);
 
 #define DA_IN_PB_PTR(ELEMENT) ((uint64_t)pb.data() + offsetof(device_args, ELEMENT))
@@ -465,7 +509,15 @@ filled with clock() */
 	// IE
 	pb.pack(cpu_floatgrids, size_floatgrids_nbytes, DA_IN_PB_PTR(Fgrids));
 
-	// we keep a copy of each proc's device_args structure
+	// Gradients
+	pb.pack(&KerConstGrads.rotbonds[0], size_grad_rotbonds_nbytes, DA_IN_PB_PTR(GRAD_rotbonds));
+	pb.pack(&KerConstGrads.rotbonds_atoms[0], size_grad_rotbonds_atoms_nbytes, DA_IN_PB_PTR(GRAD_rotbonds_atoms));
+	pb.pack(&KerConstGrads.num_rotating_atoms_per_rotbond[0], size_grad_num_rotating_atoms_per_rotbond_nbytes, DA_IN_PB_PTR(GRAD_num_rotating_atoms_per_rotbond));
+	pb.pack(&angle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_angle));
+	pb.pack(&dependence_on_theta[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_theta));
+	pb.pack(&dependence_on_rotangle[0], size_grad_dependence_nbytes, DA_IN_PB_PTR(GRAD_dependence_on_rotangle));
+
+	// We keep a copy of each proc's device_args structure
 	device_args *da_copy[ve_num_procs];
 	
 	uint64_t kernel_ga_id[ve_num_procs];
@@ -475,28 +527,28 @@ filled with clock() */
 #define PADDING 0
 #endif
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
-		// allocate memory for entire packed buffer on VE
+		// Allocating memory for entire packed buffer on VE
 		uint64_t mem_kernel_args_packbuff;
 		wrapper_veo_alloc_mem(ve_process[ve_id], &mem_kernel_args_packbuff, pb.size() + 128 * ve_num_procs);
 
 		//// save data buffer
 		//pb.save("packbuff_save.dat");
 
-		// set VE proc ID in packbuff
+		// Setting VE proc ID in packbuff
 		device_args *pb_da = (device_args *)pb.data();
 		pb_da->ve_proc_id = ve_id;
 
-		// padding
+		// Padding
 		padding[ve_id] = PADDING * ve_id;
 		
-		// fix "relocation" addresses to point to VE virtual addresses
+		// Fixing "relocation" addresses to point to VE virtual addresses
 		pb.fixup(mem_kernel_args_packbuff + padding[ve_id]);
 
-		// update local device_args structure (copy) such that we can free the packbuff later
+		// Updating local device_args structure (copy) such that we can free the packbuff later
 		da_copy[ve_id] = new device_args;
 		memcpy(da_copy[ve_id], pb.data(), sizeof(da));
 
-		// transfer packbuff to device
+		// Transferring packbuff to device
 		wrapper_veo_write_mem(ve_process[ve_id], mem_kernel_args_packbuff + padding[ve_id], pb.data(), pb.size());
 
 		// TODO: this is a memory leak because there is no free
@@ -560,6 +612,9 @@ filled with clock() */
 			std::cout << std::endl;
 
 			// LS
+			std::cout << std::left << std::setw(SPACE_L) << "lsmet" << std::right << std::setw(SPACE_M) << int { da.lsmet } << "\n";
+
+			// LS-SW
 			std::cout << std::left << std::setw(SPACE_L) << "Host_max_num_of_iters" << std::right << std::setw(SPACE_M) << Host_max_num_of_iters << "\n";
 			std::cout << std::left << std::setw(SPACE_L) << "dockpars.rho_lower_bound" << std::right << std::setw(SPACE_M) << dockpars.rho_lower_bound << "\n";
 			std::cout << std::left << std::setw(SPACE_L) << "dockpars.base_dmov_mul_sqrt3" << std::right << std::setw(SPACE_M) << dockpars.base_dmov_mul_sqrt3 << "\n";
@@ -636,8 +691,8 @@ filled with clock() */
 				      (uint64_t)da_copy[ve_id]->Gens_performed + size_evals_of_runs_offs, size_evals_of_runs_nbytes);
 	}
 
+	// Destroying the VEO process early in order to get a more accurate PROGINF
 	for (int ve_id = 0; ve_id < ve_num_procs; ve_id++) {
-		/* destroy the VEO process early in order to get a more accurate PROGINF */
 		veo_proc_destroy(ve_process[ve_id]);
 	}
 

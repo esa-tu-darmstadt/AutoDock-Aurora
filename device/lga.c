@@ -3,6 +3,8 @@
 #include "energy_ie.h"
 #include "calc_pc.h"
 #include "perform_ls.h"
+#include "ls_ad.h"
+//#include "dummy_ada.h"
 
 /*
 IC:  initial calculation of energy of populations
@@ -15,22 +17,22 @@ LS:  local search
 // --------------------------------------------------------------------------
 void lga (
 	const 	float*		PopulationCurrentInitial,
-		float*  	PopulationCurrentFinal,
-		float*  	EnergyCurrent,
-		uint*		Evals_performed,
-		uint*		Gens_performed,
-		uint		DockConst_pop_size,
-		uint            DockConst_num_of_energy_evals,
-		uint            DockConst_num_of_generations,
-		float           DockConst_tournament_rate,
-		float           DockConst_mutation_rate,
-		float           DockConst_abs_max_dmov,
-		float           DockConst_abs_max_dang,
-		float           Host_two_absmaxdmov,
-		float           Host_two_absmaxdang,
-		float           DockConst_crossover_rate,
-		uchar           DockConst_num_of_genes,
-	// pc
+			float*  	PopulationCurrentFinal,
+			float*  	EnergyCurrent,
+			uint*		Evals_performed,
+			uint*		Gens_performed,
+			uint		DockConst_pop_size,
+			uint		DockConst_num_of_energy_evals,
+			uint		DockConst_num_of_generations,
+			float		DockConst_tournament_rate,
+			float		DockConst_mutation_rate,
+			float		DockConst_abs_max_dmov,
+			float		DockConst_abs_max_dang,
+			float		Host_two_absmaxdmov,
+			float		Host_two_absmaxdang,
+			float		DockConst_crossover_rate,
+			uchar		DockConst_num_of_genes,
+	// PC
 	const	int* 		PC_rotlist,
 	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
 	const	float*		PC_ref_coords_y,
@@ -39,7 +41,7 @@ void lga (
 	const	float*		PC_rotbonds_unit_vectors,
 	const	float*		PC_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
-	// ia
+	// IA
 	const 	float*		IA_IE_atom_charges,
 	const	int*		IA_IE_atom_types,
 	const	int*		IA_intraE_contributors,
@@ -58,8 +60,8 @@ void lga (
 			float		DockConst_coeff_elec,
 			float		DockConst_qasp,
 			float		DockConst_coeff_desolv,
-	// ie
-	const	float*			Fgrids,
+	// IE
+	const	float*		Fgrids,
 			uchar		DockConst_xsz,
 			uint		DockConst_ysz,
 			uint		DockConst_zsz,
@@ -69,12 +71,21 @@ void lga (
 			float		DockConst_gridsize_z_minus1,
 			uint		Host_mul_tmp2,
 			uint		Host_mul_tmp3,
-	// ls
+	// LS
+			uchar 		lsmet,
+	// LS-SW
 			ushort		DockConst_max_num_of_iters,
 			float		DockConst_rho_lower_bound,
 			float		DockConst_base_dmov_mul_sqrt3,
 			float		DockConst_base_dang_mul_sqrt3,
 			uchar		DockConst_cons_limit,
+	// LS-AD
+	const 	int*		GRAD_rotbonds,
+	const 	int*		GRAD_rotbonds_atoms,
+	const 	int*		GRAD_num_rotating_atoms_per_rotbond,
+	const 	float*		GRAD_angle,
+	const 	float*		GRAD_dependence_on_theta,
+	const 	float*		GRAD_dependence_on_rotangle,
 	// Values changing every LGA run
 			uint		Host_RunId,
 			uint		Host_Offset_Pop,
@@ -128,16 +139,16 @@ void lga (
 #endif
 
 	// --------------------------------------------------------------------------
-	// ga
+	// GA
 	float* GlobPopCurrFinal   = PopulationCurrentFinal;
 	float* GlobEneCurr        = EnergyCurrent;
 	uint* GlobEvals_performed = Evals_performed;
 	uint* GlobGens_performed  = Gens_performed;
-	// pc
+	// PC
 
-	// ia
+	// IA
 
-	// ie
+	// IE
 	const	float*	IE_Fgrids = Fgrids;
 
 	// --------------------------------------------------------------------------
@@ -581,61 +592,132 @@ void lga (
 		//printf("Individual <before ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);
 #endif
 
-		perform_ls(
-			DockConst_max_num_of_iters,
-			DockConst_rho_lower_bound,
-			DockConst_base_dmov_mul_sqrt3,
-			DockConst_num_of_genes,
-			DockConst_base_dang_mul_sqrt3,
-			DockConst_cons_limit,
-			DockConst_pop_size,
-			LocalPopNext,
-			LocalEneNext,
-			&ls_eval_cnt,
+		if (lsmet == 0) { // Solis-Wets
+			perform_ls(
+				DockConst_max_num_of_iters,
+				DockConst_rho_lower_bound,
+				DockConst_base_dmov_mul_sqrt3,
+				DockConst_num_of_genes,
+				DockConst_base_dang_mul_sqrt3,
+				DockConst_cons_limit,
+				DockConst_pop_size,
+				LocalPopNext,
+				LocalEneNext,
+				&ls_eval_cnt,
+				// PC
+				PC_rotlist,
+				PC_ref_coords_x,
+				PC_ref_coords_y,
+				PC_ref_coords_z,
+				PC_rotbonds_moving_vectors,
+				PC_rotbonds_unit_vectors,
+				PC_ref_orientation_quats,
+				DockConst_rotbondlist_length,
+				Host_RunId,
+				// IA
+				IA_IE_atom_charges,
+				IA_IE_atom_types,
+				IA_intraE_contributors,
+				IA_reqm,
+				IA_reqm_hbond,
+				IA_atom1_types_reqm,
+				IA_atom2_types_reqm,
+				IA_VWpars_AC,
+				IA_VWpars_BD,
+				IA_dspars_S,
+				IA_dspars_V,
+				DockConst_smooth,
+				DockConst_num_of_intraE_contributors,
+				DockConst_grid_spacing,
+				DockConst_num_of_atypes,
+				DockConst_coeff_elec,
+				DockConst_qasp,
+				DockConst_coeff_desolv,
+				// IE
+				IE_Fgrids,
+				DockConst_xsz,
+				DockConst_ysz,
+				DockConst_zsz,
+				DockConst_num_of_atoms,
+				DockConst_gridsize_x_minus1,
+				DockConst_gridsize_y_minus1,
+				DockConst_gridsize_z_minus1,
+				Host_mul_tmp2,
+				Host_mul_tmp3
+			);
+		} else if (lsmet == 1) { // Steepest-Descent
+			// TODO
+		} else if (lsmet == 2) { // FIRE
+			// TODO
+		} else if (lsmet == 3) { // ADADELTA
 
-			PC_rotlist,
-			PC_ref_coords_x,
-			PC_ref_coords_y,
-			PC_ref_coords_z,
-			PC_rotbonds_moving_vectors,
-			PC_rotbonds_unit_vectors,
-			PC_ref_orientation_quats,
-			DockConst_rotbondlist_length,
-			Host_RunId,
+			ls_ad(
+				DockConst_max_num_of_iters,
+				DockConst_num_of_genes,
+				DockConst_pop_size,
+				LocalPopNext,
+				LocalEneNext,
+				&ls_eval_cnt,
+				// PC
+				PC_rotlist,
+				PC_ref_coords_x,
+				PC_ref_coords_y,
+				PC_ref_coords_z,
+				PC_rotbonds_moving_vectors,
+				PC_rotbonds_unit_vectors,
+				PC_ref_orientation_quats,
+				DockConst_rotbondlist_length,
+				Host_RunId,
+				// IA
+				IA_IE_atom_charges,
+				IA_IE_atom_types,
+				IA_intraE_contributors,
+				IA_reqm,
+				IA_reqm_hbond,
+				IA_atom1_types_reqm,
+				IA_atom2_types_reqm,
+				IA_VWpars_AC,
+				IA_VWpars_BD,
+				IA_dspars_S,
+				IA_dspars_V,
+				DockConst_smooth,
+				DockConst_num_of_intraE_contributors,
+				DockConst_grid_spacing,
+				DockConst_num_of_atypes,
+				DockConst_coeff_elec,
+				DockConst_qasp,
+				DockConst_coeff_desolv,
+				// IE
+				IE_Fgrids,
+				DockConst_xsz,
+				DockConst_ysz,
+				DockConst_zsz,
+				DockConst_num_of_atoms,
+				DockConst_gridsize_x_minus1,
+				DockConst_gridsize_y_minus1,
+				DockConst_gridsize_z_minus1,
+				Host_mul_tmp2,
+				Host_mul_tmp3,
+				// Gradients
+				GRAD_rotbonds,
+				GRAD_rotbonds_atoms,
+				GRAD_num_rotating_atoms_per_rotbond,
+				GRAD_angle,
+				GRAD_dependence_on_theta,
+				GRAD_dependence_on_rotangle
+			);
 
-			IA_IE_atom_charges,
-			IA_IE_atom_types,
-			IA_intraE_contributors,
-			IA_reqm,
-			IA_reqm_hbond,
-			IA_atom1_types_reqm,
-			IA_atom2_types_reqm,
-			IA_VWpars_AC,
-			IA_VWpars_BD,
-			IA_dspars_S,
-			IA_dspars_V,
-			DockConst_smooth,
-			DockConst_num_of_intraE_contributors,
-			DockConst_grid_spacing,
-			DockConst_num_of_atypes,
-			DockConst_coeff_elec,
-			DockConst_qasp,
-			DockConst_coeff_desolv,
+/*
+			dummy_ada(
+				DockConst_max_num_of_iters,
+				DockConst_rho_lower_bound,
+				DockConst_num_of_genes,
+				DockConst_gridsize_x_minus1,
+				DockConst_pop_size
+			);
+*/
 
-			IE_Fgrids,
-			DockConst_xsz,
-			DockConst_ysz,
-			DockConst_zsz,
-			DockConst_num_of_atoms,
-			DockConst_gridsize_x_minus1,
-			DockConst_gridsize_y_minus1,
-			DockConst_gridsize_z_minus1,
-			Host_mul_tmp2,
-			Host_mul_tmp3
-		);
-
-		// Accumulating number of evals
-		//ls_eval_cnt += ls_eval_cnt_per_iter; // done inside perform_ls
+		}
 
 #if defined (PRINT_ALL_KRNL)
 		//printf("Individual < after ls>: %3u, %20.6f\n", entity_ls, LocalEneNext[entity_ls]);

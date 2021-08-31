@@ -10,12 +10,11 @@ void perform_ls(
 			uchar				DockConst_num_of_genes,
 			float				DockConst_base_dang_mul_sqrt3,
 			uchar				DockConst_cons_limit,
-
-                        uint			pop_size,
-			float			in_out_genotype[][MAX_POPSIZE],
+			uint				pop_size,
+			float				in_out_genotype[][MAX_POPSIZE],
 			float*	restrict	in_out_energy,
 			uint*	restrict	out_eval,
-	// pc
+	// PC
 	const	int*	restrict	PC_rotlist,
 	const	float*	restrict	PC_ref_coords_x,
 	const	float*	restrict	PC_ref_coords_y,
@@ -25,7 +24,7 @@ void perform_ls(
 	const	float*	restrict	PC_ref_orientation_quats,
 			uint				DockConst_rotbondlist_length,
 			uint				Host_RunId,
-	// ia
+	// IA
 	const	float*	restrict	IA_IE_atom_charges,
 	const	int*	restrict	IA_IE_atom_types,
 	const	int*	restrict	IA_intraE_contributors,
@@ -44,7 +43,7 @@ void perform_ls(
 			float				DockConst_coeff_elec,
 			float				DockConst_qasp,
 			float				DockConst_coeff_desolv,
-	// ie
+	// IE
 	const	float*	restrict	IE_Fgrids,
 			uchar				DockConst_xsz,
 			uchar				DockConst_ysz,

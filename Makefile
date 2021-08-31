@@ -161,6 +161,13 @@ inputs:
 	git submodule update --init --recursive
 	for dir in $(EVAL_INPUTS_DIR)/* ; do (cd $$dir && gunzip protein.*.map.gz); done
 
+# The miniset of 20 inputs is already extracted.
+# However, when using it the first time, the submodule
+# has to be cloned beforehand (see above): "make inputs"
+EVAL_INPUTS_20_DIR=./ad-gpu_miniset_20/data
+
+# ------------------------------------------------------
+
 PDB      := 3ce3
 NEV      := 2048000
 NRUN     := 100
@@ -172,25 +179,36 @@ TESTLS   := sw
 
 test: all
 	$(BIN_DIR)/$(TARGET) \
-	-ffile ./input/$(PDB)/derived/$(PDB)_protein.maps.fld \
-	-lfile ./input/$(PDB)/derived/$(PDB)_ligand.pdbqt \
+	-lfile $(EVAL_INPUTS_20_DIR)/$(PDB)/rand-0.pdbqt \
+	-ffile $(EVAL_INPUTS_20_DIR)/$(PDB)/protein.maps.fld \
 	-nev ${NEV} \
 	-nrun $(NRUN) \
 	-ngen $(NGEN) \
 	-psize $(POPSIZE) \
-	-resnam $(TESTNAME) \
+	-resnam $(TESTNAME)-$(PDB)-$(TESTLS) \
 	-gfpop $(GFPOP) \
 	-lsmet $(TESTLS)
 
 eval: all
 	$(ENVSET) $(BIN_DIR)/$(TARGET) \
-	-lsmet sw \
+	-lsmet ${TESTLS} \
 	-lsit 300 -lsrat 100.000000 -smooth 0.500 \
 	-nev ${NEV} -ngen $(NGEN) -nrun $(NRUN) -psize $(POPSIZE) \
-	-lfile $(EVAL_INPUTS_DIR)/$(PDB)/rand-2.pdbqt \
+	-lfile $(EVAL_INPUTS_DIR)/$(PDB)/rand-0.pdbqt \
 	-xraylfile $(EVAL_INPUTS_DIR)/$(PDB)/flex-xray.pdbqt \
 	-ffile $(EVAL_INPUTS_DIR)/$(PDB)/protein.maps.fld \
-	-resnam $(PDB)-"`date +"%Y-%m-%d-%H:%M"`"
+	-resnam $(PDB)-$(TESTLS)-"`date +"%Y-%m-%d-%H:%M"`"
+	$(POSTRUN)
+
+eval20: all
+	$(ENVSET) $(BIN_DIR)/$(TARGET) \
+	-lsmet ${TESTLS} \
+	-lsit 300 -lsrat 100.000000 -smooth 0.500 \
+	-nev ${NEV} -ngen $(NGEN) -nrun $(NRUN) -psize $(POPSIZE) \
+	-lfile $(EVAL_INPUTS_20_DIR)/$(PDB)/rand-0.pdbqt \
+	-xraylfile $(EVAL_INPUTS_20_DIR)/$(PDB)/flex-xray.pdbqt \
+	-ffile $(EVAL_INPUTS_20_DIR)/$(PDB)/protein.maps.fld \
+	-resnam $(PDB)-$(TESTLS)-$(NRUN)-$(POPSIZE)-"`date +"%Y-%m-%d-%H:%M"`"
 	$(POSTRUN)
 
 clean:

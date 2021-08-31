@@ -1,42 +1,36 @@
 #ifndef _INCLUDE_LGA_H_
 #define _INCLUDE_LGA_H_
 
-/*
-IC:  initial calculation of energy of populations
-GG:  genetic generation
-LS:  local search
-*/
-
 // --------------------------------------------------------------------------
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
 // --------------------------------------------------------------------------
 void lga (
 	const 	float*		PopulationCurrentInitial,
-		float*		PopulationCurrentFinal,
-		float*		EnergyCurrent,
-		uint*		Evals_performed,
-		uint*		Gens_performed,
-		uint		DockConst_pop_size,
-		uint        DockConst_num_of_energy_evals,
-		uint        DockConst_num_of_generations,
-		float       DockConst_tournament_rate,
-		float       DockConst_mutation_rate,
-		float       DockConst_abs_max_dmov,
-		float       DockConst_abs_max_dang,
-		float       Host_two_absmaxdmov,
-		float       Host_two_absmaxdang,
-		float       DockConst_crossover_rate,
-		uchar       DockConst_num_of_genes,
-	// pc
+			float*		PopulationCurrentFinal,
+			float*		EnergyCurrent,
+			uint*		Evals_performed,
+			uint*		Gens_performed,
+			uint		DockConst_pop_size,
+			uint		DockConst_num_of_energy_evals,
+			uint		DockConst_num_of_generations,
+			float		DockConst_tournament_rate,
+			float		DockConst_mutation_rate,
+			float		DockConst_abs_max_dmov,
+			float		DockConst_abs_max_dang,
+			float		Host_two_absmaxdmov,
+			float		Host_two_absmaxdang,
+			float		DockConst_crossover_rate,
+			uchar		DockConst_num_of_genes,
+	// PC
 	const	int* 		PC_rotlist,
-	const	float*		PC_ref_coords_x,// TODO: merge them into a single one?
+	const	float*		PC_ref_coords_x, // TODO: merge them into a single one?
 	const	float*		PC_ref_coords_y,
 	const	float*		PC_ref_coords_z,
 	const	float*		PC_rotbonds_moving_vectors,
 	const	float*		PC_rotbonds_unit_vectors,
 	const	float*		PC_ref_orientation_quats,
 			uint		DockConst_rotbondlist_length,
-	// ia
+	// IA
 	const 	float*		IA_IE_atom_charges,
 	const	int*		IA_IE_atom_types,
 	const	int*		IA_intraE_contributors,
@@ -55,7 +49,7 @@ void lga (
 			float		DockConst_coeff_elec,
 			float		DockConst_qasp,
 			float		DockConst_coeff_desolv,
-	// ie
+	// IE
 	const	float*		Fgrids,
 			uchar		DockConst_xsz,
 			uchar		DockConst_ysz,
@@ -66,16 +60,25 @@ void lga (
 			float		DockConst_gridsize_z_minus1,
 			uint		Host_mul_tmp2,
 			uint		Host_mul_tmp3,
-	// ls
+	// LS
+			uchar		lsmet,
+	// LS-SW
 			ushort		DockConst_max_num_of_iters,
 			float		DockConst_rho_lower_bound,
 			float		DockConst_base_dmov_mul_sqrt3,
 			float		DockConst_base_dang_mul_sqrt3,
 			uchar		DockConst_cons_limit,
+	// LS-AD
+	const 	int*		GRAD_rotbonds,
+	const 	int*		GRAD_rotbonds_atoms,
+	const 	int*		GRAD_num_rotating_atoms_per_rotbond,
+	const 	float*		GRAD_angle,
+	const 	float*		GRAD_dependence_on_theta,
+	const 	float*		GRAD_dependence_on_rotangle,
 	// Values changing every LGA run
 			uint		Host_RunId,
 			uint 	    Host_Offset_Pop,
 			uint	    Host_Offset_Ene
-          );
+    );
 
 #endif

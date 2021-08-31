@@ -1,10 +1,11 @@
 # AutoDock-Aurora-2: AutoDock running on NEC SX-Aurora
 
-Ported from OpenCL code of []().
+Ported from OpenCL code of AutoDock.
 
-## Original instructions
+Specifically:
 
-[Original README of AutoDock-GPU](./README-ORIGINAL.md).
+* Host code and Solis-Wets local search from [ocladock-fpga (lga-sdx182)](https://git.esa.informatik.tu-darmstadt.de/docking/ocladock-fpga/-/tree/lga-sdx182)
+* ADADELTA local search from [AutoDock-GPU (v1.1)](https://github.com/ccsb-scripps/AutoDock-GPU/tree/v1.1/device)
 
 ## SX-Aurora specific instructions
 
@@ -58,7 +59,6 @@ When running with OMP disabled, please also set `VE_OMP_NUM_THREADS=1`, for exam
 env VE_OMP_NUM_THREADS=1 make PDB=1yv3 NRUN=16 REPRO=YES OMP=NO eval
 ```
 
-
 ### Run VE Kernel in debugger
 
 This option is useful for debugging the kernel or finding the approximate or exact
@@ -92,6 +92,14 @@ By default `CONFIG`=RELEASE.
 
 * `PDB` is a molecular input ID 
 * `NRUN` is the number of molecular docking runs
+
+### Choosing local search method
+
+```
+make TESTLS=ad POPSIZE=2048 PDB=1mzc NRUN=50 TRACE=YES eval
+```
+
+`TESTLS` can be either `sw` (Solis-Wets) or `ad` (ADADELTA).
 
 ### Compiling with OpenMP + running validation using a single molecule
 

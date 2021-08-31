@@ -1,9 +1,12 @@
 #include "calcenergy.h"
 
-int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference,
-				 	Dockpars*   	       mypars,
-				 	float*      	       cpu_ref_ori_angles,
-				 	kernelconstant_static* KerConstStatic)
+int prepare_conststatic_fields_for_aurora(
+	Liganddata* myligand_reference,
+	Dockpars* mypars,
+	float* cpu_ref_ori_angles,
+	kernelconstant_static* KerConstStatic,
+	kernelconstant_grads* KerConstGrads
+)
 {
 	int i, j;
 	int type_id1, type_id2;
@@ -11,23 +14,46 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	char* charpoi;
 	//float phi, theta, genrotangle;
 
-	// arrays to store intermmediate data
-	float atom_charges[MAX_NUM_OF_ATOMS];
-	char  atom_types[MAX_NUM_OF_ATOMS];
-	char  intraE_contributors[3*MAX_INTRAE_CONTRIBUTORS];
+	// Arrays to store intermmediate data
+	float atom_charges [MAX_NUM_OF_ATOMS];
+	char  atom_types [MAX_NUM_OF_ATOMS];
+	char  intraE_contributors [3*MAX_INTRAE_CONTRIBUTORS];
 
 	float reqm [ATYPE_NUM];
 	float reqm_hbond [ATYPE_NUM];
 	unsigned int atom1_types_reqm [ATYPE_NUM];
 	unsigned int atom2_types_reqm [ATYPE_NUM];
 
-	float VWpars_AC[MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES];
-	float VWpars_BD[MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES];
-	float dspars_S[MAX_NUM_OF_ATYPES];
-	float dspars_V[MAX_NUM_OF_ATYPES];
-	int rotlist[MAX_NUM_OF_ROTATIONS];
+	float VWpars_AC [MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES];
+	float VWpars_BD [MAX_NUM_OF_ATYPES*MAX_NUM_OF_ATYPES];
+	float dspars_S [MAX_NUM_OF_ATYPES];
+	float dspars_V [MAX_NUM_OF_ATYPES];
+	int rotlist [MAX_NUM_OF_ROTATIONS];
 
-	//charges and type id-s
+	// Added for calculating torsion-related gradients.
+	// Passing list of rotbond-atoms ids to device.
+	// Contains the same information as processligand.h/Liganddata->rotbonds
+
+	// Each row corresponds to one rotatable bond of the ligand.
+	// The rotatable bond is described with the indexes of the
+	// two atoms that are connected to each other by the bond.
+	// The row index is equal to the index of the rotatable bond.
+	int rotbonds [2*MAX_NUM_OF_ROTBONDS];
+
+	// Contains the same information as processligand.h/Liganddata->atom_rotbonds.
+	// "atom_rotbonds": array containing the rotatable bonds - atoms assignment.
+	// If the element atom_rotbonds[atom_index][rotatable_bond_index] is equal to 1,
+	// it means the atom must be rotated if the bond rotates. A 0 means the opposite.
+
+	int rotbonds_atoms [MAX_NUM_OF_ATOMS * MAX_NUM_OF_ROTBONDS];
+
+	// Each entry corresponds to a rotbond_id
+	// The value of an entry indicates the number of atoms that rotate
+	// along with that rotbond_id.
+	int num_rotating_atoms_per_rotbond [MAX_NUM_OF_ROTBONDS];
+
+	// -------------------------------------------
+	// Charges and type id-s
 	floatpoi = atom_charges;
 	charpoi = atom_types;
 
@@ -39,7 +65,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 		charpoi++;
 	}
 
-	//intramolecular energy contributors
+	// Intramolecular energy contributors
 	myligand_reference->num_of_intraE_contributors = 0;
 	for (i=0; i<myligand_reference->num_of_atoms-1; i++)
 		for (j=i+1; j<myligand_reference->num_of_atoms; j++)
@@ -80,7 +106,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
     // Smoothed pairwise potentials
     // -------------------------------------------
 	// reqm, reqm_hbond: equilibrium internuclear separation for vdW and hbond
-	for (i= 0; i<ATYPE_NUM/*myligand_reference->num_of_atypes*/; i++) {
+	for (i=0; i<ATYPE_NUM/*myligand_reference->num_of_atypes*/; i++) {
 		reqm[i]       = myligand_reference->reqm[i];
 		reqm_hbond[i] = myligand_reference->reqm_hbond[i];
 
@@ -89,7 +115,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 	}
 	// -------------------------------------------
 
-	//van der Waals parameters
+	// Van der Waals parameters
 	for (i=0; i<myligand_reference->num_of_atypes; i++)
 		for (j=0; j<myligand_reference->num_of_atypes; j++)
 		{
@@ -119,14 +145,14 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 			}
 		}
 
-	//desolvation parameters
+	// Desolvation parameters
 	for (i=0; i<myligand_reference->num_of_atypes; i++)
 	{
 		dspars_S[i] = myligand_reference->solpar[i];
 		dspars_V[i] = myligand_reference->volume[i];
 	}
 
-	//generate rotation list
+	// Generate rotation list
 	if (gen_rotlist(
 			myligand_reference, rotlist
                         ) != 0)
@@ -135,16 +161,54 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 		return 1;
 	}
 
+	// Added for calculating torsion-related gradients.
+	// Passing list of rotbond-atoms ids to device.
+	// Contains the same information as processligand.h/Liganddata->rotbonds
+	for (i = 0; i < myligand_reference->num_of_rotbonds; i++) {
+		rotbonds[2*i]   = myligand_reference->rotbonds[i][0]; // id of first-atom
+		rotbonds[2*i+1] = myligand_reference->rotbonds[i][1]; // id of second atom
+	}
+
+	// Contains the same information as processligand.h/Liganddata->atom_rotbonds.
+	// "atom_rotbonds": array containing the rotatable bonds - atoms assignment.
+	// If the element atom_rotbonds[atom_index][rotatable_bond_index] is equal to 1,
+	// it means the atom must be rotated if the bond rotates. A 0 means the opposite.
+	for (i = 0; i < MAX_NUM_OF_ROTBONDS; i++) {
+		num_rotating_atoms_per_rotbond[i] = 0;
+	}
+
+	int* intpoi;
+	//intpoi = rotbonds_atoms;
+
+	for (i=0; i < myligand_reference->num_of_rotbonds; i++) {
+		// Pointing to the mem area corresponding to a given rotbond
+		intpoi = rotbonds_atoms + MAX_NUM_OF_ATOMS*i;
+
+		for (j=0; j < myligand_reference->num_of_atoms; j++) {
+			//rotbonds_atoms [MAX_NUM_OF_ATOMS*i+j] = myligand_reference->atom_rotbonds [j][i];
+
+			// If an atom rotates with a rotbond, then
+			// add its atom-id to the entry corresponding to the rotbond-id.
+			// Also, count the number of atoms that rotate with a certain rotbond
+			if (myligand_reference->atom_rotbonds[j][i] == 1){
+				*intpoi = j;
+				intpoi++;
+				num_rotating_atoms_per_rotbond[i]++;
+			}
+		}
+	}
+
+	// -------------------------------------------
 	int m;
 	for (m=0;m<MAX_NUM_OF_ATOMS;m++) {
-		KerConstStatic->atom_charges_const[m] = atom_charges[m]; 
+		KerConstStatic->atom_charges_const[m] = atom_charges[m];
 	}
 
 	for (m=0;m<MAX_NUM_OF_ATOMS;m++) { 
-		KerConstStatic->atom_types_const[m] = atom_types[m];   
+		KerConstStatic->atom_types_const[m] = atom_types[m];
 	}
 
-	for (m=0;m<3*MAX_INTRAE_CONTRIBUTORS;m++) { 
+	for (m=0;m<3*MAX_INTRAE_CONTRIBUTORS;m++) {
 		KerConstStatic->intraE_contributors_const[m] = intraE_contributors[m];
 	}
 
@@ -165,14 +229,14 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 		KerConstStatic->rotlist_const[m] = rotlist[m];
 	}
 
-	//coordinates of reference ligand
+	// Coordinates of reference ligand
 	for (i=0; i < myligand_reference->num_of_atoms; i++) {
 		KerConstStatic->ref_coords_x_const[i] = myligand_reference->atom_idxyzq[i][1];
 		KerConstStatic->ref_coords_y_const[i] = myligand_reference->atom_idxyzq[i][2];
 		KerConstStatic->ref_coords_z_const[i] = myligand_reference->atom_idxyzq[i][3];
 	}
 
-	//rotatable bond vectors
+	// Rotatable bond vectors
 	for (i=0; i < myligand_reference->num_of_rotbonds; i++) {
 		for (j=0; j<3; j++) {
 			KerConstStatic->rotbonds_moving_vectors_const[3*i+j] = myligand_reference->rotbonds_moving_vectors[i][j];
@@ -182,7 +246,7 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 
 	float phi, theta, genrotangle;
 
-	//reference orientation quaternions
+	// Reference orientation quaternions
 	for (unsigned int i=0; i<mypars->num_of_runs; i++)
 	{
 		//printf("Pregenerated angles for run %d: %f %f %f\n", i, cpu_ref_ori_angles[3*i], cpu_ref_ori_angles[3*i+1], cpu_ref_ori_angles[3*i+2]);
@@ -194,6 +258,21 @@ int prepare_conststatic_fields_for_aurora(Liganddata* 	       myligand_reference
 		KerConstStatic->ref_orientation_quats_const[4*i+1] = sinf(genrotangle/2.0f)*sinf(theta)*cosf(phi);	//x
 		KerConstStatic->ref_orientation_quats_const[4*i+2] = sinf(genrotangle/2.0f)*sinf(theta)*sinf(phi);	//y
 		KerConstStatic->ref_orientation_quats_const[4*i+3] = sinf(genrotangle/2.0f)*cosf(theta);		//z
+	}
+
+	// Added for calculating torsion-related gradients.
+	// Passing list of rotbond-atoms ids to device.
+	// Contains the same information as processligand.h/Liganddata->rotbonds
+	for (m = 0; m < 2*MAX_NUM_OF_ROTBONDS; m++) {
+		KerConstGrads->rotbonds[m] = rotbonds[m];
+	}
+
+	for (m = 0; m < MAX_NUM_OF_ATOMS*MAX_NUM_OF_ROTBONDS; m++) {
+		KerConstGrads->rotbonds_atoms[m] = rotbonds_atoms[m];
+	}
+
+	for (m = 0; m < MAX_NUM_OF_ROTBONDS; m++) {
+		KerConstGrads->num_rotating_atoms_per_rotbond[m] = num_rotating_atoms_per_rotbond[m];
 	}
 
 	return 0;

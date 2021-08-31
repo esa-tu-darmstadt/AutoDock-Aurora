@@ -5,25 +5,19 @@
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 
-/*
-IC:  initial calculation of energy of populations
-GG:  genetic generation
-LS:  local search
-*/
-
 // --------------------------------------------------------------------------
 // Lamarckian Genetic-Algorithm (GA): GA + LS (Local Search)
 // --------------------------------------------------------------------------
-uint64_t libkernel_ga (
+uint64_t libkernel_ga(
                        struct device_args *da
-                       )
+                     )
 {
 	uint DockConst_pop_size = da->DockConst_pop_size;
 	uint Host_num_of_runs = da->Host_num_of_runs;
-        int ve_proc_id = da->ve_proc_id;
-        int ve_num_procs = da->ve_num_procs;
+	int ve_proc_id = da->ve_proc_id;
+	int ve_num_procs = da->ve_num_procs;
 
-	// initialize random generator with seed passed from host
+	// Initializing random generator with seed passed from host
 	randf_vec_init(&(da->dockpars_prng_states[ve_proc_id * DockConst_pop_size]), DockConst_pop_size);
 
 	int ve_num_of_runs = (Host_num_of_runs + ve_num_procs - 1) / ve_num_procs;
@@ -33,10 +27,11 @@ uint64_t libkernel_ga (
 #pragma omp parallel for schedule(static, 1)
 	for (uint run_cnt = run_cnt_start; run_cnt < run_cnt_end; run_cnt++) {
 
-/*
+#ifdef PRINT_ALL_KRNL
 		printf(" %u", run_cnt+1); 
 		fflush(stdout);
-*/
+#endif
+
 		// Values changing every LGA run
 		uint uint_run_cnt  = run_cnt; // - run_cnt_start;
 		uint Host_Offset_Pop = uint_run_cnt * DockConst_pop_size * ACTUAL_GENOTYPE_LENGTH;
@@ -59,16 +54,16 @@ uint64_t libkernel_ga (
 			da->Host_two_absmaxdang,
 			da->DockConst_crossover_rate,
 			da->DockConst_num_of_genes,
-			// pc
+			// PC
 			da->PC_rotlist,
-			da->PC_ref_coords_x,// TODO: merge them into a single one?
+			da->PC_ref_coords_x, // TODO: merge them into a single one?
 			da->PC_ref_coords_y,
 			da->PC_ref_coords_z,
 			da->PC_rotbonds_moving_vectors,
 			da->PC_rotbonds_unit_vectors,
 			da->PC_ref_orientation_quats,
 			da->DockConst_rotbondlist_length,
-			// ia
+			// IA
 			da->IA_IE_atom_charges,
 			da->IA_IE_atom_types,
 			da->IA_intraE_contributors,
@@ -87,7 +82,7 @@ uint64_t libkernel_ga (
 			da->DockConst_coeff_elec,
 			da->DockConst_qasp,
 			da->DockConst_coeff_desolv,
-			// ie
+			// IE
 			da->Fgrids,
 			da->DockConst_xsz,
 			da->DockConst_ysz,
@@ -98,18 +93,26 @@ uint64_t libkernel_ga (
 			da->DockConst_gridsize_z_minus1,
 			da->Host_mul_tmp2,
 			da->Host_mul_tmp3,
-			// ls
+			// LS
+			da->lsmet,
+			// LS-SW
 			da->DockConst_max_num_of_iters,
 			da->DockConst_rho_lower_bound,
 			da->DockConst_base_dmov_mul_sqrt3,
 			da->DockConst_base_dang_mul_sqrt3,
 			da->DockConst_cons_limit,
+			// LS-AD
+			da->GRAD_rotbonds,
+			da->GRAD_rotbonds_atoms,
+			da->GRAD_num_rotating_atoms_per_rotbond,
+			da->GRAD_angle,
+			da->GRAD_dependence_on_theta,
+			da->GRAD_dependence_on_rotangle,
 			// Values changing every LGA run
 			uint_run_cnt,
 			Host_Offset_Pop,
 			Host_Offset_Ene
 		);
-		
 	} // End of for loop
 
 	randf_vec_fini();

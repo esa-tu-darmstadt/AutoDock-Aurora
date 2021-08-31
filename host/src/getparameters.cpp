@@ -1,10 +1,11 @@
 #include "getparameters.h"
 
-int get_filenames_and_ADcoeffs(const int* argc,
-			       char** argv,
-			       Dockpars* mypars)
-//The function fills the file name and coeffs fields of mypars parameter
-//according to the proper command line arguments.
+// The function fills the file name and coeffs fields of mypars parameter
+// according to the proper command line arguments.
+int get_filenames_and_ADcoeffs(
+	const int* argc,
+	char** argv,
+	Dockpars* mypars)
 {
 	int i;
 	int ffile_given, lfile_given;
@@ -115,38 +116,41 @@ void get_commandpars(const int* argc,
 	//default values
 	mypars->num_of_energy_evals = 2500000;
 	mypars->num_of_generations  = 27000;
-	mypars->abs_max_dmov        = 6.0/(*spacing); 	// +/-6A
-	mypars->abs_max_dang        = 90; 		// +/- 90�
+	mypars->abs_max_dmov        = 6.0 / (*spacing);	// +/-6A
+	mypars->abs_max_dang        = 90; 		// +/-90 (sexagesimal degrees)
 	mypars->mutation_rate 	    = 2; 		// 2%
 	mypars->crossover_rate 	    = 80;		// 80%
 	mypars->lsearch_rate 	    = 6;		// 6%
-				    // unsigned long num_of_ls
+				    			// unsigned long num_of_ls
+	strcpy(mypars->ls_method, "sw");	// "sw": Solis-Wets
+										// "sd": Steepest-Descent
+										// "fire": FIRE, https://www.math.uni-bielefeld.de/~gaehler/papers/fire.pdf
+										// "ad": ADADELTA, https://arxiv.org/abs/1212.5701
 	mypars->smooth              = 0.5f;
-
 	mypars->tournament_rate     = 60;		// 60%
 	mypars->rho_lower_bound     = 0.01;		// 0.01
-	mypars->base_dmov_mul_sqrt3 = 2.0/(*spacing)*sqrt(3.0);	// 2 A
-	mypars->base_dang_mul_sqrt3 = 75.0*sqrt(3.0);		// 75�
-	mypars->cons_limit 	    = 4;			// 4
+	mypars->base_dmov_mul_sqrt3 = 2.0 / (*spacing)*sqrt(3.0);	// 2 A
+	mypars->base_dang_mul_sqrt3 = 75.0 * sqrt(3.0);		// 75 (sexagesimal degrees)
+	mypars->cons_limit 	    	= 4;			// 4
 	mypars->max_num_of_iters    = 300;
 	mypars->pop_size            = 256; // 150;
 	mypars->initpop_gen_or_loadfile = 0;
 	mypars->gen_pdbs 	    = 0;
-				    // char fldfile [128]
-		                    // char ligandfile [128]
-			            // float ref_ori_angles [3]
-	mypars->num_of_runs 	    = 1;
-	mypars->reflig_en_reqired   = 0;
-				    // char unbound_model
-				    // AD4_free_energy_coeffs coeffs
-	mypars->handle_symmetry     = 1;
-	mypars->gen_finalpop        = 0;
-	mypars->gen_best            = 0;
+							// char fldfile [128]
+							// char ligandfile [128]
+							// float ref_ori_angles [3]
+	mypars->num_of_runs = 1;
+	mypars->reflig_en_reqired = 0;
+				    			// char unbound_model
+				    			// AD4_free_energy_coeffs coeffs
+	mypars->handle_symmetry = 1;
+	mypars->gen_finalpop = 0;
+	mypars->gen_best = 0;
 	strcpy(mypars->resname, "docking");
-	mypars->qasp 		    = 0.01097f;
-	mypars->rmsd_tolerance      = 2.0;		//2 Angstr�m
+	mypars->qasp = 0.01097f;
+	mypars->rmsd_tolerance = 2.0; //2 Angstrom
 	strcpy(mypars->xrayligandfile, mypars->ligandfile);	// By default xray-ligand file is the same as the randomized input ligand
-	mypars->given_xrayligandfile      = false;		// That is, not given (explicitly by the user)
+	mypars->given_xrayligandfile = false; // That is, not given (explicitly by the user)
 
 	// ------------------------------------------
 
@@ -252,7 +256,6 @@ void get_commandpars(const int* argc,
 		// -------------------------------------------
 		// Smoothed pairwise potentials
 		// -------------------------------------------
-		mypars->smooth              = 0.5f;
 
 		if (strcmp("-smooth", argv [i]) == 0)
 		{
@@ -266,6 +269,31 @@ void get_commandpars(const int* argc,
 				printf("Warning: value of -smooth argument ignored. Value must be a float between 0 and 0.5.\n");
 		}
 		// -------------------------------------------
+		//Argument: local search method
+		// "sw": Solis-Wets
+		// "sd": Steepest-Descent
+		// "fire": FIRE
+		// "ad": ADADELTA
+		if (strcmp("-lsmet", argv [i]) == 0)
+		{
+			arg_recognized = 1;
+
+			char temp[128];
+
+			strcpy(temp, argv [i+1]);
+
+			if (strcmp(temp, "sw") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else if (strcmp(temp, "sd") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else if (strcmp(temp, "fire") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else if (strcmp(temp, "ad") == 0) {
+				strcpy(mypars->ls_method, temp);
+			} else {
+				printf("Warning: value of -lsmet argument ignored. Value must be a valid string: \"sw\", \"sd\", \"fire\", \"ad\".\n");
+			}
+		}
 
 		//Argument: tournament rate. Must be a float between 50 and 100.
 		//Means the probability that the better entity wins the tournament round during selectin
@@ -569,6 +597,11 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 
 	unsigned int pop_size = mypars->pop_size;
 
+	float u1, u2, u3; // Generating random quaternion
+	float qw, qx, qy, qz; // Random quaternion
+	float x, y, z, s; // Converting quaternion to angles
+	float phi, theta, rotangle;
+
 	// Initial population
 	gen_pop = 0;
 
@@ -609,21 +642,61 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 	// Generating initial population
 	if (gen_pop == 1)
 	{
-		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++)
-			for (unsigned char gene_id=0; gene_id<3; gene_id++)
+		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++) {
+			for (unsigned char gene_id=0; gene_id<3; gene_id++) {
+#ifdef REPRO
+				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = 30.1186;
+#else
 				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = (float) myrand()*(mygrid->size_xyz_angstr[gene_id]);
+#endif
+			}
 
-		for (unsigned int entity_id=0; entity_id<pop_size*mypars->num_of_runs; entity_id++)
-			for (unsigned char gene_id=3; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++)
-				if (gene_id == 4)
-					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*180;
-				else
-					init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*360;
+			// Generating random quaternion
+			u1 = (float) myrand();
+			u2 = (float) myrand();
+			u3 = (float) myrand();
+			qw = sqrt(1.0 - u1) * sin(PI_TIMES_2 * u2);
+			qx = sqrt(1.0 - u1) * cos(PI_TIMES_2 * u2);
+			qy = sqrt(      u1) * sin(PI_TIMES_2 * u3);
+			qz = sqrt(      u1) * cos(PI_TIMES_2 * u3);
+
+			// Converting into angle representation
+			s = sqrt(1.0 - (qw * qw));
+			if (s < 0.001) { // rotangle too small
+				x = qx;
+				y = qy;
+				z = qz;
+			} else {
+				x = qx / s;
+				y = qy / s;
+				z = qz / s;
+			}
+
+			phi = atan2(y, x);
+			theta = acos(z);
+			rotangle = 2.0 * acos(qw);
+
+			init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+3] = phi / DEG_TO_RAD;
+			init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+4] = theta / DEG_TO_RAD;
+			init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+5] = rotangle / DEG_TO_RAD;
+
+			for (unsigned char gene_id=6; gene_id<MAX_NUM_OF_ROTBONDS+6; gene_id++) {
+#ifdef REPRO
+				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = 22.0452;
+#else
+				init_populations[entity_id*ACTUAL_GENOTYPE_LENGTH+gene_id] = myrand()*360;
+#endif
+			}
+		}
 
 		// Generating reference orientation angles
-		mypars->ref_ori_angles[0] = (float) floor(myrand()*360*100)/100.0;
-		mypars->ref_ori_angles[1] = (float) floor(myrand()*360*100)/100.0;
-		mypars->ref_ori_angles[2] = (float) floor(myrand()*360*100)/100.0;
+#ifdef REPRO
+		mypars->ref_ori_angles[0] = 190.279;
+		mypars->ref_ori_angles[1] = 190.279;
+		mypars->ref_ori_angles[2] = 190.279;
+#else
+
+#endif
 
 		// Writing first initial population to initpop.txt
 		fp = fopen("initpop.txt", "w");
@@ -668,14 +741,58 @@ void gen_initpop_and_reflig(Dockpars*       mypars,
 	change_conform_f(myligand, init_orientation, ref_ori_angles, 0);
 	*/
 
-	//initial orientation will be calculated during docking,
-	//only the required angles are generated here,
-	//but the angles possibly read from file are ignored
-	for (unsigned int i=0; i<mypars->num_of_runs; i++)
-	{
-		ref_ori_angles[3*i]   = (float) (myrand()*360.0); 	//phi
-		ref_ori_angles[3*i+1] = (float) (myrand()*180.0);	//theta
-		ref_ori_angles[3*i+2] = (float) (myrand()*360.0);	//angle
+	// Initial orientation will be calculated during docking,
+	// only the required angles are generated here,
+	// but the angles possibly read from file are ignored
+	for (unsigned int i=0; i<mypars->num_of_runs; i++) {
+#ifdef REPRO
+		ref_ori_angles[3*i]   = 190.279; //phi
+		ref_ori_angles[3*i+1] =  90.279; //theta
+		ref_ori_angles[3*i+2] = 190.279; //angle
+#else
+		// Enable only for debugging.
+		// These specific values of rotational genes (in axis-angle space)
+		// correspond to a quaternion for NO rotation.
+
+		// ref_ori_angles[3*i]   = 0.0f;
+		// ref_ori_angles[3*i+1] = 0.0f;
+		// ref_ori_angles[3*i+2] = 0.0f;
+
+		// Enable for release
+		//ref_ori_angles[3*i]   = (float) (myrand()*360.0); //phi
+		//ref_ori_angles[3*i+1] = (float) (myrand()*180.0); //theta
+		//ref_ori_angles[3*i+2] = (float) (myrand()*360.0); //angle
+
+		// Uniform distribution
+		// Generating random quaternion
+		u1 = (float) myrand();
+		u2 = (float) myrand();
+		u3 = (float) myrand();
+		qw = sqrt(1.0 - u1) * sin(PI_TIMES_2 * u2);
+		qx = sqrt(1.0 - u1) * cos(PI_TIMES_2 * u2);
+		qy = sqrt(      u1) * sin(PI_TIMES_2 * u3);
+		qz = sqrt(      u1) * cos(PI_TIMES_2 * u3);
+
+		// Converting to angle representation
+		s = sqrt(1.0 - (qw * qw));
+		if (s < 0.001) { // rotangle too small
+			x = qx;
+			y = qy;
+			z = qz;
+		} else {
+			x = qx / s;
+			y = qy / s;
+			z = qz / s;
+		}
+
+		phi = atan2(y, x);
+		theta = acos(z);
+		rotangle = 2.0 * acos(qw);
+
+		ref_ori_angles[3*i]   = phi / DEG_TO_RAD;
+		ref_ori_angles[3*i+1] = theta / DEG_TO_RAD;
+		ref_ori_angles[3*i+2] = rotangle / DEG_TO_RAD;
+#endif
 	}
 
 	get_movvec_to_origo(myligand, movvec_to_origo);

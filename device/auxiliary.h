@@ -12,11 +12,9 @@
 #include <ftrace.h>
 #endif
 
-/* 
- * -----------------------------------------------
- * Overall
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Overall
+// -----------------------------------------------
 #ifndef SHORT_TYPE_NAMES_
 #define SHORT_TYPE_NAMES_
 typedef unsigned char uchar;
@@ -26,12 +24,10 @@ typedef unsigned int  uint;
 
 typedef enum {False, True} boolean;
 
-/*
- * -----------------------------------------------
- * Map the argument into the interval
- * 0 - 180, or 0 - 360 in sexagesimal
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Map the argument into the interval
+// 0 - 180, or 0 - 360 in sexagesimal
+// -----------------------------------------------
 static inline
 float map_angle_180 (float angle)
 {
@@ -61,12 +57,9 @@ float map_angle_360 (float angle) {
 	return x;
 }
 
-/* 
- * -----------------------------------------------
- * Pose calculation 
- * -----------------------------------------------
- * */
-
+// -----------------------------------------------
+// Pose calculation
+// -----------------------------------------------
 static inline
 float esa_dot3(float a[3], float b[3]) {
 
@@ -127,11 +120,9 @@ float esa_dot4_e_(float a1, float a2, float a3, float a4, float b1, float b2, fl
 */
 }
 
-/* 
- * -----------------------------------------------
- * Intermolecular
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Intermolecular
+// -----------------------------------------------
 
 /* https://www.codeproject.com/Tips/700780/Fast-floor-ceiling-functions */
 static inline
@@ -143,11 +134,9 @@ int esa_ceil (float fp) {
 #endif
 }
 
-/* 
- * -----------------------------------------------
- * Intramolecular
- * -----------------------------------------------
- * */
+// -----------------------------------------------
+// Intramolecular
+// -----------------------------------------------
 
 // sqrt7 
 //https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
@@ -192,6 +181,7 @@ static inline float esa_expf0(const float x)
 	return __int_as_float(__float_as_int(a * x) + b);
 }
 
+/*
 static float fastExp3(const float x)  // cubic spline approximation
 {
 	int32_t i = (int32_t)(12102203.0f*x) + 127*(1 << 23);
@@ -209,6 +199,7 @@ static float fastExp4(const float x)  // quartic spline approximation
 	i += (((((((((((3537*m) >> 16) + 13668)*m) >> 18) + 15817)*m) >> 14) - 80470)*m) >> 11);
 	return __int_as_float(i);
 }
+*/
 
 // https://forums.developer.nvidia.com/t/a-more-accurate-performance-competitive-implementation-of-expf/47528
 static inline
@@ -239,4 +230,26 @@ float esa_expf(const float a){
   if (fabsf (a) >= 104.0f) r = __int_as_float ((__float_as_int (a) > 0) ? 0x7f800000 : 0);
   return r;
 }
+
+// -----------------------------------------------
+// Gradients
+// -----------------------------------------------
+
+static inline
+void esa_cross3_e_(float a1, float a2, float a3, float b1, float b2, float b3, float* c1, float* c2, float* c3) {
+	*c1 = (a2 * b3) - (a3 * b2);
+	*c2 = (a3 * b1) - (a1 * b3);
+	*c3 = (a1 * b2) - (a2 * b1);
+}
+
+#define esa_length3_e(a1,a2,a3) esa_sqrt(a1*a1 + a2*a2 + a3*a3)
+
+static inline
+void esa_normalize3_e_(float a1, float a2, float a3, float* b1, float* b2, float* b3) {
+	float inv_len = 1.0f / esa_length3_e(a1, a2, a3);
+	*b1 = a1 * inv_len;
+	*b2 = a2 * inv_len;
+	*b3 = a3 * inv_len;
+}
+
 #endif /* AUXILIARY_H_ */

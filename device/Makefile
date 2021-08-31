@@ -17,7 +17,7 @@ COMMON_DIR=../common
 BIN_DIR=../bin
 
 # Device sources
-K_OBJS = calc_pc.o energy_ia.o energy_ie.o lga.o libkernel_ga.o perform_ls.o rand_gen.o
+K_OBJS = calc_pc.o energy_ia.o energy_ie.o lga.o libkernel_ga.o perform_ls.o energy_and_gradient.o ls_ad.o rand_gen.o dummy_ada.o
 K_GA_NAME = libkernel_ga
 
 KRNL_GA_LIB = $(BIN_DIR)/$(K_GA_NAME).so
@@ -41,7 +41,7 @@ KERNEL_DEBUG_COMPLETE=$(KERNEL_DEBUG_BASIC) $(KERNEL_DEBUG_INFO_AND_NOOPT)
 KERNEL_DEBUG_TRACE=$(KERNEL_TRACE) $(KERNEL_DEBUG_TRACEBACK)
 
 ifeq ($(CONFIG),FDEBUG)
-#	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) -DPRINT_ALL_KRNL -DPRINT_ALL_PC -DPRINT_ALL_IA  -DPRINT_ALL_IE -DPRINT_ALL_LS
+#	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE) -DPRINT_ALL_KRNL -DPRINT_ALL_PC -DPRINT_ALL_IA  -DPRINT_ALL_IE -DPRINT_ALL_LS_SW -DPRINT_ALL_LS_AD
 	OPT_KRNL =$(KERNEL_DEBUG_COMPLETE)
 else ifeq ($(CONFIG),LDEBUG)
 	OPT_KRNL =$(KERNEL_DEBUG_BASIC)

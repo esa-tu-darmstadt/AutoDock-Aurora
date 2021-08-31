@@ -56,7 +56,6 @@ void energy_ia (
 	// For each intramolecular atom contributor pair
 	for (uint contributor_counter = 0; contributor_counter < DockConst_num_of_intraE_contributors; contributor_counter++)
 	{
-
 		int atom1_id = IA_intraE_contributors[3*contributor_counter];
 		int atom2_id = IA_intraE_contributors[3*contributor_counter + 1];
 
@@ -100,7 +99,6 @@ void energy_ia (
 #pragma omp simd simdlen(512)
 		for (int j = 0; j < DockConst_pop_size; j++)
 		{
-
 			float subx = local_coords_x[atom1_id][j] - local_coords_x[atom2_id][j];
 			float suby = local_coords_y[atom1_id][j] - local_coords_y[atom2_id][j];
 			float subz = local_coords_z[atom1_id][j] - local_coords_z[atom2_id][j];
@@ -109,8 +107,7 @@ void energy_ia (
 			float atomic_distance = esa_sqrt(subx*subx + suby*suby + subz*subz)*DockConst_grid_spacing;
 
 #if defined (PRINT_ALL)
-			printf("\n");
-			printf("Contrib %u: atoms %u and %u, distance: %f\n", contributor_counter, atom1_id+1, atom2_id+1, atomic_distance);
+			printf("\nContrib %u: pop %3d, atoms %u and %u, distance: %f\n", contributor_counter, j, (atom1_id+1), (atom2_id+1), atomic_distance);
 #endif
 		
 			// But only if the distance is less than distance cutoff value and 20.48A (because of the tables)
@@ -123,9 +120,7 @@ void energy_ia (
 			// Getting smoothed distance
 			// smoothed_distance = function(atomic_distance, opt_distance)
 			float smoothed_distance;
-          
-			/*printf("delta_distance: %f\n", delta_distance);*/
-          
+
 			if (atomic_distance <= (opt_distance - delta_distance)) {
 				smoothed_distance = atomic_distance + delta_distance;
 			}
@@ -166,7 +161,7 @@ void energy_ia (
 			if (atomic_distance < 20.48f)
 			{
 				float term_partialE3 = atomic_distance *
-					(-8.5525f + (86.9525f / (1.0f + 7.7839f * esa_expf0(-0.3154f * atomic_distance))));
+					(DIEL_A + (DIEL_B / (1.0f + DIEL_K * esa_expf0(DIEL_B_TIMES_H * atomic_distance))));
 				float term_inv_partialE3 = (1.0f / term_partialE3);
 
 				// Calculating electrostatic term
