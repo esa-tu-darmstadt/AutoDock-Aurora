@@ -142,21 +142,21 @@ int esa_ceil (float fp) {
 //https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
 static inline
 float esa_sqrt(const float x){
+#ifndef __clang__
+	return sqrtf(x);
+#else
 	//uint i = as_uint(x);
 	unsigned int i = *(unsigned int*) &x;    	
 	i  += 127 << 23;		// adjust bias   	
 	i >>= 1; 				// approximation of square root 	
 	return *(float*) &i; 	// return as_float(i);
+#endif
 }  
 
 static inline
 float esa_fabs(const float x){
 	//return x >= 0.0f ? x : -x;
-#ifdef __clang__
 	return fabsf(x);
-#else
-	return fabs(x);  // is fastest!
-#endif
 	// https://stackoverflow.com/questions/23474796/is-there-a-fast-fabsf-replacement-for-float-in-c
 	//*(unsigned int *)(&x) &= 0x7fffffff; return x;
 }
@@ -176,9 +176,13 @@ static inline float __int_as_float(const int x)
 // max. rel. error = 3.55959567e-2 on [-87.33654, 88.72283]
 static inline float esa_expf0(const float x)
 {
+#ifndef __clang__
+	return expf(x);
+#else
 	float a = 12102203.0f;
 	int32_t b = 127 * (1 << 23) - 298765;
 	return __int_as_float(__float_as_int(a * x) + b);
+#endif
 }
 
 /*
