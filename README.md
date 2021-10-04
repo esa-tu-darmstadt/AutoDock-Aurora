@@ -57,7 +57,7 @@ When running with OMP disabled, please also set `VE_OMP_NUM_THREADS=1`, for exam
 env VE_OMP_NUM_THREADS=1 make PDB=1yv3 NRUN=16 REPRO=YES OMP=NO eval
 ```
 
-### Run VE Kernel in debugger
+### Run VE kernel in debugger
 
 This option is useful for debugging the kernel or finding the approximate or exact
 location of exceptions on the VE side. This option and FTRACE output (TRACE=YES)
@@ -139,10 +139,10 @@ a process can use is equal to the number of cores, eg. 8 cores on VE20B. By limi
 of OpenMP threads one can run multiple processes on one VE, for example:
 
 ```
-# 2 OpenMP threads per process
+# Running 2 OpenMP threads per process
 export VE_OMP_NUM_THREADS=2
 
-# run on 4 processes on VE #1
+# Running 4 processes on VE #1
 export VE_NODE_IDS=1,1,1,1
 ```
 
