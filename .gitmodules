@@ -1,7 +1,7 @@
 
 [submodule "wrapveo"]
 	path = wrapveo
-	url = https://gitlab.com/postdoc_tud/molecular-docking/autodock-aurora/wrapveo.git
+	url = https://github.com/esa-tu-darmstadt/WrapVEO.git
 [submodule "AD-GPU_set_of_42"]
 	path = AD-GPU_set_of_42
 	url = https://github.com/diogomart/AD-GPU_set_of_42.git
