@@ -1,22 +1,18 @@
-# AutoDock-Aurora-2: AutoDock running on NEC SX-Aurora
+# AutoDock-Aurora: AutoDock molecular docking for the NEC SX-Aurora TSUBASA
 
-Ported from OpenCL code of AutoDock.
-
-Specifically:
+Ported from OpenCL code of AutoDock. Specifically:
 
 * Host code and Solis-Wets local search from [ocladock-fpga (lga-sdx182)](https://git.esa.informatik.tu-darmstadt.de/docking/ocladock-fpga/-/tree/lga-sdx182)
 * ADADELTA local search from [AutoDock-GPU (v1.1)](https://github.com/ccsb-scripps/AutoDock-GPU/tree/v1.1/device)
 
-## SX-Aurora specific instructions
+## Instructions
 
 ### Cloning
 
-**FIXME!**
-
 ```bash
-git clone --single-branch --branch sx-aurora --recurse-submodules --shallow-submodules https://gitlab.com/postdoc_tud/molecular-docking/autodock-aurora/autodock-aurora-2.git
+git clone --single-branch --branch sx-aurora --recurse-submodules --shallow-submodules https://github.com/esa-tu-darmstadt/AutoDock-Aurora.git
 
-cd autodock-aurora
+cd Autodock-Aurora
 
 make inputs
 ```
@@ -41,6 +37,7 @@ make -C device CONFIG=FDEBUG kernel_ga
 PROGINF is always enabled as it costs no overhead.
 
 For FTRACE pass `TRACE=YES` (uppercase "YES"!) as a make variable.
+
 ```
 make PDB=1yv3 NRUN=16 TRACE=YES eval
 ```
@@ -55,6 +52,7 @@ LGA runs) share the same random generator and the order in which the cores call
 it is undetermined.
 
 When running with OMP disabled, please also set `VE_OMP_NUM_THREADS=1`, for example:
+
 ```
 env VE_OMP_NUM_THREADS=1 make PDB=1yv3 NRUN=16 REPRO=YES OMP=NO eval
 ```
@@ -66,13 +64,13 @@ location of exceptions on the VE side. This option and FTRACE output (TRACE=YES)
 are mutually exclusive.
 
 ```
-# normally compiled VE kernel
+# Normally compiled VE kernel
 make PDB=1yv3 NRUN=8 DEBUGVE=YES OMP=YES eval
 
-# full debug compile of VE kernel (-g -O0)
+# Full debug compile of VE kernel (-g -O0)
 make PDB=1yv3 NRUN=8 DEBUGVE=YES OMP=YES CONFIG=FDEBUG eval
 
-# strict in order execution of VE instructions
+# Strict in order execution of VE instructions
 env VE_ADVANCEOFF=YES make PDB=1yv3 NRUN=8 DEBUGVE=YES OMP=YES eval
 ```
 
@@ -107,7 +105,7 @@ make TESTLS=ad POPSIZE=2048 PDB=1mzc NRUN=50 TRACE=YES eval
 make PDB=1yv3 NRUN=16 OMP=YES eval
 ```
 
-## Compiling with OpenMP + running validation using five molecules
+### Compiling with OpenMP + running validation using five molecules
 
 It runs above command bit for five different molecules, PDB = {`1yv3`, `1ywr`, `1mzc`, `1jyq`, `3er5`}.
 
@@ -122,6 +120,7 @@ Multi-VE runs can be used to increase the performance by spreading the work acro
 
 Specify the VE IDs in the environment variable `VE_NODE_IDS` as a comma separated list. For example,
 running on four VEs and using up all cores on them requires:
+
 ```
 export VE_NODE_IDS=0,1,2,3
 ```
