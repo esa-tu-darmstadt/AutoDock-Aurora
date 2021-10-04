@@ -43,7 +43,7 @@ KFLAGS=-DKRNL_LIB_DIRECTORY=$(BIN_DIR) \
 			 -DKCMN_SRC_DIRECTORY=$(KCMN_DIR) \
 			 $(K_NAMES)
 
-TARGET := autodock-aurora-2
+TARGET := autodock-aurora
 BIN := $(wildcard $(TARGET)*)
 
 # ------------------------------------------------------
